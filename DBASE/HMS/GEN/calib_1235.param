@@ -1,0 +1,2 @@
+; HMS calibration files for run 1235
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/CAL/hcal_calib_1235.param"

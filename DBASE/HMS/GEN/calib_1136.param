@@ -1,0 +1,3 @@
+; HMS calibration files for run 1136
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/CER/hcer_calib_1136.param"
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/CAL/hcal_calib_1136.param"

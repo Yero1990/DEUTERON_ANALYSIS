@@ -1,0 +1,2 @@
+; HMS calibration files for run 1212
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/CER/hcer_calib_1212.param"
