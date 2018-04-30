@@ -1,0 +1,15 @@
+block T.*
+block P.gtr.*
+block P.dc.x_fp
+block P.dc.xp_fp
+block P.dc.y_fp
+block P.dc.yp_fp
+block P.dc.ntrack
+block P.hgcer.*
+block P.cal.etotnorm
+block P.cal.etracknorm
+block P.kin.*
+block P.react.*
+block P.hod.beta*
+block P.hod.start*
+

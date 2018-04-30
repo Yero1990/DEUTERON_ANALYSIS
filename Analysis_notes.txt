@@ -1,0 +1,10 @@
+HMS
+-----
+1. HMS sieve runs with carbon
+ * RUn 1134. 1135 and 1136
+ * Run 1138 all quads off.
+
+
+SHMS
+------
+1. Look at run 1583 , 0.5% C 

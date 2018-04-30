@@ -1,0 +1,17 @@
+1559-1722
+g_ctp_kinematics_filename ="UTIL_COMM_ONEPASS/DBASE/SHMS/STD/standard.kinematics"
+
+# DEc 9-13, 2017 runs 1559-1628
+#Dec 18-22, 2017 runs 1641-1722
+1559-1722
+g_ctp_parm_filename ="UTIL_COMM_ONEPASS/DBASE/SHMS/GEN/general.param"
+
+1559-1584
+g_ctp_calib_filename ="UTIL_COMM_ONEPASS/DBASE/SHMS/GEN/calib_1583.param"
+
+1585-1585
+g_ctp_calib_filename ="UTIL_COMM_ONEPASS/DBASE/SHMS/GEN/calib_1585.param"
+
+1586-1722
+g_ctp_calib_filename ="UTIL_COMM_ONEPASS/DBASE/SHMS/GEN/calib_1586.param"
+
