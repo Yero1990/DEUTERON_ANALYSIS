@@ -1,4 +1,4 @@
-void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="cal_calib") {
+void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="carbon_elastic") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
