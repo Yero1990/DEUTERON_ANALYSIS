@@ -30,7 +30,6 @@ hhodo_AdcTimeWindowMax = 200., 200., 200., 200.
 ; hscin_tdc_max       maximum allowed tdc value                                 
    hscin_tdc_max = 4000                                                         
 ; hscin_tdc_to_time   scin tdc time per channel                                 
-   hscin_tdc_to_time = 0.1                                                  
 ; tof and you figured out good values
    htof_tolerance = 100.0
 ;                                                                               
@@ -41,7 +40,7 @@ hhodo_AdcTimeWindowMax = 200., 200., 200., 200.
 ;                                                                               
      hhodo_slop     =    2.,  2.,  4.,  4.                                      
 ;   
-htofusinginvadc=1
+htofusinginvadc=0
 hhodo_pos_ped_limit = 1000,1000,1000,1000,1000,1000,1000,1000                   
                       1000,1000,1000,1000,1000,1000,1000,1000                   
                       1000,1000,1000,1000,1000,1000,1000,1000                   
