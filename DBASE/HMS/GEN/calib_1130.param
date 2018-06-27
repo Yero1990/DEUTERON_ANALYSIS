@@ -1,2 +1,8 @@
 ; HMS calibration files for run 1130
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/DC/hdc_cuts.param"
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/DC/hdc_calib.param"
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/DC/hdc_tzero_per_wire.param"
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/HODO/hhodo_calib.param"'
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/HODO/htofcalib.param"
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/CAL/hcal_calib.param"
 #include "UTIL_COMM_ONEPASS/PARAM/HMS/CER/hcer_calib_1130.param"
