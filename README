@@ -113,6 +113,26 @@ Run | Q1  | Q2 | Q3 | HB
 1653| 1.03|	1.03|	1.03|	1
     * carbon elastic delta scan using run 1647 quad tune.
     * Runs 1657-1665 delta = -12 to +4 to 2% steps.
+Ebeam = 2.2218
+1657  2.517 -12%
+1658  2.460 -10%
+1659  2.407 -8%
+1660  2.355 -6%
+1661  2.306 -4%
+1662  2.259 -2%
+1663  2.214 0%
+1664  2.171      2%
+1665  2.129      4%
+1667  2.089      6%
+1668  2.050      8%
+1669  2.013      10%
+1670  1.977      12%
+1671  1.942      14%
+1672  1.909      16%
+1673  1.876      18%
+1674  1.845      20%
+1675  1.815      22%
+1676  1.785      24%
     * Runs 1667-1676 delta = +6 to +24 to 2% steps.
     * Runs 1677-78 SHMS Trigger time checkout 
     * Runs 1680-84 SHMS Trigger time checkout 
@@ -122,8 +142,16 @@ Run | Q1  | Q2 | Q3 | HB
     * Run 1691  LH2 Elastic at 7.5
     * Run 1692 Beam centering
     * RUn 1694-1701 S2Y gain matching
-    * Runs 1703-1705 Optics 25 deg.
+    * Runs 1703-1705 Optics 1 25 deg.
     * Coincidence Runs 1711-1720 SHMS e HMS p
+    *    Run 1711  Lh2 ptheta_lab = 25.01
+    *    Run 1712  Al ptheta_lab = 25.01
+    *    Run 1713  Lh2 ptheta_lab = 30.0 ppcentral = 1.816
+    *    Run 1714-15 Al ptheta_lab = 30.0 ppcentral = 1.816
+    *    Run 1717 Al ptheta_lab = 30.0 ppcentral = 1.686
+    *    Run 1718  LH2 ptheta_lab = 30.0 ppcentral = 1.686
+    *    Run 1719  LH2 ppcentral = 1.555 ptheta_lab = 30.0
+    *    Run 1720 Al ppcentral = 1.555 ptheta_lab = 30.0
     * Coincidence Runs 1721-1722 SHMS p HMS e (trigger not set properly)
 
 
