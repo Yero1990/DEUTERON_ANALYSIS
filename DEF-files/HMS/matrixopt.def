@@ -9,8 +9,12 @@ block H.cer.npeSum
 block H.cer.*
 block H.cal.etotnorm
 block H.cal.etracknorm
+block H.cal.*Diff*
+block H.cal.*Mult*
+block H.cal.*Counter*
 block H.react.*
 block H.kin.*
 block H.hod.beta*
 block H.hod.start*
-
+block H.hod.*Diff*
+block H.hod.*AdcMult*
