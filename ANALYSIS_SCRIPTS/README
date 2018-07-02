@@ -1,0 +1,54 @@
+#Instructions/LogBook of what has been done to analyze onepass data (ON THIS DIRECTORY)
+#Using HMS defocused run 1267
+
+#NOTE: WE will first use HMS defocused run 1267 to set up the correct time window/ref time cuts, and perform calibrations,
+       since, it is on these runs where the focal plane gets illuminated uniformaly, so as to cover the majority of the
+       each detector. 
+
+1) Check reference time cuts are within established limits found in (/PARAM/HMS/GEN/h_reftime_cut.param) 
+   Ensure that the reference time cuts made exclude un-wanted out of time reference times (look at it log-scale)
+   --Replay the raw data and look at the leafs: 
+     T.hms.hFADC_TREF_ROC1 (hhodo/hcer/hcal _adcrefcut)
+     T.hms.hT1 (hhodo_tdcrefcut)
+     T.hms.hDCREF1 (hdc_tdcrefcut)
+
+2) Check AdcTdcTimeWindow Min/Max cuts found in /PARAM/HMS/{DETECOR}/h{detector}_cuts.param,  DETECTOR = HODO, DC, CER, CAL
+   By setting limits on the ADC/TDC TimeDiff per PMT (requiring adc_multiplicity==1), we are excluding extraneous events which would have
+   otherwise block events of interest in the main peak. These cuts increase the numbers of good triggers in the
+   distribution (after we replay the data with the updated time window cuts). When determining the time window limits,
+   a cut on the 'Good(Pos/Neg)AdcMult==1' was made to ensure we had only a single hit. When the data was replayed again, we ran set adc_mult >=1,
+   to ensure we get good triggers that have multiplicity >1 
+
+   Detectors---------Leafs of interest:			  
+   
+   HODO              H.hod.[plane_name].Good[side_name]AdcTdcDiffTime[ipmt], plane_name = 1x, 1y, 2x or 2y,  side_name = Pos, Neg
+   		     H.hod.[plane_name].Good[side_name]AdcMult[ipmt]
+ 
+   CAL               H.cal.[layer].good[side_name]]AdcTdcDiffTime[ipmt], layer = 1pr, 2ta, 3ta, 4ta, side_name = Pos, Neg
+    		     H.cal.[layer].good[side_name]AdcMult[ipmt]
+   
+   CER               H.cer.goodAdcTdcDiffTime[ipmt], ipmt = 0 or 1
+    		     H.cer.goodAdcMult[ipmt]
+
+   DC                H.dc.[plane_name].rawtdc                    plane_name = 1u1, 1u2, . . . 2x2, 2v1, ...
+                     Ndata.H.dc.[plane_name].rawtdc
+
+   ---------------------------------------------------
+
+INSTRUCTION TO RUN THE SCRIPT: setTimeWindows.C
+
+>> root -l setTimeWindows.C
+
+***What the script does:      
+   This script takes as input a ROOT file (set manually inside the script), and loops over the leafs mentioned above and fills/plots the histograms with 
+   vertical red lines indicating where the CUT region is set. The histograms are saved in the current directory in {.pdf} format.
+   
+   The reference time cuts values are hard-coded, and set at the beginning of the script. 
+   These are the values found in the /PARAM/HMS/GEN/h_reftime_cut.param. The user may change them accordingly to their needs.
+
+   The AdcTimeWindow Min/Max cut range are set at the beginning of the script, as multiples of sigma, called 'nSig'.
+   Later in the script, the MEAN/SIGMA values for each ADC:TDC TimeDiff Histogram is determined, and the cut is set around  
+   the MEAN +/- nSig*SIGMA.  The min./max. values are saved in a parameter file which is produced at /PARAM/HMS/{DETECOR}/h{detector}_tWin_runNUM.param
+   These parameters must be copied manually to the /PARAM/HMS/{DETECOR}/h{detector}_cuts.param, so that they may be read by hcana during the replay.
+ 
+ 

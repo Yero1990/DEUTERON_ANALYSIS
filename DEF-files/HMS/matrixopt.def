@@ -5,6 +5,7 @@ block H.dc.xp_fp
 block H.dc.y_fp
 block H.dc.yp_fp
 block H.dc.ntrack
+block H.dc.*raw*
 block H.cer.npeSum
 block H.cer.*
 block H.cal.etotnorm
