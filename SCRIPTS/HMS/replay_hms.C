@@ -1,4 +1,4 @@
-void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="dc_calib") {
+void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="cal_calib") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
