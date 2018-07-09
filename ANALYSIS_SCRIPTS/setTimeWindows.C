@@ -4,7 +4,7 @@ void setTimeWindows()
   gROOT->SetBatch(kTRUE);
   Int_t runNUM = 1267;
   
-  TString filename = "../../ROOTfiles/hms_replay_matrixopt_1267_100000.root";
+  TString filename = "../../ROOTfiles/hms_replay_dc_calib_1267_2000000_DCUnCalib.root";
   
   TFile *data_file = new TFile(filename, "READ"); 
   TTree *T = (TTree*)data_file->Get("T");
@@ -424,7 +424,7 @@ void setTimeWindows()
       dc_LineMax[npl]->SetLineColor(kRed);
       
       dcCanv->cd(npl+1);
-      gPad->SetLogy();
+      //gPad->SetLogy();
       H_dc_rawTDC[npl]->Draw();
       dc_LineMin[npl]->Draw();
       dc_LineMax[npl]->Draw();

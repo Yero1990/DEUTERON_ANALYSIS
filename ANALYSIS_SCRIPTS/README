@@ -51,4 +51,26 @@ INSTRUCTION TO RUN THE SCRIPT: setTimeWindows.C
    the MEAN +/- nSig*SIGMA.  The min./max. values are saved in a parameter file which is produced at /PARAM/HMS/{DETECOR}/h{detector}_tWin_runNUM.param
    These parameters must be copied manually to the /PARAM/HMS/{DETECOR}/h{detector}_cuts.param, so that they may be read by hcana during the replay.
  
- 
+ ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+DATE: JULY 5 2018
+
+As of today, we are currently in the HMS detector calibration part of the analysis. 
+The Hodoscopoes and Drift Chambers have been calibrated using the HMS defocused run 1267,
+as the focal plane is ~ uniformly illuminated, which gives a wider calibration coverage than 
+would otherwise give a normal run (with magnets properly tuned.) The Calorimeter, however, uses
+track variables in its calibration procedure, therefore, a defocused run would NOT be appropiate.
+From Vardan, the calorimeter calibration would only be valid for runs with the same kinematics (targt, angle, momentum, ...)
+which may be combined to accumulate statistics. However, if the kinematics are different, they CANNOT be used,
+as the results would NOT be good. For the calorimeter calibration, HMS run 1263 was used.
+
+To check the calibration results of each detector for any run, execute the script  checkCalib.C
+
+>> root -l
+>> .L checkCalib.C
+>> checkCalib(detector, runNUM)   //detector can be: "dc", "cal", "hod", "cer"    
+                                     //The input root file has to be put in manually inside the code
+
+This script will output a root file with the relevant histograms objects, as well as the .pdf files for quick view.
+
+
