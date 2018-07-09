@@ -1,0 +1,5 @@
+; HMS Cherenkov Parameter File Containing TimeWindow Min/Max Cuts 
+ 
+ 
+hcer_adcTimeWindowMin =0.00,0.00
+hcer_adcTimeWindowMax =0.00,0.00
