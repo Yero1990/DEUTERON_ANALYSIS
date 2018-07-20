@@ -85,13 +85,14 @@ INSTRUCTION TO RUN THE SCRIPT: setTimeWindows.C
  Projections of the 2D correlations are taken across the the entire focal-plane/target range to produced invariant mass (W-peak) slices across the entire region. 
  For example, W vs. Xfp projections take slices of W across the entire X-focal plane in order to see how stable is the W peak around the true proton mass, 0.938 GeV.   
  The projections are then gaussian-fitted and a mean/sigma values obtained which are plotted correspongding to each slice in the focal-plane/target. This would give us 
- an idea og which regions(around the focal plane or target reconstruction) need to be improved. 
+ an idea of which regions(around the focal plane or target reconstruction) need to be improved. 
 
  These delta scan studies will serve as spectrometer pointing studies, using hydrogen elastics, since it is a completely determined system/reaction. For example, by looking at
  correlations between the invariant mass the the variables mentioned above. Since the invariant mass W (Ebeam, e-momentum, e-angle) is a fucntion of beam energy, 
  electron momentum/angle, this information can be used to check any offsets that might exist in the beam energy, spectrometer momentum or spectrometer angle which might be
  attributed to bad optics reconstruction in some regions, or wrong angle/momentum in the kinematics file, or spectrometer magnet saturation, just to name an few.
 
- As of today, the plan is to do HMS single arm simulations using the delta scan kinematics to see how well it agrees with the actual data.
+ As of today, the plan is to do HMS single arm simulations using the delta scan kinematics to see how well it agrees with the actual data. Make sure to check the
+ Dipole NMR/Quad Currents to make sure they agree with the set momentum.
  -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
