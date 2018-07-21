@@ -1,0 +1,17 @@
+#Example to run ONE-PASS Replay                                                                                                                                                                                 
+                                                                                                                                                                                                                
+python3 hcswif.py --mode replay --filelist filelist --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/HMS/replay_hms.C --disk 1000000000 --spectrometer HMS_ALL --project c-comm2017 --name hallc_1pass_deltaScan                                                                                           
+      
+python3 -m json.tool hallc_onepass.json                                                                                                                                                                           
+swif import -file hallc_onepass.json                                                                                                                                                                              
+swif run hallc_onepass                                                                                                                                                                                            
+                                                                                                                                                                                                                  
+                                                                                                                                                                                                                  
+####### How to abandon/cancel/delete workflow and jobs within ######                                                                                                                                              
+swif abandon-jobs -workflow hallc_onepass 49748                                                                                                                                                                   
+swif cancel -workflow hallc_onepass -delete                                                                                                                                                                       
+####################################################################                                                                                                                                              
+                                                                                                                                                                                                                  
+swif cancel -workflow hallc_onepass                                                                                                                                                                               
+/u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/HMS/replay_hms.C                                                                                                                                 
+            
