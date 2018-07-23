@@ -24,8 +24,8 @@ def getQ(mag, hmsP):
         os.system("touch " + hms_file)
 
     #command to append field03 output currents to a dat file
-    cmd1 = ("./../../FIELD/field03 %s >> " + hms_file) %(hmsP)   
-    cmd2 = ("./../../holly/field17/getHMS %s >> " + hms_file) %(hmsP)
+    cmd1 = ("./../executables/field03 %s >> " + hms_file) %(hmsP)   
+    cmd2 = ("./../executables/getHMS %s >> " + hms_file) %(hmsP)
     sp.call(cmd1, shell=True)
     sp.call(cmd2, shell=True)
     
@@ -81,8 +81,14 @@ def main():
     #Read .csv file containing magnet currents data
     data = np.genfromtxt('hms_magnet_data.csv', delimiter=',', names=True)
 
-    #plt.plot(data['p'], data['q2'])
-    #plt.show()
+    #Plot Momentum vs. Current from the .csv file
+    plt.plot(data['q1'], data['p'], label='Q1', linewidth=2.0)
+    plt.plot(data['q2'], data['p'], label='Q2', linewidth=2.0)
+    plt.plot(data['q3'], data['p'], label='Q3', linewidth=2.0) 
+    plt.plot(data['dipole'], data['p'], label='D', linewidth=2.0) 
+      
+    plt.xlabel('HMS Magnets Current [A]')
+    plt.ylabel('HMS Momentum [GeV/c]')
     
     #Interpolate data  Momentum (Current)
     fq1 = interp1d(data['q1'], data['p'], kind='linear')
@@ -91,7 +97,44 @@ def main():
     fdipole = interp1d(data['dipole'], data['p'], kind='linear')
     fnmr = interp1d(data['nmr'], data['p'], kind='linear')
     
+    
+    #Set Min/Max Current Range for plotting interpolation range
+    xq1_min = getQ('Q1', 0.01)
+    xq1_max = getQ('Q1', 7.439)
+    xq1 = np.linspace(xq1_min, xq1_max, 10)
+    xq2_min = getQ('Q2', 0.01)                                         
+    xq2_max = getQ('Q2', 7.439)                                           
+    xq2 = np.linspace(xq2_min, xq2_max, 10)
+    xq3_min = getQ('Q3', 0.01)                                       
+    xq3_max = getQ('Q3', 7.439)                                       
+    xq3 = np.linspace(xq3_min, xq3_max, 10)
+    xd_min = getQ('D', 0.01)                                            
+    xd_max = getQ('D', 7.439)                                            
+    xd = np.linspace(xd_min, xd_max, 10)
+    xnmr_min = getQ('NMR', 0.01)                                            
+    xnmr_max = getQ('NMR', 7.439)                                            
+    xnmr = np.linspace(xnmr_min, xnmr_max, 10)
+    
+    plt.scatter(xq1, fq1(xq1), color='black', marker='o', label='interpolation')
+    plt.scatter(xq2, fq2(xq2), color='black', marker='o')
+    plt.scatter(xq3, fq3(xq3), color='black', marker='o') 
+    plt.scatter(xd, fdipole(xd), color='black', marker='o') 
 
+    plt.legend(loc='best')                        
+    plt.savefig('hms_mag_interpol.pdf')
+
+    #Plot NMR 
+    plt.figure()
+    plt.plot(data['nmr'], data['p'], label='NMR', linewidth=2.0) 
+    plt.scatter(xnmr, fnmr(xnmr), color='black', marker='o') 
+      
+    plt.xlabel('HMS NMR Field [T]')
+    plt.ylabel('HMS Momentum [GeV/c]')
+    
+    plt.legend(loc='best')                        
+    plt.savefig('hms_nmr_interpol.pdf')
+
+'''   RESIDUAL CALCULATION 
     #Make lists to store residuals
 
     q1res_list = []
@@ -176,7 +219,7 @@ def main():
         wr = csv.writer(f)
         wr.writerows(NMRres_list)
 
-
+'''
 
 
 
