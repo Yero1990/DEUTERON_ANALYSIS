@@ -1,21 +1,21 @@
 #! /bin/bash
 
-workflow="hallc_dcREF_check"
+workflow="hallc_epicsCheck"
 
 #Various optional flags to add to hcswif workflow
 mode=" --mode replay "
 spec=" --spectrometer HMS_ALL "
-run="--run 1135 1311 1763 1904 2097"
-events="--events 50000"
-filelist=" --filelist runlist "
+run="--run 1149-1154 1157-1171"
+events="--events -1"
+filelist=" --filelist filelist "
 replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/HMS/replay_hms.C "
 disk_usage=" --disk 1000000000 "   #in bytes (or 1 Gb)
 project=" --project c-comm2017 "
 workflow_name=" --name $workflow"
 
 
-CMD="python3 hcswif.py $mode $spec $run $events $filelist $replay_script $disk_usage $project $workflow_name"
-#echo $CMD
+CMD="./hcswif.py $mode $spec $run $events $filelist $replay_script $disk_usage $project $workflow_name"
+echo $CMD
 
 view_file="python3 -m json.tool $workflow.json"
 #echo $view_file
@@ -25,7 +25,7 @@ run="swif run $workflow"
 #echo $run
 
 #Execute the commands to create and run a workflow
-#eval ${CMD}
+eval ${CMD}
 #eval ${view_file}
 #eval ${import}
 #eval ${run}
