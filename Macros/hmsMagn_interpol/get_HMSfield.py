@@ -9,7 +9,7 @@ import csv
 #import ROOT
 #from ROOT import gROOT
 
-startP = 0.0
+startP = 0.01
 endP = 7.44
 
 #create an empty file to store data
@@ -29,26 +29,20 @@ dp = []
 nmr = []
 
 lst = []
-plist = []
 
-i=0
-while i < len(lst):
-    if lst[i] == 0:
-        lst.pop(i)
-    else:
-        i+=1
+lst.append(['p','q1','q2','q3','dipole','nmr'])
 
 
 #loop over hms central  momenta
-while (startP <= 7.44):
+while (startP <= endP):
 
 
     hms_file = "hms_magnet_%f.data" %startP
     os.system("touch " + hms_file) 
     
     
-    cmd1 = "./../../FIELD/field03 %f >> ./hms_magnet_%f.data" %(startP, startP)            #get quads current
-    cmd2 = "./../../holly/field17/getHMS %f >> ./hms_magnet_%f.data" %(startP, startP)     #get dipole current/nmr
+    cmd1 = "./../executables/field03 %f >> ./hms_magnet_%f.data" %(startP, startP)            #get quads current
+    cmd2 = "./../executables/getHMS %f >> ./hms_magnet_%f.data" %(startP, startP)     #get dipole current/nmr
     sp.call(cmd1, shell=True) 
     sp.call(cmd2, shell=True)   
 
@@ -74,8 +68,8 @@ while (startP <= 7.44):
                 q3_val = quads[1].strip()
                 q3_unit = quads[2].strip()
             if (cnt==3):
-                print cnt
-                print quads
+                #print cnt
+                #print quads
                 dp_val = (quads[3:6])[1]
                 dp_unit = quads[5].strip('.')
             
@@ -91,17 +85,7 @@ while (startP <= 7.44):
     startP = startP + 0.001                     #increment momentum step
     
 
-#print q1      
-#print q2                                                                                
-#print q3                                                                                       
-#print dp                                                   
-#print nmr     
 
-#print q1_unit
-#cols = ['HMS P0 [GeV]','Q1 '+q1_unit, 'Q2 '+q2_unit, 'Q3 '+q3_unit, 'D '+dp_unit, 'NMR '+nmr_unit]
-
-
-
-with open("hms_magnet_data.csv", "w") as f:
+with open("hms_magnet_datav2.csv", "w") as f:
     wr = csv.writer(f)
     wr.writerows(lst)
