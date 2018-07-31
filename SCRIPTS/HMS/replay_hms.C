@@ -1,4 +1,4 @@
-void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="epics") {
+void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="dc_calib") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -152,8 +152,23 @@ void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="epics") {
  analyzer->SetSummaryFile(Form("REPORT_OUTPUT/HMS/PRODUCTION/summary_%s_%d_%d.report", ftype, RunNumber, MaxEvent));    // optional
  // Start the actual analysis.
  analyzer->Process(run);
- // Create report file from template.
- analyzer->PrintReport("UTIL_COMM_ONEPASS/TEMPLATES/HMS/hstackana_production.template",
- 		       Form("REPORT_OUTPUT/HMS/PRODUCTION/replay_hms_%s_%d_%d.report", ftype,RunNumber, MaxEvent));
+ 
+ //Determine which template file to use based on ftype user input
+ TString temp_file;
+ 
+ if(strcmp(ftype,"hscaler") == 0)
+   { 
+     temp_file = "hscalers.template";
+   }
+ else
+   {
+     temp_file="hstackana_production.template";
+   }
 
+// Create report file from template.
+ analyzer->PrintReport("UTIL_COMM_ONEPASS/TEMPLATES/HMS/"+temp_file,
+		       Form("REPORT_OUTPUT/HMS/PRODUCTION/replay_hms_%s_%d_%d.report", ftype,RunNumber, MaxEvent));
+  
+ 
+ 
 }

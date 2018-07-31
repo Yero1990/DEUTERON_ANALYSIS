@@ -508,3 +508,14 @@ gtargmass_amu=12.0107
 hpartmass = 0.00051099
 htheta_lab = 18.50
 hpcentral = 5.816
+
+
+#Added so that we can replay any other non-physics run
+#But these vales should not be taken seriously, they are
+#just to keep the analyzer happy.
+1533-999999
+gpbeam = 10.59 
+gtargmass_amu=12.0107
+hpartmass = 0.00051099
+htheta_lab = 18.50
+hpcentral = 5.816
