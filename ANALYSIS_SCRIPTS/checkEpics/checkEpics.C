@@ -27,9 +27,6 @@ void checkEpics()
   Double_t sQ3true_sum = 0;
   Double_t sDtrue_sum = 0;
   Double_t sHBtrue_sum = 0;
-
-
-  
   
   //Define Magnet Current Leafs to be read from TTree
   
@@ -88,8 +85,8 @@ void checkEpics()
   //mycsv_strue.open("SHMS_MagnI_true.csv", std::ios_base::app);
   
   //Write Header to HMS File
-  mycsv_hset << "Run, Q1, Q2, Q3, D, NMR" << endl;
-  mycsv_htrue << "Run, Q1, Q2, Q3, D, NMR" << endl;
+  mycsv_hset << "Run,Q1,Q2,Q3,D,NMR" << endl;
+  mycsv_htrue << "Run,Q1,Q2,Q3,D,NMR" << endl;
  
   //Write Header to SHMS File
   //mycsv_sset << "Run, HB, Q1, Q2, Q3, D" << endl;
@@ -97,10 +94,10 @@ void checkEpics()
 
 
   //Loop over run Numbers
-  for(Int_t irun=1161; irun<=1161; irun++ )
+  for(Int_t irun=1149; irun<=1171; irun++ )
     {
 
-      
+      if(irun==1155 || irun==1156) continue;
 
       TString filename = Form("../../../ROOTfiles/hms_replay_epics_%d_-1.root", irun);
       TFile *data_file = new TFile(filename, "READ"); 
@@ -171,13 +168,15 @@ void checkEpics()
 	  
 	  
 	} //end entry loop
+
       
-      mycsv_hset << irun <<", " << float(hQ1set_sum/nentries) << ", " << float(hQ2set_sum/nentries) << ", " << float(hQ3set_sum/nentries) << ", " << float(hDset_sum/nentries) << ", " << float(hNMRset_sum/nentries) << endl;
-      mycsv_htrue << irun <<", " << float(hQ1true_sum/nentries) << ", " << float(hQ2true_sum/nentries) << ", " << float(hQ3true_sum/nentries) << ", " << float(hDtrue_sum/nentries) << ", " << float(hNMRtrue_sum/nentries) << endl;
+      //Write HMS .csv
+      mycsv_hset << irun <<"," << float(hQ1set_sum/nentries) << "," << float(hQ2set_sum/nentries) << "," << float(hQ3set_sum/nentries) << "," << float(hDset_sum/nentries) << "," << float(hNMRset_sum/nentries) << endl;
+      mycsv_htrue << irun <<"," << float(hQ1true_sum/nentries) << "," << float(hQ2true_sum/nentries) << "," << float(hQ3true_sum/nentries) << "," << float(hDtrue_sum/nentries) << "," << float(hNMRtrue_sum/nentries) << endl;
       
       //Write SHMS .csv
-      // mycsv_sset << irun <<", " << float(sHBset_sum) << ", " << float(sQ1set_sum/nentries) << ", " << float(sQ2set_sum/nentries) << ", " << float(sQ3set_sum/nentries) << ", " << float(sDset_sum/nentries) << endl;
-      //mycsv_strue << irun <<", " << float(sHBtrue_sum) << ", " << float(sQ1true_sum/nentries) << ", " << float(sQ2true_sum/nentries) << ", " << float(sQ3true_sum/nentries) << ", " << float(sDtrue_sum/nentries) << endl;
+      // mycsv_sset << irun <<"," << float(sHBset_sum) << "," << float(sQ1set_sum/nentries) << "," << float(sQ2set_sum/nentries) << "," << float(sQ3set_sum/nentries) << "," << float(sDset_sum/nentries) << endl;
+      //mycsv_strue << irun <<"," << float(sHBtrue_sum) << "," << float(sQ1true_sum/nentries) << "," << float(sQ2true_sum/nentries) << "," << float(sQ3true_sum/nentries) << "," << float(sDtrue_sum/nentries) << endl;
 
     } //end run loop
       
