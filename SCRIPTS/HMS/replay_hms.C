@@ -1,4 +1,4 @@
-void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="dc_calib") {
+void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="delta_scan") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -38,6 +38,11 @@ void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="dc_calib"
   // Load params for HMS trigger configuration
   gHcParms->Load("PARAM/TRIG/thms.param");
   //   gHcParms->Load("PARAM/HMS/HODO/CALIB/htofcalib.param");
+  
+  ifstream bcmFile;
+  TString bcmParamFile = Form("UTIL_COMM_ONEPASS/PARAM/HMS/BCM/bcmcurrent_%d.param",  RunNumber);
+  bcmFile.open(bcmParamFile);
+  if (bcmFile.is_open()) gHcParms->Load(bcmParamFile);
 
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
@@ -88,6 +93,10 @@ void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="dc_calib"
   gHaPhysics->Add(hkin);
   THcHodoEff* heff = new THcHodoEff("hhodeff"," HMS hodo efficiency","H.hod");
   gHaPhysics->Add(heff);
+
+  THcBCMCurrent* hbc = new THcBCMCurrent("H.bcm", "BCM current check");
+  gHaPhysics->Add(hbc);
+    
 
   // Add handler for prestart event 125.
   THcConfigEvtHandler* ev125 = new THcConfigEvtHandler("hconfig", "Config Event type 125");
