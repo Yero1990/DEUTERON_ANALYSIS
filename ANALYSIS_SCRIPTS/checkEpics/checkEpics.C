@@ -4,29 +4,29 @@ void checkEpics()
   gROOT->SetBatch(kTRUE);
 
   //Mean Variables to determine Avg. Magnet Current
-  Double_t hQ1set_sum = 0;
-  Double_t hQ2set_sum = 0;
-  Double_t hQ3set_sum = 0;
-  Double_t hDset_sum = 0;
-  Double_t hNMRset_sum = 0;
+  Double_t hQ1set_sum;
+  Double_t hQ2set_sum;
+  Double_t hQ3set_sum;
+  Double_t hDset_sum;
+  Double_t hNMRset_sum;
+      
+  Double_t hQ1true_sum;
+  Double_t hQ2true_sum;
+  Double_t hQ3true_sum;
+  Double_t hDtrue_sum;
+  Double_t hNMRtrue_sum;
   
-  Double_t hQ1true_sum = 0;
-  Double_t hQ2true_sum = 0;
-  Double_t hQ3true_sum = 0;
-  Double_t hDtrue_sum = 0;
-  Double_t hNMRtrue_sum = 0;
-
-  Double_t sQ1set_sum = 0;
-  Double_t sQ2set_sum = 0;
-  Double_t sQ3set_sum = 0;
-  Double_t sDset_sum = 0;
-  Double_t sHBset_sum = 0;
+  Double_t sQ1set_sum;
+  Double_t sQ2set_sum;
+  Double_t sQ3set_sum;
+  Double_t sDset_sum;
+  Double_t sHBset_sum;
   
-  Double_t sQ1true_sum = 0;
-  Double_t sQ2true_sum = 0;
-  Double_t sQ3true_sum = 0;
-  Double_t sDtrue_sum = 0;
-  Double_t sHBtrue_sum = 0;
+  Double_t sQ1true_sum;
+  Double_t sQ2true_sum;
+  Double_t sQ3true_sum;
+  Double_t sDtrue_sum;
+  Double_t sHBtrue_sum;
   
   //Define Magnet Current Leafs to be read from TTree
   
@@ -97,6 +97,32 @@ void checkEpics()
   for(Int_t irun=1149; irun<=1171; irun++ )
     {
 
+      //Reset Sum Counter 
+      hQ1set_sum = 0;
+      hQ2set_sum = 0;
+      hQ3set_sum = 0;
+      hDset_sum = 0;
+      hNMRset_sum = 0;
+      
+      hQ1true_sum = 0;
+      hQ2true_sum = 0;
+      hQ3true_sum = 0;
+      hDtrue_sum = 0;
+      hNMRtrue_sum = 0;
+      
+      sQ1set_sum = 0;
+      sQ2set_sum = 0;
+      sQ3set_sum = 0;
+      sDset_sum = 0;
+      sHBset_sum = 0;
+      
+      sQ1true_sum = 0;
+      sQ2true_sum = 0;
+      sQ3true_sum = 0;
+      sDtrue_sum = 0;
+      sHBtrue_sum = 0;
+      
+
       if(irun==1155 || irun==1156) continue;
 
       TString filename = Form("../../../ROOTfiles/hms_replay_epics_%d_-1.root", irun);
@@ -132,6 +158,9 @@ void checkEpics()
       T->SetBranchAddress(nsD_true, &sD_true);
       T->SetBranchAddress(nsHB_true, &sHB_true);
       
+
+      
+
       
       Long64_t nentries = T->GetEntries();
       
@@ -140,7 +169,9 @@ void checkEpics()
 	{
 	  
 	  T->GetEntry(i);  
+
 	  
+
 	  //Sum over all epics reads for each magent current settings/readback values
 	  hQ1set_sum = hQ1set_sum + hQ1_set;
 	  hQ2set_sum = hQ2set_sum + hQ2_set;
@@ -165,11 +196,11 @@ void checkEpics()
 	  sQ3true_sum = sQ3true_sum + sQ3_true;
 	  sDtrue_sum = sDtrue_sum + sD_true;
 	  sHBtrue_sum = sHBtrue_sum +  sHB_true;
-	  
+
 	  
 	} //end entry loop
 
-      
+ 
       //Write HMS .csv
       mycsv_hset << irun <<"," << float(hQ1set_sum/nentries) << "," << float(hQ2set_sum/nentries) << "," << float(hQ3set_sum/nentries) << "," << float(hDset_sum/nentries) << "," << float(hNMRset_sum/nentries) << endl;
       mycsv_htrue << irun <<"," << float(hQ1true_sum/nentries) << "," << float(hQ2true_sum/nentries) << "," << float(hQ3true_sum/nentries) << "," << float(hDtrue_sum/nentries) << "," << float(hNMRtrue_sum/nentries) << endl;
