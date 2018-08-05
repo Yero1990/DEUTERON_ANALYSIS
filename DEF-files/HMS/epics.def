@@ -1,3 +1,5 @@
+block H.bcm.*
+
 begin epics
 IBC3H00CRCUR4
 hac_bcm_average

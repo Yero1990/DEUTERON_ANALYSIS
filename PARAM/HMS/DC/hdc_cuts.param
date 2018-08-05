@@ -19,15 +19,14 @@ hdc_fix_propcorr = 1 ; do propagation along wire each time hit appeears
 ;hdc_tdc_max_win = 30000, 30000, 30000, 30000, 30000, 30000                                                                                                               
 ;                  30000, 30000, 30000, 30000, 30000, 30000   
 
-; HMS DC Parameter File Containing TimeWindow Min/Max Cuts                                                                                                              
-                                                                                                                                                                          
+; HMS DC Parameter File Containing TimeWindow Min/Max Cuts                                                                                        
+                                                                                                                                                         
                                                                     
 hdc_tdc_min_win = -16586.06, -16334.14, -16431.46, -16292.94, -16824.86, -16247.26                                                                   
                   -16475.71, -16026.56, -16206.73, -16135.13, -16629.46, -16115.80                                                
 
-hdc_tdc_max_win = -9578.75, -9903.52, -9875.41, -10019.33, -8762.82, -10022.65              
-                  -9616.72, -10115.89, -10022.20, -10006.34, -8940.76, -9999.66                                                                                                           
-           
+hdc_tdc_max_win = -9578.75, -9903.52, -9875.41, -10019.33, -8762.82, -10022.65             
+                  -9616.72, -10115.89, -10022.20, -10006.34, -8940.76, -9999.66                                                                     
 
 
 ; Zero time correction for each plane in ns that is added to TDC time.

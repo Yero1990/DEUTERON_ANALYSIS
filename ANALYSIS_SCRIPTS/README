@@ -96,3 +96,13 @@ INSTRUCTION TO RUN THE SCRIPT: setTimeWindows.C
  Dipole NMR/Quad Currents to make sure they agree with the set momentum.
  -------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+ DATE: AUGUST 03 2018
+ 
+ HMS delta scan run 1161 (delta ~ 0%) will be analyzed in detail first. So I decided to recalibrate the HMS chambers with this run, since with the run 1267 param, the 
+ drift distances in 1161 did NOT appear to be flat. The HMS hodoscope calibration parameters from run 1267 seem to work OK for this run, since the beta is peaked at unity.
+ I have also incorporated the BCM Cut threshold of beam current 4.8 uA. I have used Sanghwa's physics module to produce a bcmcurrent_1161.param file which by loading on the
+ replay script, will produce, a bcm flag in the TTree, which we can make a cut on to only select events which had a beam current > the threshold (4.8 uA for 1161). This cut
+ will become important when we begin to extract cross-sections, as we do NOT want events in which the beam was ramping, since the beam position could have been offset. 
+
+
+

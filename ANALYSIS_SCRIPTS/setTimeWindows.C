@@ -2,10 +2,10 @@ void setTimeWindows()
 {
 
   gROOT->SetBatch(kTRUE);
-  Int_t runNUM = 1267;
+  Int_t runNUM = 1161;
   
-  TString filename = "../../ROOTfiles/hms_replay_dc_calib_1267_2000000_DCUnCalib.root";
-  
+  TString filename = "../../ROOTfiles/hms_replay_dc_calib_1161_-1.root";
+  //hms_replay_dc_calib_1267_2000000_DCUnCalib.root";
   TFile *data_file = new TFile(filename, "READ"); 
   TTree *T = (TTree*)data_file->Get("T");
   

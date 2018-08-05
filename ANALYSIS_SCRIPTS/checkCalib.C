@@ -7,13 +7,10 @@ void checkCalib(string detector, int runNUM)
   //the user may input the following for detector: "dc", "cal"
 
   gROOT->SetBatch(kTRUE);
-    TString filename = "../../ROOTfiles/hms_replay_cal_calib_1263_100000.root";
-  //TString filename = "../../ROOTfiles/hms_replay_dc_calib_1267_100000.root";
-  //TString filename = "../../ROOTfiles/hms_replay_production_all_1267_1500000FullCorr.root";
+  // TString filename = "../../ROOTfiles/hms_replay_cal_calib_1263_100000.root";
+  TString filename = "../../ROOTfiles/hms_replay_dc_calib_1161_-1.root";
 
-  //TString filename = "../../ROOTfiles/hms_replay_delta_scan_1161_-1.root";
-  //TString filename = "../../ROOTfiles/hms_replay_production_all_1856_1000000.root";
-  
+
   //read the file and get the tree
   TFile *data_file = new TFile(filename, "READ");
   TTree *T = (TTree*)data_file->Get("T");

@@ -8,3 +8,4 @@ block H.cal.*
 block H.hod.starttime
 block H.hod.beta*
 block H.tr.*
+block H.bcm.*

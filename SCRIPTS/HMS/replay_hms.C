@@ -42,7 +42,7 @@ void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="delta_sca
   ifstream bcmFile;
   TString bcmParamFile = Form("UTIL_COMM_ONEPASS/PARAM/HMS/BCM/bcmcurrent_%d.param",  RunNumber);
   bcmFile.open(bcmParamFile);
-  if (bcmFile.is_open()) gHcParms->Load(bcmParamFile);
+
 
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
@@ -94,9 +94,19 @@ void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="delta_sca
   THcHodoEff* heff = new THcHodoEff("hhodeff"," HMS hodo efficiency","H.hod");
   gHaPhysics->Add(heff);
 
-  THcBCMCurrent* hbc = new THcBCMCurrent("H.bcm", "BCM current check");
-  gHaPhysics->Add(hbc);
-    
+  if (bcmFile.is_open())
+    {
+      THcBCMCurrent* hbc = new THcBCMCurrent("H.bcm", "BCM current check");
+      gHaPhysics->Add(hbc);
+      
+      gHcParms->Load(bcmParamFile);
+
+    }
+
+  else if (!bcmFile.is_open())
+    {
+      cout << "BCM Current Module will NOT be loaded . . ." << endl;
+    }
 
   // Add handler for prestart event 125.
   THcConfigEvtHandler* ev125 = new THcConfigEvtHandler("hconfig", "Config Event type 125");
