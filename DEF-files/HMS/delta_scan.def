@@ -16,4 +16,6 @@ block H.hod.beta*
 block H.hod.*Track*
 block H.kin.*
 block H.gtr.*
+block H.react.*
+block H.rb.*
 block H.bcm.*

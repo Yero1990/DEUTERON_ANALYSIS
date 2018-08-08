@@ -38,9 +38,5 @@ hphi_offset   = 0.0 ; (rad) hxp_tar = hxp_tar + hphi_offset
 ; sets hpcentral = hpcentral * ( 1. + hpcentral_offset / 100. )
 ;      htheta_lab=htheta_lab + hthetacentral_offset/degree
 ; 
-; Vertical spectrometer mispointing from survey (cm)
-hmispointing_x=0.255       ;HMS 35 deg, 2.55 mm (0.255 cm)
-; Horizontal spectrometer mispointing from survey (cm)
-hmispointing_y=0.083        ;HMS 35 deg, 0.83 mm (0.083 cm)  
 
 

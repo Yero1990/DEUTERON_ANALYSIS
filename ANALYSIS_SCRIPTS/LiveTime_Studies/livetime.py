@@ -21,7 +21,7 @@ def getLiveTimes():
               2229, 2230, 2231, 2232, 2233, 2234, 2235, 2236, 2237, 2238, 2239, 2240, 2241, 2242, 2243, 2244, 2245, 2246, 2247, 2248, 2249,
               2250, 2251, 2260, 2261, 2262]
     lst = []
-    lst.append(['Run', 'PS1_factor', 'PS1_CPU_LT', 'PS1_Total_LT', 'hT1_rate', 'edtm_rate', 'phy_rate' ])
+    lst.append(['Run', 'PS1_factor', 'PS1_CPU_LT', 'PS1_Total_LT', 'hT1_rate', 'edtm_rate', 'phy_rate'])
 
     #Loop over hms delta scan runs
     for i in range(2173,2266,1):
@@ -121,25 +121,26 @@ def main():
     #print (df.loc[0:6, 'Run'])
     #print (df.loc[0:6, 'phy_rate'])
 
-    #TESTING
-    x = np.linspace(0, 11, 100)  
 
-    plt.plot(x, dt_extended(x,3,155,5), linestyle='--', color='black', label='Buffer L3, Max=5')                                        
-    plt.plot(x, dt_extended(x,3,155,10), linestyle='--', color='blue', label='Buffer L3, Max=10') 
-    plt.plot(x, dt_extended(x,3,155,15), linestyle='--', color='red', label='Buffer L3, Max=15') 
-    plt.plot(x, dt_extended(x,3,155,100), linestyle='--', color='cyan', label='Buffer L3, Max=20')
 
-    plt.legend(loc='best')
-    plt.show()
-'''
-
-    #Plot Data: Buffer Level 1
-    plt.scatter(df.loc[0:6, 'phy_rate'], df.loc[0:6, 'PS1_CPU_LT'], color='black', label='HMS CLT, Buffer 1' )
-    plt.scatter(df.loc[7:10, 'phy_rate'], df.loc[7:10, 'PS1_CPU_LT'], color='red', label='HMS CLT, Buffer 2' ) 
-    plt.scatter(df.loc[11:14, 'phy_rate'], df.loc[11:14, 'PS1_CPU_LT'], color='blue', label='HMS CLT, Buffer 3' ) 
-    plt.scatter(df.loc[15:18, 'phy_rate'], df.loc[15:18, 'PS1_CPU_LT'], color='magenta', label='HMS CLT, Buffer 4' ) 
-
+    #Plot Data: Buffer Level 1-5
+    #plt.scatter(df.loc[0:6, 'phy_rate'], df.loc[0:6, 'PS1_CPU_LT'], color='black', label='HMS CLT, Buffer 1' )
+    #plt.scatter(df.loc[7:10, 'phy_rate'], df.loc[7:10, 'PS1_CPU_LT'], color='red', label='HMS CLT, Buffer 2' ) 
+    #plt.scatter(df.loc[11:14, 'phy_rate'], df.loc[11:14, 'PS1_CPU_LT'], color='blue', label='HMS CLT, Buffer 3' ) 
+    #plt.scatter(df.loc[15:18, 'phy_rate'], df.loc[15:18, 'PS1_CPU_LT'], color='magenta', label='HMS CLT, Buffer 4' ) 
+    #plt.scatter(df.loc[19:22, 'phy_rate'], df.loc[19:22, 'PS1_CPU_LT'], color='green', label='HMS CLT, Buffer 5' )                                             
     #set xaxis (in kHz)
+    
+    #Plot Data: Buffer Level 6-10
+    plt.scatter(df.loc[23:26, 'phy_rate'], df.loc[23:26, 'PS1_CPU_LT'], color='black', label='HMS CLT, Buffer 6' )     
+    plt.scatter(df.loc[27:30, 'phy_rate'], df.loc[27:30, 'PS1_CPU_LT'], color='red', label='HMS CLT, Buffer 7' )    
+    plt.scatter(df.loc[31:34, 'phy_rate'], df.loc[31:34, 'PS1_CPU_LT'], color='blue', label='HMS CLT, Buffer 8' )    
+    plt.scatter(df.loc[35:38, 'phy_rate'], df.loc[35:38, 'PS1_CPU_LT'], color='magenta', label='HMS CLT, Buffer 9' ) 
+    plt.scatter(df.loc[39:42, 'phy_rate'], df.loc[39:42, 'PS1_CPU_LT'], color='green', label='HMS CLT, Buffer 10' )    
+    #set xaxis (in kHz)  
+
+
+
     x = np.linspace(0, 11, 100)
 
     #Set Busy MIN/MAX corresponding to different Buffer Levels
@@ -148,31 +149,51 @@ def main():
     L1_BUSY_MIN = 155.         #micro-sec unit          
     L1_BUSY_MAX = 165.
     
-    #Plot Buffer Level 1: Live Time Theory Curves
-    plt.plot(x, dt_nonextended(x,L1_BUSY_MIN), linestyle='--', color='black', label='Buffer L1 Busy MIN=155us')
-    plt.plot(x, dt_nonextended(x,L1_BUSY_MAX), linestyle=':', color='black', label='Buffer L1 Busy Max=165us')
+    #Plot Buffer Level 1-5: Live Time Theory Curves
+    #plt.plot(x, dt_nonextended(x,L1_BUSY_MIN), linestyle='--', color='black', label='Buffer L1 Busy MIN=155us')
+    #plt.plot(x, dt_nonextended(x,L1_BUSY_MAX), linestyle=':', color='black', label='Buffer L1 Busy Max=165us')
 
-    plt.plot(x, dt_extended(x,2,155), linestyle='--', color='red', label='Buffer L2 Busy Min=155 us')  
-    plt.plot(x, dt_extended(x,2,165), linestyle=':', color='red', label='Buffer L2 Busy Min=165 us') 
+    #plt.plot(x, dt_extended(x,2,155,40), linestyle='--', color='red', label='Buffer L2 Busy Min=155 us')  
+    #plt.plot(x, dt_extended(x,2,165,40), linestyle=':', color='red', label='Buffer L2 Busy Min=165 us') 
 
-    plt.plot(x, dt_extended(x,3,155), linestyle='--', color='blue', label='Buffer L3 Busy Min=155 us') 
-    plt.plot(x, dt_extended(x,3,165), linestyle=':', color='blue', label='Buffer L3 Busy Min=165 us') 
+    #plt.plot(x, dt_extended(x,3,155,40), linestyle='--', color='blue', label='Buffer L3 Busy Min=155 us') 
+    #plt.plot(x, dt_extended(x,3,165,40), linestyle=':', color='blue', label='Buffer L3 Busy Min=165 us') 
 
-    plt.plot(x, dt_extended(x,4,155), linestyle='--', color='magenta', label='Buffer L4 Busy Min=155 us')  
-    plt.plot(x, dt_extended(x,4,165), linestyle=':', color='magenta', label='Buffer L4 Busy Min=165 us')     
-   
+    #plt.plot(x, dt_extended(x,4,155,40), linestyle='--', color='magenta', label='Buffer L4 Busy Min=155 us')  
+    #plt.plot(x, dt_extended(x,4,165,40), linestyle=':', color='magenta', label='Buffer L4 Busy Min=165 us')     
+
+    #plt.plot(x, dt_extended(x,5,155,40), linestyle='--', color='green', label='Buffer L5 Busy Min=155 us')                            
+    #plt.plot(x, dt_extended(x,5,165,40), linestyle=':', color='green', label='Buffer L5 Busy Min=165 us')    
+
+
+    #Plot Buffer Level 6-10: Live Time Theory Curves    
+    plt.plot(x, dt_extended(x,6,155,40), linestyle='--', color='black', label='Buffer L6 Busy MIN=155us')   
+    plt.plot(x, dt_extended(x,6,165,40), linestyle=':', color='black', label='Buffer L6 Busy Max=165us')                                     
+    
+    plt.plot(x, dt_extended(x,7,155,40), linestyle='--', color='red', label='Buffer L7 Busy Min=155 us')                                   
+    plt.plot(x, dt_extended(x,7,165,40), linestyle=':', color='red', label='Buffer L7 Busy Min=165 us')  
+    
+    plt.plot(x, dt_extended(x,8,155,40), linestyle='--', color='blue', label='Buffer L8 Busy Min=155 us')                    
+    plt.plot(x, dt_extended(x,8,165,40), linestyle=':', color='blue', label='Buffer L8 Busy Min=165 us')       
+    
+    plt.plot(x, dt_extended(x,9,155,40), linestyle='--', color='magenta', label='Buffer L9 Busy Min=155 us')                
+    plt.plot(x, dt_extended(x,9,165,40), linestyle=':', color='magenta', label='Buffer L9 Busy Min=165 us')            
+    
+    plt.plot(x, dt_extended(x,10,155,40), linestyle='--', color='green', label='Buffer L10 Busy Min=155 us')                                                    
+    plt.plot(x, dt_extended(x,10,165,40), linestyle=':', color='green', label='Buffer L10 Busy Min=165 us')   
+
     #Set Axes Labels
     plt.xlabel('Trigger Rate (kHz)')
     plt.ylabel('Live Time (%)')
-    plt.title('HMS Live Time Measurements: Buffer Level 1-4')
+    plt.title('HMS Live Time Measurements: Buffer Level 6-10')
 
     #Show theory curves
     plt.legend(loc='best')
     plt.show()
 
-    plt.figure()
-   
 
+   
+'''
     #-------------------------BUFFER LEVEL = 2---------------------------
 
     bf = 2  #set buffer level counter to start at 2
@@ -197,8 +218,7 @@ def main():
         plt.legend(loc='best')
         plt.show()
         bf = bf+1
-   
-'''
+   '''
 
 
 

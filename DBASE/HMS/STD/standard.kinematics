@@ -10,6 +10,12 @@
 0-9999
 hpartmass = 0.00051099
 gpbeam = 2.221
+hmispointing_x=0.0
+hmispointing_y=0.0
+gbeam_x  = +0.0
+gbeam_y  = +0.0
+gbeam_xp = +0.00
+gbeam_yp = +0.00
 
 1117-1131
 htheta_lab = -25.005
@@ -101,6 +107,10 @@ hpcentral = 2.099
 gtargmass_amu=1.00794
 htheta_lab = -13.5
 hpcentral = 2.078
+gbeam_x = -0.07016     #beam xpos offset in cm
+gbeam_y = -0.001345    #beam ypos offset in cm
+hmispointing_x=0.1427 
+hmispointing_y=0.0722
 
 1162
 gtargmass_amu=1.00794
