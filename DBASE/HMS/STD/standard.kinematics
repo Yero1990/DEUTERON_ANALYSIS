@@ -288,6 +288,14 @@ gtargmass_amu=12.0107
 htheta_lab = -14.0
 hpcentral = 2.1
 
+1272
+gtargmass_amu=1.00794
+htheta_lab = -15.002
+hpcentral = 2.0550
+hmispointing_x=0.13499 
+hmispointing_y=0.07901  
+gbeam_x=-0.03954
+gbeam_y=-0.002341
 
 # start the Jan 12 commissioning
 
