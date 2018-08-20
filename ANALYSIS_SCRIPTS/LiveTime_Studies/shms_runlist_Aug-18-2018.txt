@@ -1,0 +1,8 @@
+#SHMS Singles in Coincidence Mode Run List
+#Computer Live Time Measurements
+4528
+4533
+4538
+4542
+4546
+4551

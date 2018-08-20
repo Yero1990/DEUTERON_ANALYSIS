@@ -42,16 +42,60 @@ f.close()
 
 os.chdir('../../../')
 
-for run in hms_run_list:
-    cmd1 = "./hcana -q \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C(%d,-1)\""  %run
-    os.system(cmd1)
 
-for run in shms_run_list:                           
-    cmd2 = "./hcana -q \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C(%d,-1)\""  %run       
-    os.system(cmd2)
+
+for run in hms_run_list:
+    cmd = "./hcana -q \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C(%d,-1)\""  %run
+    os.system(cmd)
+
+for run in shms_run_list:
+    #cmd = "./hcana -q \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C(%d,-1)\""  $
+    os.system(cmd)
 
 for run in coin_run_list:
-    cmd3 = "./hcana -q \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C(%d,-1)\""  %run
-    os.system(cmd3)
+    #cmd = "./hcana -q \"SCRIPTS/COIN/SCALERS/replay_coin_scalers.C(%d,-1)\""  %run
+    os.system(cmd)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
