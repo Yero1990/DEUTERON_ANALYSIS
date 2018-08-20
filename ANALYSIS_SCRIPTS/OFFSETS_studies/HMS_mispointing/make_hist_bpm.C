@@ -26,8 +26,8 @@ using namespace std;
 
 void make_hist_bpm(){
   
-  TString basename = "hms_replay_hscaler_1161_-1";
-  Int_t nrun = 1161;
+  TString basename = "hms_replay_hscaler_1272_-1";
+  Int_t nrun = 1272;
   if (basename=="") {
     cout << " Input the basename of the root file (assumed to be in worksim)" << endl;
     cin >> basename;
@@ -41,7 +41,7 @@ void make_hist_bpm(){
   gStyle->SetTitleSize(0.06,"XY");
   gStyle->SetPadLeftMargin(0.12);
   TString inputroot;
-  inputroot="../../../ROOTfiles/"+basename+".root";
+  inputroot="../../../../ROOTfiles/"+basename+".root";
   TString outputhist;
   outputhist= basename+"_BPMhist.root";
  TObjArray HList(0);
