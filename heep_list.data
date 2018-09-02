@@ -1,0 +1,252 @@
+#H(e,e'p) Run Summary
+#Target: 10 cm LH2
+
+#-------------------
+#----HMS Singles----
+#-------------------
+-----> Particles: electrons
+-----> HMS Defocused Run: 1267 (1-PASS),  1327 (3-PASS)
+
+Run#	Beam Energy	HMS Momentum	HMS Angle	Date			PASS      Comments
+1149    2.221 GeV	2.309 GeV	13.5 deg	December 12, 2017	1-PASS    
+1150    2.221 GeV	2.293 GeV	13.5 deg	December 12, 2017	1-PASS   
+1151    2.221 GeV	2.259 GeV	13.5 deg	December 12, 2017	1-PASS  
+1152    2.221 GeV	2.234 GeV	13.5 deg	December 12, 2017	1-PASS   
+1153    2.221 GeV	2.211 GeV	13.5 deg	December 12, 2017	1-PASS  
+1154    2.221 GeV	2.187 GeV	13.5 deg	December 12, 2017	1-PASS   
+1157    2.221 GeV	2.182 GeV	13.5 deg	December 12, 2017	1-PASS  
+1158    2.221 GeV	2.142 GeV	13.5 deg	December 12, 2017	1-PASS     Q1 Tripped!
+1159    2.221 GeV	2.120 GeV	13.5 deg	December 12, 2017	1-PASS  
+1160    2.221 GeV	2.099 GeV	13.5 deg	December 12, 2017	1-PASS   
+1161    2.221 GeV	2.078 GeV	13.5 deg	December 12, 2017	1-PASS  
+1162    2.221 GeV	2.057 GeV	13.5 deg	December 12, 2017	1-PASS   
+1163    2.221 GeV	2.037 GeV	13.5 deg	December 12, 2017	1-PASS  
+1164    2.221 GeV	2.017 GeV	13.5 deg	December 12, 2017	1-PASS   
+1165    2.221 GeV	1.998 GeV	13.5 deg	December 12, 2017	1-PASS  
+1166    2.221 GeV	1.979 GeV	13.5 deg	December 12, 2017	1-PASS 
+1167    2.221 GeV	1.960 GeV	13.5 deg	December 12, 2017	1-PASS  
+1168    2.221 GeV	1.942 GeV	13.5 deg	December 12, 2017	1-PASS   
+1169    2.221 GeV	1.924 GeV	13.5 deg	December 12, 2017	1-PASS  
+1170    2.221 GeV	1.906 GeV	13.5 deg	December 12, 2017	1-PASS   
+1171    2.221 GeV	1.889 GeV	13.5 deg	December 12, 2017	1-PASS  
+1272    2.221 GeV       2.055 GeV       15.0 deg        December 18, 2017       1-PASS
+1329    6.430 GeV       5.205 GeV       15.0 deg        January  14, 2018       3-PASS
+
+1553	10.59 GeV	6.100 GeV	21.0 deg	February 19, 2018	5-PASS		Dipole Saturation Tests
+1554	10.59 GeV	6.100 GeV	21.0 deg	February 19, 2018	5-PASS		Dipole Saturation Tests
+1557	10.59 GeV	5.900 GeV	21.0 deg	February 19, 2018	5-PASS		Dipole Saturation Tests
+1558	10.59 GeV	5.900 GeV	21.0 deg	February 20, 2018	5-PASS		Dipole Saturation Tests
+1559	10.59 GeV	5.900 GeV	21.0 deg	February 20, 2018	5-PASS		Dipole Saturation Tests (Increase DIpole Field by 1%)
+1560	10.59 GeV	5.900 GeV	21.0 deg	February 20, 2018	5-PASS		Dipole Saturation Tests (Increase DIpole Field by 1%)
+1561	10.59 GeV	5.700 GeV	21.0 deg	February 20, 2018	5-PASS		Dipole Saturation Tests 
+1562	10.59 GeV	5.700 GeV	21.0 deg	February 20, 2018	5-PASS		Dipole Saturation Tests 
+1563	10.59 GeV	5.700 GeV	21.0 deg	February 20, 2018	5-PASS		Dipole Saturation Tests (Dipole Field 0.7% from Nominal)
+1565	10.59 GeV	5.700 GeV	21.0 deg	February 20, 2018	5-PASS
+1571	10.59 GeV	5.700 GeV	21.0 deg	February 20, 2018	5-PASS
+1572	10.59 GeV	5.700 GeV	21.0 deg	February 20, 2018	5-PASS
+
+#------------------
+#---SHMS Singles---
+#------------------
+--------->SHMS Defocused Run: 1791 (3-PASS)
+Run#	Beam Energy	SHMS Momentum	SHMS Angle	Date			PASS		Comments
+1689    2.221 GeV       2.177 GeV       7.5  	deg 	December 20, 2017       1-PASS
+1691    2.221 GeV       2.177 GeV       7.5 	deg   	December 20, 2017       1-PASS
+1793    6.430 GeV       6.017 GeV       8.015	deg    	January	 14, 2018       3-PASS
+2071    6.430 GeV       5.074 GeV       16.02	deg     January  21, 2018       3-PASS
+2072    6.430 GeV       5.074 GeV       16.02	deg     January  21, 2018       3-PASS
+2073    6.430 GeV       4.522 GeV       20.03	deg     January  21, 2018       3-PASS
+2074    6.430 GeV       4.522 GeV       20.03	deg     January  21, 2018       3-PASS
+2085    6.430 GeV       3.349 GeV       30.06	deg     January  21, 2018       3-PASS
+2086    6.430 GeV       3.349 GeV       30.06	deg     January  21, 2018       3-PASS
+2087    6.430 GeV       2.869 GeV       35.06	deg     January  21, 2018       3-PASS
+2088    6.430 GeV       2.869 GeV       35.06	deg     January  21, 2018       3-PASS
+2221    6.430 GeV       3.911 GeV       25.0	deg     January	 29, 2018	3-PASS
+2222    6.430 GeV       3.911 GeV       25.0	deg     January	 29, 2018	3-PASS
+2223    6.430 GeV       3.911 GeV       25.0	deg     January	 29, 2018	3-PASS
+2224    6.430 GeV       3.911 GeV       25.0	deg     January	 29, 2018	3-PASS
+2225    6.430 GeV       3.911 GeV       25.0	deg     January	 29, 2018	3-PASS
+2226    6.430 GeV       3.911 GeV       25.0	deg     January	 29, 2018	3-PASS
+2227    6.430 GeV       3.911 GeV       25.0	deg     January	 29, 2018	3-PASS
+2228    6.430 GeV       3.911 GeV       25.0	deg     January	 29, 2018	3-PASS
+2229    6.430 GeV       3.911 GeV       25.0	deg     January	 29, 2018	3-PASS
+2230   	6.430 GeV       3.600 GeV   	25.0 	deg     January  29, 2018 	3-PASS		Delta =~ 8%, edge acceptance
+2231   	6.430 GeV       3.600 GeV   	25.0 	deg     January  29, 2018 	3-PASS
+
+2259	10.59 GeV	7.234 GeV	16.49	deg	January	 31, 2018	5-PASS
+
+2475	10.59 GeV	5.023 GeV	21.0	deg	February 19, 2018	5-PASS		Dipole Saturation Tests
+2476	10.59 GeV	5.023 GeV	21.0	deg	February 19, 2018	5-PASS		Dipole Saturation Tests
+2477	10.59 GeV	5.023 GeV	21.0	deg	February 19, 2018	5-PASS		Dipole Saturation Tests
+
+2480	10.59 GeV	5.023 GeV	21.0	deg	February 19, 2018	5-PASS		Dipole Saturation Tests
+2481	10.59 GeV	5.023 GeV	21.0	deg	February 20, 2018	5-PASS		Dipole Saturation Tests
+2482	10.59 GeV	5.023 GeV	21.0	deg	February 20, 2018	5-PASS		Dipole Saturation Tests
+2483	10.59 GeV	5.023 GeV	21.0	deg	February 20, 2018	5-PASS		Dipole Saturation Tests
+2484	10.59 GeV	5.023 GeV	21.0	deg	February 20, 2018	5-PASS		Dipole Saturation Tests
+2485	10.59 GeV	5.023 GeV	21.0	deg	February 20, 2018	5-PASS		
+2486	10.59 GeV	5.023 GeV	21.0	deg	February 20, 2018	5-PASS		
+2487	10.59 GeV	5.023 GeV	21.0	deg	February 20, 2018	5-PASS		
+2488	10.59 GeV	5.023 GeV	21.0	deg	February 20, 2018	5-PASS		
+
+
+#------------------
+#---Coincidence----
+#------------------
+
+Run#	Beam Energy	SHMS Momentum	SHMS Angle	HMS Momentum	HMS Angle	Date			PASS		Comments
+1719    2.221 GeV       -1.555 GeV     	30.0 	deg	+1.136 GeV	47.9	deg	December 21, 2018	1-PASS
+1722    2.221 GeV	+2.012 GeV	25.0	deg	-0.936 GeV	65.1	deg	December 21, 2017	1-PASS 
+1851    6.430 GeV       -3.550 GeV	27.6	deg	+3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1852    6.430 GeV       -3.550 GeV	27.6	deg	+3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1853    6.430 GeV       -3.550 GeV	27.6	deg	+3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1854    6.430 GeV       -3.550 GeV	27.6	deg	+3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1855    6.430 GeV       -3.550 GeV	27.6	deg	+3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1856    6.430 GeV       -3.550 GeV	27.6	deg	+3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1857    6.430 GeV       -3.550 GeV	27.6	deg	+3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1858    6.430 GeV       -3.550 GeV	27.6	deg	+3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1859    6.430 GeV       -3.550 GeV	27.6	deg	+3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1860    6.430 GeV       -3.550 GeV	27.6	deg	+3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1861    6.430 GeV       -3.550 GeV	27.6	deg	+3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1862    6.430 GeV       -3.550 GeV	27.6	deg	+3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1863    6.430 GeV       -3.550 GeV	27.6	deg	+3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1864    6.430 GeV       -3.550 GeV	27.6	deg	+3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1865    6.430 GeV       -3.550 GeV	27.6	deg	+3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1866    6.430 GeV       -3.550 GeV	27.6	deg	+3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1867    6.430 GeV       -3.550 GeV	27.6	deg	+3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+
+1868    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1869    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1870    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1871    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1872    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1873    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1874    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1875    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1876    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1877    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1878    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 16, 2018	3-PASS
+1879    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 17, 2018	3-PASS
+1880    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 17, 2018	3-PASS
+1881    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 17, 2018	3-PASS
+1882    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 17, 2018	3-PASS
+1883    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 17, 2018	3-PASS
+
+1893    6.430 GeV	-3.550 GeV	27.5	deg	+3.609 GeV	27.54	deg	January	 17, 2018	3-PASS	    NOT clear about SHMS polarity starting with this RUN. Only know it is 'neg' from std kin. file 
+1894    6.430 GeV	-3.550 GeV	27.5	deg	+3.609 GeV	27.54	deg	January	 17, 2018	3-PASS	    
+1895    6.430 GeV	-3.550 GeV	27.5	deg	+3.609 GeV	27.54	deg	January	 17, 2018	3-PASS	    
+1896    6.430 GeV	-3.550 GeV	27.5	deg	+3.609 GeV	27.54	deg	January	 17, 2018	3-PASS
+1897    6.430 GeV	-3.550 GeV	27.5	deg	+3.609 GeV	27.54	deg	January	 17, 2018	3-PASS
+1898    6.430 GeV	-3.550 GeV	27.5	deg	+3.609 GeV	27.54	deg	January	 17, 2018	3-PASS
+1899    6.430 GeV	-3.550 GeV	27.5	deg	+3.609 GeV	27.54	deg	January	 17, 2018	3-PASS
+1900    6.430 GeV	-3.550 GeV	27.5	deg	+3.609 GeV	27.54	deg	January	 17, 2018	3-PASS
+1901    6.430 GeV	-3.550 GeV	27.5	deg	+3.609 GeV	27.54	deg	January	 17, 2018	3-PASS
+
+1920	6.430 GeV	+2.881 GeV	33.06	deg	-4.284 GeV	22.01	deg	January  18, 2018	3-PASS
+1929	6.430 GeV	+4.314 GeV	22.04	deg	+2.869 GeV	35.00 	deg	January	 18, 2018	3-PASS
+1951	6.430 GeV	+5.328 GeV	15.03	deg	-1.864 GeV	50.00	deg	January	 18, 2018	3-PASS
+1952	6.430 GeV	+5.328 GeV	15.03	deg	-1.864 GeV	50.00	deg	January	 18, 2018	3-PASS
+
+2022	6.430 GeV	+5.045 GeV	17.1	deg	-2.131 GeV	45.1	deg	January	 19, 2018	3-PASS
+2023	6.430 GeV	+5.045 GeV	17.1	deg	-2.131 GeV	45.1	deg	January	 19, 2018	3-PASS
+2024	6.430 GeV	+5.045 GeV	17.1	deg	-2.131 GeV	45.1	deg	January	 19, 2018	3-PASS
+
+2045	6.430 GeV	+5.045 GeV	17.12	deg	-2.131 GeV	45.1	deg	January  20, 2018	3-PASS
+2046	6.430 GeV	+5.045 GeV	17.12	deg	-2.131 GeV	45.1	deg	January  20, 2018	3-PASS
+2047	6.430 GeV	+5.045 GeV	17.12	deg	-2.131 GeV	45.1	deg	January  20, 2018	3-PASS
+2048	6.430 GeV	+5.045 GeV	17.12	deg	-2.131 GeV	45.1	deg	January  20, 2018	3-PASS
+2049	6.430 GeV	+5.045 GeV	17.12	deg	-2.131 GeV	45.1	deg	January  20, 2018	3-PASS
+2050	6.430 GeV	+5.045 GeV	17.12	deg	-2.131 GeV	45.1	deg	January  20, 2018	3-PASS
+2051	6.430 GeV	+5.045 GeV	17.12	deg	-2.131 GeV	45.1	deg	January  20, 2018	3-PASS
+2052	6.430 GeV	+5.045 GeV	17.12	deg	-2.131 GeV	45.1	deg	January  20, 2018	3-PASS
+2053	6.430 GeV	+5.045 GeV	17.12	deg	-2.131 GeV	45.1	deg	January  20, 2018	3-PASS
+2054	6.430 GeV	+5.045 GeV	17.12	deg	-2.131 GeV	45.1	deg	January  20, 2018	3-PASS
+
+2058	6.430 GeV	+5.045 GeV	17.12	deg	-2.131 GeV	45.1	deg	January	 21, 2018	3-PASS
+2059	6.430 GeV	+5.045 GeV	17.12	deg	-2.131 GeV	45.1	deg	January	 21, 2018	3-PASS
+2060	6.430 GeV	+5.045 GeV	17.12	deg	-2.131 GeV	45.1	deg	January	 21, 2018	3-PASS
+2066	6.430 GeV	+5.045 GeV	17.12	deg	-2.131 GeV	45.1	deg	January	 21, 2018	3-PASS
+
+2278	10.59 GeV	+5.836 GeV	21.62	deg	-5.539 GeV	23.18	deg	January	 31, 2018	5-PASS
+2279	10.59 GeV	+5.836 GeV	21.62	deg	-5.539 GeV	23.18	deg	Jan31/Feb1,  2018	5-PASS	
+2280	10.59 GeV	+5.836 GeV	21.62	deg	-5.539 GeV	23.18	deg	February 01, 2018	5-PASS
+2281	10.59 GeV	+5.836 GeV	21.62	deg	-5.539 GeV	23.18	deg	February 01, 2018	5-PASS
+
+2282	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 01, 2018	5-PASS
+2283	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 01, 2018	5-PASS		
+2397	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 12, 2018	5-PASS
+
+2404	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 14, 2018	5-PASS	
+2405	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 14, 2018	5-PASS
+2406	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 14, 2018	5-PASS
+2407	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 14, 2018	5-PASS
+2408	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 14, 2018	5-PASS
+2409	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 14, 2018	5-PASS
+2410	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 14, 2018	5-PASS	
+2411	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 14, 2018	5-PASS		
+2412	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 14, 2018	5-PASS
+2413	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 14, 2018	5-PASS
+2414	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 14, 2018	5-PASS
+2415	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 15, 2018	5-PASS
+2416	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 15, 2018	5-PASS
+2417	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 15, 2018	5-PASS	
+2418	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 15, 2018	5-PASS
+2419	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 15, 2018	5-PASS
+2420	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 16, 2018	5-PASS
+2421	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 16, 2018	5-PASS
+2422	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 16, 2018	5-PASS
+2423	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 16, 2018	5-PASS
+2424	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 16, 2018	5-PASS
+2425	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 16, 2018	5-PASS
+2426	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 16, 2018	5-PASS
+2427	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 16, 2018	5-PASS
+2428	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 16, 2018	5-PASS
+2429	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 17, 2018	5-PASS
+2430	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 17, 2018	5-PASS
+2431	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 17, 2018	5-PASS
+2432	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 17, 2018	5-PASS
+2433	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 17, 2018	5-PASS
+2434	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 17, 2018	5-PASS
+2435	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 17, 2018	5-PASS
+2436	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 17, 2018	5-PASS
+2437	10.59 GeV	+8.377 GeV	12.8	deg	-2.982 GeV	39.28	deg	February 17, 2018	5-PASS
+
+2452	10.59 GeV	+6.895 GeV	17.83	deg	-4.478 GeV	28.505	deg	February 18, 2018	5-PASS
+2453	10.59 GeV	+6.895 GeV	17.83	deg	-4.478 GeV	28.505	deg	February 18, 2018	5-PASS
+2454	10.59 GeV	+6.895 GeV	17.83	deg	-4.478 GeV	28.505	deg	February 18, 2018	5-PASS
+2464	10.59 GeV	+6.895 GeV	17.83	deg	-4.478 GeV	28.505	deg	February 19, 2018	5-PASS
+
+3188	10.59 GeV	+5.836 GeV	21.6	deg	-5.539 GeV	23.19	deg	April	 01, 2018	5-PASS
+3189	10.59 GeV	+5.836 GeV	21.6	deg	-5.539 GeV	23.19	deg	April	 01, 2018	5-PASS
+3190	10.59 GeV	+5.836 GeV	21.6	deg	-5.539 GeV	23.19	deg	April	 01, 2018	5-PASS
+3191	10.59 GeV	+5.836 GeV	21.6	deg	-5.539 GeV	23.19	deg	April	 01, 2018	5-PASS
+
+3243	10.59 GeV	-8.569 GeV	12.2	deg	+2.938 GeV	37.29	deg	April	 03, 2018	5-PASS	      D2-Electro-Disintegration Begins !
+3244	10.59 GeV	-8.569 GeV	12.2	deg	+2.938 GeV	37.29	deg	April	 03, 2018	5-PASS
+3245	10.59 GeV	-8.569 GeV	12.2	deg	+2.938 GeV	37.29	deg	April	 03, 2018	5-PASS
+3246	10.59 GeV	-8.569 GeV	12.2	deg	+2.938 GeV	37.29	deg	April	 03, 2018	5-PASS
+3247	10.59 GeV	-8.569 GeV	12.2	deg	+2.938 GeV	37.29	deg	April	 03, 2018	5-PASS
+3248	10.59 GeV	-8.569 GeV	12.2	deg	+2.938 GeV	37.29	deg	April	 03, 2018	5-PASS
+3249	10.59 GeV	-8.569 GeV	12.2	deg	+2.938 GeV	37.29	deg	April	 03, 2018	5-PASS
+3250	10.59 GeV	-8.569 GeV	12.2	deg	+2.938 GeV	37.29	deg	April	 03, 2018	5-PASS
+3251	10.59 GeV	-8.569 GeV	12.2	deg	+2.938 GeV	37.29	deg	April	 03, 2018	5-PASS
+
+3259	10.59 GeV	-8.569 GeV	12.2	deg	+2.938 GeV	37.29	deg	April	 04, 2018	5-PASS
+3260	10.59 GeV	-8.569 GeV	12.2	deg	+2.938 GeV	37.29	deg	April	 04, 2018	5-PASS
+3261	10.59 GeV	-8.569 GeV	12.2	deg	+2.938 GeV	37.29	deg	April	 04, 2018	5-PASS
+3262	10.59 GeV	-8.569 GeV	12.2	deg	+2.938 GeV	37.29	deg	April	 04, 2018	5-PASS
+3263	10.59 GeV	-8.569 GeV	12.2	deg	+2.938 GeV	37.29	deg	April	 04, 2018	5-PASS
+
+3288	10.59 GeV	-8.569 GeV	12.19	deg	+2.938 GeV	37.34	deg	April	 04, 2018	5-PASS	      First H(e,e')p after taking out un-needed Q3 corr.
+
+3371	10.59 GeV	-8.569 GeV	13.935	deg	+3.480 GeV	33.54	deg	April	 09, 2018	5-PASS	      LH2 Elastic Delta Scan Begins: Delta = 8 %
+3372	10.59 GeV	-8.569 GeV	9.93	deg	+3.480 GeV	33.54	deg	April	 09, 2018	5-PASS	      LH2 Elastic Delta Scan Begins: Delta = -5 %
+3373	10.59 GeV	-8.569 GeV	9.93	deg	+2.31  GeV	42.9	deg	April	 09, 2018	5-PASS	      LH2 Elastic Delta Scan Begins: Delta = -5 %
+3374	10.59 GeV	-8.569 GeV	9.93	deg	+2.31  GeV	42.9	deg	April	 09, 2018	5-PASS	      LH2 Elastic Delta Scan Begins: Delta = -5 %
+
+3375	10.59 GeV	-8.569 GeV	8.5	deg	+1.89  GeV	47.6	deg	April	 09, 2018	5-PASS	      LH2 Elastic Delta Scan Begins: Delta = -8 %
+3376	10.59 GeV	-8.569 GeV	8.5	deg	+1.89  GeV	47.6	deg	April	 09, 2018	5-PASS	      LH2 Elastic Delta Scan Begins: Delta = -8 %
+3377	10.59 GeV	-8.569 GeV	8.5	deg	+1.89  GeV	47.6	deg	April	 09, 2018	5-PASS	      LH2 Elastic Delta Scan Begins: Delta = -8 %
+3378	10.59 GeV	-8.569 GeV	8.5	deg	+1.89  GeV	47.6	deg	April	 09, 2018	5-PASS	      LH2 Elastic Delta Scan Begins: Delta = -8 %
+3379	10.59 GeV	-8.569 GeV	8.5	deg	+1.89  GeV	47.6	deg	April 09/10, 2018	5-PASS	      LH2 Elastic Delta Scan Begins: Delta = -8 %
+

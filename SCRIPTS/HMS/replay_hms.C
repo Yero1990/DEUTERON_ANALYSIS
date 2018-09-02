@@ -46,7 +46,7 @@ void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="delta_sca
 
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
-  gHcDetectorMap->Load("MAPS/HMS/DETEC/STACK/hms_stack.map");
+  gHcDetectorMap->Load("MAPS/HMS/DETEC/STACK/hms_stack_comm18.map");
   gHcParms->Load("PARAM/HMS/GEN/h_fadc_debug.param");
 
   // Add trigger apparatus
