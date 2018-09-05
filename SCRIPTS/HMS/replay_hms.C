@@ -1,4 +1,4 @@
-void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="delta_scan") {
+void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="hscaler") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -46,13 +46,15 @@ void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="delta_sca
 
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
-  gHcDetectorMap->Load("MAPS/HMS/DETEC/STACK/hms_stack_comm18.map");
+  //gHcDetectorMap->Load("MAPS/HMS/DETEC/STACK/hms_stack.map");  //Post Spring-2018 Run Period HMS Map 
+  gHcDetectorMap->Load("MAPS/HMS/DETEC/STACK/hms_stack_comm18.map");  //Dec 2017/Sprin-2018 Run HMS Map (with ROC3, TDC SLot 2 pointing to hDCREF1)
   gHcParms->Load("PARAM/HMS/GEN/h_fadc_debug.param");
 
   // Add trigger apparatus
   THaApparatus* TRG = new THcTrigApp("T", "TRG");
   gHaApps->Add(TRG);
-  // Add trigger detector to trigger apparatus
+  
+// Add trigger detector to trigger apparatus
   THcTrigDet* hms = new THcTrigDet("hms", "HMS Trigger Information");
   TRG->AddDetector(hms);
 

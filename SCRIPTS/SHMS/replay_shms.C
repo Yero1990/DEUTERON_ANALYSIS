@@ -1,4 +1,4 @@
-void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="carbon_elastic") {
+void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="pscaler") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -38,6 +38,11 @@ void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="car
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
   // Load params for SHMS trigger configuration
   gHcParms->Load("PARAM/TRIG/tshms.param");
+  
+  ifstream bcmFile;
+  TString bcmParamFile = Form("UTIL_COMM_ONEPASS/PARAM/SHMS/BCM/bcmcurrent_%d.param",  RunNumber);
+  bcmFile.open(bcmParamFile);
+  
 
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
@@ -47,7 +52,6 @@ void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="car
   // Add trigger apparatus
   THaApparatus* TRG = new THcTrigApp("T", "TRG");
   gHaApps->Add(TRG);
-
   
   // Add trigger detector to trigger apparatus
   THcTrigDet* shms = new THcTrigDet("shms", "SHMS Trigger Information");
@@ -91,8 +95,20 @@ void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="car
   gHaPhysics->Add(kin);
  THcHodoEff* peff = new THcHodoEff("phodeff"," SHMS hodo efficiency","P.hod");
   gHaPhysics->Add(peff);
+  
+  if (bcmFile.is_open())
+    {
+      THcBCMCurrent* pbc = new THcBCMCurrent("P.bcm", "BCM current check");
+      gHaPhysics->Add(pbc);
+      
+      gHcParms->Load(bcmParamFile);
+      
+    }
 
-   
+  else if (!bcmFile.is_open())
+    {
+      cout << "BCM Current Module will NOT be loaded . . ." << endl;
+    }
 
   // Add event handler for prestart event 125.
   THcConfigEvtHandler* ev125 = new THcConfigEvtHandler("HC", "Config Event type 125");
@@ -162,9 +178,21 @@ void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="car
   analyzer->SetSummaryFile(Form("REPORT_OUTPUT/SHMS/PRODUCTION/summary_production_%d_%d.report", RunNumber, MaxEvent));  // optional
   // Start the actual analysis.
   analyzer->Process(run);
+  
+  //Determine which template file to use based on ftype user input
+  TString temp_file;
+  
+  if(strcmp(ftype,"pscaler") == 0)
+    { 
+      temp_file = "pscalers.template";
+    }
+  else
+    {
+      temp_file="pstackana_production.template";
+    }
+
   // Create report file from template
-  TString TemplateFile=Form("UTIL_COMM_ONEPASS/TEMPLATES/SHMS/%s.template",ftype);
-  analyzer->PrintReport(TemplateFile,
+  analyzer->PrintReport("UTIL_COMM_ONEPASS/TEMPLATES/SHMS/"+temp_file,
   			Form("REPORT_OUTPUT/SHMS/PRODUCTION/replay_shms_%s_%d_%d.report",ftype, RunNumber, MaxEvent));  // optional
 
 }

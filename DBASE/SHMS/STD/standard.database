@@ -1,3 +1,9 @@
+0-99999
+g_ctp_parm_filename ="UTIL_COMM_ONEPASS/DBASE/SHMS/GEN/general.param"
+g_ctp_kinematics_filename ="UTIL_COMM_ONEPASS/DBASE/SHMS/STD/standard.kinematics"
+g_ctp_calib_filename ="UTIL_COMM_ONEPASS/DBASE/SHMS/GEN/default_det_calib_files.param"
+
+
 1559-1722
 g_ctp_kinematics_filename ="UTIL_COMM_ONEPASS/DBASE/SHMS/STD/standard.kinematics"
 

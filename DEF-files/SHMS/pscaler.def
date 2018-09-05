@@ -1,4 +1,4 @@
-block H.bcm.*
+block P.bcm.*
 
 begin epics
 
