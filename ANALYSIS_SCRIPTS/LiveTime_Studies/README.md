@@ -70,4 +70,10 @@ On modern TDCs (Caen 1190), when the L1 accept comes in the TDC, it initiates da
 module serves as the 'TDC Start' (synched with the 40 MHz clock). The reference time (copy of the trigger before L1 acc.) will serve as the 'TDC Stop' (synched
 with the high resolution, 10 GHz clock). The 'TDC Start' triggers on the leading edge of the next 40 MHz clock cycle, which means the pulse
 could have landed anywhere in a 25 ns range between the previous and next clock cycle. As a result, a 25 ns jitter arises intrinsically, 
-when one tries to take the difference between the TDC Start and Stop signals. 
+when one tries to take the difference between the TDC Start and Stop signals.  
+
+**NOTE**: The detector signals from the 16 Ch. ribbon-cable are measured better than 25 ns, however, the trigger itself (L1 Acc.) is ONLY measured by the 40 MHz clock,
+and as a result, all signals measured when its time window is open, will also have a 25 ns uncertainty. However, any two signals from the ribbon cable, even though they
+both have this 25 ns uncertainty, they both **move together** in uncertainty, so if one is measured relative to the other, this 25 ns uncertainty will be NO MORE. Also,
+we need a signal that will ALWAYS be present, when the L1 accept comes, and what better than a copy of the trigger itself (known as the reference time). Then all detector
+signals can be measured relative to the reference time, taking out this 25 ns jitter. 
