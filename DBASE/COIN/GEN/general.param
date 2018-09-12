@@ -35,7 +35,6 @@ cminch=2.54
 #include "UTIL_COMM_ONEPASS/PARAM/SHMS/AERO/paero_cuts.param"
 #include "UTIL_COMM_ONEPASS/PARAM/SHMS/CAL/pcal_cuts.param"
 
-
 ; General HMS parameter files
 ; Note: hmsflags.param includes spectrometer offsets and options.
 #include "UTIL_COMM_ONEPASS/PARAM/HMS/GEN/hcana.param"

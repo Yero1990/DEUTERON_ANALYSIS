@@ -34,13 +34,3 @@ cminch=2.54
 #include "UTIL_COMM_ONEPASS/PARAM/SHMS/AERO/paero_cuts.param"
 #include "UTIL_COMM_ONEPASS/PARAM/SHMS/CAL/pcal_cuts.param"
 
-; SHMS default calibration parameter files
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/HGCER/phgcer_calib.param"
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/NGCER/pngcer_calib.param"
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/DC/pdc_calib.param"
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/DC/pdc_tzero_per_wire.param"
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/HODO/hhodo_calib.param"
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/HODO/phodo_TWcalib.param"
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/HODO/phodo_Vpcalib.param"
-#include "UTIL_COMM_ONEPASS/PARAM/HMS/AERO/haero_calib.param"
-#include "UTIL_COMM_ONEPASS/PARAM/HMS/CAL/hcal_calib.param"

@@ -1,8 +1,28 @@
+# COIN
+# Need to set htheta_lab to a NEGATIVE value
+# Need to set ptheta_lab to a POSITIVE value
+# 1H   gtargmass_amu = 1.00794
+# 12C  gtargmass_amu = 12.0107
+# 27Al gtargmass_amu = 26.98
+#
+
+0-1722
+gpbeam = 2.221
+gtargmass_amu=12.0107
+htheta_lab = -15.
+ptheta_lab = 15.
+hpcentral = 3.
+ppcentral = 3.
+hpartmass = 0.00051099
+ppartmass = 0.00051099
+
 1711-1722
 gpbeam = 2.221
+
 1711-1720
 ppartmass = 0.00051099
 hpartmass = 0.938272
+
 1721-1722
 hpartmass = 0.00051099
 ppartmass = 0.938272
@@ -67,3 +87,13 @@ gtargmass_amu = 26.98
 
 1722
 gtargmass_amu = 1.00794
+
+2033
+gpbeam = 2.221
+gtargmass_amu=12.0107
+htheta_lab = -15.
+ptheta_lab = 15.
+hpcentral = 3.
+ppcentral = 3.
+hpartmass = 0.00051099
+ppartmass = 0.00051099

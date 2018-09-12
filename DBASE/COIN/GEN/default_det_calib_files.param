@@ -1,3 +1,14 @@
+0-99999
+; HMS default calibration parameter files
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/CER/hcer_calib.param"
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/DC/hdc_calib.param"
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/DC/hdc_tzero_per_wire.param"
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/HODO/hhodo_calib.param"
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/HODO/hhodo_TWcalib.param"
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/HODO/hhodo_Vpcalib.param"
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/AERO/haero_calib.param"
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/CAL/hcal_calib.param"
+
 ; SHMS default calibration parameter files
 #include "UTIL_COMM_ONEPASS/PARAM/SHMS/HGCER/phgcer_calib.param"
 #include "UTIL_COMM_ONEPASS/PARAM/SHMS/NGCER/pngcer_calib.param"
