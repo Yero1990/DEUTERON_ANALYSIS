@@ -37,24 +37,33 @@ Parameters READ IN:
     {"usefr",                &fgusefr,               kInt,0,1},    ---> flag to use fast raster data in calculating beam positions
 
 
- #Raw BPMs positions (What are the units?)   
- BPMXA_raw = atof(fEpicsHandler->GetString("IPM3H07A.XRAW"))  --> Obtained from EPICS, raw BPM position 
 
- fPedADC[0] = pulseIntRaw
-
- FRYA_rawadc = pulseIntRaw
-
- fFrYA_ADC_zero_offset = fPedADC[0]/ fNPedestalEvents   --> Why is this re-defined. It is already read from the gbeam.param file
-
- #Raster raw ADC in Channels, offset corrected
+ #Raw fast Raster ADC
+ FRXA_rawadc = pulseIntRaw
+ 
+ #Offset Corrected Raster raw ADC (in Channels)
  fXA_ADC =  FRXA_rawadc-fFrXA_ADC_zero_offset  
 
  #Convert raster position from Channels to cm
  fXA_pos = (fXA_ADC/fFrXA_ADCperCM)*(fFrCalMom/fgpbeam);    --> Raster positions in cm
  fYA_pos = (-1.)*(fYA_ADC/fFrYA_ADCperCM)*(fFrCalMom/fgpbeam);  --> Why (-1), I forgot.
-
+ 
+ #Raw BPMs positions    
+ BPMXA_raw = atof(fEpicsHandler->GetString("IPM3H07A.XRAW"))  --> Obtained from EPICS, raw BPM position (in mm)
+ 
  #BPM positions using calib parameters from HARP SCANS (0.1 is to convert from mm to cm)
  BPMXA_pos = 0.1*(fgbpmxa_slope*BPMXA_raw + fgbpmxa_off);
+
+ #Project BPMs to the target (BEAM LEFT, in Harp Coordinate Systems)	
+ if(!checkBPM)  ---> checks if BPMs are non-zero
+ xbeam = BPMXA_pos - (BPMXA_pos - BPMXC_pos)/(fgbpma_zpos - fgbpmc_zpos)*fgbpma_zpos;
+ ybeam = BPMYA_pos - (BPMYA_pos - BPMYC_pos)/(fgbpma_zpos - fgbpmc_zpos)*fgbpma_zpos;
+ xpbeam = (xbeam-BPMXA_pos)/fgbpma_zpos;
+ ypbeam = (ybeam-BPMYA_pos)/fgbpma_zpos;
+ 
+ fXbpm_tar= -xbeam; -->  assumes the BPM calibration gives BPM with +X beam left (HARP coordinate system). fXbpm_tar is in EPICS coord. system
+ fYbpm_tar= ybeam;
+
 
 
 OUTPUT to TTree:

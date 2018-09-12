@@ -44,15 +44,7 @@ The fast raster parameters were updated and now the react variables are centered
 SIMC currently being used (deut_simc), the coordinate system used throughout SIMC is the transport coordinate system. So a traslation
 between the hallc_replay coordinate system and deut_simc is needed.
 
-================
-AUGUST 08 2018:
-================
 
---Coordinate Transformations--
-
-X_simc
-         
-                
                        
               
 
