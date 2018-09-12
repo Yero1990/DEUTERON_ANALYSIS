@@ -22,7 +22,6 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   pathList.push_back("./raw");
   pathList.push_back("./raw/../raw.copiedtotape");
   pathList.push_back("./cache");
-  pathList.push_back("./ROOTfiles");
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
   const char* ROOTFileNamePattern = "ROOTfiles/coin_replay_%s_%d_%d.root";
@@ -41,10 +40,8 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   gHcParms->Load("PARAM/SHMS/GEN/p_fadc_debug.param");
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
-  gHcDetectorMap->Load("MAPS/COIN/DETEC/coin.map");
+  gHcDetectorMap->Load("MAPS/COIN/DETEC/coin_comm18.map");
 
-  THaDecData* decdata= new THaDecData("D","Decoder raw data");
-  gHaApps->Add(decdata);
 
   //=:=:=:=
   // SHMS 

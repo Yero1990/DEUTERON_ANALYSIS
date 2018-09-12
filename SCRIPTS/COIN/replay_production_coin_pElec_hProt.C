@@ -31,8 +31,8 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   gHcParms->AddString("g_ctp_database_filename", "UTIL_COMM_ONEPASS/DBASE/COIN/STD/standard.database");
   gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"),RunNumber);
   gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
-  gHcParms->Load(gHcParms->GetString("g_ctp_calib_filename"), RunNumber);
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
+  gHcParms->Load(gHcParms->GetString("g_ctp_calib_filename"), RunNumber);
   // Load params for COIN trigger configuration
   gHcParms->Load("PARAM/TRIG/tcoin.param");
   // Load fadc debug parameters
@@ -40,10 +40,8 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   gHcParms->Load("PARAM/SHMS/GEN/p_fadc_debug.param");
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
-  gHcDetectorMap->Load("MAPS/COIN/DETEC/coin.map");
-  //
-  THaDecData* decdata= new THaDecData("D"," Decode raw data");
-  gHaApps->Add(decdata);
+  gHcDetectorMap->Load("MAPS/COIN/DETEC/coin_comm18.map");
+
 
   //=:=:=:=
   // SHMS 

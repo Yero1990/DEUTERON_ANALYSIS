@@ -1,4 +1,4 @@
-void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="pscaler") {
+void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="dc_calib") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -172,7 +172,8 @@ void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="psc
   TString DefTreeFile=Form("UTIL_COMM_ONEPASS/DEF-files/SHMS/%s.def",ftype);
   analyzer->SetOdefFile(DefTreeFile);
   // Define cuts file
-  DefTreeFile=Form("UTIL_COMM_ONEPASS/DEF-files/SHMS/%s_cuts.def",ftype);
+  // DefTreeFile=Form("UTIL_COMM_ONEPASS/DEF-files/SHMS/%s_cuts.def",ftype);
+  DefTreeFile="UTIL_COMM_ONEPASS/DEF-files/SHMS/CUTS/pstackana_production_cuts.def";
   analyzer->SetCutFile(DefTreeFile);  // optional
   // File to record accounting information for cuts
   analyzer->SetSummaryFile(Form("REPORT_OUTPUT/SHMS/PRODUCTION/summary_production_%d_%d.report", RunNumber, MaxEvent));  // optional

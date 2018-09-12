@@ -167,7 +167,8 @@ void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="hscaler")
   TString DefTreeFile=Form("UTIL_COMM_ONEPASS/DEF-files/HMS/%s.def",ftype);
   analyzer->SetOdefFile(DefTreeFile);
   // Define cuts file
-  DefTreeFile=Form("UTIL_COMM_ONEPASS/DEF-files/HMS/%s_cuts.def",ftype);
+  //  DefTreeFile=Form("UTIL_COMM_ONEPASS/DEF-files/HMS/%s_cuts.def",ftype);
+  DefTreeFile="UTIL_COMM_ONEPASS/DEF-files/HMS/CUTS/hstackana_production_cuts.def";
   analyzer->SetCutFile(DefTreeFile);  // optional
   //
  analyzer->SetSummaryFile(Form("REPORT_OUTPUT/HMS/PRODUCTION/summary_%s_%d_%d.report", ftype, RunNumber, MaxEvent));    // optional
