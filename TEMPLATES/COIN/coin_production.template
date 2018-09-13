@@ -17,6 +17,16 @@ SHMS Angle : {ptheta_lab}
 SHMS Run Length   : {P.1MHz.scalerTime:%.3f} sec
 HMS  Run Length   : {H.1MHz.scalerTime:%.3f} sec
 
+*****************************
+*SPECTROMETER MISPOINTING*
+*****************************
+
+HMS X Mispointing   : {hMisPointX} cm
+HMS Y Mispointing   : {hMisPointY} cm
+
+SHMS X Mispointing   : {pMisPointX} cm
+SHMS Y Mispointing   : {pMisPointY} cm
+
 ***********
 * Beamline
 ***********
