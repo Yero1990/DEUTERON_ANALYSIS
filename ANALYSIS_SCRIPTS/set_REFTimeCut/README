@@ -1,0 +1,14 @@
+*************************
+*Set Reference Time Cuts
+*************************
+
+The first step in Hall C Data Analysis, (once the data has been determined to
+be OK) is to make sure the reference time cuts are set properly, as one needs
+to make sure the correct reference times associated with the true physics events
+are selected.
+
+setTimeWindows:  Code to set reference time cuts (adc/tdc ref time)
+		 based on the ref. time peak locations for various detectors,
+		 such as hodoscopoes, drift chambers, cherenkovs, calorimeters.
+		 Also set time window cuts on a PMT-basis.
+ 

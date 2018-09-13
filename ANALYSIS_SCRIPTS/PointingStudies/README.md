@@ -13,7 +13,7 @@ Directory Contents
 survey-summary   : document summarizing the HMS/SHMS Xtar/Ytar offsets in mm.
 make_hist_bpm.C  : ROOT script to determine beam position offsets.
 
-<fastRaster>:
+../<fastRaster>:
 Dir. containing plots of the fast Raster histograms in Raw ADC channels. The edge peaks of each of these
 histograms is inputed in the gbeam.param file. Here is a list of the important parameters to check:
 	   gfr_cal_mom  = 2.221  ; represents the beam energy 
