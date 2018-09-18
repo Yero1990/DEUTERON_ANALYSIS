@@ -66,8 +66,6 @@ Run#	Beam Energy	HMS Momentum	HMS Angle	Date			PASS      Comments
 1675  	10.59 GeV	1.500 GeV	59.0 deg	February 24, 2018	5-PASS		Delta = 9% (edge of HMS acceptance)
 1676  	10.59 GeV	1.500 GeV	59.0 deg	February 24, 2018	5-PASS		Delta = 9% (edge of HMS acceptance)
 1677  	10.59 GeV	1.500 GeV	59.0 deg	February 24, 2018	5-PASS		Delta = 9% (edge of HMS acceptance)
-1678  	10.59 GeV	1.500 GeV	59.0 deg	February 24, 2018	5-PASS		Delta = 9% (edge of HMS acceptance)
-1679  	10.59 GeV	1.500 GeV	59.0 deg	February 24, 2018	5-PASS		Delta = 9% (edge of HMS acceptance)
 
 1686  	10.59 GeV	1.500 GeV	59.0 deg	February 25, 2018	5-PASS		Delta = 9% (edge of HMS acceptance)
 1687  	10.59 GeV	1.500 GeV	59.0 deg	February 25, 2018	5-PASS		Delta = 9% (edge of HMS acceptance)
@@ -214,8 +212,6 @@ Run#	Beam Energy	SHMS Momentum	SHMS Angle	Date			PASS		Comments
 2728	10.59 GeV	3.200 GeV	32.985	deg	March 	 02, 2018	5-PASS		Delta = 17% (edge of SHMS acceptance)
 2729	10.59 GeV	3.200 GeV	32.985	deg	March 	 02, 2018	5-PASS		Delta = 17% (edge of SHMS acceptance)
 2730	10.59 GeV	3.200 GeV	32.985	deg	March 	 02, 2018	5-PASS		Delta = 17% (edge of SHMS acceptance)
-2731	10.59 GeV	3.200 GeV	32.985	deg	March 	 02, 2018	5-PASS		Delta = 17% (edge of SHMS acceptance)
-2732	10.59 GeV	3.200 GeV	32.985	deg	March 	 02, 2018	5-PASS		Delta = 17% (edge of SHMS acceptance)
 
 2737	10.59 GeV	3.200 GeV	32.985	deg	March 	 02, 2018	5-PASS		Delta = 17% (edge of SHMS acceptance)
 2738	10.59 GeV	3.200 GeV	32.985	deg	March 	 02, 2018	5-PASS		Delta = 17% (edge of SHMS acceptance)
@@ -328,7 +324,7 @@ Run#	Beam Energy	SHMS Momentum	SHMS Angle	HMS Momentum	HMS Angle	Date			PASS		Co
 1901    6.430 GeV	-3.550 GeV	27.5	deg	+3.609 GeV	27.54	deg	January	 17, 2018	3-PASS
 
 1920	6.430 GeV	+2.881 GeV	33.06	deg	-4.284 GeV	22.01	deg	January  18, 2018	3-PASS
-1929	6.430 GeV	+4.314 GeV	22.04	deg	+2.869 GeV	35.00 	deg	January	 18, 2018	3-PASS
+1929	6.430 GeV	+4.314 GeV	22.04	deg	-2.869 GeV	35.00 	deg	January	 18, 2018	3-PASS
 1951	6.430 GeV	+5.328 GeV	15.03	deg	-1.864 GeV	50.00	deg	January	 18, 2018	3-PASS
 1952	6.430 GeV	+5.328 GeV	15.03	deg	-1.864 GeV	50.00	deg	January	 18, 2018	3-PASS
 
