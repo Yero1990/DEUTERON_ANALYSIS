@@ -1,6 +1,6 @@
 #Example to run ONE-PASS Replay                                                                                                                                                                                 
                                                                                                                                                                                                                 
-python3 hcswif.py --mode replay --filelist filelist --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/HMS/replay_hms.C --disk 1000000000 --spectrometer HMS_ALL --project c-comm2017 --name hallc_1pass_deltaScan                                                                                           
+python3 hcswif.py --mode replay --filelist filelist --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/HMS/replay_hms.C --disk 1000000000 --spectrometer HMS_ALL --project c-comm2017 --name heep_hms_scaler_replay                                                                                           
       
 python3 -m json.tool hallc_onepass.json                                                                                                                                                                           
 swif import -file hallc_onepass.json                                                                                                                                                                              

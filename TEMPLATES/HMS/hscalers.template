@@ -3,9 +3,22 @@ Run # : {gen_run_number}
 **************************
 * General Run Information
 **************************
+Beam energy : {gpbeam}
+Target mass (amu) : {gtargmass_amu} 
+
+HMS Particle Mass : {hpartmass}
+HMS P Central : {hpcentral}
+HMS Angle : {htheta_lab}
 
 1 MhZ Pulses : {H.1MHz.scaler}
 Run Length   : {H.1MHz.scalerTime:%.3f} sec
+
+*****************************
+*SPECTROMETER MISPOINTING*
+*****************************
+
+HMS X Mispointing   : {hMisPointX} cm
+HMS Y Mispointing   : {hMisPointY} cm
 
 ***********
 * Beamline

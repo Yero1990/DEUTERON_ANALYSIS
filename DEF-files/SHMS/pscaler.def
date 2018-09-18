@@ -1,4 +1,5 @@
 block P.bcm.*
+block P.rb.*       
 
 begin epics
 

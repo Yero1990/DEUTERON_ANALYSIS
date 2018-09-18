@@ -1,4 +1,4 @@
-void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="coin_hElec_pProt") {
+void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="coin_scaler") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -225,6 +225,8 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   analyzer->SetEvent(event);
   // Set EPICS event type
   analyzer->SetEpicsEvtType(180);
+  analyzer->SetEpicsEvtType(181);
+
   // Define crate map
   analyzer->SetCrateMapFileName("MAPS/db_cratemap.dat");
   // Define output ROOT file
@@ -236,13 +238,16 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
     DefTreeFile="UTIL_COMM_ONEPASS/DEF-files/COIN/CUTS/coin_production_cuts.def";
     analyzer->SetCutFile(DefTreeFile);  // optional
   // File to record accounting information for cuts
-  analyzer->SetSummaryFile(Form("REPORT_OUTPUT/COIN/PRODUCTION/summary_production_%d_%d.report", RunNumber, MaxEvent));  // optional
+    analyzer->SetSummaryFile(Form("REPORT_OUTPUT/COIN/PRODUCTION/summary_production_%s_%d_%d.report", ftype, RunNumber, MaxEvent));  // optional
   // Start the actual analysis.
   analyzer->Process(run);
   // Create report file from template
-   ftype="coin_production";
-  TString TemplateFile=Form("UTIL_COMM_ONEPASS/TEMPLATES/COIN/%s.template",ftype);
-   analyzer->PrintReport(TemplateFile,
+  
+  TString TemplateFile=Form("UTIL_COMM_ONEPASS/TEMPLATES/COIN/coin_production.template");
+  
+
+
+  analyzer->PrintReport(TemplateFile,
    			 Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_%s_%d_%d.report",ftype, RunNumber, MaxEvent));  
 
 }

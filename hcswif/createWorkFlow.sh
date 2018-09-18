@@ -1,6 +1,6 @@
 #! /bin/bash
 
-workflow="hallc_epicsCheck"
+workflow="hallc"
 
 #Various optional flags to add to hcswif workflow
 mode=" --mode replay "

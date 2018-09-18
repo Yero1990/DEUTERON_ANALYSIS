@@ -1,4 +1,4 @@
-void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="dc_calib") {
+void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="pscaler") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -164,6 +164,8 @@ void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="dc_
   analyzer->SetEvent(event);
   // Set EPICS event type
   analyzer->SetEpicsEvtType(180);
+  analyzer->SetEpicsEvtType(181);
+    
   // Define crate map
   analyzer->SetCrateMapFileName("MAPS/db_cratemap.dat");
   // Define output ROOT file
