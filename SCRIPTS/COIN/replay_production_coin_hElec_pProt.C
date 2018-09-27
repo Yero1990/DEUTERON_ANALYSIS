@@ -1,4 +1,4 @@
-void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="coin_scaler") {
+void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="scaler") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -224,7 +224,7 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
 
   analyzer->SetEvent(event);
   // Set EPICS event type
-  analyzer->SetEpicsEvtType(180);
+  //analyzer->SetEpicsEvtType(180);
   analyzer->SetEpicsEvtType(181);
 
   // Define crate map

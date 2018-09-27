@@ -1,4 +1,4 @@
-void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="coin_scaler") {
+void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="dc_calib") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -41,8 +41,11 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
   gHcDetectorMap->Load("MAPS/COIN/DETEC/coin_comm18.map");
+  //gHcDetectorMap->Load("MAPS/COIN/DETEC/coin.map");  //Fall 2018
 
-
+ //Add Module to explicitly plot all TDC hits from the trigger signals
+  THaDecData* decdata= new THaDecData("D","Decoder raw data");
+  gHaApps->Add(decdata);
   //=:=:=:=
   // SHMS 
   //=:=:=:=
@@ -181,6 +184,9 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   // Add trigger apparatus
   THaApparatus* TRG = new THcTrigApp("T", "TRG");
   gHaApps->Add(TRG);
+
+ 
+
   // Add trigger detector to trigger apparatus
   THcTrigDet* coin = new THcTrigDet("coin", "Coincidence Trigger Information");
   // Suppress missing reference time warnings for these event types
@@ -228,7 +234,10 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   analyzer->SetEvent(event);
   // Set EPICS event type
   analyzer->SetEpicsEvtType(180);
-  analyzer->SetEpicsEvtType(181);
+  //analyzer->AddEpicsEvtType(180);
+
+  //analyzer->SetEpicsEvtType(181);
+  //analyzer->AddEpicsEvtType(181);
 
   // Define crate map
   analyzer->SetCrateMapFileName("MAPS/db_cratemap.dat");

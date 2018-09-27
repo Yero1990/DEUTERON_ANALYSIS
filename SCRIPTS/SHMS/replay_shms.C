@@ -1,4 +1,4 @@
-void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="pscaler") {
+void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="hod_calib") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -164,7 +164,7 @@ void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="psc
   analyzer->SetEvent(event);
   // Set EPICS event type
   analyzer->SetEpicsEvtType(180);
-  analyzer->SetEpicsEvtType(181);
+  //analyzer->SetEpicsEvtType(181);
     
   // Define crate map
   analyzer->SetCrateMapFileName("MAPS/db_cratemap.dat");
@@ -185,7 +185,7 @@ void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="psc
   //Determine which template file to use based on ftype user input
   TString temp_file;
   
-  if(strcmp(ftype,"pscaler") == 0)
+  if(strcmp(ftype,"scaler") == 0)
     { 
       temp_file = "pscalers.template";
     }

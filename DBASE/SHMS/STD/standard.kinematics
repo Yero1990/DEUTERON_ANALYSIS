@@ -1796,9 +1796,19 @@ ppartmass = 0.00051099
 ptheta_lab = 8.915
 ppcentral = 6.2
 
-3606-9999
+3606
 gpbeam = 10.59
 gtargmass_amu = 12.000 
 ppartmass = 0.00051099
 ptheta_lab = 16.000
 ppcentral = 2.53*0.985
+
+
+
+#-----Fall 2018 RUN PERIOD
+4698
+gpbeam = 10.59
+gtargmass_amu = 12.000 
+ppartmass = 0.00051099
+ptheta_lab = 18.00
+ppcentral = 2.53

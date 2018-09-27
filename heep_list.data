@@ -313,7 +313,6 @@ Run#	Beam Energy	SHMS Momentum	SHMS Angle	HMS Momentum	HMS Angle	Date			PASS		Co
 1882    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 17, 2018	3-PASS
 1883    6.430 GeV       +3.550 GeV	27.6	deg	-3.609 GeV	27.5	deg	January	 17, 2018	3-PASS
 
-1893    6.430 GeV	-3.550 GeV	27.5	deg	+3.609 GeV	27.54	deg	January	 17, 2018	3-PASS	    NOT clear about SHMS polarity starting with this RUN. Only know it is 'neg' from std kin. file 
 1894    6.430 GeV	-3.550 GeV	27.5	deg	+3.609 GeV	27.54	deg	January	 17, 2018	3-PASS	    
 1895    6.430 GeV	-3.550 GeV	27.5	deg	+3.609 GeV	27.54	deg	January	 17, 2018	3-PASS	    
 1896    6.430 GeV	-3.550 GeV	27.5	deg	+3.609 GeV	27.54	deg	January	 17, 2018	3-PASS

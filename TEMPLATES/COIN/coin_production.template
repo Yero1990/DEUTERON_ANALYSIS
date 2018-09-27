@@ -21,11 +21,11 @@ HMS  Run Length   : {H.1MHz.scalerTime:%.3f} sec
 *SPECTROMETER MISPOINTING*
 *****************************
 
-HMS X Mispointing   : {hMisPointX} cm
-HMS Y Mispointing   : {hMisPointY} cm
+HMS X Mispointing   : {hmispointing_x} cm
+HMS Y Mispointing   : {hmispointing_y} cm
 
-SHMS X Mispointing   : {pMisPointX} cm
-SHMS Y Mispointing   : {pMisPointY} cm
+SHMS X Mispointing   : {pmispointing_x} cm
+SHMS Y Mispointing   : {pmispointing_y} cm
 
 ***********
 * Beamline

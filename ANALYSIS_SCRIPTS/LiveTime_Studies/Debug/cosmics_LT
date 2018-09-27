@@ -1,0 +1,73 @@
+Cosmis Run Live Time Studies
+
+
+Run: 4661
+PS1 (SHMS 3/4) = 0, PS4 (HMS 3/4) = 0, rest = -1
+Buffer Level = 10
+
+Coin ROC2 pTRIG1 passed: 119030
+SHMS_pTRIG1 :   119165   [ 0.002 kHz ]
+ROC2 Pre-Scaled Ps1 ROC2 Computer Live Time : 99.8867 %
+
+
+Coin ROC2 pTRIG4 passed: 165911
+SHMS_pTRIG4 :   165988   [ 0.003 kHz ]
+ROC2 Pre-Scaled Ps4 ROC2 Computer Live Time : 99.9536 %
+
+ROC2 pTRIG1 TDC Multiplicity:
+1 ----> 118890 L1 Acc.  (L1 Acc. that had 1 TDC hit associated with it)  
+2 ----> 139 L1 Acc. (L1 Acc. that had 2 TDC hits associated with it)    - 139 scaler counts
+3 ----> 1 L1 Acc. (L1 Acc. that had 3 TDC hits associated with it)      - 2x(1) scaler counts
+
+Corrected Computer Live Time = 119030 /  (119165 - 141) = 100.005
+
+
+ROC2 pTRIG4 TDC Multiplicity:
+1 ----> 165836 L1 Acc.  (L1 Acc. that had 1 TDC hit associated with it)   
+2 ----> 71 L1 Acc. (L1 Acc. that had 2 TDC hits associated with it)        -71 scaler counts
+3 ----> 3 L1 Acc. (L1 Acc. that had 3 TDC hits associated with it)         -2x(3) scaler counts
+4 ----> 1 L1 Acc. (L1 Acc. that had 4 TDC hits associated with it)          - 3 scaler counts
+
+Corrected Computer Live Time = 165911 / 165908 = 100.001
+
+Run: 4666 
+PS1 (SHMS 3/4) = 0, rest = -1
+Buffer Level = 1
+
+Coin ROC2 pTRIG1 passed: 94004
+SHMS_pTRIG1_scalers :  	94183 	[ 0.002 kHz ]
+ROC2 Pre-Scaled Ps1 ROC2 Computer Live Time : 99.8099 %
+
+ROC2 pTRIG1 TDC Multiplicity:
+1 ----> 93905 L1 Acc.  (L1 Acc. that had 1 TDC hit associated with it)
+2 ----> 99 L1 Acc. (L1 Acc. that had 2 TDC hits associated with it)
+How many of these 2 TDC Hits are associated with the L1 Acc? 
+The second hit is actually never counted in the TDC Window, so
+it should be taken out in the scaler counts. 
+
+
+-----  1st hit   2nd hit     ------ L1 Acc.   (Single L1 Acc with  Mult of 2.)
+     |  | |     | |         |
+     |  |_|     |_|         |
+     |______________________|
+     <------- ~ 1 us ------->
+
+Corrected Computer Live Time = 94004 / (94183 - 99) = 94004 / 94084 = 99.915 %
+
+----------------------------------------------------------------
+
+Run: 4670
+PS1 (SHMS 3/4) = 0, rest = -1
+Buffer Level = 10
+
+Coin ROC2 pTRIG1 passed: 98559
+SHMS_pTRIG1_scalers :  	98668	[ 0.002 kHz ]
+ROC2 Pre-Scaled Ps1 ROC2 Computer Live Time : 99.8895 %
+
+ROC2 pTRIG1 TDC Multiplicity:
+1 ----> 98446 L1 Acc.  (L1 Acc. that had 1 TDC hit associated with it)
+2 ----> 113 L1 Acc. (L1 Acc. that had 2 TDC hits associated with it)
+
+Corrected Computer Live Time = 98559 / (98668 - 113) = 98559 / 98555 = 100.0040 %  ??????
+ 
+

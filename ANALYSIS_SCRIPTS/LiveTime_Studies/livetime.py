@@ -77,13 +77,14 @@ def main():
     print ('Entering main() . . . ')
 
 
+    print (dt_nonextended(0.002, 211))
 
     #write csv file with live time /trigger information
     #getLiveTimes()
 
     #Read .csv file containing magnet currents data     
     #data = np.genfromtxt('hms_livetime.csv', delimiter=',', names=True)       
-    
+    '''
     #Read .csv file into dataframe
     df1 = pd.read_csv('hms_livetime_aug14.csv')
     #print(df1)
@@ -284,7 +285,7 @@ def main():
     #plt.show()
 
 
-'''   
+  
 
     #-------------------------BUFFER LEVEL = 2---------------------------
 

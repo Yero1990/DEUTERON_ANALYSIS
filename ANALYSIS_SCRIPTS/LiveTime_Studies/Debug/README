@@ -1,0 +1,35 @@
+*********************
+** DEBUG Live Time***
+*********************
+
+* This directory has relevant code to debug the livetime measured by the report 
+  files.
+
+-------------------------
+---September 25, 2018----
+-------------------------
+
+During a coin. cosmic run, 4661, it was observed that the livetime measured
+from HMS/SHMS singles was smaller than expected, as the rates were so low (2 Hz)
+it was unlikely that more than a few events would be blocked by the BUSY.
+
+It was found, by looking at the pTRIG1/pTRIG4 tdc Times (will all hits included),
+that the there was more often than NOT, a second hit per event on the TDC Time window.
+
+At these rates, every time a L1 Acc. comes, each TDC Channel looks back in time (~ 1 us) to look for any
+signal that migh have arrived. If we look at pTRIG1 TDC Time itself, then ideally, we should find 1 hit per event.
+This hit corresponding to the L1 Acc. However, over the course of many events, we find two distributions. One, corresponding
+to the "good hits" (first hit in the lookback window), and the second peak corresponding to the second hit, which its
+source is unknown at the moment. If it were to be background, it would have to be evenly distributed across the TDC window,
+and the rates would have to be much higher.  
+
+TDC Channel:
+
+       1st hit    2nd hit
+       (pTRIG)    (unknown)
+------ _   _      _   _      ------ L1 Accept
+     |  | |        | |       |         |
+     |  |_|        |_|       |         |
+     |_______________________|         | comes
+     <----------------------->         v
+       1 us look back window

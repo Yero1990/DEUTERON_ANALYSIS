@@ -1,4 +1,4 @@
-void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="hscaler") {
+void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="scaler") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -159,7 +159,7 @@ void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="hscaler")
  analyzer->SetEvent(event);
  // Set EPICS event type
  analyzer->SetEpicsEvtType(180);
- analyzer->SetEpicsEvtType(181);
+
 
  // Define crate map
  analyzer->SetCrateMapFileName("MAPS/db_cratemap.dat");
@@ -180,7 +180,7 @@ void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="hscaler")
  //Determine which template file to use based on ftype user input
  TString temp_file;
  
- if(strcmp(ftype,"hscaler") == 0)
+ if(strcmp(ftype,"scaler") == 0)
    { 
      temp_file = "hscalers.template";
    }
