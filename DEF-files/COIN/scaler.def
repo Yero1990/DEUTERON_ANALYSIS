@@ -1,11 +1,9 @@
-block H.bcm.*
-block P.bcm.*
-block H.rb.*       
-block P.rb.*  
-block T.coin.*
-block D.*
-block P.hod.*
-block H.hod.*
+#block H.bcm.*
+#block P.bcm.*
+#block H.rb.*       
+#block P.rb.*  
+#block D.*
+
 
 begin epics
 
