@@ -27,6 +27,18 @@ HMS Y Mispointing   : {hmispointing_y} cm
 SHMS X Mispointing   : {pmispointing_x} cm
 SHMS Y Mispointing   : {pmispointing_y} cm
 
+
+************************************
+*Calibrated Beam Positions @ Target 
+************************************
+
+HMS X BPM   : {h_XBPM_AVG} cm
+HMS Y BPM   : {h_YBPM_AVG} cm
+
+SHMS X BPM   : {p_XBPM_AVG} cm
+SHMS Y BPM   : {p_YBPM_AVG} cm
+
+
 ***********
 * Beamline
 ***********

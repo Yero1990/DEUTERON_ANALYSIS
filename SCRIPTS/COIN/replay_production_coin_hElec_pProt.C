@@ -274,6 +274,6 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
 
 
   analyzer->PrintReport(TemplateFile,
-   			 Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_%s_%d_%d.report",ftype, RunNumber, MaxEvent));  
+   			 Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_%s_%d_%d.report",ftype, RunNumber, MaxEvent));  
 
 }

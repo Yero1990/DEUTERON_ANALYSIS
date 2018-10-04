@@ -13,33 +13,46 @@ void checkEpics(string exp)
   gROOT->SetBatch(kTRUE);
 
   //Mean Variables to determine Avg. Magnet Current
-  Double_t hQ1set_sum;
-  Double_t hQ2set_sum;
-  Double_t hQ3set_sum;
-  Double_t hDset_sum;
-  Double_t hNMRset_sum;
+  Double_t hQ1set_sum, hQ1set_avg;
+  Double_t hQ2set_sum, hQ2set_avg;
+  Double_t hQ3set_sum, hQ3set_avg;
+  Double_t hDset_sum,  hDset_avg;
+  Double_t hNMRset_sum, hNMRset_avg;
       
-  Double_t hQ1true_sum;
-  Double_t hQ2true_sum;
-  Double_t hQ3true_sum;
-  Double_t hDtrue_sum;
-  Double_t hNMRtrue_sum;
+  Double_t hQ1true_sum,  hQ1true_avg;
+  Double_t hQ2true_sum,  hQ2true_avg;
+  Double_t hQ3true_sum,  hQ3true_avg;
+  Double_t hDtrue_sum,   hDtrue_avg;
+  Double_t hNMRtrue_sum, hNMRtrue_avg;
   
-  Double_t sQ1set_sum;
-  Double_t sQ2set_sum;
-  Double_t sQ3set_sum;
-  Double_t sDset_sum;
-  Double_t sHBset_sum;
+  Double_t sQ1set_sum, sQ1set_avg;
+  Double_t sQ2set_sum, sQ2set_avg;
+  Double_t sQ3set_sum, sQ3set_avg;
+  Double_t sDset_sum,  sDset_avg;
+  Double_t sHBset_sum, sHBset_avg;
   
-  Double_t sQ1true_sum;
-  Double_t sQ2true_sum;
-  Double_t sQ3true_sum;
-  Double_t sDtrue_sum;
-  Double_t sHBtrue_sum;
+  Double_t sQ1true_sum, sQ1true_avg;
+  Double_t sQ2true_sum, sQ2true_avg;
+  Double_t sQ3true_sum, sQ3true_avg;
+  Double_t sDtrue_sum,  sDtrue_avg;
+  Double_t sHBtrue_sum, sHBtrue_avg;
 
-  
+   
+  //Variables to determine Avg. EPICS variables
+  Double_t hColl_sum, hColl_avg;
+  Double_t sColl_sum, sColl_avg;
 
-  Int_t hentries, sentries;  //count number of good entries
+  TString hColl_name;
+  TString sColl_name;
+
+  Double_t TFE_sum, TFE_avg;
+  Double_t FRX_sum, FRX_avg;
+  Double_t FRY_sum, FRY_avg;
+
+  Double_t targ_sum, targ_avg;
+  TString targ_name;
+
+  Int_t hentries, sentries, good_evt;  //count number of good entries
   
   //Define Magnet Current Leafs to be read from TTree
   
@@ -60,21 +73,37 @@ void checkEpics(string exp)
   Double_t sHB_true, sQ1_true, sQ2_true, sQ3_true, sD_true;
 
   //Additional EPICS LEAF names and variables;
+  TString nTFE;  
+
+  TString nFRX;  
+  TString nFRY;   
+
+  TString nhColl; 
+  TString nsColl;   
+  
+  TString ntarg;    
+
+
   Double_t TFE;   //Hall C Tiefenback Energy
 
   Double_t FRX;    //Fast Raster X (mm)
   Double_t FRY;    //Fast Raster Y (mm)
 
+  //all_out --> collimator ladder is completely out of the way, HOME--->Used to calibrate collimator positions (set to 0.0),  Shift_sieve--->shifted hole in sieve slit
   Double_t hColl;   //HMS Collimator  (-497...=all_out, -317...=Sieve, -143...=Pion, 0=Home, 488...=Large)  1e7 -->should divide by 1e5 to get 3 digits for easy comparison
   Double_t sColl;   //SHMS Collimator (-315...=Shift_sieve, -114...=Cent_Sieve, 0=Home, 860...=Coll.)      1e7 -->should divide by 1e5 to get 3 digits for easy comparison
   
   Double_t targ;    //Target Encoder Position
 
-  Double_t bpmX;    //Beam Position at Target X
-  Double_t bpmY;    //Beam Position at Target Y
+
  
   /* 
      Target encoder values taken snapshot
+                                                              Last Dec. 2017 Run
+//NOTE: December 2017, (Loop 1--->10 cm H2,  Loop 2---> He4)        HMS: 1277, SHMS: 1705,  COIN: 1722
+//      Spring 2018, (Loop 1--->10 cm He4,   Loop 2--->H2)
+
+
 Index----Encoder--------Name--------------Divide Encoder by 1e4
      
 0       33360185     Loop 1 4  cm          3336
@@ -105,6 +134,8 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
   */
 
 
+  //LEAF NAMES: Magnet Currents
+
   nhQ1_set = "ecQ1_Set_Current";
   nhQ2_set = "ecQ2_Set_Current";
   nhQ3_set = "ecQ3_Set_Current";
@@ -129,6 +160,20 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
   nsQ3_true = "ecSQ3_I_True";
   nsD_true = "ecSDI_I_True";
 
+
+  //Other Important Leafs
+  nTFE = "HALLC_p";       //Beam Energy
+
+  nFRX = "EHCFR_LIXWidth";     //Fast Raster - X (mm)
+  nFRY = "EHCFR_LIYWidth";     //Fast Raster- Y (mm)
+
+  nhColl = "HCCO_HMS_POSRB";       //HMS collimator
+  nsColl = "HCCO_SHMS_POSRB";      //SHMS collimator
+  
+  ntarg = "hcBDSPOS.VAL";        //Target Encoder
+
+  
+
   //Create File STreams to store CSV data
   ofstream mycsv;
 
@@ -139,19 +184,19 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
   if(strcmp(exp.c_str(),"hms")==0)
     {
       //Write Header to CSV File
-      mycsv << "Run,Q1_set,Q2_set,Q3_set,D_set,NMR_set" << endl;
+      mycsv << "Run,Q1_set,Q2_set,Q3_set,D_set,NMR_set,hColl,target,raster,TFE" << endl;
     }
     
   if(strcmp(exp.c_str(),"shms")==0)
     {
       //Write Header to CSV File
-      mycsv << "Run,HB_set,Q1_set,Q2_set,Q3_set,D_set" << endl;
+      mycsv << "Run,HB_set,Q1_set,Q2_set,Q3_set,D_set,sColl,target,raster,TFE" << endl;
     }
 
   if(strcmp(exp.c_str(),"coin")==0)
     {
       //Write Header to CSV File
-      mycsv << "Run,hQ1_set,hQ2_set,hQ3_set,hD_set,NMR_set,sHB_set,sQ1_set,sQ2_set,sQ3_set,sD_set" << endl;
+      mycsv << "Run,hQ1_set,hQ2_set,hQ3_set,hD_set,NMR_set,sHB_set,sQ1_set,sQ2_set,sQ3_set,sD_set,hColl,sColl,target,raster,TFE" << endl;
     }
 
   //Read Run List
@@ -191,14 +236,30 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
       sDtrue_sum = 0.;
       sHBtrue_sum = 0.;
 
+
+      hColl_sum = 0;
+      sColl_sum = 0;
+      
+      hColl_avg = 0;
+      sColl_avg = 0;
+	      
+
+      TFE_sum = 0;
+      FRX_sum = 0;
+      FRY_sum = 0;
+      
+      targ_sum = 0;
+      
+      
       hentries = 0;
       sentries = 0;
+      good_evt = 0;
 
       TString filename = Form("../../../ROOTfiles/%s_replay_scaler_%d_-1.root", exp.c_str(), irun);
       TFile *data_file = new TFile(filename, "READ"); 
       TTree *T = (TTree*)data_file->Get("T");
       
-      //Set Branch Address for reference times
+      //Set Branch Address for Magnet Configuration
       //HMS SET
       T->SetBranchAddress(nhQ1_set, &hQ1_set);
       T->SetBranchAddress(nhQ2_set, &hQ2_set);
@@ -227,6 +288,15 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
       T->SetBranchAddress(nsD_true, &sD_true);
       T->SetBranchAddress(nsHB_true, &sHB_true);
         
+      //Set Branch Address for Other Leafs
+      T->SetBranchAddress(nTFE, &TFE);
+      T->SetBranchAddress(nFRX, &FRX);
+      T->SetBranchAddress(nFRY, &FRY);
+      T->SetBranchAddress(nhColl, &hColl);
+      T->SetBranchAddress(nsColl, &sColl);
+      T->SetBranchAddress(ntarg, &targ);
+
+
       
       Long64_t nentries = T->GetEntries();
       	 
@@ -240,7 +310,7 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
 	  T->GetEntry(i);  
 	  
 	  hgoodEPICS = kFALSE;
-	  hgoodEPICS = abs(hQ1_set)<10000&&abs(hQ2_set)<10000&&abs(hQ3_set)<10000&&abs(hD_set)<10000&&abs(NMR_set)<10000;
+	  hgoodEPICS = abs(hQ1_set)<10000&&abs(hQ2_set)<10000&&abs(hQ3_set)<10000&&abs(hD_set)<10000&&abs(NMR_set)<10000&&hQ1_set!=0&&hQ2_set!=0&&hQ3_set!=0&&hD_set!=0;
 	  if( hgoodEPICS )
 	{
 	  //Sum over all epics reads for each magent current settings/readback values
@@ -255,13 +325,16 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
 	  hQ3true_sum = hQ3true_sum + hQ3_true;
 	  hDtrue_sum = hDtrue_sum + hD_true;
 	  hNMRtrue_sum = hNMRtrue_sum + NMR_true;
-	  
+
+	  //HMS Collimator Setting
+	  hColl_sum = hColl_sum + hColl;
+
 	  hentries++;
 	  
-	    }
+	}
 
 	  sgoodEPICS = kFALSE;
-	  sgoodEPICS = abs(sQ1_set)<10000&&abs(sQ2_set)<10000&&abs(sQ3_set)<10000&&abs(sHB_set)<10000&&abs(sD_set)<10000;
+	  sgoodEPICS = abs(sQ1_set)<10000&&abs(sQ2_set)<10000&&abs(sQ3_set)<10000&&abs(sHB_set)<10000&&abs(sD_set)<10000&&sQ1_set!=0&&sQ2_set!=0&&sQ3_set!=0&&sD_set!=0;
 	  if(sgoodEPICS )
 	    {
         
@@ -276,40 +349,142 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
 	      sQ3true_sum = sQ3true_sum + sQ3_true;
 	      sDtrue_sum = sDtrue_sum + sD_true;
 	      sHBtrue_sum = sHBtrue_sum +  sHB_true;
-	    
+	    	 
+	      //SHMS Collimator Setting
+	      sColl_sum = sColl_sum + sColl;
+	      
 	      sentries++;
 	     
 
 	    }
+
+
+	  if(FRX>=0 && FRY>=0 && TFE>0)  
+	    {
+	      //Take Average of All OTHER  EPICS VARIABLES
+	      targ_sum = targ_sum + targ;
+	      
+	      TFE_sum = TFE_sum + TFE;	      
+	      
+	      FRX_sum = FRX_sum + FRX;
+	      FRY_sum = FRY_sum + FRY;
+
+	      good_evt++;
+
+	    }
 	  
 	} //end entry loop
+      
+      //Determine the averages
+      hQ1set_avg = float(hQ1set_sum/hentries);
+      hQ2set_avg = float(hQ2set_sum/hentries);
+      hQ3set_avg = float(hQ3set_sum/hentries);
+      hDset_avg = float(hDset_sum/hentries);
+      hNMRset_avg = float(hNMRset_sum/hentries);
 
- 
+      sHBset_avg = float(sHBset_sum/sentries);
+      sQ1set_avg = float(sQ1set_sum/sentries);
+      sQ2set_avg = float(sQ2set_sum/sentries);
+      sQ3set_avg = float(sQ3set_sum/sentries);
+      sDset_avg = float(sDset_sum/sentries);
+      
+      hColl_avg = float(hColl_sum/hentries)/1.e5;    
+      sColl_avg = float(sColl_sum/sentries)/1.e5;
+
+      targ_avg = float(targ_sum/good_evt)/1.e4;
+
+      TFE_avg = float(TFE_sum/good_evt)/1000.;
+      FRX_avg = int(FRX_sum/good_evt);
+      FRY_avg = int(FRY_sum/good_evt);
+      
+      
+
+      //Define Collimator Naming Based on Encoder Position
+      if(hColl_avg>300.&&hColl_avg<700) {hColl_name = "Large_Coll";}
+      else if (hColl_avg>-700.&&hColl_avg<100.) {hColl_name = "Home";}
+      else if (hColl_avg>-1800.&&hColl_avg<-1000.) {hColl_name = "Pion";}
+      else if (hColl_avg>-3800.&&hColl_avg<-2700) {hColl_name = "Sieve";}
+      else if (hColl_avg>-5300.&&hColl_avg<-4300) {hColl_name = "ALL_OUT";}
+
+
+      
+      if(sColl_avg>300.&&sColl_avg<1200.) {sColl_name = "Coll";}
+      else if (sColl_avg>-700.&&sColl_avg<100.) {sColl_name = "Home";}
+      else if (sColl_avg>-1500.&&sColl_avg<-900.) {sColl_name = "Centered_Sieve";}
+      else if (sColl_avg>-3800.&&sColl_avg<-2700) {sColl_name = "Shifted_Sieve";}
+
+      //Define Target Type Based on Encoder Position
+      
+      //Only Dec. 2017 Runs
+      if((exp=="hms"&&irun<=1277) || (exp=="shms"&&irun<=1705) || (exp=="coin"&&irun<=1722))
+	{
+	  if (targ_avg>2600.&&targ_avg<3100.){targ_name = "LH2";}
+	  else  if (targ_avg>2000.&&targ_avg<2500.){targ_name = "LHe4";}
+	  
+	}                         
+      //Post Dec. 2017 Runs, Loop 1: 10 cm LHe4,  Loop 2: 10 cm LH2
+      else
+	{
+	  if (targ_avg>2600.&&targ_avg<3100.){targ_name = "LHe4";}
+	  else  if (targ_avg>2000.&&targ_avg<2500.){targ_name = "LH2";}
+	}
+
+      
+      if(targ_avg>1300&&targ_avg<1900) {targ_name = "LD2";}
+      
+      if(targ_avg>1105&&targ_avg<1240) {targ_name = "C+Al_Dummy_10cm";}
+      
+      if(targ_avg>1040&&targ_avg<1100) {targ_name = "Al_Dummy_10cm";}
+
+      if(targ_avg>980&&targ_avg<1020) {targ_name = "Al_Dummy_4cm";}
+
+      if(targ_avg>800&&targ_avg<920) {targ_name = "Optics-1";}
+
+      if(targ_avg>710&&targ_avg<795) {targ_name = "Optics-2";}
+
+      if(targ_avg>600&&targ_avg<700) {targ_name = "C-Hole";}
+
+      if(targ_avg>550&&targ_avg<595) {targ_name = "Carbon-6%";}
+
+      if(targ_avg>470&&targ_avg<540) {targ_name = "Carbon-1.5%";}
+
+      if(targ_avg>400&&targ_avg<465) {targ_name = "Carbon-0.5%";}
+
+      if(targ_avg>320&&targ_avg<395) {targ_name = "10B4C";}
+
+      if(targ_avg>260&&targ_avg<315) {targ_name = "11B4C";}
+
+      if(targ_avg>190&&targ_avg<250) {targ_name = "Beryllium";}
+
+      if(targ_avg>50&&targ_avg<185) {targ_name = "Raster-HALO";}
+
+
       if(strcmp(exp.c_str(),"hms")==0)
 	{
 	  //Write HMS .csv
-	  mycsv << irun <<"," << float(hQ1set_sum/hentries) << "," << 
-	    float(hQ2set_sum/hentries) << "," << float(hQ3set_sum/hentries) << "," << 
-	    float(hDset_sum/hentries) << "," << float(hNMRset_sum/hentries) << endl;
+	  mycsv << irun <<"," << hQ1set_avg << "," << 
+	    hQ2set_avg  << "," << hQ3set_avg << "," << 
+	    hDset_avg << "," <<  hNMRset_avg << "," << hColl_name << "," << targ_name << "," << Form("%dx%d",(int)FRX_avg,(int)FRY_avg) << "," << TFE_avg << endl;
 	}
 
       
       if(strcmp(exp.c_str(),"shms")==0)
 	{
 	  //Write SHMS .csv
-	  mycsv << irun <<"," << float(sHBset_sum/sentries) << "," << 
-	    float(sQ1set_sum/sentries) << "," << float(sQ2set_sum/sentries) << "," << 
-	    float(sQ3set_sum/sentries) << "," << float(sDset_sum/sentries) << endl;
+	  mycsv << irun <<"," << sHBset_avg << "," << 
+	    sQ1set_avg << "," << sQ2set_avg << "," << 
+	    sQ3set_avg << "," << sDset_avg << "," << sColl_name << "," << targ_name << "," << Form("%dx%d",(int)FRX_avg,(int)FRY_avg) << "," << TFE_avg <<  endl;
 	}
 
       if (strcmp(exp.c_str(),"coin")==0)
 	{
-	  mycsv << irun <<"," << float(hQ1set_sum/hentries) << "," << 
-	    float(hQ2set_sum/hentries) << "," << float(hQ3set_sum/hentries) << "," << 
-	    float(hDset_sum/hentries) << "," << float(hNMRset_sum/hentries) << "," <<
-	    float(sHBset_sum/sentries) << "," << float(sQ1set_sum/sentries) << "," << 
-	    float(sQ2set_sum/sentries) << "," << float(sQ3set_sum/sentries) << "," << 
-	    float(sDset_sum/sentries) << endl;
+	  mycsv << irun <<"," << hQ1set_avg << "," << 
+	    hQ2set_avg << "," << hQ3set_avg << "," <<
+	    hDset_avg << "," << hNMRset_avg << "," << 
+	    sHBset_avg << "," << sQ1set_avg << "," << 
+	    sQ2set_avg << "," << sQ3set_avg << "," << 
+	    sDset_avg << "," << hColl_name << "," << 
+	    sColl_name << "," << targ_name << "," << Form("%dx%d",(int)FRX_avg,(int)FRY_avg) << "," << TFE_avg << endl;
 	}
       
       
