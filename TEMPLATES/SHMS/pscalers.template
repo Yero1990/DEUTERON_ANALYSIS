@@ -20,6 +20,14 @@ Run Length   : {P.1MHz.scalerTime:%.3f} sec
 SHMS X Mispointing   : {pmispointing_x} cm
 SHMS Y Mispointing   : {pmispointing_y} cm
 
+************************************
+*Calibrated Beam Positions @ Target 
+************************************
+
+SHMS X BPM   : {p_XBPM_AVG} cm
+SHMS Y BPM   : {p_YBPM_AVG} cm
+
+
 ***********
 * Beamline
 ***********

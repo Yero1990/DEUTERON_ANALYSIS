@@ -15,7 +15,7 @@ import warnings
 
 # Where do you want your job output (json files, stdout, stderr)?
 #out_dir = os.path.join('/lustre/expphy/volatile/hallc/xem2/', getpass.getuser() , 'hcswif/output')
-out_dir = '/u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/hcswif'
+out_dir = '/u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/hcswif/hcswif_output'
 if not os.path.isdir(out_dir):
     warnings.warn('out_dir: ' + out_dir + ' does not exist')
 

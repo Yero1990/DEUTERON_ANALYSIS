@@ -18,6 +18,7 @@ from MagInterpolate import GetP
 df1 = pd.read_csv('HMS_MagnI_set.csv', parse_dates=False)
 df2 = pd.read_csv('HMS_MagnI_true.csv', parse_dates=False)
 
+'''
 #PLOT Magnet Currents vs. Run Number, as read from EPICS tree
 
 fig = plt.figure()
@@ -138,6 +139,6 @@ plt.grid()
 
 plt.show()
 
-
+'''
 
 

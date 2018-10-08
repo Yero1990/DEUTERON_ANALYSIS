@@ -8,8 +8,14 @@ python3 hcswif.py --mode replay --run file heep_shms_runlist.dat --replay /u/gro
 python3 -m json.tool heep_shms_scaler_replay.json                                                                                                                                                                            
 swif import -file  heep_shms_scaler_replay.json                                                                                                                                                                            
 swif run heep_shms_scaler_replay  
-
+sw
 python3 hcswif.py --mode replay --run file heep_coin_runlist.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_coin_hElec_pProt.C --disk 1000000000 --spectrometer COIN --project c-comm2017 --name heep_coin_scaler_replay           
 python3 -m json.tool heep_coin_scaler_replay.json                                                                                                                                                                            
 swif import -file  heep_coin_scaler_replay.json                                                                                                                                                                            
 swif run heep_coin_scaler_replay  
+
+
+python3 hcswif.py --mode replay --run file hms_replay.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/HMS/replay_hms.C --disk 1000000000 --spectrometer HMS_ALL --project c-comm2017 --name heep_hms_scaler_replay           
+python3 -m json.tool heep_hms_scaler_replay.json                                                                                                                                                                            
+swif import -file  heep_hms_scaler_replay.json                                                                                                                                                                            
+swif run heep_hms_scaler_replay  

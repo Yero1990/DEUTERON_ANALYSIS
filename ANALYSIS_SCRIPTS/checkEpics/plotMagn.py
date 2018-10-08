@@ -7,7 +7,7 @@ import numpy as np
 import re
 from scipy import interpolate
 from scipy.interpolate import interp1d
-from MagInterpolate import GetP
+from MagInterpolate_V2 import GetP
 
 #Script to read .csv format data into dataframes and plot
 #Magnet Current and Momentum vs. Run Number

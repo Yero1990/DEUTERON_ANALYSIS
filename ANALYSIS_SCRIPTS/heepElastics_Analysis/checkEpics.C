@@ -162,7 +162,7 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
 
 
   //Other Important Leafs
-  nTFE = "HALLC_p";       //Beam Energy
+  nTFE = "HALLC_p";       //Tiefenback Beam Energy
 
   nFRX = "EHCFR_LIXWidth";     //Fast Raster - X (mm)
   nFRY = "EHCFR_LIYWidth";     //Fast Raster- Y (mm)
@@ -184,30 +184,31 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
   if(strcmp(exp.c_str(),"hms")==0)
     {
       //Write Header to CSV File
-      mycsv << "Run,Q1_set,Q2_set,Q3_set,D_set,NMR_set,hColl,target,raster,TFE" << endl;
+      mycsv << "Run,Q1_set,Q2_set,Q3_set,D_set,NMR_set,Collimator,Target,Raster,TFE" << endl;
     }
     
   if(strcmp(exp.c_str(),"shms")==0)
     {
       //Write Header to CSV File
-      mycsv << "Run,HB_set,Q1_set,Q2_set,Q3_set,D_set,sColl,target,raster,TFE" << endl;
+      mycsv << "Run,HB_set,Q1_set,Q2_set,Q3_set,D_set,Collimator,Target,Raster,TFE" << endl;
     }
 
   if(strcmp(exp.c_str(),"coin")==0)
     {
       //Write Header to CSV File
-      mycsv << "Run,hQ1_set,hQ2_set,hQ3_set,hD_set,NMR_set,sHB_set,sQ1_set,sQ2_set,sQ3_set,sD_set,hColl,sColl,target,raster,TFE" << endl;
+      mycsv << "Run,hQ1_set,hQ2_set,hQ3_set,hD_set,NMR_set,sHB_set,sQ1_set,sQ2_set,sQ3_set,sD_set,hms_Collimator,shms_Collimator,Target,Raster,TFE" << endl;
     }
 
   //Read Run List
   ifstream ifs;
-  ifs.open(Form("%s_test_list.dat", exp.c_str()));
+  ifs.open(Form("heep_%s_runlist.dat", exp.c_str()));
   string line;
   Int_t irun;
   while(getline(ifs, line))
     {
 
       irun = stoi(line.c_str());
+
      
       cout << Form("Analyzing %s Run: ", exp.c_str()) << irun << endl;
 
@@ -359,7 +360,7 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
 	    }
 
 
-	  if(FRX>=0 && FRY>=0 && TFE>0)  
+	  if(FRX>=0 && FRY>=0 && TFE>0 && targ>0)  
 	    {
 	      //Take Average of All OTHER  EPICS VARIABLES
 	      targ_sum = targ_sum + targ;

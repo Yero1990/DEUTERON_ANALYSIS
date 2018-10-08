@@ -20,6 +20,13 @@ Run Length   : {H.1MHz.scalerTime:%.3f} sec
 HMS X Mispointing   : {hmispointing_x} cm
 HMS Y Mispointing   : {hmispointing_y} cm
 
+************************************
+*Calibrated Beam Positions @ Target 
+************************************
+
+HMS X BPM   : {h_XBPM_AVG} cm
+HMS Y BPM   : {h_YBPM_AVG} cm
+
 ***********
 * Beamline
 ***********

@@ -31,7 +31,6 @@ void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="scaler") 
   gHcParms->AddString("g_ctp_database_filename", "UTIL_COMM_ONEPASS/DBASE/HMS/STD/standard.database");
   // Load varibles from files to global list.
   gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
-  // g_ctp_parm_filename and g_decode_map_filename should now be defined.
   gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
   gHcParms->Load(gHcParms->GetString("g_ctp_calib_filename"));
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
@@ -57,14 +56,16 @@ void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="scaler") 
       gHcDetectorMap->Load("MAPS/HMS/DETEC/STACK/hms_stack_comm18.map");  //Dec 2017/Sprin-2018 Run HMS Map (with ROC3, TDC SLot 2 pointing to hDCREF1)
     }
 
-  
 
+  //Add Module to explicitly plot all TDC hits from the trigger signals
+  THaDecData* decdata= new THaDecData("D","Decoder raw data");
+  gHaApps->Add(decdata);
 
-  // Add trigger apparatus
+  //Add trigger apparatus
   THaApparatus* TRG = new THcTrigApp("T", "TRG");
   gHaApps->Add(TRG);
   
-// Add trigger detector to trigger apparatus
+  //Add trigger detector to trigger apparatus
   THcTrigDet* hms = new THcTrigDet("hms", "HMS Trigger Information");
   TRG->AddDetector(hms);
 
@@ -88,17 +89,18 @@ void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="scaler") 
   // Add calorimeter to HMS apparatus
   THcShower* cal = new THcShower("cal", "Calorimeter");
   HMS->AddDetector(cal);
-
-// Add Rastered Beam Apparatus
+  
+  //Include golden track information
+  THaGoldenTrack* gtr = new THaGoldenTrack("H.gtr", "HMS Golden Track", "H");
+  gHaPhysics->Add(gtr);
+  //Add Rastered Beam Apparatus
   THaApparatus* beam = new THcRasteredBeam("H.rb", "Rastered Beamline");
   gHaApps->Add(beam);  
   THcReactionPoint* hrp= new THcReactionPoint("H.react"," HMS reaction point","H","H.rb");
   gHaPhysics->Add(hrp);
   THcExtTarCor* hext = new THcExtTarCor("H.extcor"," HMS extended target corrections","H","H.react");
   gHaPhysics->Add(hext);
-  // Include golden track information
-  THaGoldenTrack* gtr = new THaGoldenTrack("H.gtr", "HMS Golden Track", "H");
-  gHaPhysics->Add(gtr);
+
 // Add Ideal Beam Apparatus
  // THaApparatus* beam = new THaIdealBeam("IB", "Ideal Beamline");
  // gHaApps->Add(beam);
@@ -130,7 +132,6 @@ void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="scaler") 
   gHaEvtHandlers->Add(hcepics);
   // Add handler for scaler events
   THcScalerEvtHandler *hscaler = new THcScalerEvtHandler("H", "Hall C scaler event type 2");  
-  
   hscaler->AddEvtType(2);
   hscaler->AddEvtType(129);
   hscaler->SetDelayedType(129);
@@ -192,7 +193,7 @@ void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="scaler") 
  // Start the actual analysis.
 
   //Comment out all cuts summary that show up at the end of every replay
-  analyzer->SetVerbosity(1);
+  analyzer->SetVerbosity(2);
       
   analyzer->Process(run);
  

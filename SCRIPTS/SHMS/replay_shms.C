@@ -32,10 +32,10 @@ void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="sca
   gHcParms->AddString("g_ctp_database_filename", "UTIL_COMM_ONEPASS/DBASE/SHMS/STD/standard.database");
   // Load varibles from files to global list.
   gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
-  // g_ctp_parm_filename and g_decode_map_filename should now be defined.
   gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
   gHcParms->Load(gHcParms->GetString("g_ctp_calib_filename"));
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
+  
   // Load params for SHMS trigger configuration
   gHcParms->Load("PARAM/TRIG/tshms.param");
   
@@ -50,11 +50,15 @@ void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="sca
 
   gHcDetectorMap->Load("MAPS/SHMS/DETEC/STACK/shms_stack.map");
 
-  // Add trigger apparatus
+  //Add Module to explicitly plot all TDC hits from the trigger signals
+  THaDecData* decdata= new THaDecData("D","Decoder raw data");
+  gHaApps->Add(decdata);
+  
+  //Add trigger apparatus
   THaApparatus* TRG = new THcTrigApp("T", "TRG");
   gHaApps->Add(TRG);
   
-  // Add trigger detector to trigger apparatus
+  //Add trigger detector to trigger apparatus
   THcTrigDet* shms = new THcTrigDet("shms", "SHMS Trigger Information");
   TRG->AddDetector(shms);
 
@@ -120,13 +124,16 @@ void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="sca
   // Add event handler for scaler events
   THcScalerEvtHandler* pscaler = new THcScalerEvtHandler("P", "Hall C scaler event type 1");
   pscaler->AddEvtType(1);
-  // pscaler->AddEvtType(2);
-  //pscaler->AddEvtType(3);
+  pscaler->AddEvtType(2);
+  pscaler->AddEvtType(3);
   pscaler->AddEvtType(129);
   pscaler->SetDelayedType(129);
   pscaler->SetUseFirstEvent(kTRUE);
   gHaEvtHandlers->Add(pscaler);
-
+  
+  // Add event handler for DAQ configuration event
+  THcConfigEvtHandler *pconfig = new THcConfigEvtHandler("pconfig", "Hall C configuration event handler");
+  gHaEvtHandlers->Add(pconfig);
 
   // Set up the analyzer - we use the standard one,
   // but this could be an experiment-specific one as well.
@@ -177,7 +184,7 @@ void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="sca
   DefTreeFile="UTIL_COMM_ONEPASS/DEF-files/SHMS/CUTS/pstackana_production_cuts.def";
   analyzer->SetCutFile(DefTreeFile);  // optional
   // File to record accounting information for cuts
-  analyzer->SetSummaryFile(Form("REPORT_OUTPUT/SHMS/PRODUCTION/summary_production_%d_%d.report", RunNumber, MaxEvent));  // optional
+  analyzer->SetSummaryFile(Form("REPORT_OUTPUT/SHMS/PRODUCTION/summary_%s_%d_%d.report", ftype, RunNumber, MaxEvent));  // optional
   // Start the actual analysis.
 
   //Comment out all cuts summary that show up at the end of every replay

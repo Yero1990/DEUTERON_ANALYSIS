@@ -47,6 +47,11 @@ void replay_production_hms_coin (Int_t RunNumber=0, Int_t MaxEvent=0, const char
     {
       gHcDetectorMap->Load("MAPS/HMS/DETEC/STACK/hms_stack_comm18.map");
     }
+
+  //Add Module to explicitly plot all TDC hits from the trigger signals
+  THaDecData* decdata= new THaDecData("D","Decoder raw data");
+  gHaApps->Add(decdata);
+
   // Set up the equipment to be analyzed.
   THcHallCSpectrometer* HMS = new THcHallCSpectrometer("H", "HMS");
   HMS->SetEvtType(2);
@@ -181,7 +186,6 @@ void replay_production_hms_coin (Int_t RunNumber=0, Int_t MaxEvent=0, const char
   // Start the actual analysis.
   analyzer->Process(run);
 
-  // Create report file from template.
  //Determine which template file to use based on ftype user input
  TString temp_file;
  
@@ -194,6 +198,7 @@ void replay_production_hms_coin (Int_t RunNumber=0, Int_t MaxEvent=0, const char
      temp_file="hstackana_production.template";
    }
 
+  // Create report file from template.
   analyzer->PrintReport("UTIL_COMM_ONEPASS/TEMPLATES/HMS/"+temp_file,
 			Form("REPORT_OUTPUT/HMS/PRODUCTION/replay_hms_coin_%s_%d_%d.report", ftype, RunNumber, MaxEvent));
 

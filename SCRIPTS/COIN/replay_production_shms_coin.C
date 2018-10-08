@@ -23,7 +23,7 @@ void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const
   pathList.push_back("./raw/../raw.copiedtotape");
   pathList.push_back("./cache");
 
-  const char* ROOTFileNamePattern = "ROOTfiles/shms_coin_replay_production_%s_%d_%d.root";
+  const char* ROOTFileNamePattern = "ROOTfiles/shms_coin_replay_%s_%d_%d.root";
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
@@ -40,7 +40,10 @@ void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const
 
 
   gHcDetectorMap->Load("MAPS/SHMS/DETEC/STACK/shms_stack.map");
-      
+       
+  //Add Module to explicitly plot all TDC hits from the trigger signals
+  THaDecData* decdata= new THaDecData("D","Decoder raw data");
+  gHaApps->Add(decdata);
   
   // Set up the equipment to be analyzed.
   THcHallCSpectrometer* SHMS = new THcHallCSpectrometer("P", "SHMS");
@@ -85,14 +88,14 @@ void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const
   THcReactionPoint* prp = new THcReactionPoint("P.react", "SHMS reaction point", "P", "P.rb");
   gHaPhysics->Add(prp);
   // Calculate extended target corrections
-  THcExtTarCor* pext = new THcExtTarCor("P.extcor", "HMS extended target corrections", "P", "P.react");
+  THcExtTarCor* pext = new THcExtTarCor("P.extcor", "SHMS extended target corrections", "P", "P.react");
   gHaPhysics->Add(pext);
   // Calculate golden track quantites
   THaGoldenTrack* gtr = new THaGoldenTrack("P.gtr", "SHMS Golden Track", "P");
   gHaPhysics->Add(gtr);
   // Calculate primary (scattered beam - usually electrons) kinematics
-  THcPrimaryKine* kin = new THcPrimaryKine("P.kin", "SHMS Single Arm Kinematics", "P", "P.rb");
-  gHaPhysics->Add(kin);
+  THcPrimaryKine* pkin = new THcPrimaryKine("P.kin", "SHMS Single Arm Kinematics", "P", "P.rb");
+  gHaPhysics->Add(pkin);
   // Calculate the hodoscope efficiencies
   THcHodoEff* peff = new THcHodoEff("phodeff", "SHMS hodo efficiency", "P.hod");
   gHaPhysics->Add(peff);   

@@ -94,7 +94,7 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   THaReactionPoint* prp = new THaReactionPoint("P.react", "SHMS reaction point", "P", "P.rb");
   gHaPhysics->Add(prp);
   // Calculate extended target corrections
-  THcExtTarCor* pext = new THcExtTarCor("P.extcor", "HMS extended target corrections", "P", "P.react");
+  THcExtTarCor* pext = new THcExtTarCor("P.extcor", "SHMS extended target corrections", "P", "P.react");
   gHaPhysics->Add(pext);
   // Calculate golden track quantites
   THaGoldenTrack* pgtr = new THaGoldenTrack("P.gtr", "SHMS Golden Track", "P");
@@ -246,7 +246,6 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
                               // 2 = counter is event number
 
   analyzer->SetEvent(event);
-  
   // Set EPICS event type
   analyzer->SetEpicsEvtType(180);
   analyzer->AddEpicsEvtType(181);
@@ -264,12 +263,11 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   analyzer->SetCutFile(DefTreeFile);  // optional
   // File to record accounting information for cuts
   analyzer->SetSummaryFile(Form("REPORT_OUTPUT/COIN/PRODUCTION/summary_production_%s_%d_%d.report", ftype, RunNumber, MaxEvent));  // optional
-  // Start the actual analysis.
   
   //Comment out all cuts summary that show up at the end of every replay
   analyzer->SetVerbosity(1);
 
-
+  // Start the actual analysis.
   analyzer->Process(run);
   // Create report file from template
 

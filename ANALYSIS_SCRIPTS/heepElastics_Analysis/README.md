@@ -18,3 +18,15 @@ a first step in this analysis.
 
 2.  Do Scaler replay over the run list. Preferably via ifarm-job submission 
     since it might take a longer time to do locally.
+
+3.  Run checkEpics.C on the hms/shms/coin run lists to get EPICS variables from the ROOTfiles
+    produced in STEP 2. Loop over run lists to get camera angles as well.
+
+4.  Run plotEpics.C on the hms/shms/coin run lists to plot Magnet Currents and Momentum as
+    a function of Run Number, as well as generate a .csv file with the correct spectrometer
+    momentum to check against the kinematics file. The camera angles will also be checked against
+    the kinematics file.
+
+5.  With a solid knowledge of the spectrometer momentum/angles, one can start looking at kinematics
+    variables such as the invariant mass W.
+

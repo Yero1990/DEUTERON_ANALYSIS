@@ -1,5 +1,6 @@
-block H.bcm.*
-block H.rb.*       
+#block H.bcm.*
+#block H.rb.*       
+#block D.*
 
 begin epics
 
