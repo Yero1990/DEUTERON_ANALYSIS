@@ -9,6 +9,9 @@ void checkEpics(string exp)
     a python script.
    */
 
+  //Choose Format to output the data file
+  Bool_t csv = kFALSE;
+  Bool_t ssv = kTRUE;   //space-separated values (used to put in W.B.'s LT.box format)
 
   gROOT->SetBatch(kTRUE);
 
@@ -52,7 +55,7 @@ void checkEpics(string exp)
   Double_t targ_sum, targ_avg;
   TString targ_name;
 
-  Int_t hentries, sentries, good_evt;  //count number of good entries
+  Int_t hentries, sentries, good_raster_evt, good_TFE_evt, good_targ_evt, good_hColl_evt, good_sColl_evt;  //count number of good entries
   
   //Define Magnet Current Leafs to be read from TTree
   
@@ -95,6 +98,7 @@ void checkEpics(string exp)
   
   Double_t targ;    //Target Encoder Position
 
+  Double_t targ_mass;   //Target Mass
 
  
   /* 
@@ -176,27 +180,43 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
 
   //Create File STreams to store CSV data
   ofstream mycsv;
-
- 
+  ofstream myssv;
+  
   //Open CSV file
-  mycsv.open(Form("%s_EPICS.csv", exp.c_str()), std::ios_base::app);
+  if(csv) 
+    { 
+      mycsv.open(Form("TEST_%s_EPICS.csv", exp.c_str()), std::ios_base::app); 
+    }
+  
+
+  if(ssv) 
+    {  
+      myssv.open(Form("TEST_%s_EPICS.data", exp.c_str()), std::ios_base::app); 
+    }
+
 
   if(strcmp(exp.c_str(),"hms")==0)
     {
-      //Write Header to CSV File
-      mycsv << "Run,Q1_set,Q2_set,Q3_set,D_set,NMR_set,Collimator,Target,Raster,TFE" << endl;
+      //Write Header to CSV or SSV File
+      
+      if(csv) {mycsv << "Run,Q1_set,Q2_set,Q3_set,D_set,NMR_set,Collimator,Target,Target_Mass,Raster,TFE,Angle" << endl;}
+      if(ssv) {myssv << "#! Run[f,0]/   Q1_set[f,1]/   Q2_set[f,2]/   Q3_set[f,3]/    D_set[f,4]/    NMR_set[f,5]/    Collimator[f,6]/    Target[f,7]/     Target_Mass[f,8]/    Raster[f,9]/   TFE[f,10]/    Angle[f,11]/" << endl;}
     }
     
   if(strcmp(exp.c_str(),"shms")==0)
     {
       //Write Header to CSV File
-      mycsv << "Run,HB_set,Q1_set,Q2_set,Q3_set,D_set,Collimator,Target,Raster,TFE" << endl;
+      if(csv) {mycsv << "Run,HB_set,Q1_set,Q2_set,Q3_set,D_set,Collimator,Target,Target_Mass,Raster,TFE,Angle" << endl;}
+      if(ssv) {myssv << "#! Run[f,0]/   Q1_set[f,1]/   Q2_set[f,2]/   Q3_set[f,3]/    D_set[f,4]/    Collimator[f,6]/    Target[f,7]/     Target_Mass[f,8]/    Raster[f,9]/   TFE[f,10]/     Angle[f,11]/" << endl;}
+
     }
 
   if(strcmp(exp.c_str(),"coin")==0)
     {
       //Write Header to CSV File
-      mycsv << "Run,hQ1_set,hQ2_set,hQ3_set,hD_set,NMR_set,sHB_set,sQ1_set,sQ2_set,sQ3_set,sD_set,hms_Collimator,shms_Collimator,Target,Raster,TFE" << endl;
+      if(csv) {mycsv << "Run,hQ1_set,hQ2_set,hQ3_set,hD_set,NMR_set,sHB_set,sQ1_set,sQ2_set,sQ3_set,sD_set,hms_Collimator,shms_Collimator,Target,Target_Mass,Raster,TFE,hms_Angle,shms_Angle" << endl;}
+      if(ssv) {myssv << "#! Run[f,0]/   hQ1_set[f,1]/   hQ2_set[f,2]/   hQ3_set[f,3]/    hD_set[f,4]/    NMR_set[f,5]/  sHB_set[f,6]/    sQ1_set[f,7]/   sQ2_set[f,8]/   sQ3_set[f,9]/    sD_set[f,10]/   hms_Collimator[f,11]/  shms_Collimator[f,12]/  Target[f,13]/    Target_Mass[f,14]/    Raster[f,15]/   TFE[f,16]/    hms_Angle[f,17]/    shms_Angle[f,18]/" << endl;}
+
     }
 
   //Read Run List
@@ -254,7 +274,12 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
       
       hentries = 0;
       sentries = 0;
-      good_evt = 0;
+
+      good_raster_evt = 0;
+      good_TFE_evt = 0;
+      good_targ_evt = 0;
+      good_hColl_evt = 0;
+      good_sColl_evt = 0;
 
       TString filename = Form("../../../ROOTfiles/%s_replay_scaler_%d_-1.root", exp.c_str(), irun);
       TFile *data_file = new TFile(filename, "READ"); 
@@ -311,7 +336,7 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
 	  T->GetEntry(i);  
 	  
 	  hgoodEPICS = kFALSE;
-	  hgoodEPICS = abs(hQ1_set)<10000&&abs(hQ2_set)<10000&&abs(hQ3_set)<10000&&abs(hD_set)<10000&&abs(NMR_set)<10000&&hQ1_set!=0&&hQ2_set!=0&&hQ3_set!=0&&hD_set!=0;
+	  hgoodEPICS = abs(hQ1_set)<10000&&abs(hQ2_set)<10000&&abs(hQ3_set)<10000&&abs(NMR_set)<10000&&hQ1_set!=0&&hQ2_set!=0&&hQ3_set!=0;
 	  if( hgoodEPICS )
 	{
 	  //Sum over all epics reads for each magent current settings/readback values
@@ -327,15 +352,13 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
 	  hDtrue_sum = hDtrue_sum + hD_true;
 	  hNMRtrue_sum = hNMRtrue_sum + NMR_true;
 
-	  //HMS Collimator Setting
-	  hColl_sum = hColl_sum + hColl;
 
 	  hentries++;
 	  
 	}
 
 	  sgoodEPICS = kFALSE;
-	  sgoodEPICS = abs(sQ1_set)<10000&&abs(sQ2_set)<10000&&abs(sQ3_set)<10000&&abs(sHB_set)<10000&&abs(sD_set)<10000&&sQ1_set!=0&&sQ2_set!=0&&sQ3_set!=0&&sD_set!=0;
+	  sgoodEPICS = abs(sQ1_set)<10000&&abs(sQ2_set)<10000&&abs(sQ3_set)<10000&&abs(sHB_set)<10000&&abs(sD_set)<10000&&sQ1_set!=0&&sQ2_set!=0&&sQ3_set!=0&&sD_set>0;
 	  if(sgoodEPICS )
 	    {
         
@@ -350,9 +373,7 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
 	      sQ3true_sum = sQ3true_sum + sQ3_true;
 	      sDtrue_sum = sDtrue_sum + sD_true;
 	      sHBtrue_sum = sHBtrue_sum +  sHB_true;
-	    	 
-	      //SHMS Collimator Setting
-	      sColl_sum = sColl_sum + sColl;
+
 	      
 	      sentries++;
 	     
@@ -360,19 +381,43 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
 	    }
 
 
-	  if(FRX>=0 && FRY>=0 && TFE>0 && targ>0)  
+	  if(FRX>0 && FRY>0) 
 	    {
-	      //Take Average of All OTHER  EPICS VARIABLES
-	      targ_sum = targ_sum + targ;
-	      
-	      TFE_sum = TFE_sum + TFE;	      
-	      
 	      FRX_sum = FRX_sum + FRX;
 	      FRY_sum = FRY_sum + FRY;
+	      good_raster_evt++;
+	    } 
 
-	      good_evt++;
-
+	  if(TFE>0) 
+	    {
+	      TFE_sum = TFE_sum + TFE;
+	      good_TFE_evt++;
 	    }
+	  
+	  if(targ>0) 
+	    {
+	      targ_sum = targ_sum + targ;
+	      good_targ_evt++;
+	    }  
+	    
+	  if(1==1)
+	    {
+	      //HMS Collimator Setting
+	      hColl_sum = hColl_sum + hColl;
+	      good_hColl_evt++;
+	    }
+
+	  if(1==1)
+	    {
+	      //SHMS Collimator Setting
+	      sColl_sum = sColl_sum + sColl;
+	      good_sColl_evt++;
+	    }
+	    
+             
+
+
+	    
 	  
 	} //end entry loop
       
@@ -389,14 +434,14 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
       sQ3set_avg = float(sQ3set_sum/sentries);
       sDset_avg = float(sDset_sum/sentries);
       
-      hColl_avg = float(hColl_sum/hentries)/1.e5;    
-      sColl_avg = float(sColl_sum/sentries)/1.e5;
+      hColl_avg = float(hColl_sum/good_hColl_evt)/1.e5;    
+      sColl_avg = float(sColl_sum/good_sColl_evt)/1.e5;
 
-      targ_avg = float(targ_sum/good_evt)/1.e4;
+      targ_avg = float(targ_sum/good_targ_evt)/1.e4;
 
-      TFE_avg = float(TFE_sum/good_evt)/1000.;
-      FRX_avg = int(FRX_sum/good_evt);
-      FRY_avg = int(FRY_sum/good_evt);
+      TFE_avg = float(TFE_sum/good_TFE_evt)/1000.;
+      FRX_avg = int(FRX_sum/good_raster_evt);
+      FRY_avg = int(FRY_sum/good_raster_evt);
       
       
 
@@ -419,73 +464,106 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
       //Only Dec. 2017 Runs
       if((exp=="hms"&&irun<=1277) || (exp=="shms"&&irun<=1705) || (exp=="coin"&&irun<=1722))
 	{
-	  if (targ_avg>2600.&&targ_avg<3100.){targ_name = "LH2";}
-	  else  if (targ_avg>2000.&&targ_avg<2500.){targ_name = "LHe4";}
+	  if (targ_avg>2600.&&targ_avg<3100.){targ_name = "LH2", targ_mass = 1.00794;}
+	  else if (targ_avg>2000.&&targ_avg<2500.){targ_name = "LHe4", targ_mass = 4.002602;}
 	  
 	}                         
       //Post Dec. 2017 Runs, Loop 1: 10 cm LHe4,  Loop 2: 10 cm LH2
       else
 	{
-	  if (targ_avg>2600.&&targ_avg<3100.){targ_name = "LHe4";}
-	  else  if (targ_avg>2000.&&targ_avg<2500.){targ_name = "LH2";}
+	  if (targ_avg>2600.&&targ_avg<3100.){targ_name = "LHe4", targ_mass = 4.002602;}
+	  else  if (targ_avg>2000.&&targ_avg<2500.){targ_name = "LH2", targ_mass = 1.00794;}
 	}
 
       
-      if(targ_avg>1300&&targ_avg<1900) {targ_name = "LD2";}
+      if(targ_avg>1300&&targ_avg<1900) {targ_name = "LD2", targ_mass = 2.014101;}
       
       if(targ_avg>1105&&targ_avg<1240) {targ_name = "C+Al_Dummy_10cm";}
       
-      if(targ_avg>1040&&targ_avg<1100) {targ_name = "Al_Dummy_10cm";}
+      if(targ_avg>1040&&targ_avg<1100) {targ_name = "Al_Dummy_10cm", targ_mass = 26.98;}  //Al-27
 
-      if(targ_avg>980&&targ_avg<1020) {targ_name = "Al_Dummy_4cm";}
+      if(targ_avg>980&&targ_avg<1020) {targ_name = "Al_Dummy_4cm", targ_mass = 26.98;}
 
-      if(targ_avg>800&&targ_avg<920) {targ_name = "Optics-1";}
+      if(targ_avg>800&&targ_avg<920) {targ_name = "Optics-1", targ_mass = 12.0107;}
 
-      if(targ_avg>710&&targ_avg<795) {targ_name = "Optics-2";}
+      if(targ_avg>710&&targ_avg<795) {targ_name = "Optics-2", targ_mass = 12.0107;}
 
-      if(targ_avg>600&&targ_avg<700) {targ_name = "C-Hole";}
+      if(targ_avg>600&&targ_avg<700) {targ_name = "C-Hole", targ_mass = 12.0107;}
 
-      if(targ_avg>550&&targ_avg<595) {targ_name = "Carbon-6%";}
+      if(targ_avg>550&&targ_avg<595) {targ_name = "Carbon-6%", targ_mass = 12.0107;}
 
-      if(targ_avg>470&&targ_avg<540) {targ_name = "Carbon-1.5%";}
+      if(targ_avg>470&&targ_avg<540) {targ_name = "Carbon-1.5%", targ_mass = 12.0107;}
 
-      if(targ_avg>400&&targ_avg<465) {targ_name = "Carbon-0.5%";}
+      if(targ_avg>400&&targ_avg<465) {targ_name = "Carbon-0.5%", targ_mass = 12.0107;}
 
-      if(targ_avg>320&&targ_avg<395) {targ_name = "10B4C";}
+      if(targ_avg>320&&targ_avg<395) {targ_name = "10B4C", targ_mass = 10.0102;}     //^10B_{4}C  , Boron-10 Carbide
 
-      if(targ_avg>260&&targ_avg<315) {targ_name = "11B4C";}
+      if(targ_avg>260&&targ_avg<315) {targ_name = "11B4C", targ_mass = 11.01;}
 
-      if(targ_avg>190&&targ_avg<250) {targ_name = "Beryllium";}
+      if(targ_avg>190&&targ_avg<250) {targ_name = "Beryllium", targ_mass = 9.012;}
 
-      if(targ_avg>50&&targ_avg<185) {targ_name = "Raster-HALO";}
+      if(targ_avg>50&&targ_avg<185) {targ_name = "Raster-HALO";}  //?? What is the mass of this? 
 
 
       if(strcmp(exp.c_str(),"hms")==0)
 	{
-	  //Write HMS .csv
+	  //Write HMS .csv (or ssv)
+	  if(csv){
 	  mycsv << irun <<"," << hQ1set_avg << "," << 
 	    hQ2set_avg  << "," << hQ3set_avg << "," << 
-	    hDset_avg << "," <<  hNMRset_avg << "," << hColl_name << "," << targ_name << "," << Form("%dx%d",(int)FRX_avg,(int)FRY_avg) << "," << TFE_avg << endl;
+	    hDset_avg << "," <<  hNMRset_avg << "," << hColl_name << "," << targ_name << "," << targ_mass << "," << Form("%dx%d",(int)FRX_avg,(int)FRY_avg) << "," << TFE_avg << endl;
+	  }
+	
+	  if(ssv){
+	    myssv << irun <<"    " << hQ1set_avg << "    " << 
+	      hQ2set_avg  << "    " << hQ3set_avg << "    " << 
+	      hDset_avg << "    " <<  hNMRset_avg << "    " << hColl_name << "    " << targ_name << "    " << targ_mass << "    " << Form("%dx%d",(int)FRX_avg,(int)FRY_avg) << "    " << TFE_avg << endl;
+	  }
+	  
 	}
 
       
       if(strcmp(exp.c_str(),"shms")==0)
 	{
 	  //Write SHMS .csv
+	  if(csv){
 	  mycsv << irun <<"," << sHBset_avg << "," << 
 	    sQ1set_avg << "," << sQ2set_avg << "," << 
-	    sQ3set_avg << "," << sDset_avg << "," << sColl_name << "," << targ_name << "," << Form("%dx%d",(int)FRX_avg,(int)FRY_avg) << "," << TFE_avg <<  endl;
+	    sQ3set_avg << "," << sDset_avg << "," << sColl_name << "," << targ_name << "," << targ_mass << "," << Form("%dx%d",(int)FRX_avg,(int)FRY_avg) << "," << TFE_avg <<  endl;
+	  }
+	
+	  if(ssv){
+	  myssv << irun <<"    " << sHBset_avg << "    " << 
+	    sQ1set_avg << "    " << sQ2set_avg << "    " << 
+	    sQ3set_avg << "    " << sDset_avg << "    " << sColl_name << "    " << targ_name << "    " << targ_mass << "    " << Form("%dx%d",(int)FRX_avg,(int)FRY_avg) << "    " << TFE_avg <<  endl;
+	  }
+
 	}
 
       if (strcmp(exp.c_str(),"coin")==0)
 	{
+	
+	  if(csv){
 	  mycsv << irun <<"," << hQ1set_avg << "," << 
 	    hQ2set_avg << "," << hQ3set_avg << "," <<
 	    hDset_avg << "," << hNMRset_avg << "," << 
 	    sHBset_avg << "," << sQ1set_avg << "," << 
 	    sQ2set_avg << "," << sQ3set_avg << "," << 
 	    sDset_avg << "," << hColl_name << "," << 
-	    sColl_name << "," << targ_name << "," << Form("%dx%d",(int)FRX_avg,(int)FRY_avg) << "," << TFE_avg << endl;
+	    sColl_name << "," << targ_name << "," << targ_mass << "," << Form("%dx%d",(int)FRX_avg,(int)FRY_avg) << "," << TFE_avg << endl;
+	  }
+	
+	  if(ssv){
+	    myssv << irun <<"    " << hQ1set_avg << "    " << 
+	      hQ2set_avg << "    " << hQ3set_avg << "    " <<
+	      hDset_avg << "    " << hNMRset_avg << "    " << 
+	      sHBset_avg << "    " << sQ1set_avg << "    " << 
+	      sQ2set_avg << "    " << sQ3set_avg << "    " << 
+	      sDset_avg << "    " << hColl_name << "    " << 
+	      sColl_name << "    " << targ_name << "    " << targ_mass << "    " << Form("%dx%d",(int)FRX_avg,(int)FRY_avg) << "    " << TFE_avg << endl;
+	  }
+	  
+
 	}
       
       

@@ -14,6 +14,13 @@ Run Length   : {P.1MHz.scalerTime:%.3f} sec
 SHMS X Mispointing   : {pmispointing_x} cm
 SHMS Y Mispointing   : {pmispointing_y} cm
 
+************************************                                         
+*Calibrated Beam Positions @ Target                            
+************************************   
+     
+SHMS X BPM   : {p_XBPM_AVG} cm           
+SHMS Y BPM   : {p_YBPM_AVG} cm   
+
 ***********
 * Beamline
 ***********
@@ -58,6 +65,14 @@ Ps3_factor = {gpconfig_ti_ps_factors[2]}
 Ps4_factor = {gpconfig_ti_ps_factors[3]}
 Ps5_factor = {gpconfig_ti_ps_factors[4]}
 Ps6_factor = {gpconfig_ti_ps_factors[5]}
+
+Ps1_factor_internal = {gpconfig_ti_ps[0]}  
+Ps2_factor_internal = {gpconfig_ti_ps[1]}
+Ps3_factor_internal = {gpconfig_ti_ps[2]}
+Ps4_factor_internal = {gpconfig_ti_ps[3]} 
+Ps5_factor_internal = {gpconfig_ti_ps[4]} 
+Ps6_factor_internal = {gpconfig_ti_ps[5]} 
+
 
 ***********	
 * Triggers 

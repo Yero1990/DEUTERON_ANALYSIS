@@ -86,6 +86,6 @@ while (startP <= endP):
     
 
 
-with open("hms_magnet_datav2.csv", "w") as f:
+with open("NEW_hms_magnet_data.csv", "w") as f:
     wr = csv.writer(f)
     wr.writerows(lst)

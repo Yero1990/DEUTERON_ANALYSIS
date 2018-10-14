@@ -19,7 +19,7 @@ void checkCalib_shms(string detector, int runNUM)
 
   gROOT->SetBatch(kTRUE);
   // TString filename = "../../ROOTfiles/hms_replay_cal_calib_1263_100000.root";
-  TString filename = "../../ROOTfiles/hms_replay_dc_calib_1161_-1.root";
+  TString filename = "../../../ROOTfiles/shms_replay_dc_calib_2484_1000000.root";
 
 
   //read the file and get the tree
@@ -101,21 +101,22 @@ void checkCalib_shms(string detector, int runNUM)
   static const Int_t hodPLANES = 4;
   
   string hod_pl_names[hodPLANES] = {"1x", "1y", "2x", "2y"};
+
   
-  if(spec=="HMS")
-    {
-      string dc_pl_names[dcPLANES] = {"1u1", "1u2", "1x1", "1x2", "1v2", "1v1", "2v1", "2v2", "2x2", "2x1", "2u2", "2u1"};
-      Int_t nwires[dcPLANES] = {96, 96, 102, 102, 96, 96, 96, 96, 102, 102, 96, 96};
-      Int_t maxBar[hodPLANES] = {16, 10, 16, 10};
-    }
+  //if(spec=="HMS")
+  // {
+  //   string dc_pl_names[dcPLANES] = {"1u1", "1u2", "1x1", "1x2", "1v2", "1v1", "2v1", "2v2", "2x2", "2x1", "2u2", "2u1"};
+  //    Int_t nwires[dcPLANES] = {96, 96, 102, 102, 96, 96, 96, 96, 102, 102, 96, 96};
+  //    Int_t maxBar[hodPLANES] = {16, 10, 16, 10};
+  //  }
   
-  else if (spec=="SHMS")
-    {
+  // else if (spec=="SHMS")
+  //  {
       string dc_pl_names[dcPLANES] = {"1u1", "1u2", "1x1", "1x2", "1v1", "1v2", "2v2", "2v1", "2x2", "2x1", "2u2", "2u1"};
       Int_t nwires[dcPLANES] = {107, 107, 79, 79, 107, 107, 107, 107, 79, 79, 107, 107};
       Int_t maxBar[hodPLANES] = {13, 13, 14, 21};
 
-    }
+      // }
 
   //Define Canvas
 

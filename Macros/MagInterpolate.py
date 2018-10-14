@@ -15,7 +15,7 @@ def GetP(spec, Mag, I):
   
     if(spec is 'hms'):
         #Read .csv file containing magnet currents data
-        hdata = np.genfromtxt('hms_magnet_data.csv', delimiter=',', names=True)
+        hdata = np.genfromtxt('/u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/Macros/hmsMagn_interpol/hms_magnet_data.csv', delimiter=',', names=True)
     
         #Interpolate data  Momentum (Current)
         fq1 = interp1d(hdata['q1'], hdata['p'], kind='linear')
@@ -45,7 +45,7 @@ def GetP(spec, Mag, I):
     if(spec is 'shms'):
 
         #Read .csv file containing magnet currents data
-        pdata = np.genfromtxt('shms_magnet_data.csv', delimiter=',', names=True)
+        pdata = np.genfromtxt('/u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/Macros/shmsMagn_interpol/shms_magnet_data.csv', delimiter=',', names=True)
 
         #Interpolate data  Momentum (Current)
         fhb = interp1d(pdata['hb'], pdata['p'], kind='linear')

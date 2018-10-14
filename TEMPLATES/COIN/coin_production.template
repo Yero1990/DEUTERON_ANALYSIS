@@ -116,6 +116,14 @@ Ps4_factor = {gHC_ti_ps_factors[3]}
 Ps5_factor = {gHC_ti_ps_factors[4]}
 Ps6_factor = {gHC_ti_ps_factors[5]}
 
+Ps1_factor_internal = {gHC_ti_ps[0]}
+Ps2_factor_internal = {gHC_ti_ps[1]}
+Ps3_factor_internal = {gHC_ti_ps[2]}
+Ps4_factor_internal = {gHC_ti_ps[3]}
+Ps5_factor_internal = {gHC_ti_ps[4]}
+Ps6_factor_internal = {gHC_ti_ps[5]}
+
+
 *********** 
 * Triggers 
 ***********

@@ -15,7 +15,8 @@ gbpm_zpos = 370.82, 224.96, 129.3 ; cm
 ; Various fast raster quantities: gUse* are flags
 
 
-;  gfr_cal_mom  = 6.4  ; = beam momnetum during jan 2018 3 pass 
+;  gfr_cal_mom  = 10.58794 ; = beam momentum during spring 2018 5 pass
+;  gfr_cal_mom  = 6.430  ; = beam momnetum during jan 2018 3 pass 
    gfr_cal_mom  = 2.221  ; = beam momnetum during Dec 2017 1 pass 
 
   gfrya_adcpercm = (72817. - 62662.)/.3;

@@ -9,8 +9,9 @@ import csv
 #import ROOT
 #from ROOT import gROOT
 
-startP = 2.0
+startP = 1.0
 endP = 11.0
+
 
 #create an empty file to store data
 #hms_file = "hms_magnet.data"
@@ -24,7 +25,7 @@ endP = 11.0
 
 lst = []
 
-lst.append(['HB', 'Q1', 'Q2', 'Q3', 'D'])
+lst.append(['p', 'hb', 'q1', 'q2', 'q3', 'dipole'])
 
 
 #loop over hms central  momenta
@@ -35,7 +36,7 @@ while (startP <= endP):
     shms_file = "shms_magnet_%f.data" %startP
     os.system("touch " + shms_file) 
     
-    cmd = "./../../holly/field17/getSHMS %f >> ./shms_magnet_%f.data" %(startP, startP)     #get dipole current/nmr
+    cmd = "./../executables/getSHMS %f >> ./shms_magnet_%f.data" %(startP, startP)     #get dipole current/nmr
 
 
     sp.call(cmd, shell=True) 
@@ -76,6 +77,6 @@ while (startP <= endP):
     startP = startP + 0.001                      #increment momentum step
     
 
-with open("shms_magnet_data.csv", "w") as f:
+with open("NEW_shms_magnet_data.csv", "w") as f:
     wr = csv.writer(f)
     wr.writerows(lst)

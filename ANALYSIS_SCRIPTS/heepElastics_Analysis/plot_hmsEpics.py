@@ -15,13 +15,14 @@ from MagInterpolate import GetP
 #-------------------------------------------------------------
 
 #read csv file into data frame
-df1 = pd.read_csv('hms_EPICS.csv', parse_dates=False)
-df2 = pd.read_csv('shms_EPICS.csv', parse_dates=False)
-df3 = pd.read_csv('coin_EPICS.csv', parse_dates=False)
+df = pd.read_csv('test.data', parse_dates=False)
+#df1 = pd.read_csv('hms_EPICS.csv', parse_dates=False)
+#df2 = pd.read_csv('shms_EPICS.csv', parse_dates=False)
+#df3 = pd.read_csv('coin_EPICS.csv', parse_dates=False)
 
-print(df1)
-print(df2)
-print(df3)
+print(df)
+#print(df2)
+#print(df3)
 
 #Plot Mag. CUrrents vs. Run Number
 

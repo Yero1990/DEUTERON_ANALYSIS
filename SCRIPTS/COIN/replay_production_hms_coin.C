@@ -1,4 +1,4 @@
-void replay_production_hms_coin (Int_t RunNumber=0, Int_t MaxEvent=0, const char* ftype="scaler") {
+void replay_production_hms_coin (Int_t RunNumber=0, Int_t MaxEvent=0, const char* ftype="heep_check") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -181,7 +181,7 @@ void replay_production_hms_coin (Int_t RunNumber=0, Int_t MaxEvent=0, const char
   analyzer->SetSummaryFile(Form("REPORT_OUTPUT/HMS/PRODUCTION/summary_%s_%d_%d.report", ftype, RunNumber, MaxEvent));    // optional
   
   //Comment out all cuts summary that show up at the end of every replay
-  analyzer->SetVerbosity(1);
+  analyzer->SetVerbosity(2);
   
   // Start the actual analysis.
   analyzer->Process(run);

@@ -22,11 +22,11 @@ a first step in this analysis.
 3.  Run checkEpics.C on the hms/shms/coin run lists to get EPICS variables from the ROOTfiles
     produced in STEP 2. Loop over run lists to get camera angles as well.   DONE
 
-4.  Run plotEpics.C on the hms/shms/coin run lists to plot Magnet Currents and Momentum as
-    a function of Run Number, as well as generate a .csv file with the correct spectrometer
-    momentum to check against the kinematics file. The camera angles will also be checked against
-    the kinematics file.   IN PROCESS . . .
-
+4.  Run make_kinFile.py on the hms/shms/coin run lists to produce:
+    **  standard.kinematics files 
+    **  spec_kin.dat files containing all the relevant information for each run (target, coll., raster, momentum, angles, . . .)
+    **  good run lists (file with only run numbers) to be read by hcswif to submit jobs
+    
 5.  With a solid knowledge of the spectrometer momentum/angles, one can start looking at kinematics
     variables such as the invariant mass W.
 

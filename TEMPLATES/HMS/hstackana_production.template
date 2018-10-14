@@ -14,6 +14,12 @@ Run Length   : {H.1MHz.scalerTime:%.3f} sec
 HMS X Mispointing   : {hmispointing_x} cm
 HMS Y Mispointing   : {hmispointing_y} cm
 
+************************************                        
+*Calibrated Beam Positions @ Target              
+************************************                                          
+HMS X BPM   : {h_XBPM_AVG} cm                
+HMS Y BPM   : {h_YBPM_AVG} cm   
+
 ***********
 * Beamline
 ***********
@@ -58,6 +64,14 @@ Ps3_factor = {ghconfig_ti_ps_factors[2]}
 Ps4_factor = {ghconfig_ti_ps_factors[3]}
 Ps5_factor = {ghconfig_ti_ps_factors[4]}
 Ps6_factor = {ghconfig_ti_ps_factors[5]}
+
+Ps1_factor_internal = {ghconfig_ti_ps[0]} 
+Ps2_factor_internal = {ghconfig_ti_ps[1]} 
+Ps3_factor_internal = {ghconfig_ti_ps[2]} 
+Ps4_factor_internal = {ghconfig_ti_ps[3]} 
+Ps5_factor_internal = {ghconfig_ti_ps[4]} 
+Ps6_factor_internal = {ghconfig_ti_ps[5]} 
+
 
 ***********
 * Triggers
@@ -368,7 +382,6 @@ Tracks found    = scleantrack = {hcut_CleanTrack.npassed}
 //Tracks passing chisquared cut = (hstat_cal_numevents:%7d) (in previous template, do we need this here?)
 
 hmsPreShower	     Counts: {H.cal.stat_trksum1} eff : {H.cal.stat_hitsum1 / H.cal.stat_trksum1}
-hmsShowerArray	     Counts: {H.cal.stat_trksum_array} eff : {H.cal.stat_hitsum_array / H.cal.stat_trksum_array}
 
 hA	     Counts: {H.cal.stat_trksum1} eff : {H.cal.stat_hitsum1 / H.cal.stat_trksum1}
 hB	     Counts: {H.cal.stat_trksum2} eff : {H.cal.stat_hitsum2 / H.cal.stat_trksum2}
