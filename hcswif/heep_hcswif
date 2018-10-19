@@ -1,62 +1,42 @@
 
-python3 hcswif.py --mode replay --run file heep_hms_runlist.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/HMS/replay_hms.C --disk 1000000000 --spectrometer HMS_ALL --project c-comm2017 --name heep_hms_scaler_replay           
-python3 -m json.tool heep_hms_scaler_replay.json                                                                                                                                                                            
-swif import -file  heep_hms_scaler_replay.json                                                                                                                                                                            
-swif run heep_hms_scaler_replay  
-
-python3 hcswif.py --mode replay --run file heep_shms_runlist.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/SHMS/replay_shms.C --disk 1000000000 --spectrometer SHMS_ALL --project c-comm2017 --name heep_shms_scaler_replay           
-python3 -m json.tool heep_shms_scaler_replay.json                                                                                                                                                                            
-swif import -file  heep_shms_scaler_replay.json                                                                                                                                                                            
-swif run heep_shms_scaler_replay  
-
-python3 hcswif.py --mode replay --run file heep_coin_runlist.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_coin_hElec_pProt.C --disk 1000000000 --spectrometer COIN --project c-comm2017 --name heep_coin_scaler_replay           
-python3 -m json.tool heep_coin_scaler_replay.json                                                                                                                                                                            
-swif import -file  heep_coin_scaler_replay.json                                                                                                                                                                            
-swif run heep_coin_scaler_replay  
-
 ---------------------------------------------------------------------------
 Submit jobs for good H(e,e'p) runs
 
 =====SINGLE-ARM MODE=====
 
-python3 hcswif.py --mode replay --run file good_hms_singles_list.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/HMS/replay_hms.C --disk 1000000000 --spectrometer HMS_ALL --project c-comm2017 --name heep_hms_singles          
-python3 -m json.tool heep_hms_singles.json                                                                                                                                                                                                                    
-swif import -file  heep_hms_singles.json  
-swif run heep_hms_singles
+python3 hcswif.py --mode replay --run file good_hms_singles_list_Oct17_2018.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/HMS/replay_hms.C --disk 1000000000 --spectrometer HMS_ALL --project c-comm2017 --name heep_hms_singles_Oct17          
+python3 -m json.tool heep_hms_singles_Oct17.json                                                                                                                                                                                                                    
+swif import -file  heep_hms_singles_Oct17.json  
+swif run heep_hms_singles_Oct17
 
-python3 hcswif.py --mode replay --run file good_shms_singles_list.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/SHMS/replay_shms.C --disk 1000000000 --spectrometer SHMS_ALL --project c-comm2017 --name heep_shms_singles 
-python3 -m json.tool heep_shms_singles.json 
-swif import -file  heep_shms_singles.json 
-swif run heep_shms_singles 
+python3 hcswif.py --mode replay --run file good_shms_singles_list_fix.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/SHMS/replay_shms.C --disk 4000000000 --spectrometer SHMS_ALL --project c-comm2017 --name heep_shms_singles_FIX 
+python3 -m json.tool heep_shms_singles_FIX.json 
+swif import -file  heep_shms_singles_FIX.json 
+swif run heep_shms_singles_FIX 
 
 =====COIN MODE: SINGLES======
 
-python3 hcswif.py --mode replay --run file good_coin_hms_singles_list.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_hms_coin.C  --disk 1000000000 --spectrometer HMS_COIN --project c-comm2017 --name heep_coin_hms_singles
-python3 -m json.tool heep_coin_hms_singles.json 
-swif import -file heep_coin_hms_singles.json 
-swif run heep_coin_hms_singles 
+python3 hcswif.py --mode replay --run file good_coin_hms_singles_list_Oct17_2018.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_hms_coin.C  --disk 2000000000 --spectrometer HMS_COIN --project c-comm2017 --name heep_coin_hms_singles_Oct17
+python3 -m json.tool heep_coin_hms_singles_Oct17.json 
+swif import -file heep_coin_hms_singles_Oct17.json 
+swif run heep_coin_hms_singles_Oct17 
 
 
-python3 hcswif.py --mode replay --run file good_coin_shms_singles_list.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_shms_coin.C  --disk 1000000000 --spectrometer SHMS_COIN --project c-comm2017 --name heep_coin_shms_singles
-python3 -m json.tool heep_coin_shms_singles.json 
-swif import -file heep_coin_shms_singles.json
-swif run heep_coin_shms_singles 
+python3 hcswif.py --mode replay --run file good_coin_shms_singles_list_fix.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_shms_coin.C  --disk 3000000000 --spectrometer SHMS_COIN --project c-comm2017 --name heep_coin_shms_singles_FIX
+python3 -m json.tool heep_coin_shms_singles_FIX.json 
+swif import -file heep_coin_shms_singles_FIX.json
+swif run heep_coin_shms_singles_FIX 
 
 
 ====COIN MODE:  COINCIDENCE=======
-python3 hcswif.py --mode replay --run file good_coin_hElec_list.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_coin_hElec_pProt.C  --disk 1000000000 --spectrometer COIN --project c-comm2017 --name heep_coin_hmsElectron 
-python3 -m json.tool heep_coin_hmsElectron.json 
-swif import -file heep_coin_hmsElectron.json
-swif run heep_coin_hmsElectron
+python3 hcswif.py --mode replay --run file good_coin_hElec_list_Oct17_2018.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_coin_hElec_pProt.C  --disk 2000000000 --spectrometer COIN --project c-comm2017 --name heep_coin_hmsElectron_Oct17 
+python3 -m json.tool heep_coin_hmsElectron_Oct17.json 
+swif import -file heep_coin_hmsElectron_Oct17.json
+swif run heep_coin_hmsElectron_Oct17
 
-python3 hcswif.py --mode replay --run file good_coin_pElec_list.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C  --disk 1000000000 --spectrometer COIN --project c-comm2017 --name heep_coin_shmsElectron
-python3 -m json.tool heep_coin_shmsElectron.json
-swif import -file heep_coin_shmsElectron.json
-swif run heep_coin_shmsElectron  
+python3 hcswif.py --mode replay --run 3247 --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C  --disk 3000000000 --spectrometer COIN --project c-comm2017 --name heep_coin_shmsElectron_FIX
+python3 -m json.tool heep_coin_shmsElectron_FIX.json
+swif import -file heep_coin_shmsElectron_FIX.json
+swif run heep_coin_shmsElectron_FIX  
 
 ---------------------------------------------------------------------------
-
-python3 hcswif.py --mode replay --run file hms_replay.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/HMS/replay_hms.C --disk 1000000000 --spectrometer HMS_ALL --project c-comm2017 --name heep_hms_scaler_replay           
-python3 -m json.tool heep_hms_scaler_replay.json                                                                                                                                                                            
-swif import -file  heep_hms_scaler_replay.json                                                                                                                                                                            
-swif run heep_hms_scaler_replay  

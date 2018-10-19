@@ -27,6 +27,18 @@ a first step in this analysis.
     **  spec_kin.dat files containing all the relevant information for each run (target, coll., raster, momentum, angles, . . .)
     **  good run lists (file with only run numbers) to be read by hcswif to submit jobs
     
-5.  With a solid knowledge of the spectrometer momentum/angles, one can start looking at kinematics
-    variables such as the invariant mass W.
+5.  Combined runs with the same kinematics in /combined_data dir. Put individual runs in /single_runs_data dir.
 
+
+
+
+Why do we have NMR in HMS dipole, but NOT in SHMS dipole?  Could NOT get the NMR to work because the field was not homogeneous enough in SHMS. 
+NO saturation in the SHMS dipole, so we can rely on the set current to relate to a momentum.
+
+What is NMR calibrated against? In 6 GeV Era, the relation was empirically determined from a series of H(e,e'p) checks
+
+Initial Field--->Momentum Mapping from Model:
+
+Measure the NMR field from TOSCA MODEL integrated field tell you what bent angle ---> what momentum
+
+TOSCA: A code to calculate magnetic fields

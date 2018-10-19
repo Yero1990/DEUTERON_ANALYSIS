@@ -11,7 +11,7 @@ block H.react.*
 
 #Calibration checks 
 block H.dc.*wirenum*
-block H.dc.*drifttime* 
+block H.dc.*time* 
 block H.dc.*dist*
 block H.dc.*residual*  
 block H.dc.*nhit* 

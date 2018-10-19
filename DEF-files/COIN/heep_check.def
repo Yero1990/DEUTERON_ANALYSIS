@@ -18,7 +18,7 @@ block H.react.*
 
 #Calibration checks 
 block P.dc.*wirenum*
-block P.dc.*drifttime* 
+block P.dc.*time* 
 block P.dc.*dist*
 block P.dc.*residual*  
 block P.dc.*nhit* 
@@ -31,7 +31,7 @@ block P.cal.*track*
 block P.hod.*Track*
 
 block H.dc.*wirenum*
-block H.dc.*drifttime*
+block H.dc.*time*
 block H.dc.*dist*               
 block H.dc.*residual*       
 block H.dc.*nhit*                                                                                 

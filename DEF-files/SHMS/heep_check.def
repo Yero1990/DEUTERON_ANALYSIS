@@ -11,7 +11,7 @@ block P.react.*
 
 #Calibration checks 
 block P.dc.*wirenum*
-block P.dc.*drifttime* 
+block P.dc.*time* 
 block P.dc.*dist*
 block P.dc.*residual*  
 block P.dc.*nhit* 

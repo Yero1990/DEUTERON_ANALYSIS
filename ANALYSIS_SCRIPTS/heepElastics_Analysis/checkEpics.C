@@ -200,7 +200,7 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
       //Write Header to CSV or SSV File
       
       if(csv) {mycsv << "Run,Q1_set,Q2_set,Q3_set,D_set,NMR_set,Collimator,Target,Target_Mass,Raster,TFE,Angle" << endl;}
-      if(ssv) {myssv << "#! Run[f,0]/   Q1_set[f,1]/   Q2_set[f,2]/   Q3_set[f,3]/    D_set[f,4]/    NMR_set[f,5]/    Collimator[f,6]/    Target[f,7]/     Target_Mass[f,8]/    Raster[f,9]/   TFE[f,10]/    Angle[f,11]/" << endl;}
+      if(ssv) {myssv << "#! Run[f,0]/   Q1_set[f,1]/   Q2_set[f,2]/   Q3_set[f,3]/    D_set[f,4]/    NMR_TRUE[f,5]/    Collimator[f,6]/    Target[f,7]/     Target_Mass[f,8]/    Raster[f,9]/   TFE[f,10]/    Angle[f,11]/" << endl;}
     }
     
   if(strcmp(exp.c_str(),"shms")==0)
@@ -215,13 +215,13 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
     {
       //Write Header to CSV File
       if(csv) {mycsv << "Run,hQ1_set,hQ2_set,hQ3_set,hD_set,NMR_set,sHB_set,sQ1_set,sQ2_set,sQ3_set,sD_set,hms_Collimator,shms_Collimator,Target,Target_Mass,Raster,TFE,hms_Angle,shms_Angle" << endl;}
-      if(ssv) {myssv << "#! Run[f,0]/   hQ1_set[f,1]/   hQ2_set[f,2]/   hQ3_set[f,3]/    hD_set[f,4]/    NMR_set[f,5]/  sHB_set[f,6]/    sQ1_set[f,7]/   sQ2_set[f,8]/   sQ3_set[f,9]/    sD_set[f,10]/   hms_Collimator[f,11]/  shms_Collimator[f,12]/  Target[f,13]/    Target_Mass[f,14]/    Raster[f,15]/   TFE[f,16]/    hms_Angle[f,17]/    shms_Angle[f,18]/" << endl;}
+      if(ssv) {myssv << "#! Run[f,0]/   hQ1_set[f,1]/   hQ2_set[f,2]/   hQ3_set[f,3]/    hD_set[f,4]/    NMR_TRUE[f,5]/  sHB_set[f,6]/    sQ1_set[f,7]/   sQ2_set[f,8]/   sQ3_set[f,9]/    sD_set[f,10]/   hms_Collimator[f,11]/  shms_Collimator[f,12]/  Target[f,13]/    Target_Mass[f,14]/    Raster[f,15]/   TFE[f,16]/    hms_Angle[f,17]/    shms_Angle[f,18]/" << endl;}
 
     }
 
   //Read Run List
   ifstream ifs;
-  ifs.open(Form("heep_%s_runlist.dat", exp.c_str()));
+  ifs.open(Form("runlists/heep_%s_runlist.dat", exp.c_str()));
   string line;
   Int_t irun;
   while(getline(ifs, line))
@@ -281,7 +281,7 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
       good_hColl_evt = 0;
       good_sColl_evt = 0;
 
-      TString filename = Form("../../../ROOTfiles/%s_replay_scaler_%d_-1.root", exp.c_str(), irun);
+      TString filename = Form("../../../ROOTfiles_volatile/%s_replay_scaler_%d_-1.root", exp.c_str(), irun);
       TFile *data_file = new TFile(filename, "READ"); 
       TTree *T = (TTree*)data_file->Get("T");
       
@@ -336,7 +336,7 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
 	  T->GetEntry(i);  
 	  
 	  hgoodEPICS = kFALSE;
-	  hgoodEPICS = abs(hQ1_set)<10000&&abs(hQ2_set)<10000&&abs(hQ3_set)<10000&&abs(NMR_set)<10000&&hQ1_set!=0&&hQ2_set!=0&&hQ3_set!=0;
+	  hgoodEPICS = abs(hQ1_set)<10000&&abs(hQ2_set)<10000&&abs(hQ3_set)<10000&&abs(NMR_true)<10000&&hQ1_set!=0&&hQ2_set!=0&&hQ3_set!=0;
 	  if( hgoodEPICS )
 	{
 	  //Sum over all epics reads for each magent current settings/readback values
@@ -426,7 +426,7 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
       hQ2set_avg = float(hQ2set_sum/hentries);
       hQ3set_avg = float(hQ3set_sum/hentries);
       hDset_avg = float(hDset_sum/hentries);
-      hNMRset_avg = float(hNMRset_sum/hentries);
+      hNMRtrue_avg = float(hNMRtrue_sum/hentries);
 
       sHBset_avg = float(sHBset_sum/sentries);
       sQ1set_avg = float(sQ1set_sum/sentries);
@@ -511,13 +511,13 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
 	  if(csv){
 	  mycsv << irun <<"," << hQ1set_avg << "," << 
 	    hQ2set_avg  << "," << hQ3set_avg << "," << 
-	    hDset_avg << "," <<  hNMRset_avg << "," << hColl_name << "," << targ_name << "," << targ_mass << "," << Form("%dx%d",(int)FRX_avg,(int)FRY_avg) << "," << TFE_avg << endl;
+	    hDset_avg << "," <<  hNMRtrue_avg << "," << hColl_name << "," << targ_name << "," << targ_mass << "," << Form("%dx%d",(int)FRX_avg,(int)FRY_avg) << "," << TFE_avg << endl;
 	  }
 	
 	  if(ssv){
 	    myssv << irun <<"    " << hQ1set_avg << "    " << 
 	      hQ2set_avg  << "    " << hQ3set_avg << "    " << 
-	      hDset_avg << "    " <<  hNMRset_avg << "    " << hColl_name << "    " << targ_name << "    " << targ_mass << "    " << Form("%dx%d",(int)FRX_avg,(int)FRY_avg) << "    " << TFE_avg << endl;
+	      hDset_avg << "    " <<  hNMRtrue_avg << "    " << hColl_name << "    " << targ_name << "    " << targ_mass << "    " << Form("%dx%d",(int)FRX_avg,(int)FRY_avg) << "    " << TFE_avg << endl;
 	  }
 	  
 	}
@@ -546,7 +546,7 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
 	  if(csv){
 	  mycsv << irun <<"," << hQ1set_avg << "," << 
 	    hQ2set_avg << "," << hQ3set_avg << "," <<
-	    hDset_avg << "," << hNMRset_avg << "," << 
+	    hDset_avg << "," << hNMRtrue_avg << "," << 
 	    sHBset_avg << "," << sQ1set_avg << "," << 
 	    sQ2set_avg << "," << sQ3set_avg << "," << 
 	    sDset_avg << "," << hColl_name << "," << 
@@ -556,7 +556,7 @@ Index----Encoder--------Name--------------Divide Encoder by 1e4
 	  if(ssv){
 	    myssv << irun <<"    " << hQ1set_avg << "    " << 
 	      hQ2set_avg << "    " << hQ3set_avg << "    " <<
-	      hDset_avg << "    " << hNMRset_avg << "    " << 
+	      hDset_avg << "    " << hNMRtrue_avg << "    " << 
 	      sHBset_avg << "    " << sQ1set_avg << "    " << 
 	      sQ2set_avg << "    " << sQ3set_avg << "    " << 
 	      sDset_avg << "    " << hColl_name << "    " << 

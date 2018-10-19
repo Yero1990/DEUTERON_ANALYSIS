@@ -263,7 +263,7 @@ void replay_production_coin_hElec_pProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   analyzer->SetSummaryFile(Form("REPORT_OUTPUT/COIN/PRODUCTION/summary_production_%s_%d_%d.report", ftype, RunNumber, MaxEvent));  // optional
   
   //Comment out all cuts summary that show up at the end of every replay
-  analyzer->SetVerbosity(1);
+  analyzer->SetVerbosity(2);
 
   // Start the actual analysis.
   analyzer->Process(run);

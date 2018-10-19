@@ -15,7 +15,8 @@
 ;  plots will be screwed up.
 ; For hms_recon_coeef_opt2018.dat
 hdelta_offset = 0.       ; (%)   hdelta_tar = hdelta_tar + hdelta_offset  
-htheta_offset = 7.445150905e-04  ; (rad) hyp_tar = hyp_tar + htheta_offset
+;htheta_offset = 7.445150905e-04  ; (rad) hyp_tar = hyp_tar + htheta_offset
+htheta_offset = 0.0
 hphi_offset   = 0.0 ; (rad) hxp_tar = hxp_tar + hphi_offset
 ;
 

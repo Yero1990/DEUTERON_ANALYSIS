@@ -17,7 +17,7 @@ spec = sys.argv[1]   #user cmd-line input 'hms', 'shms', or 'coin'
                     #Usage: python make_kinFile.py`` hms
 
 #Script to produce a kinematics file and data file with useful kinematics variables run-by-run
-f = B.get_file('data/%s_epics.data' % (spec))
+f = B.get_file('epics_data/%s_epics.data' % (spec))
 
 if(spec=='hms'):
     #Read in the run setting into an array
@@ -25,7 +25,7 @@ if(spec=='hms'):
     hQ1_set = B.get_data(f, 'hQ1_set')
     hQ2_set = B.get_data(f, 'hQ2_set')
     hQ3_set = B.get_data(f, 'hQ3_set')
-    NMR_set = B.get_data(f, 'NMR_set')
+    NMR_true = B.get_data(f, 'NMR_true')
     hPol = B.get_data(f, 'Polarity')
     angle = B.get_data(f, 'Angle')
     coll = B.get_data(f, 'Collimator')
@@ -55,7 +55,7 @@ elif(spec=='coin'):
     hQ1_set = B.get_data(f, 'hQ1_set')
     hQ2_set = B.get_data(f, 'hQ2_set')
     hQ3_set = B.get_data(f, 'hQ3_set')
-    NMR_set = B.get_data(f, 'NMR_set')
+    NMR_true = B.get_data(f, 'NMR_true')
     sHB_set = B.get_data(f, 'sHB_set')
     sQ1_set = B.get_data(f, 'sQ1_set')
     sQ2_set = B.get_data(f, 'sQ2_set')
@@ -73,17 +73,17 @@ elif(spec=='coin'):
     
    
 
-#Open a file to write kinematics data file
+#Open a file to write kinematics summary file
 fout = open('%s_kin.dat'%(spec), 'w')
 
 if(spec=='hms'):
-    fout.write('#! Run[i,0]/  hQ1_P[f,1]/  hQ2_P[f,2]/  hQ3_P[f,3]/  hNMR_P[f,4]/  Angle[f,5]/  Target[s,6]/  Target_Mass[f,7]/ hpartmass[f,8]/  Raster[s,9]/  Collimator[s,10]/  TFE[f,11]/ \n')
+    fout.write('#! Run[i,0]/       hQ1_P[f,1]/       hQ2_P[f,2]/       hQ3_P[f,3]/       hNMR_P[f,4]/       Angle[f,5]/       Target[s,6]/       Target_Mass[f,7]/      hpartmass[f,8]/       Raster[s,9]/       Collimator[s,10]/       TFE[f,11]/ \n')
 
 elif(spec=='shms'):
     fout.write('#! Run[i,0]/  sHB_P[f,1]/  sQ1_P[f,2]/  sQ2_P[f,3]/  sQ3_P[f,4]/  sD_P[f,5]/  Angle[f,6]/  Target[s,7]/  Target_Mass[f,8]/ ppartmass[f,9]/  Raster[s,10]/  Collimator[s,11]/  TFE[f,12]/ \n')
 
 elif(spec=='coin'):
-      fout.write('#! Run[i,0]/  hQ1_P[f,1]/  hQ2_P[f,2]/  hQ3_P[f,3]/  hNMR_P[f,4]/ sHB_P[f,5]/  sQ1_P[f,6]/  sQ2_P[f,7]/  sQ3_P[f,8]/  sD_P[f,9]/   hms_Angle[f,10]/    shms_Angle[f,11]/   hms_Collimator[s,12]/   shms_Collimator[s,13]/   Target[s,14]/  Target_Mass[f,15]/  hpartmass[f,16]/  ppartmass[f,17]/   Raster[s,18]/   TFE[f,19]/ \n')  
+      fout.write('#! Run[i,0]/     hQ1_P[f,1]/     hQ2_P[f,2]/     hQ3_P[f,3]/     hNMR_P[f,4]/    sHB_P[f,5]/     sQ1_P[f,6]/     sQ2_P[f,7]/     sQ3_P[f,8]/     sD_P[f,9]/      hms_Angle[f,10]/       shms_Angle[f,11]/      hms_Collimator[s,12]/      shms_Collimator[s,13]/      Target[s,14]/     Target_Mass[f,15]/     hpartmass[f,16]/     ppartmass[f,17]/      Raster[s,18]/      TFE[f,19]/ \n')  
 
 #Create the standard.kinematics file specific for these studies
 f_std = open('standard.kinematics.%s_elastics'%(spec), 'w')
@@ -98,7 +98,7 @@ for index, run in enumerate(run):
         Q1_P  = GetP('hms', 'Q1',   hQ1_set[index])
         Q2_P  = GetP('hms', 'Q2',   hQ2_set[index])
         Q3_P  = GetP('hms', 'Q3',   hQ3_set[index])
-        NMR_P = GetP('hms', 'NMR',  NMR_set[index])
+        NMR_P_true = GetP('hms', 'NMR',  NMR_true[index])
         if(hPol[index]=='pos'):
             hpartmass = 0.938272
         elif(hPol[index]=='neg'):
@@ -120,7 +120,7 @@ for index, run in enumerate(run):
         hQ1_P  = GetP('hms', 'Q1',   hQ1_set[index])
         hQ2_P  = GetP('hms', 'Q2',   hQ2_set[index])
         hQ3_P  = GetP('hms', 'Q3',   hQ3_set[index])
-        NMR_P = GetP('hms', 'NMR',  NMR_set[index])
+        NMR_P_true = GetP('hms', 'NMR',  NMR_true[index])
         sHB_P = GetP('shms', 'HB',   sHB_set[index])
         sQ1_P = GetP('shms', 'Q1',   sQ1_set[index])
         sQ2_P = GetP('shms',  'Q2',   sQ2_set[index])
@@ -141,7 +141,7 @@ for index, run in enumerate(run):
     elif(targ[index]=='LD2'):
         targ_mass = 2.014101
     
-    #Get Correct Beam Energy fro TFE
+    #Get Correct Beam Energy from TFE
     if(TFE[index] < 3.0):
         gpbeam = 2.221
     elif(TFE[index] > 6.0 and TFE[index] < 7.0):
@@ -150,18 +150,24 @@ for index, run in enumerate(run):
         gpbeam = 10.58794
 
 
+
+
+
     #Write to File
     if(spec=='hms'):
+#        print('Run = ', run,  ' NMR_P_set = ', round(NMR_P,4),  ' NMR_P_true = ', round(NMR_P_true,4), 'NMR_P_%Diff = ',  ( (NMR_P_true - NMR_P)/(NMR_P_true)  ) )
         fout.write('%s      %s           %s             %s             %s              %s            %s          %s           %s           %s             %s           %s\n' % 
-                   (run, round(Q1_P,4), round(Q2_P,4), round(Q3_P,4), round(NMR_P,4), angle[index], targ[index], targ_mass, hpartmass, raster[index], coll[index], TFE[index] ))
+                   (run, round(Q1_P,4), round(Q2_P,4), round(Q3_P,4),  round(NMR_P_true,4), angle[index], targ[index], targ_mass, hpartmass, raster[index], coll[index], TFE[index] ))
 
     elif(spec=='shms'):
+#        print('Run = ', run,  ' NMR_P_set = ', round(NMR_P,4),  ' NMR_P_true = ', round(NMR_P_true,4), 'NMR_P_Diff = ',  ( (NMR_P_true - NMR_P)/(NMR_P_true)  ) )
         fout.write('%s        %s           %s            %s            %s             %s            %s            %s           %s           %s           %s            %s          %s\n' % 
                    (run, round(HB_P,4), round(Q1_P,4), round(Q2_P,4), round(Q3_P,4), round(D_P,4), angle[index], targ[index], targ_mass, ppartmass, raster[index], coll[index], TFE[index] ))
 
     elif(spec=='coin'):
+#        print('Run = ', run,  ' NMR_P_set = ', round(NMR_P,4),  ' NMR_P_true = ', round(NMR_P_true,4), 'NMR_P_Diff = ',  ( (NMR_P_true - NMR_P)/(NMR_P_true)  ) )
         fout.write('%s      %s            %s              %s              %s               %s              %s             %s               %s              %s            %s             %s              %s              %s             %s           %s          %s          %s            %s             %s \n' % 
-                   (run, round(hQ1_P,4), round(hQ2_P,4), round(hQ3_P,4), round(NMR_P,4), round(sHB_P,4), round(sQ1_P,4), round(sQ2_P,4), round(sQ3_P,4), round(sD_P,4), hangle[index], sangle[index],  hcoll[index],  scoll[index],  targ[index], targ_mass,  hpartmass,  ppartmass,  raster[index],  TFE[index] ))                                                             
+                   (run, round(hQ1_P,4), round(hQ2_P,4), round(hQ3_P,4), round(NMR_P_true,4), round(sHB_P,4), round(sQ1_P,4), round(sQ2_P,4), round(sQ3_P,4), round(sD_P,4), hangle[index], sangle[index],  hcoll[index],  scoll[index],  targ[index], targ_mass,  hpartmass,  ppartmass,  raster[index],  TFE[index] ))                                                             
    
 
     #Write each run to the standard.kinematics file
@@ -172,7 +178,7 @@ for index, run in enumerate(run):
         f_std.write('gtargmass_amu = %s\n' % (targ_mass))
         f_std.write('hpartmass = %s\n' % (hpartmass))    #This value should be generalized once I know how to get the particle type we want in the spectrometer
         f_std.write('htheta_lab = -%s\n' % (angle[index]))
-        f_std.write('hpcentral = %s\n' % round(NMR_P,4) )
+        f_std.write('hpcentral = %s\n' % round(NMR_P_true,4) )
         f_std.write('\n')
     elif(spec=='shms'):
         f_std.write('%s\n' % (run))
@@ -190,7 +196,7 @@ for index, run in enumerate(run):
         f_std.write('ppartmass = %s\n' % (ppartmass))   
         f_std.write('htheta_lab = -%s\n' % (hangle[index]))
         f_std.write('ptheta_lab = %s\n' % (sangle[index]))
-        f_std.write('hpcentral = %s\n' % round(NMR_P,4) )
+        f_std.write('hpcentral = %s\n' % round(NMR_P_true,4) )
         f_std.write('ppcentral = %s\n' % round(sD_P,4) )
         f_std.write('\n')
 
@@ -215,18 +221,25 @@ kd.add_key('Ps6','f')     #Coincidence
 if(spec=='hms'):
     kd.add_key('hms_xMisPoint','f')
     kd.add_key('hms_yMisPoint','f')
+    kd.add_key('hms_xBPM', 'f')
+    kd.add_key('hms_yBPM', 'f')
 elif(spec=='shms'):
     kd.add_key('shms_xMisPoint','f')
     kd.add_key('shms_yMisPoint','f')
+    kd.add_key('shms_xBPM', 'f')
+    kd.add_key('shms_yBPM', 'f')
 elif(spec=='coin'):
     kd.add_key('hms_xMisPoint','f')
     kd.add_key('hms_yMisPoint','f')
     kd.add_key('shms_xMisPoint','f')
     kd.add_key('shms_yMisPoint','f')
-
+    kd.add_key('hms_xBPM', 'f')
+    kd.add_key('hms_yBPM', 'f')
+    kd.add_key('shms_xBPM', 'f')
+    kd.add_key('shms_yBPM', 'f')
 #Loop over scaler report file from heep runs
 for i, run in enumerate(kd['Run']):
-    reportFile = "../../../REPORT_OUTPUT/%s/PRODUCTION/replay_%s_scaler_%s_%s.report"% (spec.upper(), spec, run, -1)
+    reportFile = "../../../REPORT_OUTPUT_volatile/%s/PRODUCTION/replay_%s_scaler_%s_%s.report"% (spec.upper(), spec, run, -1)
 
     #print(reportFile)
     #Open report file
@@ -252,16 +265,26 @@ for i, run in enumerate(kd['Run']):
             kd.data[i]['Ps6'] = int(line[1])
             
         if(spec=='hms'):    
-            if("HMS X Mispointing" in line[0] and "SHMS X Mispointing" not in line[0]):
+            if("HMS X Mispointing" in line[0]):
                 kd.data[i]['hms_xMisPoint'] = float(line[1].strip('cm'))
-            elif("HMS Y Mispointing" in line[0] and "SHMS Y Mispointing" not in line[0]):
+            elif("HMS Y Mispointing" in line[0]):
                 kd.data[i]['hms_yMisPoint'] = float(line[1].strip('cm'))
+            elif("HMS X BPM" in line[0]):
+                kd.data[i]['hms_xBPM'] = float(line[1].strip('cm'))
+            elif("HMS Y BPM" in line[0]):
+                kd.data[i]['hms_yBPM'] = float(line[1].strip('cm'))
+
 
         elif(spec=='shms'):
             if("SHMS X Mispointing" in line[0]):
                 kd.data[i]['shms_xMisPoint'] = float(line[1].strip('cm'))
             elif("SHMS Y Mispointing" in line[0]):
                 kd.data[i]['shms_yMisPoint'] = float(line[1].strip('cm'))
+            elif("SHMS X BPM" in line[0]):
+                kd.data[i]['shms_xBPM'] = float(line[1].strip('cm'))
+            elif("SHMS Y BPM" in line[0]):
+                kd.data[i]['shms_yBPM'] = float(line[1].strip('cm'))
+
         elif(spec=='coin'):
             if("HMS X Mispointing" in line[0] and "SHMS X Mispointing" not in line[0]):
                 kd.data[i]['hms_xMisPoint'] = float(line[1].strip('cm'))
@@ -271,12 +294,21 @@ for i, run in enumerate(kd['Run']):
                 kd.data[i]['shms_xMisPoint'] = float(line[1].strip('cm'))
             elif("SHMS Y Mispointing" in line[0]):
                 kd.data[i]['shms_yMisPoint'] = float(line[1].strip('cm'))
+            elif("HMS X BPM" in line[0] and "SHMS X BPM" not in line[0]):
+                kd.data[i]['hms_xBPM'] = float(line[1].strip('cm'))
+            elif("HMS Y BPM" in line[0] and "SHMS Y BPM" not in line[0]):
+                kd.data[i]['hms_yBPM'] = float(line[1].strip('cm'))
+            elif("SHMS X BPM" in line[0]):
+                kd.data[i]['shms_xBPM'] = float(line[1].strip('cm'))
+            elif("SHMS Y BPM" in line[0]):
+                kd.data[i]['shms_yBPM'] = float(line[1].strip('cm'))
+
 
 print('End Loop')
 
 kd.save('%s_kin.dat' % (spec))
 
-
+'''
 #Create good run lists based on singles, coincidences, or singles in coin. mode
 #these are to be used by hcswif to submit jobs to ifarm
 
@@ -319,4 +351,4 @@ for i, run in enumerate(kd['Run']):
     else:
         fsingles.write('%s\n'%(run))
 print('End Loop')
-
+'''
