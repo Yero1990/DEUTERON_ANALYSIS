@@ -1,0 +1,799 @@
+#Hydrogen Elastics Kinematics Data File
+1689
+gpbeam = 2.221
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 7.449
+ppcentral = 2.177
+
+1691
+gpbeam = 2.221
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 7.449
+ppcentral = 2.177
+
+1793
+gpbeam = 6.43
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 7.985
+ppcentral = 6.017
+
+2071
+gpbeam = 6.43
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 16.023
+ppcentral = 5.074
+
+2072
+gpbeam = 6.43
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 16.023
+ppcentral = 5.074
+
+2073
+gpbeam = 6.43
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 20.032
+ppcentral = 4.522
+
+2074
+gpbeam = 6.43
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 20.032
+ppcentral = 4.522
+
+2085
+gpbeam = 6.43
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 30.059
+ppcentral = 3.349
+
+2086
+gpbeam = 6.43
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 30.059
+ppcentral = 3.349
+
+2087
+gpbeam = 6.43
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 35.046
+ppcentral = 2.869
+
+2088
+gpbeam = 6.43
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 35.046
+ppcentral = 2.869
+
+2221
+gpbeam = 6.43
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.995
+ppcentral = 4.8659
+
+2222
+gpbeam = 6.43
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.995
+ppcentral = 3.911
+
+2223
+gpbeam = 6.43
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.995
+ppcentral = 3.911
+
+2228
+gpbeam = 6.43
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.995
+ppcentral = 3.911
+
+2229
+gpbeam = 6.43
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.995
+ppcentral = 3.911
+
+2230
+gpbeam = 6.43
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.995
+ppcentral = 3.6
+
+2231
+gpbeam = 6.43
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.995
+ppcentral = 3.349
+
+2475
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 21.035
+ppcentral = 5.1
+
+2476
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 21.035
+ppcentral = 5.1
+
+2477
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 21.035
+ppcentral = 5.1
+
+2480
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 21.035
+ppcentral = 5.1
+
+2481
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 21.035
+ppcentral = 5.1
+
+2483
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 21.035
+ppcentral = 5.1
+
+2484
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 21.035
+ppcentral = 5.1
+
+2485
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 21.035
+ppcentral = 5.1
+
+2486
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 21.035
+ppcentral = 5.1
+
+2487
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 21.035
+ppcentral = 5.1
+
+2488
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 21.035
+ppcentral = 5.1
+
+2570
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2571
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2572
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2573
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2574
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2575
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2576
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2583
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2584
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2585
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2586
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2587
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2588
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2589
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2599
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2600
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2601
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2602
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2608
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2609
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2610
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2611
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2612
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2613
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2614
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2626
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2627
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2628
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2629
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2630
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2631
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2632
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2633
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 38.975
+ppcentral = 2.5
+
+2726
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 32.975
+ppcentral = 3.2
+
+2727
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 32.975
+ppcentral = 3.2
+
+2729
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 32.975
+ppcentral = 3.2
+
+2730
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 32.975
+ppcentral = 3.2
+
+2737
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 32.975
+ppcentral = 3.2
+
+2738
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 32.975
+ppcentral = 3.2
+
+2739
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 32.975
+ppcentral = 3.2
+
+2740
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 32.975
+ppcentral = 3.2
+
+2741
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 32.975
+ppcentral = 3.2
+
+2747
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 32.975
+ppcentral = 3.2
+
+2748
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 32.975
+ppcentral = 3.2
+
+2751
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 32.975
+ppcentral = 3.2
+
+2752
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 32.975
+ppcentral = 3.2
+
+2753
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 32.975
+ppcentral = 3.2
+
+2754
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 32.975
+ppcentral = 3.2
+
+2902
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 28.99
+ppcentral = 3.7
+
+2903
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 28.99
+ppcentral = 3.7
+
+2904
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 28.99
+ppcentral = 3.7
+
+2905
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 28.99
+ppcentral = 3.7
+
+2906
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 28.99
+ppcentral = 3.7
+
+2907
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 28.99
+ppcentral = 3.7
+
+2908
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 28.99
+ppcentral = 3.7
+
+2909
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 28.99
+ppcentral = 3.7
+
+2910
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 28.99
+ppcentral = 3.7
+
+2911
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 28.99
+ppcentral = 3.7
+
+2912
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 28.99
+ppcentral = 3.7
+
+2913
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 28.99
+ppcentral = 3.7
+
+3026
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.98
+ppcentral = 4.4
+
+3027
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.98
+ppcentral = 4.4
+
+3028
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.98
+ppcentral = 4.4
+
+3029
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.98
+ppcentral = 4.4
+
+3030
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.98
+ppcentral = 4.4
+
+3031
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.98
+ppcentral = 4.4
+
+3032
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.98
+ppcentral = 4.4
+
+3033
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.98
+ppcentral = 4.4
+
+3034
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.98
+ppcentral = 4.4
+
+3122
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.98
+ppcentral = 4.4
+
+3123
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.98
+ppcentral = 4.4
+
+3148
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 8.02
+ppcentral = 9.8
+
+3149
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 8.02
+ppcentral = 9.8
+
+3150
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 8.02
+ppcentral = 9.8
+
+3151
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 8.02
+ppcentral = 9.8
+
+3206
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.955
+ppcentral = 4.4
+
+3207
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.955
+ppcentral = 4.4
+
+3208
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.955
+ppcentral = 4.4
+
+3209
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.955
+ppcentral = 4.4
+
+3210
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.955
+ppcentral = 4.4
+
+3211
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.955
+ppcentral = 4.4
+
+3212
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.955
+ppcentral = 4.4
+
+3213
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.955
+ppcentral = 4.4
+
+3214
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.955
+ppcentral = 4.4
+
+3215
+gpbeam = 10.58794
+gtargmass_amu = 1.00794
+ppartmass = 0.00051099
+ptheta_lab = 24.955
+ppcentral = 4.4
+

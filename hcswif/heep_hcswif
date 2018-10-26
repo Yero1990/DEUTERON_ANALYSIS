@@ -34,9 +34,9 @@ python3 -m json.tool heep_coin_hmsElectron_Oct17.json
 swif import -file heep_coin_hmsElectron_Oct17.json
 swif run heep_coin_hmsElectron_Oct17
 
-python3 hcswif.py --mode replay --run 3247 --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C  --disk 3000000000 --spectrometer COIN --project c-comm2017 --name heep_coin_shmsElectron_FIX
-python3 -m json.tool heep_coin_shmsElectron_FIX.json
-swif import -file heep_coin_shmsElectron_FIX.json
-swif run heep_coin_shmsElectron_FIX  
+python3 hcswif.py --mode replay --run file good_coin_pElec_list.dat --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C  --disk 3000000000 --spectrometer COIN --project c-comm2017 --name heepCoin_hmsProtons_check
+python3 -m json.tool heepCoin_hmsProtons_check.json
+swif import -file heepCoin_hmsProtons_check.json
+swif run heepCoin_hmsProtons_check  
 
 ---------------------------------------------------------------------------

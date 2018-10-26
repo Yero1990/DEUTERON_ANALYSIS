@@ -2,13 +2,8 @@ block T.coin.*FADC*
 block T.coin.*pT*
 
 block P.hod.*
-block P.dc.
-block P.cal.etotnorm
-block P.cal.etracknorm
+block P.dc.ntrack
+block P.cal.etot*
+block P.cal.etrack*
 block P.hgcer.npe*
 block P.ngcer.npe*
-
-block H.hod.*
-block H.cal.etotnorm
-block H.cal.etracknorm
-block H.cer.npe*

@@ -1,4 +1,4 @@
-void replay_production_hms_coin (Int_t RunNumber=0, Int_t MaxEvent=0, const char* ftype="heep_check") {
+void replay_production_hms_coin (Int_t RunNumber=0, Int_t MaxEvent=0, const char* ftype="hod_calib") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {

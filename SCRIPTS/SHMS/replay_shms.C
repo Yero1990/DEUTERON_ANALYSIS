@@ -1,4 +1,4 @@
-void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="heep_check") {
+void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="hod_calib") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -51,8 +51,8 @@ void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="hee
   gHcDetectorMap->Load("MAPS/SHMS/DETEC/STACK/shms_stack.map");
 
   //Add Module to explicitly plot all TDC hits from the trigger signals
-  THaDecData* decdata= new THaDecData("D","Decoder raw data");
-  gHaApps->Add(decdata);
+  //THaDecData* decdata= new THaDecData("D","Decoder raw data");
+  //gHaApps->Add(decdata);
   
   //Add trigger apparatus
   THaApparatus* TRG = new THcTrigApp("T", "TRG");
