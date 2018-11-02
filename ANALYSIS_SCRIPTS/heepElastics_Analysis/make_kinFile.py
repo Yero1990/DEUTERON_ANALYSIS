@@ -86,7 +86,7 @@ elif(spec=='coin'):
       fout.write('#! Run[i,0]/     hQ1_P[f,1]/     hQ2_P[f,2]/     hQ3_P[f,3]/     hNMR_P[f,4]/    sHB_P[f,5]/     sQ1_P[f,6]/     sQ2_P[f,7]/     sQ3_P[f,8]/     sD_P[f,9]/      hms_Angle[f,10]/       shms_Angle[f,11]/      hms_Collimator[s,12]/      shms_Collimator[s,13]/      Target[s,14]/     Target_Mass[f,15]/     hpartmass[f,16]/     ppartmass[f,17]/      Raster[s,18]/      TFE[f,19]/ \n')  
 
 #Create the standard.kinematics file specific for these studies
-f_std = open('standard.kinematics.%s_elastics'%(spec), 'w')
+f_std = open('standard.kinematics.%s_elastics_test'%(spec), 'w')
 f_std.write('#Hydrogen Elastics Kinematics Data File\n')
 
 #Loop over run list
@@ -143,13 +143,16 @@ for index, run in enumerate(run):
     
     #Get Correct Beam Energy from TFE
     if(TFE[index] < 3.0):
-        gpbeam = 2.221
+        gpbeam = 2.22178            #updated from MArk, 11/2/2018
+        gpbeam_err = 0.00236
     elif(TFE[index] > 6.0 and TFE[index] < 7.0):
-        gpbeam = 6.430
+        gpbeam = 6.42765            #updated from MArk, 11/2/2018
+        gpbeam_err = 0.00306
     elif(TFE[index] > 10.0):
-        gpbeam = 10.58794
-
-
+        gpbeam = 10.6005           #updated from MArk, 11/2/2018 (Measured on April 2018 --should be used up to Spring 2018 Run)
+        gpbeam_err = 0.00415
+        #gpbeam = 10.5965           #updated from MArk, 11/2/2018 (Measured on Octobes 2018 --should be used Starting Fall 2018 Run)
+        #gpbeam_err = 0.00415
 
 
 

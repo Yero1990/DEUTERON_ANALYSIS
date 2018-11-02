@@ -1,0 +1,11 @@
+python3 hcswif.py --mode replay --run file filelist.dat --replay /u/group/E12-10-003/cyero/hallc_replay/SCRIPTS/COIN/PRODUCTION/replay_production_coin_hElec_pProt.C --disk 1000000000 --spectrometer COIN --events 50000 --project c-comm2017 --name test_carlos
+python3 -m json.tool test_carlos.json
+swif import -file test_carlos.json
+swif run test_carlos
+
+
+
+#hcswif useful commands
+swif status workflow_name
+
+swif cancel -workflow test_burcu -delete

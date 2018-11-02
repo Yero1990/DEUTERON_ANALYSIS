@@ -10,9 +10,11 @@ block P.kin.*
 block H.kin.*
 
 #Focal Plane/Target Variables
+block P.dc.*fp*
 block P.gtr.*
 block P.react.*
 
+block H.dc.*fp*
 block H.gtr.*
 block H.react.*
 

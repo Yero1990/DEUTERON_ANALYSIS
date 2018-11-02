@@ -8,7 +8,7 @@
 1) Check reference time cuts are within established limits found in (/PARAM/HMS/GEN/h_reftime_cut.param) 
    Ensure that the reference time cuts made exclude un-wanted out of time reference times (look at it log-scale)
    --Replay the raw data and look at the leafs: 
-     T.hms.hFADC_TREF_ROC1 (hhodo/hcer/hcal _adcrefcut)
+     T.hms.hFADC_TREF_ROC1 (hhodo/hcer/hcal_adcrefcut)
      T.hms.hT1 (hhodo_tdcrefcut)
      T.hms.hDCREF1 (hdc_tdcrefcut)
 
@@ -16,7 +16,7 @@
    By setting limits on the ADC/TDC TimeDiff per PMT (requiring adc_multiplicity==1), we are excluding extraneous events which would have
    otherwise block events of interest in the main peak. These cuts increase the numbers of good triggers in the
    distribution (after we replay the data with the updated time window cuts). When determining the time window limits,
-   a cut on the 'Good(Pos/Neg)AdcMult==1' was made to ensure we had only a single hit. When the data was replayed again, we ran set adc_mult >=1,
+   a cut on the 'Good(Pos/Neg)AdcMult==1' was made to ensure we had only a single hit. When the data was replayed again, we ran with set adc_mult >=1,
    to ensure we get good triggers that have multiplicity >1 
 
    Detectors---------Leafs of interest:			  

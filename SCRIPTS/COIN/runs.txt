@@ -1,7 +1,0 @@
-JULT 30, 2018 ---> hdcREF5 was added 
-
-LAST RUNS Before this DATE:
-
-HMS RUN: 2313
-SHMS RUN: 4362
-COIN: 4361

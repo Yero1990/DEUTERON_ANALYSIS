@@ -12,3 +12,63 @@ setTimeWindows:  Code to set reference time cuts (adc/tdc ref time)
 		 such as hodoscopoes, drift chambers, cherenkovs, calorimeters.
 		 Also set time window cuts on a PMT-basis.
  
+
+
+
+LIST OF REF TIME HISTOGRAMS:
+** This list was obtained by looking in /MAPS/{SPEC}/DETEC/STACK/{spec}_stack.map  (also look at htrip.map)
+** Look for the value 1000, since it is associated to what the map points to, to use as ref. time
+** the 'sig' column represents the REFINDEX value. To determine which index is each ROC pointing to,
+   look at the REFINDEX or REFCHAN (shms DC) value below each SLOT assignment
+
+=======
+==HMS==
+=======
+    NAME (on MAP)                 LOCATION                              LEAF NAME (spec--> shms or coin)
+1.  hFADC_TREF_ROC1       (ROC1::SLOT18::Ch11)                         T.{spec}.hFADC_TREF_ROC1_adcPulseTimeRaw -->Look at this ONE   
+2.  hTref1(hT1)           (ROC1::SLOT02::Ch06)                         T.{spec}.hT1_tdcTimeRaw                  -->Look as this ONE
+3.  hTref2(hT2)           (ROC1::SLOT20::Ch127)  (not used)	       T.{spec}.hT2_tdcTimeRaw			_
+4.  hDCREF1               (ROC3::SLOT08::Ch15)	      		       T.{spec}.hDCREF1_tdcTimeRaw		 |
+5.  hDCREF2		  (ROC3::SLOT16::Ch63)			       T.{spec}.hDCREF2_tdcTimeRaw		 |
+6.  hDCREF3		  (ROC3::SLOT04::Ch111)			       T.{spec}.hDCREF3_tdcTimeRaw		 | Look at all
+7.  hDCREF4		  (ROC3::SLOT13::Ch95)			       T.{spec}.hDCREF4_tdcTimeRaw		 |
+8.  hDCREF5 		  (ROC3::SLOT02::Ch127) (added July 2018)      T.{spec}.hDCREF5_tdcTimeRaw		_|
+**Even though only hDCREF1 is used (hDCREF5 is also used as of July 2018),
+it is best to look at all of them.
+
+========
+==SHMS==
+========
+     NAME (on MAP)                 LOCATION                              LEAF NAME (spec--> shms or coin)
+1.   pFADC_TREF_ROC2	      (ROC2::SLOT14::Ch11)		    T.{spec}.pFADC_TREF_ROC2_adcPulseTimeRaw -->Look at this ONE
+2.   pTRef1		      (ROC2::SLOT20::Ch15)		    T.{spec}.pT1_tdcTimeRaw
+3.   pTRef2		      (ROC2::SLOT19::Ch31)		    T.{spec}.pT2_tdcTimeRaw   -->Look at this ONE!
+4.   pDCREF1->10              --- (Need to look at all)		    T.{spec}.pDCREF{1..10}_tdcTimeRaw   -->Look at all 10
+                              Since each module has its own
+			      copy of the ref. time
+
+==================================================
+====IMPORTANT NOTE ON SETTING REFERENCE TIMES=====
+==================================================
+
+When setting reference time cuts, we want to ensure we select the correct
+reference time signal, when multiplicity (number of hits in TDC window) is
+greater than 1. Currently, the source code (hcana) selects the first hit in the
+window by default. If there was only one hit, there would NOT be a problem,
+since that hit is guaranteed to be the reference time, as it caused the L1
+Acc., which blocks any subsequent signals. If there is more than one hit,
+there is NO guaranteed that the first hit would be the reference time, so
+a cut is made in the reference time histogram, requiring to pick the
+first hit above a certain time window cut. In picking this cut, it is
+important to look at it with a multiplicity cut ==1, to to see all the signals
+which had a single hit, and be able to clearly discern which single hit is good/bad.
+By looking at the distribution, it becomes clear, that there is a large block (~ 25 ns width, good hits)
+with some grass to the left of it, so it becomes clear where to put the cut.   
+
+It is possible to have more than a single good hit as there are multiple ref. times (3/4, el-real, ...)
+So in reality, we require a multiplicity of 3. So only events which had all three ref. times present.
+Of course, there will be some events, in which a ref. time did not fire because of in-efficiency, but it is
+rare, specially, for the 3/4, which must be 99.9 % efficient for us NOT to lose a ref. time
+
+====================================================
+====================================================

@@ -1,0 +1,5 @@
+H.kin.secondary.xangle
+P.kin.primary.scat_ang_deg
+H.gtr.p
+H.kin.secondary.emiss
+H.gtr.dp

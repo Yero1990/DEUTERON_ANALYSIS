@@ -1,0 +1,24 @@
+*********************
+ HMS Protons Studies
+*********************
+
+Brief: All coincidence elastics runs with HMS protons has been
+gathered for HMS momentum studies. The study consists of
+using a formula to calculate the proton momentum, which is
+compared against the HMS measured momentum, H.gtr.p, on an event by
+event basis. Ideally, the difference should give a delta peak at zero,
+however, in reality, this peak might be offset if the momentum measured is
+NOT what is supposed to be. 
+
+1)The quantity of interest is:  dP / P = (P_calc - P_meas ) / P_meas
+This calculation is done in SIMC and DATA, and them compared. It was found
+that SIMC/DATA disagree, from which we can then measure this disagreement as
+dP / P = (P_simc - P_data) / P_meas.  Where P_simc(or data) is the 
+fitted peak  from (P_calc - P_meas) / P_meas.
+
+
+2) It was found that dP_simc was an order of magnitude smaller than data, and with
+   opposite sign.  We still need to compare SIMC to DATA no matter what. 
+   dP = dP_data - dP_simc.   The correction is then: 
+   ** P_corr = P + dP    --- Not using the information from W in the SHMS
+ 

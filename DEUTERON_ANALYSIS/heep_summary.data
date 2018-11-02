@@ -1,0 +1,17 @@
+HMS MOMENTUM: NMR_true,  protons
+SHMS MOMENTUM: Calculated from Dipole Set Current, electrons
+
+#For now, multiply hms_P *corr_factor for these runs, for now. This factor was obtained from the hms proton studies/electron studies comparison (See UTIL_COMM_ONEPASS REPO)
+
+Run[s,0]/   nmr_true[f,1]/      hms_P[f,1]/   hms_Angle[f,2]/    shms_P[f,3]/      shms_Angle[f,4]/     Ebeam[f,5]/       hms_Coll[s,6]/     shms_Coll[s,7]/    Raster[s,8]/  dP_Pmeas_data[f,6]/    dP_Pmeas_data_err[f,7]/     dp_Pmeas_simc[f,8]/        dp_Pmeas_simc_err[f,9]/      corr_factor[f,10]/
+3244              0.804385	      2.9382        37.29        8.7               12.2                 10.58794    	  Large_Coll	     Coll     		2x2  	      -5.63817e-03   	      1.53242e-05 		     6.67438e-04   		1.83192e-05	     	 0.995
+3245              0.804385	      2.9382        37.29        8.7               12.2                 10.58794    	  Large_Coll	     Coll     		2x2  	      -5.63817e-03   	      1.53242e-05 		     6.67438e-04   		1.83192e-05	     	 0.995
+3246              0.804385	      2.9382        37.29        8.7               12.2                 10.58794     	  Large_Coll	     Coll     		2x2  	      -5.63817e-03   	      1.53242e-05 		     6.67438e-04   		1.83192e-05	     	 0.995
+3247              0.804385	      2.9382        37.29        8.7               12.2                 10.58794      	  Large_Coll	     Coll    		2x2  	      -5.63817e-03   	      1.53242e-05 		     6.67438e-04   		1.83192e-05	     	 0.995
+3248              0.804386	      2.9382        37.29        8.7               12.2                 10.58794      	  Large_Coll	     Coll    		2x2  	      -5.63817e-03   	      1.53242e-05 		     6.67438e-04   		1.83192e-05	     	 0.995
+3288              0.804333	      2.938         37.338       8.7               12.194               10.58794      	  Large_Coll	     Coll    		2x2  	      -5.23498e-03   	      1.71661e-05		     6.64255e-04   		1.86556e-05	     	 0.995
+3371              0.952715	      3.48          33.545       8.7               13.93                10.58794      	  Large_Coll	     Coll    		2x2  	      -5.72367e-03   	      4.02318e-05		     5.77566e-04   		1.65849e-05	     	 0.995
+3374              0.632393	      2.31          42.9         8.7               9.928                10.58794      	  Large_Coll	     Coll    		2x2  	      -3.97759e-03   	      2.15750e-05		     7.82011e-04   		2.22659e-05          	 0.995                
+3376              0.517386	      1.8899        47.605       8.7               8.495                10.58794      	  Large_Coll	     Coll    		2x2  	      -3.17055e-03   	      1.93666e-05		     1.00559e-03   		2.69176e-05	     	 0.995		  
+3377              0.517404	      1.8899        47.605       8.7               8.495                10.58794      	  Large_Coll	     Coll    		2x2  	      -3.17055e-03   	      1.93666e-05		     1.00559e-03   		2.69176e-05	     	 0.995 
+3379              0.517379	      1.8898        47.605       8.7               8.495                10.58794      	  Large_Coll  	     Centered_Sieve   	2x2  	      -3.17055e-03   	      1.93666e-05		     1.00559e-03   		2.69176e-05	     	 0.995
