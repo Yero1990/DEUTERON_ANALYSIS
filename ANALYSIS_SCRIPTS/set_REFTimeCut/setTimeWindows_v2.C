@@ -1,300 +1,311 @@
+//#include "example.h"
 //Define and Set REF. TIME CUTS 
 //0.0625 ns / Ch., in case it is used
 
-//(See /PARAM/HMS/GEN/h_reftime_cut.param, units in Channel)
-static const Double_t hhod_trefcut = 1250.;      //hodo tdc ref cut
-static const Double_t hdc_trefcut = 14800.;      //dc tdc ref cut
-static const Double_t hadc_trefcut = 2640.;      //hodo/cer/cal adc ref cut
-
-//(See /PARAM/SHMS/GEN/p_reftime_cut.param, units in Channel)
-static const Double_t phod_trefcut = 3000.;
-static const Double_t pdc_trefcut = 12000.;
-static const Double_t padc_trefcut = 3200.;  
-
-//Define some detectors planes and sides
-static const Int_t hod_PLANES = 4;
-static const Int_t cal_PLANES = 4;
-static const Int_t dc_PLANES = 12;
-static const Int_t SIDES = 2;
-
-static const string hod_pl_names[hod_PLANES] = {"1x", "1y", "2x", "2y"};
-static const string cal_pl_names[cal_PLANES] = {"1pr", "2ta", "3ta", "4ta"};
-
-//For SHMS, P.cal.fly.goodAdcTdcDiffTime
-// P.cal.pr.good{Pos,Neg}AdcMult or AdcTdcDiffTime
-
-static const string hdc_pl_names[dc_PLANES] = {"1u1", "1u2", "1x1", "1x2", "1v2", "1v1", "2v1", "2v2", "2x2", "2x1", "2u2", "2u1"};
-static const string pdc_pl_names[dc_PLANES] = {"1u1", "1u2", "1x1", "1x2", "1v1", "1v2", "2v2", "2v1", "2x2", "2x1", "2u2", "2u1"};
-  
-static const string side_names[SIDES] = {"GoodPos", "GoodNeg"};
-static const string cal_side_names[SIDES] = {"goodPos", "goodNeg"};
-
-static const string nsign[SIDES] = {"+", "-"};
-
-static const Int_t hmaxPMT[hod_PLANES] = {16, 10, 16, 10};
-static const Int_t pmaxPMT[hod_PLANES] = {13, 13, 14, 21};
-
-
-//Define REF Time Histogram Binning
-//HMS
-Double_t hhod_tref_nbins, hhod_tref_xmin, hhod_tref_xmax;
-Double_t hdc_tref_nbins, hdc_tref_xmin, hdc_tref_xmax;
-Double_t hadc_tref_nbins, hadc_tref_xmin, hadc_tref_xmax;
-//SHMS
-Double_t phod_tref_nbins, phod_tref_xmin, phod_tref_xmax;
-Double_t pdc_tref_nbins, pdc_tref_xmin, pdc_tref_xmax;
-Double_t padc_tref_nbins, padc_tref_xmin, padc_tref_xmax;
-
-
-//Define ADC:TDC Time Diff. Histogram Bins
-//HMS
-Double_t hhod_nbins, hhod_xmin, hhod_xmax;
-Double_t hdc_nbins, hdc_xmin, hdc_xmax;
-Double_t hcer_nbins, hcer_xmin, hcer_xmax;                                                                                              
-Double_t hcal_nbins, hcal_xmin, hcal_xmax;                                                                                                                    
-//SHMS
-Double_t phod_nbins, phod_xmin, phod_xmax;
-Double_t pdc_nbins, pdc_xmin, pdc_xmax;
-Double_t pcer_nbins, pcer_xmin, pcer_xmax;                                                                                              
-Double_t pcal_nbins, pcal_xmin, pcal_xmax;                                                                                                                    
-
-//Define Histograms for reference time Cuts
-//HMS
-TH1F *H_hodo_Tref;
-TH1F *H_DC_Tref[4];
-TH1F *H_FADC_Tref;
-//SHMS
-TH1F *P_hodo_Tref;
-TH1F *P_DC_Tref[10];
-TH1F *P_FADC_Tref;
-
-//Define Histograms for Time Window Cuts
-//HMS
-TH1F *H_hod_TdcAdcTimeDiff[hod_PLANES][SIDES][16];
-TH1F *H_cal_TdcAdcTimeDiff[cal_PLANES][SIDES][13];
-TH1F *H_dc_rawTDC[dc_PLANES];
-TH1F *H_cer_TdcAdcTimeDiff[2];
-
-//SHMS
-TH1F *P_hod_TdcAdcTimeDiff[hod_PLANES][SIDES][21];
-TH1F *P_cal_TdcAdcTimeDiff[224];  //fly's eye (224 pmt-channels)
-TH1F *P_prSh_TdcAdcTimeDiff[SIDES][14];
-TH1F *P_dc_rawTDC[dc_PLANES];
-TH1F *P_hgcer_TdcAdcTimeDiff[2];
-TH1F *P_ngcer_TdcAdcTimeDiff[4];
-
-
-//Define Arrays to store Min/Max Time Window Cuts
-//HMS
-Double_t hhodo_tWinMin[hod_PLANES][SIDES][16] = {0.};
-Double_t hhodo_tWinMax[hod_PLANES][SIDES][16] = {0.};
-
-Double_t hCal_tWinMin[cal_PLANES][SIDES][13] = {0.};
-Double_t hCal_tWinMax[cal_PLANES][SIDES][13] = {0.};
-
-Double_t hCer_tWinMin[2] = {0.};
-Double_t hCer_tWinMax[2] = {0.};
-
-Double_t hDC_tWinMin[dc_PLANES] = {0.};
-Double_t hDC_tWinMax[dc_PLANES] = {0.};
-
-//SHMS
-Double_t phodo_tWinMin[hod_PLANES][SIDES][21] = {0.};
-Double_t phodo_tWinMax[hod_PLANES][SIDES][21] = {0.};
-
-Double_t pCal_tWinMin[224] = {0.};
-Double_t pCal_tWinMax[224] = {0.};
-
-Double_t pPrsh_tWinMin[SIDES][14] = { 0.};
-Double_t pPrsh_tWinMax[SIDES][14] = { 0.};
-
-Double_t phgcer_tWinMin[2] = {0.};
-Double_t phgcer_tWinMax[2] = {0.};
-
-Double_t pngcer_tWinMin[4] = {0.};
-Double_t pngcer_tWinMax[4] = {0.};
-
-Double_t pDC_tWinMin[dc_PLANES] = {0.};
-Double_t pDC_tWinMax[dc_PLANES] = {0.};
-
-
-//Define Canvas
-//HMS
-TCanvas *hms_REF_Canv;                      //canvas to save reference time histograms
-TCanvas *hhodoCanv[hod_PLANES][SIDES];
-TCanvas *hcaloCanv[cal_PLANES][SIDES];
-TCanvas *hdcCanv;
-TCanvas *hCer_Canv;
-//SHMS
-TCanvas *shms_REF_Canv;                      //canvas to save reference time histograms
-TCanvas *phodoCanv[hod_PLANES][SIDES];
-TCanvas *pcalCanv;
-TCanvas *pPrshCanv[SIDES];
-TCanvas *pdcCanv;
-TCanvas *pngCer_Canv;
-TCanvas *phgCer_Canv;
-
-//Define and set Multiple of Sigma to place cuts (Mean +/- nSig*sig) around ADC:TDC Time Diff HERE ! ! !
-Double_t hhod_nSig;
-Double_t hdc_nSig; 
-Double_t hcer_nSig;
-Double_t hcal_nSig;
- 	                 
-Double_t phod_nSig;
-Double_t pdc_nSig; 
-Double_t pcer_nSig;
-Double_t pcal_nSig;
-
-//Mean and Sigma. Variables to determine TimeWindow Cut Region
-Double_t mean; 
-Double_t sig;
-  
-
-//Define TLines to draw around Cut Region
-
-//Reference Time TLines
-//HMS
-TLine *hT1_Line;      //hms trigger ref. time
-TLine *hDCREF1_Line;  //hms DC ref. time
-TLine *hFADC_Line;    //flash ADC ref. time
-//SHMS
-TLine *pT1_Line;      //shms trigger ref. time
-TLine *pDCREF1_Line;  //shms DC ref. time
-TLine *pFADC_Line;    //flash ADC ref. time
-
-
-//Detectors Time Windows Lines
-//HMS
-TLine *hhod_LineMin[hod_PLANES][SIDES][16];
-TLine *hhod_LineMax[hod_PLANES][SIDES][16];
-
-TLine *hcal_LineMin[cal_PLANES][SIDES][13];
-TLine *hcal_LineMax[cal_PLANES][SIDES][13];
-
-TLine *hdc_LineMin[dc_PLANES];
-TLine *hdc_LineMax[dc_PLANES];
-
-TLine *hCER_LineMin[2];
-TLine *hCER_LineMax[2];
-
-//SHMS
-TLine *phod_LineMin[hod_PLANES][SIDES][21];
-TLine *phod_LineMax[hod_PLANES][SIDES][21];
-
-TLine *pcal_LineMin[224];
-TLine *pcal_LineMax[224];
-
-TLine *pPrsh_LineMin[14];
-TLine *pPrsh_LineMax[14];
-
-TLine *pdc_LineMin[dc_PLANES];
-TLine *pdc_LineMax[dc_PLANES];
-
-TLine *phgcer_LineMin[2];
-TLine *phgcer_LineMax[2];
-
-TLine *pngcer_LineMin[2];
-TLine *pngcer_LineMax[2];
-
-                                                                                                                                                 
-TString base;
-
-//Define Hodo Leafs to be read from TTree                                                                                                                                             
-//HMS Leaf Names                                                                                                                                                                     
-TString n_hhod_TdcAdcTimeDiff;                                                                                                                                             
-TString n_hhod_AdcMult;                                                                                                                                                   
-TString n_hcal_TdcAdcTimeDiff;                                                                                                                                               
-TString n_hcal_AdcMult;                                                                                                                                                         
-TString n_hcer_TdcAdcTimeDiff;                                                                                                                      
-TString n_hcer_AdcMult;                                                                                                                                                                
-TString n_hndata_rawTDC;                                                                                                                          
-TString n_hdc_rawTDC; 
-
-//HMS Ref. Time Names
-TString n_hT1_ref;
-TString n_hDC_ref[4];
-TString n_hFADC_ref;
-TString n_hT1_tdcMult;
-TString n_hDC_tdcMult;
-TString n_hFADC_adcMult;
-
-//SHMS Leaf Names              
-TString n_phod_TdcAdcTimeDiff;                                                                                                                                                         
-TString n_phod_AdcMult;                                                                                                                                                              
-TString n_pcal_TdcAdcTimeDiff;                                                                                                                                                        
-TString n_pcal_AdcMult;                                                                                                                                                               
-TString n_phgcer_TdcAdcTimeDiff;                                                                                                                                          
-TString n_phgcer_AdcMult;
-TString n_pngcer_TdcAdcTimeDiff;                                                                                                                                                      
-TString n_pngcer_AdcMult;
-TString n_pndata_rawTDC;                                                                                                                                                               
-TString n_pdc_rawTDC;                                                                                                                                                               
-                                                                                                                                                                                      
-//Ref. Time Names                                                                                                                                                                      
-TString n_pT2_ref;                                                                                                                                                
-TString n_pDC_ref[10];                                                                                                                                                    
-TString n_pFADC_ref;        
-TString n_pT2_tdcMult;                                                                                                                                                
-TString n_pDC_tdcMult[10];                                                                                                                                                    
-TString n_pFADC_adcMult;                                                                                                                                 
-
-//Define Variables Associated with Leafs
-//HMS Leaf Variables
-Double_t hhod_TdcAdcTimeDiff[hod_PLANES][SIDES][16];
-Double_t hhod_AdcMult[hod_PLANES][SIDES][16];
-Double_t hcal_TdcAdcTimeDiff[cal_PLANES][SIDES][13];
-Double_t hcal_AdcMult[cal_PLANES][SIDES][13];
-Double_t hcer_TdcAdcTimeDiff[2];
-Double_t hcer_AdcMult[2];
-Double_t hdc_rawTDC[dc_PLANES][1000];
-Int_t hndata_rawTDC[dc_PLANES];
-
-//HMS Ref. Time Varables                                                                                                                                           
-Double_t hT1_ref;                                                                                                    
-Double_t hDC_ref[4];                                                                                      
-Double_t hFADC_ref;
-
-//SHMS Leaf Variables
-Double_t phod_TdcAdcTimeDiff[hod_PLANES][SIDES][21];
-Double_t phod_AdcMult[hod_PLANES][SIDES][21];
-
-Double_t pcal_TdcAdcTimeDiff[224];
-Double_t pcal_AdcMult[224];
-
-Double_t pPrSh_TdcAdcTimeDiff[SIDES][14];
-Double_t pPrSh_AdcMult[SIDES][14];
-
-Double_t phgcer_TdcAdcTimeDiff[2];
-Double_t phgcer_AdcMult[2];
-
-Double_t pngcer_TdcAdcTimeDiff[4];
-Double_t pngcer_AdcMult[4];
-
-Double_t pdc_rawTDC[dc_PLANES][1000];
-Int_t pndata_rawTDC[dc_PLANES];
-
-//SHMS Ref. Time Varables                                                                                                                                           
-Double_t pT2_ref;                                                                                                    
-Double_t pDC_ref[10];                                                                                      
-Double_t pFADC_ref;
-
-
-void setHistBins()
+void setTimeWindows_v2()
 {
+
+  //(See /PARAM/HMS/GEN/h_reftime_cut.param, units in Channel)
+  static const Double_t hhod_trefcut = 2100.;      //hodo tdc ref cut
+  static const Double_t hdc_trefcut = 15600.;      //dc tdc ref cut
+  static const Double_t hadc_trefcut = 3150.;      //hodo/cer/cal adc ref cut
+  
+  //(See /PARAM/SHMS/GEN/p_reftime_cut.param, units in Channel)
+  static const Double_t phod_trefcut = 3000.;
+  static const Double_t pdc_trefcut = 12000.;
+  static const Double_t padc_trefcut = 3200.;  
+  
+  //Define some detectors planes and sides
+  static const Int_t hod_PLANES = 4;
+  static const Int_t cal_PLANES = 4;
+  static const Int_t dc_PLANES = 12;
+  static const Int_t SIDES = 2;
+  
+  static const string hod_pl_names[hod_PLANES] = {"1x", "1y", "2x", "2y"};
+  static const string cal_pl_names[cal_PLANES] = {"1pr", "2ta", "3ta", "4ta"};
+  
+  //For SHMS, P.cal.fly.goodAdcTdcDiffTime
+  // P.cal.pr.good{Pos,Neg}AdcMult or AdcTdcDiffTime
+  
+  static const string hdc_pl_names[dc_PLANES] = {"1u1", "1u2", "1x1", "1x2", "1v2", "1v1", "2v1", "2v2", "2x2", "2x1", "2u2", "2u1"};
+  static const string pdc_pl_names[dc_PLANES] = {"1u1", "1u2", "1x1", "1x2", "1v1", "1v2", "2v2", "2v1", "2x2", "2x1", "2u2", "2u1"};
+  
+  static const string side_names[SIDES] = {"GoodPos", "GoodNeg"};
+  static const string cal_side_names[SIDES] = {"goodPos", "goodNeg"};
+  
+  static const string nsign[SIDES] = {"+", "-"};
+  
+  static const Int_t hmaxPMT[hod_PLANES] = {16, 10, 16, 10};
+  static const Int_t pmaxPMT[hod_PLANES] = {13, 13, 14, 21};
+  
+
+  //Define REF Time Histogram Binning
+  //HMS
+  Double_t hhod_tref_nbins, hhod_tref_xmin, hhod_tref_xmax;
+  Double_t hdc_tref_nbins, hdc_tref_xmin, hdc_tref_xmax;
+  Double_t hadc_tref_nbins, hadc_tref_xmin, hadc_tref_xmax;
+  //SHMS
+  Double_t phod_tref_nbins, phod_tref_xmin, phod_tref_xmax;
+  Double_t pdc_tref_nbins, pdc_tref_xmin, pdc_tref_xmax;
+  Double_t padc_tref_nbins, padc_tref_xmin, padc_tref_xmax;
+  
+
+  //Define ADC:TDC Time Diff. Histogram Bins
+  //HMS
+  Double_t hhod_nbins, hhod_xmin, hhod_xmax;
+  Double_t hdc_nbins, hdc_xmin, hdc_xmax;
+  Double_t hcer_nbins, hcer_xmin, hcer_xmax;                                                                                              
+  Double_t hcal_nbins, hcal_xmin, hcal_xmax;                                                                                                                    
+  //SHMS
+  Double_t phod_nbins, phod_xmin, phod_xmax;
+  Double_t pdc_nbins, pdc_xmin, pdc_xmax;
+  Double_t phgcer_nbins, phgcer_xmin, phgcer_xmax;                                                                                              
+  Double_t pngcer_nbins, pngcer_xmin, pngcer_xmax;
+  Double_t pPrsh_nbins, pPrsh_xmin, pPrsh_xmax;                                                                                                                                                                                                   
+  Double_t pcal_nbins, pcal_xmin, pcal_xmax;                                                                                                                    
+  
+  //Define Histograms for reference time Cuts
+  //HMS
+  TH1F *H_hodo_Tref;
+  TH1F *H_DC_Tref[4];
+  TH1F *H_FADC_Tref;
+  //SHMS
+  TH1F *P_hodo_Tref;
+  TH1F *P_DC_Tref[10];
+  TH1F *P_FADC_Tref;
+  
+  //Define Histograms for Time Window Cuts
+  //HMS
+  TH1F *H_hod_TdcAdcTimeDiff[hod_PLANES][SIDES][16];
+  TH1F *H_cal_TdcAdcTimeDiff[cal_PLANES][SIDES][13];
+  TH1F *H_dc_rawTDC[dc_PLANES];
+  TH1F *H_cer_TdcAdcTimeDiff[2];
+  
+  //SHMS
+  TH1F *P_hod_TdcAdcTimeDiff[hod_PLANES][SIDES][21];
+  TH1F *P_cal_TdcAdcTimeDiff[224];  //fly's eye (224 pmt-channels)
+  TH1F *P_prSh_TdcAdcTimeDiff[SIDES][14];
+  TH1F *P_dc_rawTDC[dc_PLANES];
+  TH1F *P_hgcer_TdcAdcTimeDiff[4];
+  TH1F *P_ngcer_TdcAdcTimeDiff[4];
+
+
+  //Define Arrays to store Min/Max Time Window Cuts
+  //HMS
+  Double_t hhodo_tWinMin[hod_PLANES][SIDES][16] = {0.};
+  Double_t hhodo_tWinMax[hod_PLANES][SIDES][16] = {0.};
+  
+  Double_t hCal_tWinMin[cal_PLANES][SIDES][13] = {0.};
+  Double_t hCal_tWinMax[cal_PLANES][SIDES][13] = {0.};
+  
+  Double_t hCer_tWinMin[2] = {0.};
+  Double_t hCer_tWinMax[2] = {0.};
+  
+  Double_t hDC_tWinMin[dc_PLANES] = {0.};
+  Double_t hDC_tWinMax[dc_PLANES] = {0.};
+
+  //SHMS
+  Double_t phodo_tWinMin[hod_PLANES][SIDES][21] = {0.};
+  Double_t phodo_tWinMax[hod_PLANES][SIDES][21] = {0.};
+  
+  Double_t pCal_tWinMin[224] = {0.};
+  Double_t pCal_tWinMax[224] = {0.};
+  
+  Double_t pPrsh_tWinMin[SIDES][14] = { 0.};
+  Double_t pPrsh_tWinMax[SIDES][14] = { 0.};
+
+  Double_t phgcer_tWinMin[2] = {0.};
+  Double_t phgcer_tWinMax[2] = {0.};
+  
+  Double_t pngcer_tWinMin[4] = {0.};
+  Double_t pngcer_tWinMax[4] = {0.};
+  
+  Double_t pDC_tWinMin[dc_PLANES] = {0.};
+  Double_t pDC_tWinMax[dc_PLANES] = {0.};
+
+
+  //Define Canvas
+  //HMS
+  TCanvas *hms_REF_Canv;                      //canvas to save reference time histograms
+  TCanvas *hhodoCanv[hod_PLANES][SIDES];
+  TCanvas *hcaloCanv[cal_PLANES][SIDES];
+  TCanvas *hdcCanv;
+  TCanvas *hCer_Canv;
+  //SHMS
+  TCanvas *shms_REF_Canv;                      //canvas to save reference time histograms
+  TCanvas *phodoCanv[hod_PLANES][SIDES];
+  TCanvas *pcalCanv;
+  TCanvas *pPrshCanv[SIDES];
+  TCanvas *pdcCanv;
+  TCanvas *pngCer_Canv;
+  TCanvas *phgCer_Canv;
+  
+  //Define and set Multiple of Sigma to place cuts (Mean +/- nSig*sig) around ADC:TDC Time Diff HERE ! ! !
+  //HMS
+  Double_t hhod_nSig;
+  Double_t hdc_nSig; 
+  Double_t hcer_nSig;
+  Double_t hcal_nSig;
+  //SHMS
+  Double_t phod_nSig;
+  Double_t pdc_nSig; 
+  Double_t pcer_nSig;
+  Double_t pcal_nSig;
+  
+  //Mean and Sigma. Variables to determine TimeWindow Cut Region
+  Double_t mean; 
+  Double_t sig;
+  
+  
+  //Define TLines to draw around Cut Region
+  
+  //Reference Time TLines
+  //HMS
+  TLine *hT1_Line;      //hms trigger ref. time
+  TLine *hDCREF_Line;  //hms DC ref. time
+  TLine *hFADC_Line;    //flash ADC ref. time
+  //SHMS
+  TLine *pT2_Line;      //shms trigger ref. time
+  TLine *pDCREF_Line;  //shms DC ref. time
+  TLine *pFADC_Line;    //flash ADC ref. time
+  
+  
+  //Detectors Time Window CUts Lines
+  //HMS
+  TLine *hhod_LineMin[hod_PLANES][SIDES][16];
+  TLine *hhod_LineMax[hod_PLANES][SIDES][16];
+  
+  TLine *hcal_LineMin[cal_PLANES][SIDES][13];
+  TLine *hcal_LineMax[cal_PLANES][SIDES][13];
+  
+  TLine *hdc_LineMin[dc_PLANES];
+  TLine *hdc_LineMax[dc_PLANES];
+  
+  TLine *hCER_LineMin[2];
+  TLine *hCER_LineMax[2];
+  
+  //SHMS
+  TLine *phod_LineMin[hod_PLANES][SIDES][21];
+  TLine *phod_LineMax[hod_PLANES][SIDES][21];
+  
+  TLine *pcal_LineMin[224];
+  TLine *pcal_LineMax[224];
+  
+  TLine *pPrsh_LineMin[14];
+  TLine *pPrsh_LineMax[14];
+  
+  TLine *pdc_LineMin[dc_PLANES];
+  TLine *pdc_LineMax[dc_PLANES];
+  
+  TLine *phgcer_LineMin[2];
+  TLine *phgcer_LineMax[2];
+  
+  TLine *pngcer_LineMin[2];
+  TLine *pngcer_LineMax[2];
+  
+  
+  TString base;
+  
+  //Define Hodo Leafs to be read from TTree                                                                                                                                             
+  //HMS Leaf Names                                                                                                                                                                     
+  TString n_hhod_TdcAdcTimeDiff;                                                                                                                                             
+  TString n_hhod_AdcMult;                                                                                                                                                   
+  TString n_hcal_TdcAdcTimeDiff;                                                                                                                                               
+  TString n_hcal_AdcMult;                                                                                                                                                         
+  TString n_hcer_TdcAdcTimeDiff;                                                                                                                      
+  TString n_hcer_AdcMult;                                                                                                                                                                
+  TString n_hndata_rawTDC;                                                                                                                          
+  TString n_hdc_rawTDC; 
+  
+  //HMS Ref. Time Names
+  TString n_hT1_ref;
+  TString n_hDC_ref;
+  TString n_hFADC_ref;
+  TString n_hT1_tdcMult;
+  TString n_hDC_tdcMult;
+  TString n_hFADC_adcMult;
+  
+  //SHMS Leaf Names              
+  TString n_phod_TdcAdcTimeDiff;                                                                                                                                                         
+  TString n_phod_AdcMult;                                                                                                                                                              
+  TString n_pcal_TdcAdcTimeDiff;                                                                                                                                                        
+  TString n_pcal_AdcMult;                                                                                                                                                               
+  TString n_pPrSh_TdcAdcTimeDiff;
+  TString n_pPrSh_AdcMult;
+  TString n_phgcer_TdcAdcTimeDiff;                                                                                                                                          
+  TString n_phgcer_AdcMult;
+  TString n_pngcer_TdcAdcTimeDiff;                                                                                                                                                      
+  TString n_pngcer_AdcMult;
+  TString n_pdc_rawTDC;                                                                                                                                                               
+  TString n_pndata_rawTDC;                                                                                                                                                               
+  
+  //Ref. Time Names                                                                                                                                                                      
+  TString n_pT2_ref;                                                                                                                                                
+  TString n_pDC_ref;                                                                                                                                                    
+  TString n_pFADC_ref;        
+  TString n_pT2_tdcMult;                                                                                                                                                
+  TString n_pDC_tdcMult;                                                                                                                                                    
+  TString n_pFADC_adcMult;                                                                                                                                 
+  
+  
+  //Define Variables Associated with Leafs
+  //HMS Leaf Variables
+  Double_t hhod_TdcAdcTimeDiff[hod_PLANES][SIDES][16];
+  Double_t hhod_AdcMult[hod_PLANES][SIDES][16];
+  Double_t hcal_TdcAdcTimeDiff[cal_PLANES][SIDES][13];
+  Double_t hcal_AdcMult[cal_PLANES][SIDES][13];
+  Double_t hcer_TdcAdcTimeDiff[2];
+  Double_t hcer_AdcMult[2];
+  Double_t hdc_rawTDC[dc_PLANES][1000];
+
+  //HMS Ref. Time Varables                                                                                                                                           
+  Double_t hT1_ref;                                                                                                    
+  Double_t hDC_ref[4];                                                                                      
+  Double_t hFADC_ref;
+  Double_t hT1_tdcMult;
+  Double_t hDC_tdcMult[4];
+  Double_t hFADC_adcMult;
+
+  //SHMS Leaf Variables
+  Double_t phod_TdcAdcTimeDiff[hod_PLANES][SIDES][21];
+  Double_t phod_AdcMult[hod_PLANES][SIDES][21];
+  Double_t pcal_TdcAdcTimeDiff[1][224];
+  Double_t pcal_AdcMult[1][224];
+  Double_t pPrSh_TdcAdcTimeDiff[1][SIDES][14]; 
+  Double_t pPrSh_AdcMult[1][SIDES][14]; 
+  Double_t phgcer_TdcAdcTimeDiff[2];
+  Double_t phgcer_AdcMult[2];
+  Double_t pngcer_TdcAdcTimeDiff[4];
+  Double_t pngcer_AdcMult[4];
+  Double_t pdc_rawTDC[dc_PLANES][1000];
+
+  //SHMS Ref. Time Varables                                                                                                                                           
+  Double_t pT2_ref;                                                                                                    
+  Double_t pDC_ref[10];                                                                                      
+  Double_t pFADC_ref;
+  Double_t pT2_tdcMult;
+  Double_t pDC_tdcMult[10];
+  Double_t pFADC_adcMult;
+ 
+  //Ndata
+  Int_t hndata_rawTDC[dc_PLANES];
+  Int_t pndata_rawTDC[dc_PLANES];
 
   //REF Time Histos (Bin Width was consistently set to 2)
   //HMS                           SHMS
-  hhod_tref_nbins = 400,          phod_tref_nbins = 1350;
+  hhod_tref_nbins = 100,          phod_tref_nbins = 1350;
   hhod_tref_xmin = 1700,          phod_tref_xmin = 1500;
   hhod_tref_xmax = 2500,          phod_tref_xmax = 4200;
 
-  hdc_tref_nbins = 700,           pdc_tref_nbins = 1750;
+  hdc_tref_nbins = 200,           pdc_tref_nbins = 1750;
   hdc_tref_xmin = 14600,          pdc_tref_xmin = 12000;
   hdc_tref_xmax = 16000,          pdc_tref_xmax = 15500;
  
   hadc_tref_nbins = 150,          padc_tref_nbins = 1250;
   hadc_tref_xmin = 3000,          padc_tref_xmin = 2000;
   hadc_tref_xmax = 3300,          padc_tref_xmax = 4500;
+
+
   
   //ADC:TDC Time Diff Histos
   //HMS               SHMS
@@ -305,18 +316,15 @@ void setHistBins()
   hdc_xmin = -20000,  pdc_xmin = -20000;                                                                
   hdc_xmax = -5000,   pdc_xmax = -5000;  
                                           
-  hcer_nbins = 200,   pcer_nbins = 200;                                                                                                                                     
-  hcer_xmin = 50,     pcer_xmin = 50;                                                                                                                                       
-  hcer_xmax = 150,    pcer_xmax = 150;                                                                                                                     
+  hcer_nbins = 200,   phgcer_nbins = 200,    pngcer_nbins = 200;                                                                                                                                     
+  hcer_xmin = 50,     phgcer_xmin = 50,      pngcer_xmin = 50;                                                                                                                                   
+  hcer_xmax = 150,    phgcer_xmax = 150,     pngcer_xmax = 150;                                                                                                                 
                                           
-  hcal_nbins = 200,   pcal_nbins = 200;                                                                                                                                            
-  hcal_xmin = -140,   pcal_xmin = -140;                                                                                                                          
-  hcal_xmax = -60,    pcal_xmax = -60;       
+  hcal_nbins = 200,   pPrsh_nbins = 200,      pcal_nbins = 200;                                                                                                                                            
+  hcal_xmin = -140,   pPrsh_xmin = -140,      pcal_xmin = -140;                                                                                                                    
+  hcal_xmax = -60,    pPrsh_xmax = -60,       pcal_xmax = -60; 
 
-}
 
-void setCutRange()
-{
   //Set ADC:TDC Time Window Cut Range
   //Based on multiples of sigma from the histos
   hhod_nSig = 6.0;
@@ -328,48 +336,136 @@ void setCutRange()
   pdc_nSig = 5.5; 
   pcer_nSig = 3.5;
   pcal_nSig = 4.0;
-}
 
 
-void setLeafNames()
-{
+  //gROOT->SetBatch(kTRUE);
 
-  //HMS -refTime Leafs
-  n_hT1_ref = "T.coin.hT1_tdcTimeRaw";
-  n_hFADC_ref = "T.coin.hFADC_TREF_ROC1_adcPulseTimeRaw";
+
+  //=========================
+  //====OPEN ROOT FILE=======
+  //=========================
+
+  Int_t runNUM = 3288;
+  string daq = "coin";    //or hms, shms  (single arm mode)
+  string rtype = "coin";  //or "hms", "shms"  (singles in coin mode)
+  
+  TString filename = "coin_replay_timeWin_check_3288_1000.root";
+
+  //read ROOTfile and Get TTree
+  TFile *data_file = new TFile(filename, "READ"); 
+  TTree *T = (TTree*)data_file->Get("T");
+  
+  //Create output root file where histograms will be stored
+  TFile *outROOT = new TFile(Form("%s_histos_run%d.root", rtype.c_str(), runNUM), "recreate");
+         
+
+
+  //===========================
+  //===Reference Time Leafs====
+  //===========================
+  
+
+
+  //HMS REF-TIME LEAFS
   for (int i=0; i<4; i++)
     {
-      n_hDC_ref[i] = Form("T.coin.hDCREF%d_tdcTimeRaw", i+1);
+      n_hDC_ref = Form("T.coin.hDCREF%d_tdcTimeRaw", i+1);
+      n_hDC_tdcMult = Form("T.coin.hDCREF%d_tdcMultiplicity", i+1);
+      
+      T->SetBranchAddress(n_hDC_ref, &hDC_ref[i]);
+      T->SetBranchAddress(n_hDC_tdcMult, &hDC_tdcMult[i]);
+      
+      H_DC_Tref[i] = new TH1F(Form("hDC%d_refTime", i+1), Form("HMS DC Ref %d", i+1), hdc_tref_nbins,  hdc_tref_xmin, hdc_tref_xmax);
+
     }
+
+  H_hodo_Tref = new TH1F("hT1_ref", "HMS Hodo hT1 Ref. Time", hhod_tref_nbins, hhod_tref_xmin, hhod_tref_xmax);
+  H_FADC_Tref = new TH1F("hFADC_ref", "HMS fADC Ref. Time", hadc_tref_nbins,  hadc_tref_xmin, hadc_tref_xmax);
+
+
+  n_hT1_ref = "T.coin.hT1_tdcTimeRaw";
+  n_hFADC_ref = "T.coin.hFADC_TREF_ROC1_adcPulseTimeRaw";
   n_hT1_tdcMult = "T.coin.hT1_tdcMultiplicity";
   n_hFADC_adcMult = "T.coin.hFADC_TREF_ROC1_adcMultiplicity";
-  n_hDC_tdcMult = "T.coin.hDCREF1_tdcMultiplicity";
-
-
-  //SHMS -refTime Leafs
-  n_pT2_ref = "T.coin.pT2_tdcTimeRaw";
-  n_pFADC_ref = "T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw";
+  
+  T->SetBranchAddress(n_hT1_ref, &hT1_ref);     
+  T->SetBranchAddress(n_hFADC_ref, &hFADC_ref);
+  T->SetBranchAddress(n_hT1_tdcMult, &hT1_tdcMult);
+  T->SetBranchAddress(n_hFADC_adcMult, &hFADC_adcMult);
+  
+  
+  //SHMS REF-TIME LEAFS 
   for (int i=0; i<10; i++)
     {
-      n_pDC_ref[i] = Form("T.coin.pDCREF%d_tdcTimeRaw", i+1);
-      n_pDC_tdcMult[i] = Form("T.coin.pDCREF%d_tdcMultiplicity", i+1);
+      n_pDC_ref = Form("T.coin.pDCREF%d_tdcTimeRaw", i+1);
+      n_pDC_tdcMult = Form("T.coin.pDCREF%d_tdcMultiplicity", i+1);
+      
+      T->SetBranchAddress(n_pDC_ref, &pDC_ref[i]);
+      T->SetBranchAddress(n_pDC_tdcMult, &pDC_tdcMult[i]);
+           
+      P_DC_Tref[i] = new TH1F(Form("pDC%d_refTime", i+1), Form("SHMS DC Ref %d", i+1), pdc_tref_nbins,  pdc_tref_xmin, pdc_tref_xmax);
 
     }
+  
+  n_pT2_ref = "T.coin.pT2_tdcTimeRaw";
   n_pT2_tdcMult = "T.coin.pT2_tdcMultiplicity";
+  n_pFADC_ref = "T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw";
   n_pFADC_adcMult = "T.coin.pFADC_TREF_ROC2_adcMultiplicity";
 
+  P_hodo_Tref = new TH1F("pT2_ref", "SHMS Hodo hT2 Ref. Time", phod_tref_nbins, phod_tref_xmin, phod_tref_xmax);
+  P_FADC_Tref = new TH1F("pFADC_ref", "SHMS fADC Ref. Time", padc_tref_nbins,  padc_tref_xmin, padc_tref_xmax);
 
-  //Detector Time Window Leafs
 
- //Loop over Cherenkov PMTs
-  for (Int_t ipmt = 0; ipmt < 2; ipmt++ )
-    {
-      //HMS
-      base = "H.cer.";
-      n_hcer_TdcAdcTimeDiff = base  + "goodAdcTdcDiffTime";
-      n_hcer_AdcMult = base + "goodAdcMult";
+  T->SetBranchAddress(n_pT2_ref, &pT2_ref);
+  T->SetBranchAddress(n_pT2_tdcMult, &pT2_tdcMult);
+  T->SetBranchAddress(n_pFADC_ref, &pFADC_ref);
+  T->SetBranchAddress(n_pFADC_adcMult, &pFADC_adcMult);
+  
+  //======================================
+  //=======Detector Time Window Leafs=====
+  //======================================
+  
+
+ 
+  //Loop over Cherenkov PMTs
+  for (Int_t ipmt = 0; ipmt < 4; ipmt++ )
+    {  
+      
+      if (ipmt<2)
+	{
+	  //HMS  Cherenkov
+	  n_hcer_TdcAdcTimeDiff =  "H.cer.goodAdcTdcDiffTime";
+	  n_hcer_AdcMult = "H.cer.goodAdcMult";
+	  
+	  T->SetBranchAddress(n_hcer_AdcMult, &hcer_AdcMult);
+	  T->SetBranchAddress(n_hcer_TdcAdcTimeDiff, &hcer_TdcAdcTimeDiff);
+	  
+	  H_cer_TdcAdcTimeDiff[ipmt] = new TH1F(Form("hCER%d_timeDiff", ipmt+1), Form("HMS Cer %d AdcTdcTimeDiff", ipmt+1), hcer_nbins, hcer_xmin, hcer_xmax);
+	  
+	}
+ 
+	  //SHMS Heavy Gas Cherenkov
+	  n_phgcer_TdcAdcTimeDiff =  "P.hgcer.goodAdcTdcDiffTime";
+	  n_phgcer_AdcMult = "P.hgcer.goodAdcMult";
+	  
+	  T->SetBranchAddress(n_phgcer_AdcMult, &phgcer_AdcMult);
+	  T->SetBranchAddress(n_phgcer_TdcAdcTimeDiff, &phgcer_TdcAdcTimeDiff);
+	  
+	  P_hgcer_TdcAdcTimeDiff[ipmt] = new TH1F(Form("pHGCER%d_timeDiff", ipmt+1), Form("SHMS Heavy Gas Cer%d AdcTdcTimeDiff", ipmt+1), phgcer_nbins, phgcer_xmin, phgcer_xmax);
+	  
+	  //SHMS Noble Gas Cherenkov
+	  n_pngcer_TdcAdcTimeDiff =  "P.ngcer.goodAdcTdcDiffTime";
+	  n_pngcer_AdcMult = "P.ngcer.goodAdcMult";
+	  
+	  T->SetBranchAddress(n_pngcer_AdcMult, &pngcer_AdcMult);
+	  T->SetBranchAddress(n_pngcer_TdcAdcTimeDiff, &pngcer_TdcAdcTimeDiff);
+	  
+	  P_ngcer_TdcAdcTimeDiff[ipmt] = new TH1F(Form("pNGCER%d_timeDiff", ipmt+1), Form("SHMS Noble Gas Cer%d AdcTdcTimeDiff", ipmt+1), pngcer_nbins, pngcer_xmin, pngcer_xmax);
+	  
+ 
     }
 
+      
  //Loop over drift chamber planes
   for (Int_t npl = 0; npl < 12; npl++ )
     {
@@ -378,6 +474,21 @@ void setLeafNames()
       base = "H.dc." + hdc_pl_names[npl];
       n_hdc_rawTDC = base + "." + "rawtdc";
       n_hndata_rawTDC = "Ndata." + n_hdc_rawTDC;
+      
+      T->SetBranchAddress(n_hdc_rawTDC, hdc_rawTDC[npl]);
+      T->SetBranchAddress(n_hndata_rawTDC, &hndata_rawTDC[npl]);
+      
+      H_dc_rawTDC[npl] = new TH1F(Form("hDC%d_rawTDC", npl+1), Form("HMS DC Plane %d Raw TDC", npl+1), hdc_nbins, hdc_xmin, hdc_xmax);
+
+      //SHMS
+      base = "P.dc." + pdc_pl_names[npl];
+      n_pdc_rawTDC = base + "." + "rawtdc";
+      n_pndata_rawTDC = "Ndata." + n_pdc_rawTDC;
+
+      T->SetBranchAddress(n_pdc_rawTDC, pdc_rawTDC[npl]);
+      T->SetBranchAddress(n_pndata_rawTDC, &pndata_rawTDC[npl]);
+      
+      P_dc_rawTDC[npl] = new TH1F(Form("pDC%d_rawTDC", npl+1), Form("SHMS DC Plane %d Raw TDC", npl+1), pdc_nbins, pdc_xmin, pdc_xmax);
 
     }
 
@@ -396,6 +507,12 @@ void setLeafNames()
 	      
 	      n_hhod_TdcAdcTimeDiff = base + "." + side_names[iside] + "AdcTdcDiffTime";
 	      n_hhod_AdcMult = base + "." + side_names[iside] + "AdcMult";
+	      
+	      T->SetBranchAddress(n_hhod_TdcAdcTimeDiff, &hhod_TdcAdcTimeDiff[npl][iside][ipmt]);
+	      T->SetBranchAddress(n_hhod_AdcMult, &hhod_AdcMult[npl][iside][ipmt]);
+
+	      H_hod_TdcAdcTimeDiff[npl][iside][ipmt] = new TH1F(Form("hHod%s%d%s_timeDiff", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str() ), Form("HMS Hodo %s%d%s AdcTdcTimeDiff", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str()),hhod_nbins,hhod_xmin,hhod_xmax);
+
 	    }
 
 	  //Loop over HMS calorimeter PMTs
@@ -406,39 +523,311 @@ void setLeafNames()
 	      n_hcal_TdcAdcTimeDiff = base + "." + cal_side_names[iside] + "AdcTdcDiffTime";
 	      n_hcal_AdcMult = base + "." + cal_side_names[iside] + "AdcMult";
 
+	      T->SetBranchAddress(n_hcal_TdcAdcTimeDiff, &hcal_TdcAdcTimeDiff[npl][iside][ipmt]);
+	      T->SetBranchAddress(n_hcal_AdcMult, &hcal_AdcMult[npl][iside][ipmt]);
+	  
+	      H_cal_TdcAdcTimeDiff[npl][iside][ipmt] = new TH1F(Form("hCal%s%d%s_timeDiff", cal_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str() ), Form("HMS Cal %s%d%s AdcTdcTimeDiff", cal_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str()),hcal_nbins,hcal_xmin,hcal_xmax) ;
+
 	    }
 
 
+	  //Loop over SHMS hodo PMTs
+	  for (Int_t ipmt = 0; ipmt < pmaxPMT[npl]; ipmt++)
+	    {
+	      base = "P.hod." + hod_pl_names[npl];
+	      
+	      n_phod_TdcAdcTimeDiff = base + "." + side_names[iside] + "AdcTdcDiffTime";
+	      n_phod_AdcMult = base + "." + side_names[iside] + "AdcMult";
+	  	
+	      T->SetBranchAddress(n_phod_TdcAdcTimeDiff, &phod_TdcAdcTimeDiff[npl][iside][ipmt]);
+	      T->SetBranchAddress(n_phod_AdcMult, &phod_AdcMult[npl][iside][ipmt]);
+	    	     
+	      P_hod_TdcAdcTimeDiff[npl][iside][ipmt] = new TH1F(Form("pHod%s%d%s_timeDiff", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str() ), Form("SHMS Hodo %s%d%s AdcTdcTimeDiff", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str()),phod_nbins,phod_xmin,phod_xmax);
+
+	    }
+	  
+	  if(npl==0)
+	    {
+	      //Loop over SHMS PreSH PMTs
+	      for (Int_t ipmt = 0; ipmt < 14; ipmt++)
+		{
+		  base =  "P.cal.pr";
+		  
+		  n_pPrSh_TdcAdcTimeDiff = base + "." + cal_side_names[iside] + "AdcTdcDiffTime";
+		  n_pPrSh_AdcMult = base + "." + cal_side_names[iside] + "AdcMult";
+		  
+		  T->SetBranchAddress(n_pPrSh_TdcAdcTimeDiff, &pPrSh_TdcAdcTimeDiff[npl][iside][ipmt]);
+		  T->SetBranchAddress(n_pPrSh_AdcMult, &pPrSh_AdcMult[npl][iside][ipmt]);
+	      
+		  P_prSh_TdcAdcTimeDiff[iside][ipmt] = new TH1F(Form("pPrSh_pmt%d%s", ipmt+1, nsign[iside].c_str()), Form("SHMS Pre-Shower PMT_%d%s", ipmt+1, nsign[iside].c_str()), pPrsh_nbins, pPrsh_xmin, pPrsh_xmax);
+		}
+	      if(iside==0)
+		{
+		  //Loop over SHMS fly's eye Calorimeter
+		  for (Int_t ipmt = 0; ipmt < 224; ipmt++)
+		    {
+		      base =  "P.cal.fly";
+		      n_pcal_TdcAdcTimeDiff = base + "." + "goodAdcTdcDiffTime";
+		      n_pcal_AdcMult = "totNumGoodAdcHits";
+		      //For multiplicity, see THcSHowerArray.cxx, for totNumGoodAdcHits, 
+		      T->SetBranchAddress(n_pcal_TdcAdcTimeDiff, &pcal_TdcAdcTimeDiff[iside][ipmt]);
+		      
+		      P_cal_TdcAdcTimeDiff[ipmt] = new TH1F(Form("pSh_pmt%d", ipmt+1), Form("SHMS Pre-Shower PMT_%d", ipmt+1), pcal_nbins, pcal_xmin, pcal_xmax);
+		    }
+		} //end side0 requirement for fly's eye
+
+	    } //End plane 0 requirement for Pre-SHower
+
+
+	} //End Loop over sides
+
+    } //End Loop over planes
+      
+
+  //===================================
+  //====== E V E N T    L O O P =======
+  //===================================
+
+  Long64_t nentries = T->GetEntries();
+  
+  //Loop over all entries
+  for(Long64_t i=0; i<nentries; i++)
+    {
+      
+      T->GetEntry(i); 
+
+
+
+      //--------------Loop over HMS/SHMS Ref. TImes-------------------
+
+      //Define Multiplicity Cuts Here
+
+      //SHMS DC Ref Times
+      for (int iref=0; iref<10; iref++)
+	{
+
+	  P_DC_Tref[iref]->Fill(pDC_ref[iref]);
+	  
+	  //HMS DC Ref. Times
+	  if(iref<4)
+	    {
+	      H_DC_Tref[iref]->Fill(hDC_ref[iref]);
+	    }
 	}
 
-    }
+      //HMS Ref
+      H_hodo_Tref->Fill(hT1_ref);
+      H_FADC_Tref->Fill(hFADC_ref);
 
-} //end set leaf names
+      //SHMS Ref
+      P_hodo_Tref->Fill(pT2_ref);
+      P_FADC_Tref->Fill(pFADC_ref);
 
-void setTimeWindows_v2()
-{
+      
 
+      //------------------------------------------------------------------------------
+ 
+      //Loop over Cherenkov PMTs
+      for (Int_t ipmt = 0; ipmt < 4; ipmt++)
+	{                                                                                                                                             
+	  
+	  if(ipmt < 2)
+	    {
+	      //----HMS Cherenkov----
+	      
+	      //Define Multiplicity Cuts
+	      
+	      //Require ADC Multiplicity == 1  NOT YET DONE . . .
+	      if (1)
+		{
+		  
+		  H_cer_TdcAdcTimeDiff[ipmt]->Fill(hcer_TdcAdcTimeDiff[ipmt]);
+		  
+		}
+	    }
+	  
+	  //----SHMS Heavy Gas Cherenkov-----
+	  
+	  //Define Multiplicity Cuts
+
+	  //Require ADC Multiplicity == 1
+	  if (1)
+	    {
+	      P_hgcer_TdcAdcTimeDiff[ipmt]->Fill(phgcer_TdcAdcTimeDiff[ipmt]);
+	      
+	    }
+	
+	  //----SHMS Noble Gas Cherenkov-----
+	  
+	  //Define Multiplicity Cuts
+
+	  //Require ADC Multiplicity == 1
+	  if (1)
+	    {
+	      P_ngcer_TdcAdcTimeDiff[ipmt]->Fill(pngcer_TdcAdcTimeDiff[ipmt]);
+	      
+	    }
+	  
+
+	} //End Cherenkov PMT loop
+
+
+
+
+      //-----------------------------------------------------------------------------
+
+      //Loop over Drift Chamber Planes
+      for (Int_t npl = 0; npl<dc_PLANES; npl++)
+	{
+
+
+	  //-------HMS Drift Chambers----------
+	  
+	  //Define Cuts Here
+
+	  //Loop over all hits per event
+	  for(Int_t j = 0; j < hndata_rawTDC[npl]; j++)
+	    {
+	      H_dc_rawTDC[npl]->Fill(hdc_rawTDC[npl][j]);
+	    }
+
+	  
+
+	  //--------SHMS Drift Chambers--------
+	  
+	  //Define Cuts Here
+
+	  //Loop over all hits per event
+	  for(Int_t j = 0; j < pndata_rawTDC[npl]; j++)
+	    {
+	      P_dc_rawTDC[npl]->Fill(pdc_rawTDC[npl][j]);
+	    }
+
+	
+	}
+      
+
+      //-------------------------------------------------------------------------------
+
+
+      //Loop over Hodoscopes/Calorimeter Planes
+      for (Int_t ip =0; ip < hod_PLANES; ip++)
+	{
+
+
+	  //Loop over hodo/calorimeter side
+	  for (Int_t iside = 0; iside < SIDES; iside++)
+	    {
+
+	      //Loop over Hodoscopes PMTs
+	      for (Int_t ipmt = 0; ipmt < hmaxPMT[ip]; ipmt++)
+		{
+
+		  //DEfine Multiplicity CUts here
+
+		  //-------------HMS Hodoscopoes--------------
+		  H_hod_TdcAdcTimeDiff[ip][iside][ipmt]->Fill(hhod_TdcAdcTimeDiff[ip][iside][ipmt]);
+	  
+		}
+
+	      //Loop over Calorimeter PMTs
+	      for (Int_t ipmt = 0; ipmt < 13; ipmt++)
+		{
+
+		  //------------HMS Calorimeter----------------
+
+		  //DEfine Multiplicity CUts here
+		   
+
+		  H_cal_TdcAdcTimeDiff[ip][iside][ipmt]->Fill(hcal_TdcAdcTimeDiff[ip][iside][ipmt]);
+
+
+
+		}
+	      
+	      
+	      //Loop over SHMS Hodoscopes PMTs
+	      for (Int_t ipmt = 0; ipmt < pmaxPMT[ip]; ipmt++)
+		{
+		  
+		  //------------SHMS Hodoscopes----------------
+
+		  P_hod_TdcAdcTimeDiff[ip][iside][ipmt]->Fill(phod_TdcAdcTimeDiff[ip][iside][ipmt]);
+
+		}
+
+	      
+	      
+	      //------------SHMS PreSHower-------------------
+	      	  
+	      //Loop over SHMS PrSh PMTs
+	      for (Int_t ipmt=0; ipmt < 14; ipmt++)
+		{
+		   
+		  if(ip==0){
+		  P_prSh_TdcAdcTimeDiff[iside][ipmt]->Fill(pPrSh_TdcAdcTimeDiff[ip][iside][ipmt]);
+		  }
+       
+
+		} //End loop over SHMS PrSH PMTs
+
+	      
+	      //----------SHMS FLy's Eye Calorimeter-------------
+	      for (Int_t ipmt = 0; ipmt < 224; ipmt++)
+		{
+		  if(ip==0&&iside==0)
+		    {
+		      P_cal_TdcAdcTimeDiff[ipmt]->Fill(pcal_TdcAdcTimeDiff[iside][ipmt]);
+		    }
+		}
+	      
+
+
+	    } // END LOOP OVER SIDES
+
+	} //END LOOP OVER PLANES
+
+
+    } //END EVENT LOOP
+  
   
 
-  gROOT->SetBatch(kTRUE);
-
-  Int_t runNUM = 3288;
-  string daq = "coin";    //or hms, shms  (single arm mode)
-  string rtype = "coin";  //or "hms", "shms"  (singles in coin mode)
-
-
+  //DRAW HISTOGRAMS TO CANVAS
   
-  TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3288_10000.root";
-
-  //read ROOTfile and Get TTree
-  TFile *data_file = new TFile(filename, "READ"); 
-  TTree *T = (TTree*)data_file->Get("T");
+  //Reference Time Histograms
+  hms_REF_Canv = new TCanvas("REF Times", "HMS REF TIMES",  1000, 500);
+  hms_REF_Canv->Divide(3,1);
   
-  //Create output root file where histograms will be stored
-  TFile *outROOT = new TFile(Form("%s_histos_run%d.root", rtype.c_str(), runNUM), "recreate");
-         
-
+  hT1_Line = new TLine(hhod_trefcut, 0,  hhod_trefcut, H_hodo_Tref->GetMaximum());
+  hDCREF_Line = new TLine(hdc_trefcut, 0,  hdc_trefcut, H_DC_Tref[0]->GetMaximum());
+  hFADC_Line = new TLine(hadc_trefcut, 0,  hadc_trefcut, H_FADC_Tref->GetMaximum());
   
+  hms_REF_Canv->cd(1);
+  gPad->SetLogy();
+  H_hodo_Tref->Draw();
+  hT1_Line->SetLineColor(kRed);
+  hT1_Line->SetLineWidth(3);
+  hT1_Line->Draw();
+  
+  hms_REF_Canv->cd(2);
+  gPad->SetLogy();
+  H_DC_Tref[0]->SetLineColor(kBlack);
+  H_DC_Tref[0]->Draw();
+  hDCREF_Line->SetLineColor(kRed);
+  hDCREF_Line->SetLineWidth(3);
+  hDCREF_Line->Draw();
+
+  hms_REF_Canv->cd(3);
+  gPad->SetLogy();
+  H_FADC_Tref->Draw();
+  hFADC_Line->SetLineColor(kRed);
+  hFADC_Line->SetLineWidth(3);
+  hFADC_Line->Draw();
+  hms_REF_Canv->SaveAs("hms_REFTime_cuts.pdf");
+  
+
+  //---------------------------------------------------
+
   //Define Histograms for Reference time
   //HMS
   //TH1F *H_hodo_Tref = new TH1F("hhodoTref", "HMS Hodoscope hT1 TDC Raw Time",  hhod_tref_nbins, hhod_tref_xmin, hhod_tref_xmax);                                                                            
