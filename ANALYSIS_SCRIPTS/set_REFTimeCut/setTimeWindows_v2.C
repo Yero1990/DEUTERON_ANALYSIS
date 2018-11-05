@@ -12,8 +12,8 @@ void setTimeWindows_v2()
   
   //(See /PARAM/SHMS/GEN/p_reftime_cut.param, units in Channel)
   static const Double_t phod_trefcut = 3000.;
-  static const Double_t pdc_trefcut = 12000.;
-  static const Double_t padc_trefcut = 3200.;  
+  static const Double_t pdc_trefcut = 13500.;
+  static const Double_t padc_trefcut = 3000.;  
   
   //Define some detectors planes and sides
   static const Int_t hod_PLANES = 4;
@@ -149,7 +149,8 @@ void setTimeWindows_v2()
   //SHMS
   Double_t phod_nSig;
   Double_t pdc_nSig; 
-  Double_t pcer_nSig;
+  Double_t phgcer_nSig;
+  Double_t pngcer_nSig;
   Double_t pcal_nSig;
   
   //Mean and Sigma. Variables to determine TimeWindow Cut Region
@@ -256,7 +257,6 @@ void setTimeWindows_v2()
   Double_t hcal_AdcMult[cal_PLANES][SIDES][13];
   Double_t hcer_TdcAdcTimeDiff[2];
   Double_t hcer_AdcMult[2];
-  Double_t hdc_rawTDC[dc_PLANES][1000];
 
   //HMS Ref. Time Varables                                                                                                                                           
   Double_t hT1_ref;                                                                                                    
@@ -277,7 +277,6 @@ void setTimeWindows_v2()
   Double_t phgcer_AdcMult[2];
   Double_t pngcer_TdcAdcTimeDiff[4];
   Double_t pngcer_AdcMult[4];
-  Double_t pdc_rawTDC[dc_PLANES][1000];
 
   //SHMS Ref. Time Varables                                                                                                                                           
   Double_t pT2_ref;                                                                                                    
@@ -287,21 +286,25 @@ void setTimeWindows_v2()
   Double_t pDC_tdcMult[10];
   Double_t pFADC_adcMult;
  
-  //Ndata
+  //Drift Chamber rawTDC / Ndata
+  Double_t hdc_rawTDC[dc_PLANES][1000];
+  Double_t pdc_rawTDC[dc_PLANES][1000];
+
   Int_t hndata_rawTDC[dc_PLANES];
   Int_t pndata_rawTDC[dc_PLANES];
+  
 
   //REF Time Histos (Bin Width was consistently set to 2)
   //HMS                           SHMS
-  hhod_tref_nbins = 100,          phod_tref_nbins = 1350;
+  hhod_tref_nbins = 100,          phod_tref_nbins = 100;
   hhod_tref_xmin = 1700,          phod_tref_xmin = 1500;
   hhod_tref_xmax = 2500,          phod_tref_xmax = 4200;
 
-  hdc_tref_nbins = 200,           pdc_tref_nbins = 1750;
-  hdc_tref_xmin = 14600,          pdc_tref_xmin = 12000;
-  hdc_tref_xmax = 16000,          pdc_tref_xmax = 15500;
+  hdc_tref_nbins = 200,           pdc_tref_nbins = 100;
+  hdc_tref_xmin = 14600,          pdc_tref_xmin = 13500;
+  hdc_tref_xmax = 16000,          pdc_tref_xmax = 15000;
  
-  hadc_tref_nbins = 150,          padc_tref_nbins = 1250;
+  hadc_tref_nbins = 150,          padc_tref_nbins = 100;
   hadc_tref_xmin = 3000,          padc_tref_xmin = 2000;
   hadc_tref_xmax = 3300,          padc_tref_xmax = 4500;
 
@@ -312,13 +315,13 @@ void setTimeWindows_v2()
   hhod_nbins = 50,    phod_nbins = 50;    
   hhod_xmin = -70,    phod_xmin = -70;    
   hhod_xmax = -40,    phod_xmax = -40;                                              
-  hdc_nbins = 500,    pdc_nbins = 500;                                                      
-  hdc_xmin = -20000,  pdc_xmin = -20000;                                                                
-  hdc_xmax = -5000,   pdc_xmax = -5000;  
-                                          
+  hdc_nbins = 100,    pdc_nbins = 500;                                                      
+  hdc_xmin = -16000,  pdc_xmin = -20000;                                                                
+  hdc_xmax = -10000,   pdc_xmax = -5000;  
+
   hcer_nbins = 200,   phgcer_nbins = 200,    pngcer_nbins = 200;                                                                                                                                     
-  hcer_xmin = 50,     phgcer_xmin = 50,      pngcer_xmin = 50;                                                                                                                                   
-  hcer_xmax = 150,    phgcer_xmax = 150,     pngcer_xmax = 150;                                                                                                                 
+  hcer_xmin = 50,     phgcer_xmin = -100,      pngcer_xmin = 50;                                                                                                                                   
+  hcer_xmax = 150,    phgcer_xmax = 100,     pngcer_xmax = 150;                                                                                                                 
                                           
   hcal_nbins = 200,   pPrsh_nbins = 200,      pcal_nbins = 200;                                                                                                                                            
   hcal_xmin = -140,   pPrsh_xmin = -140,      pcal_xmin = -140;                                                                                                                    
@@ -334,7 +337,8 @@ void setTimeWindows_v2()
   
   phod_nSig = 6.0;
   pdc_nSig = 5.5; 
-  pcer_nSig = 3.5;
+  phgcer_nSig = 3.5;
+  pngcer_nSig = 3.5;
   pcal_nSig = 4.0;
 
 
@@ -412,7 +416,7 @@ void setTimeWindows_v2()
   n_pFADC_ref = "T.coin.pFADC_TREF_ROC2_adcPulseTimeRaw";
   n_pFADC_adcMult = "T.coin.pFADC_TREF_ROC2_adcMultiplicity";
 
-  P_hodo_Tref = new TH1F("pT2_ref", "SHMS Hodo hT2 Ref. Time", phod_tref_nbins, phod_tref_xmin, phod_tref_xmax);
+  P_hodo_Tref = new TH1F("pT2_ref", "SHMS Hodo pT2 Ref. Time", phod_tref_nbins, phod_tref_xmin, phod_tref_xmax);
   P_FADC_Tref = new TH1F("pFADC_ref", "SHMS fADC Ref. Time", padc_tref_nbins,  padc_tref_xmin, padc_tref_xmax);
 
 
@@ -478,7 +482,7 @@ void setTimeWindows_v2()
       T->SetBranchAddress(n_hdc_rawTDC, hdc_rawTDC[npl]);
       T->SetBranchAddress(n_hndata_rawTDC, &hndata_rawTDC[npl]);
       
-      H_dc_rawTDC[npl] = new TH1F(Form("hDC%d_rawTDC", npl+1), Form("HMS DC Plane %d Raw TDC", npl+1), hdc_nbins, hdc_xmin, hdc_xmax);
+      H_dc_rawTDC[npl] = new TH1F(Form("hDC%s_rawTDC", hdc_pl_names[npl].c_str()), Form("HMS DC Plane %s Raw TDC", hdc_pl_names[npl].c_str()), hdc_nbins, hdc_xmin, hdc_xmax);
 
       //SHMS
       base = "P.dc." + pdc_pl_names[npl];
@@ -488,7 +492,7 @@ void setTimeWindows_v2()
       T->SetBranchAddress(n_pdc_rawTDC, pdc_rawTDC[npl]);
       T->SetBranchAddress(n_pndata_rawTDC, &pndata_rawTDC[npl]);
       
-      P_dc_rawTDC[npl] = new TH1F(Form("pDC%d_rawTDC", npl+1), Form("SHMS DC Plane %d Raw TDC", npl+1), pdc_nbins, pdc_xmin, pdc_xmax);
+      P_dc_rawTDC[npl] = new TH1F(Form("pDC%s_rawTDC", hdc_pl_names[npl].c_str()), Form("SHMS DC Plane %s Raw TDC", hdc_pl_names[npl].c_str()), pdc_nbins, pdc_xmin, pdc_xmax);
 
     }
 
@@ -597,7 +601,6 @@ void setTimeWindows_v2()
       T->GetEntry(i); 
 
 
-
       //--------------Loop over HMS/SHMS Ref. TImes-------------------
 
       //Define Multiplicity Cuts Here
@@ -640,7 +643,7 @@ void setTimeWindows_v2()
 	      //Require ADC Multiplicity == 1  NOT YET DONE . . .
 	      if (1)
 		{
-		  
+		  cout << hcer_TdcAdcTimeDiff[ipmt] << endl;
 		  H_cer_TdcAdcTimeDiff[ipmt]->Fill(hcer_TdcAdcTimeDiff[ipmt]);
 		  
 		}
@@ -686,11 +689,12 @@ void setTimeWindows_v2()
 	  //Define Cuts Here
 
 	  //Loop over all hits per event
-	  for(Int_t j = 0; j < hndata_rawTDC[npl]; j++)
-	    {
-	      H_dc_rawTDC[npl]->Fill(hdc_rawTDC[npl][j]);
-	    }
-
+	      for(Int_t j = 0; j < hndata_rawTDC[npl]; j++)
+		{
+	        
+		  H_dc_rawTDC[npl]->Fill(hdc_rawTDC[npl][j]);
+		}
+	    
 	  
 
 	  //--------SHMS Drift Chambers--------
@@ -794,8 +798,10 @@ void setTimeWindows_v2()
 
   //DRAW HISTOGRAMS TO CANVAS
   
-  //Reference Time Histograms
-  hms_REF_Canv = new TCanvas("REF Times", "HMS REF TIMES",  1000, 500);
+  //-------Reference Time Histograms----------
+
+  //HMS
+  hms_REF_Canv = new TCanvas("REF Times", "HMS REF TIMES",  1500, 500);
   hms_REF_Canv->Divide(3,1);
   
   hT1_Line = new TLine(hhod_trefcut, 0,  hhod_trefcut, H_hodo_Tref->GetMaximum());
@@ -825,6 +831,176 @@ void setTimeWindows_v2()
   hFADC_Line->Draw();
   hms_REF_Canv->SaveAs("hms_REFTime_cuts.pdf");
   
+  //SHMS
+  shms_REF_Canv = new TCanvas("REF Times", "SHMS REF TIMES",  1500, 500);
+  shms_REF_Canv->Divide(3,1);
+  
+  pT2_Line = new TLine(phod_trefcut, 0,  phod_trefcut, P_hodo_Tref->GetMaximum());
+  pDCREF_Line = new TLine(pdc_trefcut, 0,  pdc_trefcut, P_DC_Tref[0]->GetMaximum());
+  pFADC_Line = new TLine(padc_trefcut, 0,  padc_trefcut, P_FADC_Tref->GetMaximum());
+  
+  shms_REF_Canv->cd(1);
+  gPad->SetLogy();
+  P_hodo_Tref->Draw();
+  pT2_Line->SetLineColor(kRed);
+  pT2_Line->SetLineWidth(3);
+  pT2_Line->Draw();
+  
+  shms_REF_Canv->cd(2);
+  gPad->SetLogy();
+  P_DC_Tref[0]->SetLineColor(kBlack);
+  for(Int_t iref=0; iref<10; iref++)
+    {
+      P_DC_Tref[iref]->Draw("sames");
+    }
+  pDCREF_Line->SetLineColor(kRed);
+  pDCREF_Line->SetLineWidth(3);
+  pDCREF_Line->Draw();
+
+  shms_REF_Canv->cd(3);
+  gPad->SetLogy();
+  P_FADC_Tref->Draw();
+  pFADC_Line->SetLineColor(kRed);
+  pFADC_Line->SetLineWidth(3);
+  pFADC_Line->Draw();
+  shms_REF_Canv->SaveAs("shms_REFTime_cuts.pdf");
+
+
+
+  //-----Setting up Detector Time WIndows----
+
+  //Cherenkovs
+  
+  //HMS
+  hCer_Canv = new TCanvas("hCer_ADC:TDC Time Diff", "HMS Cherenkov ADC:TDC Time Diff", 1500, 500);
+  hCer_Canv->Divide(2,1);
+
+  //SHMS Heavy Gas Cherenkov
+  phgCer_Canv = new TCanvas("pHGCer_ADC:TDC Time Diff", "SHMS Heavy Gas Cherenkov ADC:TDC Time Diff", 1500, 1500);
+  phgCer_Canv->Divide(2,2);
+  
+  //Loop over hCer PMTs
+  for (Int_t ipmt = 0; ipmt < 4; ipmt++ )
+    {
+
+      //HMS Cherenkov
+      if(ipmt < 2)
+	{
+	  //Get Mean and Sigma
+	  mean = H_cer_TdcAdcTimeDiff[ipmt]->GetMean();
+	  sig = H_cer_TdcAdcTimeDiff[ipmt]->GetStdDev();
+    
+	  //Set Time Window Cuts
+	  hCer_tWinMin[ipmt] = mean - hcer_nSig*sig;
+	  hCer_tWinMax[ipmt] = mean + hcer_nSig*sig;
+	  
+	  //Set Min/Max Line Limits
+	  hCER_LineMin[ipmt] = new TLine(hCer_tWinMin[ipmt], 0, hCer_tWinMin[ipmt], H_cer_TdcAdcTimeDiff[ipmt]->GetMaximum());
+	  hCER_LineMax[ipmt] = new TLine(hCer_tWinMax[ipmt], 0, hCer_tWinMax[ipmt], H_cer_TdcAdcTimeDiff[ipmt]->GetMaximum());
+	  
+	  hCER_LineMin[ipmt]->SetLineColor(kRed);
+	  hCER_LineMax[ipmt]->SetLineColor(kRed);
+	  
+	  hCer_Canv->cd(ipmt+1);
+	  gPad->SetLogy();
+	  H_cer_TdcAdcTimeDiff[ipmt]->Draw();
+	  hCER_LineMin[ipmt]->Draw();
+	  hCER_LineMax[ipmt]->Draw();
+	}
+    
+
+
+      //Get Mean and Sigma
+      mean = P_hgcer_TdcAdcTimeDiff[ipmt]->GetMean();
+      sig = P_hgcer_TdcAdcTimeDiff[ipmt]->GetStdDev();
+      
+      //Set Time Window Cuts
+      phgcer_tWinMin[ipmt] = mean - phgcer_nSig*sig;
+      phgcer_tWinMax[ipmt] = mean + phgcer_nSig*sig;
+      
+      //Set Min/Max Line Limits
+      phgcer_LineMin[ipmt] = new TLine(phgcer_tWinMin[ipmt], 0, phgcer_tWinMin[ipmt], P_hgcer_TdcAdcTimeDiff[ipmt]->GetMaximum());
+      phgcer_LineMax[ipmt] = new TLine(phgcer_tWinMax[ipmt], 0, phgcer_tWinMax[ipmt], P_hgcer_TdcAdcTimeDiff[ipmt]->GetMaximum());
+      
+      phgcer_LineMin[ipmt]->SetLineColor(kRed);
+      phgcer_LineMax[ipmt]->SetLineColor(kRed);
+      
+      phgCer_Canv->cd(ipmt+1);
+      gPad->SetLogy();
+      P_hgcer_TdcAdcTimeDiff[ipmt]->Draw();
+      phgcer_LineMin[ipmt]->Draw();
+      phgcer_LineMax[ipmt]->Draw();
+      
+
+    }
+
+  
+  hCer_Canv->SaveAs("hCER_timeWindow.pdf");
+  phgCer_Canv->SaveAs("pHGCER_timeWindow.pdf");
+
+
+  //Drift Chambers
+  //HMS
+  hdcCanv = new TCanvas("HMS DC Raw Times", "HMS DC Raw Times", 1500, 500);
+  hdcCanv->Divide(6,2);
+  //SHMS
+  pdcCanv = new TCanvas("SHMS DC Raw Times", "SHMS DC Raw Times", 1500, 500);
+  pdcCanv->Divide(6,2);
+  
+  //Loop over DC planes
+  for (Int_t npl = 0; npl < 12; npl++ )
+    {
+     
+      //HMS 
+
+      //Get Mean ans Sigma
+      mean =  H_dc_rawTDC[npl]->GetMean();
+      sig  = H_dc_rawTDC[npl]->GetStdDev();
+    
+      //Set Time Window Cuts
+      hDC_tWinMin[npl] = mean - hdc_nSig*sig;
+      hDC_tWinMax[npl] = mean + hdc_nSig*sig;
+      
+      hdc_LineMin[npl] = new TLine(hDC_tWinMin[npl], 0, hDC_tWinMin[npl], H_dc_rawTDC[npl]->GetMaximum());
+      hdc_LineMax[npl] = new TLine(hDC_tWinMax[npl], 0, hDC_tWinMax[npl], H_dc_rawTDC[npl]->GetMaximum());
+
+      hdc_LineMin[npl]->SetLineColor(kRed);
+      hdc_LineMax[npl]->SetLineColor(kRed);
+      
+      hdcCanv->cd(npl+1);
+      gPad->SetLogy();
+      H_dc_rawTDC[npl]->Draw();
+      hdc_LineMin[npl]->Draw();
+      hdc_LineMax[npl]->Draw();
+      
+      //SHMS
+      //Get Mean ans Sigma
+      mean =  P_dc_rawTDC[npl]->GetMean();
+      sig  = P_dc_rawTDC[npl]->GetStdDev();
+    
+      //Set Time Window Cuts
+      pDC_tWinMin[npl] = mean - pdc_nSig*sig;
+      pDC_tWinMax[npl] = mean + pdc_nSig*sig;
+      
+      pdc_LineMin[npl] = new TLine(pDC_tWinMin[npl], 0, pDC_tWinMin[npl], P_dc_rawTDC[npl]->GetMaximum());
+      pdc_LineMax[npl] = new TLine(pDC_tWinMax[npl], 0, pDC_tWinMax[npl], P_dc_rawTDC[npl]->GetMaximum());
+
+      pdc_LineMin[npl]->SetLineColor(kRed);
+      pdc_LineMax[npl]->SetLineColor(kRed);
+      
+      pdcCanv->cd(npl+1);
+      gPad->SetLogy();
+      P_dc_rawTDC[npl]->Draw();
+      pdc_LineMin[npl]->Draw();
+      pdc_LineMax[npl]->Draw();
+
+
+    }
+
+  hdcCanv->SaveAs("hDC_rawTDC_window.pdf");
+  pdcCanv->SaveAs("pDC_rawTDC_window.pdf");
+
+
 
   //---------------------------------------------------
 
