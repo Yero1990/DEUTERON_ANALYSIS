@@ -349,7 +349,7 @@ void setTimeWindows_v2()
                                           
   hcal_nbins = 200,   pPrsh_nbins = 200,      pcal_nbins = 200;                                                                                                                                            
   hcal_xmin = -140,   pPrsh_xmin = -200,      pcal_xmin = -200;                                                                                                                    
-  hcal_xmax = -60,    pPrsh_xmax = 200,       pcal_xmax = -200; 
+  hcal_xmax = -60,    pPrsh_xmax = 200,       pcal_xmax = 200; 
 
 
   //Set ADC:TDC Time Window Cut Range
@@ -1202,7 +1202,36 @@ void setTimeWindows_v2()
 	      pPrsh_LineMax[iside][ipmt]->Draw();
 	    
 	    } //end pmt loop
-	  
+	  	  
+	  if(iside==0)
+	    {
+	      //Loop over SHMS FLy's Eye PMTs
+	      for(int ipmt=0; ipmt<224; ipmt++)
+		{
+		  //Get Mean and Sigma
+		  mean = P_cal_TdcAdcTimeDiff[ipmt]->GetMean();
+		  sig =  P_cal_TdcAdcTimeDiff[ipmt]->GetStdDev();
+		  
+		  //Set Time Window Cuts
+		  pCal_tWinMin[ipmt] = mean - pcal_nSig*sig;
+		  pCal_tWinMax[ipmt] = mean + pcal_nSig*sig;                                                                                                          
+		  
+		  //Set Min/Max Line Limits
+		  pcal_LineMin[ipmt] = new TLine(pCal_tWinMin[ipmt], 0, pCal_tWinMin[ipmt], P_cal_TdcAdcTimeDiff[ipmt]->GetMaximum());
+		  pcal_LineMax[ipmt] = new TLine(pCal_tWinMax[ipmt], 0, pCal_tWinMax[ipmt], P_cal_TdcAdcTimeDiff[ipmt]->GetMaximum());
+		  
+		  pcal_LineMin[ipmt]->SetLineColor(kRed);
+		  pcal_LineMax[ipmt]->SetLineColor(kRed);
+		  
+		  pcalCanv->cd(ipmt+1);
+		  gPad->SetLogy();
+		  P_cal_TdcAdcTimeDiff[ipmt]->Draw();
+		  pcal_LineMin[ipmt]->Draw();
+		  pcal_LineMax[ipmt]->Draw();
+		  
+		} // End FLys Eye PMT loop
+	    }
+
 
 	  /*
 	  //hhodoCanv[npl][iside]->SaveAs(Form("Hodo_%s%s.pdf", hod_pl_names[npl].c_str(), side_names[iside].c_str()));
