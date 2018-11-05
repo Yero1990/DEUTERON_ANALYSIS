@@ -21,8 +21,8 @@ block P.dc.*rawtdc*
 block P.hod.*AdcTdcDiffTime*
 block P.hod.*Mult*
 block P.cal.*AdcTdcDiffTime*
+block P.cal.*AdcHits*
 block P.cal.*Mult*
-
 
 begin epics
 IBC3H00CRCUR4
