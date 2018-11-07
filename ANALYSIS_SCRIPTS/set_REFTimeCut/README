@@ -70,5 +70,20 @@ So in reality, we require a multiplicity of 3. So only events which had all thre
 Of course, there will be some events, in which a ref. time did not fire because of in-efficiency, but it is
 rare, specially, for the 3/4, which must be 99.9 % efficient for us NOT to lose a ref. time
 
+
+November 06 2018:
+
+**After discussion with Mark, when setting ref. time cuts, it may be beneficial
+to put a multiplicity cut == # OR'ed ref times (e.g, 3/4, el-real, el-clean), then 
+a multiplicity ==3 should be put which will clean up the histogram. Then, place timing cuts
+around the main peak.
+
+**For setting timeWindow cuts on individual detector channels, a multiplicity == 1
+should always be used, since if there was a true event, the tdc window for that particular
+detector channel (say, hHod PMT 1X3+) should in principle, ONLY see a single hit corresponding to
+the L1 Acc. If the channel is noisy, there is significant backgrouns, etc., then that could cause
+larger multiplicities in the window, so by setting a multiplicity==1, the background is cleaned up.,
+and a timing cut can be easily placed. 
+
 ====================================================
 ====================================================

@@ -35,8 +35,9 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
 
   // Load params for COIN trigger configuration
-  gHcParms->Load("PARAM/TRIG/tcoin.param");
-  
+  gHcParms->Load("UTIL_COMM_ONEPASS/PARAM/TRIG/tcoin.param");
+  //gHcParms->Load("PARAM/TRIG/tcoin.param");
+
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
   

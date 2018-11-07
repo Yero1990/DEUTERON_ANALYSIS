@@ -8,6 +8,7 @@ block T.coin.*Mult*
 block H.cer.*AdcTdcDiffTime
 block H.cer.*Mult*
 block H.dc.*rawtdc*
+block H.dc.*nhit*
 block H.hod.*AdcTdcDiffTime*
 block H.hod.*Mult*
 block H.cal.*AdcTdcDiffTime*
@@ -18,6 +19,7 @@ block P.hgcer.*Mult*
 block P.ngcer.*AdcTdcDiffTime
 block P.ngcer.*Mult*
 block P.dc.*rawtdc*
+block P.dc.*nhit*
 block P.hod.*AdcTdcDiffTime*
 block P.hod.*Mult*
 block P.cal.*AdcTdcDiffTime*
