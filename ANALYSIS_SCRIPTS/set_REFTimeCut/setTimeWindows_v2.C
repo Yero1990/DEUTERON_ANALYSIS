@@ -190,8 +190,8 @@ void setTimeWindows_v2(int run)
   Double_t hCal_tWinMax[cal_PLANES][SIDES][13] = {0.};
   
   //SET BY EYE
-  Double_t hCer_tWinMin[2] = {-180., -170.};
-  Double_t hCer_tWinMax[2] = {225., 230.};
+  Double_t hCer_tWinMin[2] = {80., 90.};
+  Double_t hCer_tWinMax[2] = {105., 110.};
   
   //SET BY EYE
   Double_t hDC_tWinMin[dc_PLANES] = {-14e3, -14e3,   -14e3,   -14e3,  -14.e3,  -14e3,     -14e3,   -14e3,   -14e3,   -14e3,   -14e3,   -14e3   };
@@ -467,8 +467,8 @@ void setTimeWindows_v2(int run)
   hdc_xmax = -10000,  pdc_xmax = -5000;  
 
   hcer_nbins = 100,   phgcer_nbins = 100,    pngcer_nbins = 100;                                                                                                                                     
-  hcer_xmin = -200,     phgcer_xmin = -500,    pngcer_xmin = -500;                                                                                                                                   
-  hcer_xmax = 300,    phgcer_xmax = 300,     pngcer_xmax = 300;                                                                                                                 
+  hcer_xmin = 0,     phgcer_xmin = -500,    pngcer_xmin = -500;                                                                                                                                   
+  hcer_xmax = 200,    phgcer_xmax = 300,     pngcer_xmax = 300;                                                                                                                 
                                           
   hcal_nbins = 200,   pPrsh_nbins = 100,      pcal_nbins = 100;                                                                                                                                            
   hcal_xmin = -140,   pPrsh_xmin = -300,      pcal_xmin = -300;                                                                                                                    
@@ -480,7 +480,7 @@ void setTimeWindows_v2(int run)
   hhod_nSig = 4.0;
   hcal_nSig = 4.0;
   
-  phod_nSig = 4.0;
+  phod_nSig = 4.5;
   pcal_nSig = 3.0;
   pPrSh_nSig = 1.5;
 
@@ -1202,7 +1202,7 @@ void setTimeWindows_v2(int run)
 	  hCER_LineMax[ipmt]->SetLineStyle(2);
 
 	  hCer_Canv->cd(ipmt+1);
-	  gPad->SetLogy();
+	  //gPad->SetLogy();
 	  H_cer_TdcAdcTimeDiff_CUT[ipmt]->SetLineColor(kRed);
 	  H_cer_TdcAdcTimeDiff[ipmt]->Draw();
 	  H_cer_TdcAdcTimeDiff_CUT[ipmt]->Draw("sames");
@@ -1476,8 +1476,8 @@ void setTimeWindows_v2(int run)
 	      sig =  P_hod_TdcAdcTimeDiff_CUT[npl][iside][ipmt]->GetStdDev();
 	      
 	      //Set Time Window Cuts
-	      phodo_tWinMin[npl][iside][ipmt] = mean - phod_nSig*sig;
-	      phodo_tWinMax[npl][iside][ipmt] = mean + 5.*sig;
+	      phodo_tWinMin[npl][iside][ipmt] = mean - 5.0*sig;
+	      phodo_tWinMax[npl][iside][ipmt] = mean + 5.5*sig;
 	      
 	            
 	      //Set Min/Max Line Limits
