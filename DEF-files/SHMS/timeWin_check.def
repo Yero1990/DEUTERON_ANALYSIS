@@ -1,0 +1,32 @@
+#SHMS Singles in COIN-MODE
+#block T.coin.*FADC_TREF*
+#block T.coin.*tdcTimeRaw*
+#block T.coin.*Mult*
+
+#SHMS Singles in SINGLE ARM-MODE
+block T.shms.*FADC_TREF*
+block T.shms.*tdcTimeRaw*
+block T.shms.*Mult*
+
+block P.hgcer.*AdcTdcDiffTime
+block P.hgcer.*Mult*
+block P.ngcer.*AdcTdcDiffTime
+block P.ngcer.*Mult*
+block P.dc.*rawtdc*
+block P.dc.*nhit*
+block P.hod.*AdcTdcDiffTime*
+block P.hod.*Mult*
+block P.cal.*AdcTdcDiffTime*
+block P.cal.*AdcHits*
+block P.cal.*Mult*
+
+begin epics
+IBC3H00CRCUR4
+hac_bcm_average
+ibcm1
+ibcm2
+iunser
+itov3out
+itov4out
+end epics
+

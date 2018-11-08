@@ -75,8 +75,9 @@ November 06 2018:
 
 **After discussion with Mark, when setting ref. time cuts, it may be beneficial
 to put a multiplicity cut == # OR'ed ref times (e.g, 3/4, el-real, el-clean), then 
-a multiplicity ==3 should be put which will clean up the histogram. Then, place timing cuts
-around the main peak.
+a multiplicity ==3 should be put which will clean up the histogram. Then, place the
+cut to that includes the good coincidences (main distribution), good accidental coincidence (side peak),
+but excludes the other background or noise that may have snuck in the TDC Time Window.
 
 **For setting timeWindow cuts on individual detector channels, a multiplicity == 1
 should always be used, since if there was a true event, the tdc window for that particular
@@ -87,3 +88,8 @@ and a timing cut can be easily placed.
 
 ====================================================
 ====================================================
+
+November 08 2018
+** Make Ref cuts to take only good coincidences (and good accidentals).  Widen the cuts a bit -->DONE
+** Ony look at ROC2 leafs, since we have pT2 as our ref. time in tcoin.param
+** To estimate the background rate, we can multiply the [ HMS hT1 window X SHMS pT2 window ] * HMS Rate * SHMS Rate (Ask Mark later, to be sure) 
