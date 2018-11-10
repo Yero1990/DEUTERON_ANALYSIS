@@ -103,9 +103,11 @@ void setTimeWindows_v2(int run, string trg)
   string daq = "coin";    //or hms, shms  (single arm mode)
   string rtype = "coin";  //or "hms", "shms"  (singles in coin mode)
   
-  TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3288_-1_noCUTSset.root";
+  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3288_-1_noCUTSset.root";
+  
   //TString filename = "../../../ROOTfiles/shms_replay_timeWin_check_1791_-1.root";
-
+  TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3288_-1_refCUTset.root";
+   
   //read ROOTfile and Get TTree
   TFile *data_file = new TFile(filename, "READ"); 
   TTree *T = (TTree*)data_file->Get("T");
@@ -395,7 +397,7 @@ void setTimeWindows_v2(int run, string trg)
   Bool_t good_Mult;
   
   //Loop over all entries
-  for(Long64_t i=0; i<1000; i++)
+  for(Long64_t i=0; i<nentries; i++)
     {
       
       T->GetEntry(i); 
@@ -992,9 +994,6 @@ void setTimeWindows_v2(int run, string trg)
 		  pcalCanv =  new TCanvas("pCal_TDC:ADC Time Diff", "SHMS Calo TDC:ADC Time Diff",  2500, 2500);
 		}
 	     
-
-
- 
 	    }
 	  
 	  
@@ -1051,8 +1050,50 @@ void setTimeWindows_v2(int run, string trg)
 	      sig =  H_hod_TdcAdcTimeDiff_CUT[npl][iside][ipmt]->GetStdDev();
 	      
 	      //Set Time Window Cuts
-	      hhodo_tWinMin[npl][iside][ipmt] = mean - hhod_nSig*sig;
-	      hhodo_tWinMax[npl][iside][ipmt] = mean + hhod_nSig*sig;
+	      hhodo_tWinMin[npl][iside][ipmt] = mean - 4.0*sig;
+	      hhodo_tWinMax[npl][iside][ipmt] = mean + 5.5*sig;
+	      
+	      //Exceptions to CUTS
+	      if(npl==1&&iside==0){
+		if(ipmt==3||ipmt==4){
+		hhodo_tWinMin[npl][iside][ipmt] = -61.;
+		hhodo_tWinMax[npl][iside][ipmt] = -53.;
+		}
+	      
+	      }
+	      if(npl==1&&iside==1){
+		if(ipmt==0){
+		hhodo_tWinMin[npl][iside][ipmt] = -65.;
+		hhodo_tWinMax[npl][iside][ipmt] = -50.;
+		}
+		if(ipmt==4){
+		hhodo_tWinMin[npl][iside][ipmt] = -64.;
+		hhodo_tWinMax[npl][iside][ipmt] = -55.;
+		}
+
+	      }
+	      if(npl==3&&iside==1){
+		if(ipmt==0){
+		hhodo_tWinMin[npl][iside][ipmt] = -63.;
+		hhodo_tWinMax[npl][iside][ipmt] = -52.;
+		}
+		if(ipmt==1){
+		hhodo_tWinMin[npl][iside][ipmt] = -63.;
+		hhodo_tWinMax[npl][iside][ipmt] = -52.;
+		}
+		if(ipmt==9){
+		hhodo_tWinMin[npl][iside][ipmt] = -61.;
+		hhodo_tWinMax[npl][iside][ipmt] = -50.;
+		}
+		if(ipmt==8){
+		hhodo_tWinMin[npl][iside][ipmt] = -61.;
+		hhodo_tWinMax[npl][iside][ipmt] = -51.;
+		}
+		if(ipmt==7){
+		hhodo_tWinMin[npl][iside][ipmt] = -61.;
+		hhodo_tWinMax[npl][iside][ipmt] = -51.;
+		}
+	      }
 
 	            
 	      //Set Min/Max Line Limits
@@ -1084,8 +1125,8 @@ void setTimeWindows_v2(int run, string trg)
 	      sig =  P_hod_TdcAdcTimeDiff_CUT[npl][iside][ipmt]->GetStdDev();
 	      
 	      //Set Time Window Cuts
-	      phodo_tWinMin[npl][iside][ipmt] = mean - 5.0*sig;
-	      phodo_tWinMax[npl][iside][ipmt] = mean + 5.5*sig;
+	      phodo_tWinMin[npl][iside][ipmt] = mean - 6.0*sig;
+	      phodo_tWinMax[npl][iside][ipmt] = mean + 7.5*sig;
 	      
 	            
 	      //Set Min/Max Line Limits
@@ -1118,8 +1159,8 @@ void setTimeWindows_v2(int run, string trg)
 	      sig =  H_cal_TdcAdcTimeDiff_CUT[npl][iside][ipmt]->GetStdDev();
 	      
 	      //Set Time Window Cuts
-	      hCal_tWinMin[npl][iside][ipmt] = mean - hcal_nSig*sig;
-	      hCal_tWinMax[npl][iside][ipmt] = mean + hcal_nSig*sig;                                                                                                          
+	      hCal_tWinMin[npl][iside][ipmt] = mean - 3.2*sig;
+	      hCal_tWinMax[npl][iside][ipmt] = mean + 4.5*sig;                                                                                                          
 	      
 	      //Set Min/Max Line Limits
 	      hcal_LineMin[npl][iside][ipmt] = new TLine(hCal_tWinMin[npl][iside][ipmt], 0, hCal_tWinMin[npl][iside][ipmt], H_cal_TdcAdcTimeDiff[npl][iside][ipmt]->GetMaximum());
@@ -1236,17 +1277,15 @@ void setTimeWindows_v2(int run, string trg)
  int ipmt = 0; //initialize pmt counter
  
  //Alternative Cal Plot
- for(int col=0; col < 16; col++)
+ for(int row=0; row < 16; row++)
    {
 
-     pcalCanv_alt[col] =  new TCanvas(Form("pCal_col_%d", col+1), Form("SHMS Calo TDC:ADC Time Diff, Col %d", col+1),  1500, 600);
-     pcalCanv_alt[col]->Divide(7,2);
+     pcalCanv_alt[row] =  new TCanvas(Form("pCal_row_%d", row+1), Form("SHMS Calo TDC:ADC Time Diff, Row %d", row+1),  1500, 600);
+     pcalCanv_alt[row]->Divide(7,2);
 
-     for(int row=0; row<14; row++)
+     for(int col=0; col<14; col++)
        {
-	 
-	 cout << "col = " << col + 1 << " , " << " row = " << row + 1 << " , " << " pmt = " << ipmt + 1 <<  endl;
-	 
+	 	 
 	 //Get Mean and Sigma
 	 binmax =  P_cal_TdcAdcTimeDiff_CUT[ipmt]->GetMaximumBin();
 	 mean = P_cal_TdcAdcTimeDiff_CUT[ipmt]->GetXaxis()->GetBinCenter(binmax);
@@ -1268,7 +1307,7 @@ void setTimeWindows_v2(int run, string trg)
 	 
 	 
 	 //cd to row pads / column
-	 pcalCanv_alt[col]->cd(row+1);
+	 pcalCanv_alt[row]->cd(col+1);
 	 gPad->SetLogy();
 	 P_cal_TdcAdcTimeDiff_CUT[ipmt]->SetLineColor(kRed);
 	 P_cal_TdcAdcTimeDiff[ipmt]->Draw();
@@ -1280,10 +1319,13 @@ void setTimeWindows_v2(int run, string trg)
        }//end loop over rows
      
      //Save Each Cal. Column
-     pcalCanv_alt[col]->SaveAs(Form("refTime_cuts_%d/SHMS/CAL/pCal_col%d.pdf",run, col+1));
+     pcalCanv_alt[row]->SaveAs(Form("refTime_cuts_%d/SHMS/CAL/pCal_row%d.pdf",run, row+1));
      
    }//end loop over columns
  
+
+ 
+
 
  
  //Write Histograms to ROOT file
@@ -1294,298 +1336,441 @@ void setTimeWindows_v2(int run, string trg)
   
  
   //------------Write Time Window Min/Max Limits to Parameter File---------------
-  ofstream outPARAM;
-  outPARAM.open(Form("../../PARAM/HMS/HODO/hhodo_tWin_%d.param", run));
-  outPARAM << "; HMS Hodoscope Parameter File Containing TimeWindow Min/Max Cuts " << endl;
-  outPARAM << " " << endl;
-  outPARAM << " " << endl;
-  outPARAM << " " << endl;
 
-  string n_side[2] = {"Pos", "Neg"};
-  string n_lim[2] = {"Min", "Max"};
+ string n_side[2] = {"Pos", "Neg"};
+ string n_side_cal[2] = {"pos", "neg"};
+ string n_lim[2] = {"Min", "Max"};
+ 
+ ofstream out_hhodo;
+ ofstream out_phodo;
+ ofstream out_hcal;
+ ofstream out_pprsh;  
+ ofstream out_pcal;  
+ ofstream out_hdc;   
+ ofstream out_pdc;   
+ ofstream out_hcer; 
+ ofstream out_phgcer;
+ ofstream out_pngcer; 
 
-  //outPARAM << "; " << setw(32) << "1x " << setw(19) << "1y " << setw(16) << "2x " << setw(16) << "2y " << endl;
-  //outPARAM << "hhodo_PosAdcTimeWindowMin = ";
+ //HMS Hodo
+ out_hhodo.open(Form("../../PARAM/HMS/HODO/hhodo_tWin_%d.param", run));
+ out_hhodo << "; HMS Hodoscope Parameter File Containing TimeWindow Min/Max Cuts " << endl;
+ out_hhodo << " " << endl;
+ out_hhodo << " " << endl;
+ out_hhodo << " " << endl;
+ //SHMS Hodo
+ out_phodo.open(Form("../../PARAM/SHMS/HODO/phodo_tWin_%d.param", run));
+ out_phodo << "; SHMS Hodoscope Parameter File Containing TimeWindow Min/Max Cuts " << endl;
+ out_phodo << " " << endl;
+ out_phodo << " " << endl;
+ out_phodo << " " << endl;
+ //HMS Cal
+ out_hcal.open(Form("../../PARAM/HMS/CAL/hcal_tWin_%d.param", run));
+ out_hcal << "; HMS Calorimeter Parameter File Containing TimeWindow Min/Max Cuts " << endl;
+ out_hcal << " " << endl;
+ out_hcal << " " << endl;
+ out_hcal << " " << endl;
+ //SHMS PreSh
+ out_pprsh.open(Form("../../PARAM/SHMS/CAL/pprsh_tWin_%d.param", run));
+ out_pprsh << "; SHMS Pre-Shower Parameter File Containing TimeWindow Min/Max Cuts " << endl;
+ out_pprsh << " " << endl;
+ out_pprsh << " " << endl;
+ out_pprsh << " " << endl;
+ //SHMS Fly's Eye Cal
+ out_pcal.open(Form("../../PARAM/SHMS/CAL/pcal_tWin_%d.param", run));
+ out_pcal << "; SHMS Fly's Eye Calorimeter  Parameter File Containing TimeWindow Min/Max Cuts " << endl;
+ out_pcal << " " << endl;
+ out_pcal << " " << endl;
+ out_pcal << " " << endl;
+ //HMS DC
+ out_hdc.open(Form("../../PARAM/HMS/DC/hdc_tWin_%d.param", run));
+ out_hdc << "; HMS DC  Parameter File Containing TimeWindow Min/Max Cuts " << endl;
+ out_hdc << " " << endl;
+ out_hdc << " " << endl;
+ out_hdc << " " << endl;
+ //SHMS DC
+ out_pdc.open(Form("../../PARAM/SHMS/DC/pdc_tWin_%d.param", run));
+ out_pdc << "; SHMS DC  Parameter File Containing TimeWindow Min/Max Cuts " << endl;
+ out_pdc << " " << endl;
+ out_pdc << " " << endl;
+ out_pdc << " " << endl;
+ //HMS Cer
+ out_hcer.open(Form("../../PARAM/HMS/CER/hcer_tWin_%d.param", run));
+ out_hcer << "; HMS Cer  Parameter File Containing TimeWindow Min/Max Cuts " << endl;
+ out_hcer << " " << endl;
+ out_hcer << " " << endl;
+ out_hcer << " " << endl;
+//SHMS HGCER
+ out_phgcer.open(Form("../../PARAM/SHMS/HGCER/phgcer_tWin_%d.param", run));
+ out_phgcer << "; SHMS Heavy Gas Cer  Parameter File Containing TimeWindow Min/Max Cuts " << endl;
+ out_phgcer << " " << endl;
+ out_phgcer << " " << endl;
+ out_phgcer << " " << endl;
+//SHMS NGCER
+ out_pngcer.open(Form("../../PARAM/SHMS/NGCER/pngcer_tWin_%d.param", run));
+ out_pngcer << "; SHMS Noble Gas Cer  Parameter File Containing TimeWindow Min/Max Cuts " << endl;
+ out_pngcer << " " << endl;
+ out_pngcer << " " << endl;
+ out_pngcer << " " << endl;
 
-  
+  //out_hhodo << "; " << setw(32) << "1x " << setw(19) << "1y " << setw(16) << "2x " << setw(16) << "2y " << endl;
+  //out_hhodo << "hhodo_PosAdcTimeWindowMin = ";
 
+ //Loop over Hodoscopes Detector Sides, HMS Calorimeter Sides, SHMS PreSHower
   for(int iside = 0; iside<SIDES; iside++)
     {
-        
+      //Loop over Min/Max Window Limits
       for (int lim=0; lim<2; lim++)
 	{
+
+	  //Minimum Time Window
 	  if(lim==0){
-	    outPARAM << "" << endl;
-	    outPARAM << "; " << setw(32) << "1x " << setw(19) << "1y " << setw(16) << "2x " << setw(16) << "2y " << endl;
-	    outPARAM << Form("hhodo_%sAdcTimeWindow%s = ", n_side[iside].c_str(), n_lim[lim].c_str());
+	    //HMS Hodo
+	    out_hhodo << "" << endl;
+	    out_hhodo << "; " << setw(32) << "1x " << setw(19) << "1y " << setw(16) << "2x " << setw(16) << "2y " << endl;
+	    out_hhodo << Form("hhodo_%sAdcTimeWindow%s = ", n_side[iside].c_str(), n_lim[lim].c_str());
+
+	    
+	    //SHMS Hodo
+	    out_phodo << "" << endl;
+	    out_phodo << "; " << setw(32) << "1x " << setw(19) << "1y " << setw(16) << "2x " << setw(16) << "2y " << endl;
+	    out_phodo << Form("phodo_%sAdcTimeWindow%s = ", n_side[iside].c_str(), n_lim[lim].c_str());
+
+	    //HMS Calorimeter
+	    out_hcal << "" << endl;
+	    out_hcal << Form("hcal_%s_AdcTimeWindow%s = ", n_side_cal[iside].c_str(), n_lim[lim].c_str());
+	    
+	    //SHMS PreSHower
+	    out_pprsh << "" << endl;
+	    out_pprsh << Form("pcal_%s_AdcTimeWindow%s = ", n_side_cal[iside].c_str(), n_lim[lim].c_str());
+	 
+	    if(iside==0){
+	    //SHMS Fly's Eye
+	    out_pcal << "" << endl;
+	    out_pcal << Form("pcal_arr_AdcTimeWindow%s = ", n_lim[lim].c_str());
+	   
+	    //HMS DC
+	    out_hdc << "" << endl;
+	    out_hdc << "hdc_tdc_min_win = ";
+	    
+	    //SHMS DC
+	    out_pdc << "" << endl;
+	    out_pdc << "pdc_tdc_min_win = ";
+	    
+	    //HMS Cer
+	    out_hcer << "" << endl;
+	    out_hcer << "hcer_adcTimeWindowMin = ";
+
+	    //SHMS HGCER
+	    out_phgcer << "" << endl;
+	    out_phgcer << "phgcer_adcTimeWindowMin = ";
+	    
+	    //SHMS NGCER
+	    out_pngcer << "" << endl;
+	    out_pngcer << "pngcer_adcTimeWindowMin = ";
+	    }
+
 	  }
+	  //Maximum Time Window
 	  if(lim==1){
-	    outPARAM << "" << endl;
-	    outPARAM << "; " << setw(32) << "1x " << setw(19) << "1y " << setw(16) << "2x " << setw(16) << "2y " << endl;
-	    outPARAM << Form("hhodo_%sAdcTimeWindow%s = ", n_side[iside].c_str(), n_lim[lim].c_str());
+	    //HMS Hodo
+	    out_hhodo << "" << endl;
+	    out_hhodo << "; " << setw(32) << "1x " << setw(19) << "1y " << setw(16) << "2x " << setw(16) << "2y " << endl;
+	    out_hhodo << Form("hhodo_%sAdcTimeWindow%s = ", n_side[iside].c_str(), n_lim[lim].c_str());
+
+	    //SHMS Hodo
+	    out_phodo << "" << endl;
+	    out_phodo << "; " << setw(32) << "1x " << setw(19) << "1y " << setw(16) << "2x " << setw(16) << "2y " << endl;
+	    out_phodo << Form("phodo_%sAdcTimeWindow%s = ", n_side[iside].c_str(), n_lim[lim].c_str());
+
+	    //HMS Calorimeter
+	    out_hcal << "" << endl;
+	    out_hcal << Form("hcal_%s_AdcTimeWindow%s = ", n_side_cal[iside].c_str(), n_lim[lim].c_str());
+	    
+	    //SHMS PreSHower
+	    out_pprsh << "" << endl;
+	    out_pprsh << Form("pcal_%s_AdcTimeWindow%s = ", n_side_cal[iside].c_str(), n_lim[lim].c_str());
+	    
+	    if(iside==0){
+	    //SHMS Fly's Eye
+	    out_pcal << "" << endl;
+	    out_pcal << Form("pcal_arr_AdcTimeWindow%s = ", n_lim[lim].c_str());
+	    
+	    //HMS DC
+	    out_hdc << "" << endl;
+	    out_hdc << "hdc_tdc_max_win = ";
+  
+	    //SHMS DC
+	    out_pdc << "" << endl;
+	    out_pdc << "pdc_tdc_max_win = ";
+	    
+	    //HMS Cer
+	    out_hcer << "" << endl;
+	    out_hcer << "hcer_adcTimeWindowMax = ";
+
+	    //SHMS HGCER
+	    out_phgcer << "" << endl;
+	    out_phgcer << "phgcer_adcTimeWindowMax = ";
+	    
+	    //SHMS NGCER
+	    out_pngcer << "" << endl;
+	    out_pngcer << "pngcer_adcTimeWindowMax = ";
+
+	    }
 	  }
-	  for(int ipmt = 0; ipmt<16; ipmt++)
+
+	  for(int ipmt = 0; ipmt<21; ipmt++)
 	    {     
+
+	      //--------Write out HMS Hodo Param---------
+	      if(ipmt<16){
+		if(ipmt==0){
+		  
+		  if (lim==0){
+		    out_hhodo << setprecision(2) << hhodo_tWinMin[0][iside][ipmt] << ", " << setw(15) << hhodo_tWinMin[1][iside][ipmt] << ", " << setw(15) << hhodo_tWinMin[2][iside][ipmt] << ", " << setw(15) << hhodo_tWinMin[3][iside][ipmt] << fixed << endl; 
+		  }
+		  if(lim==1){
+		    out_hhodo << setprecision(2) << hhodo_tWinMax[0][iside][ipmt] << ", " << setw(15) << hhodo_tWinMax[1][iside][ipmt] << ", " << setw(15) << hhodo_tWinMax[2][iside][ipmt] << ", " << setw(15) << hhodo_tWinMax[3][iside][ipmt] << fixed << endl; 
+		  }
+		}
+		
+		else{
+		  if(lim==0){
+		    out_hhodo << setw(32) << setprecision(2) << hhodo_tWinMin[0][iside][ipmt] << ", " << setw(15) << hhodo_tWinMin[1][iside][ipmt] << ", " << setw(15) << hhodo_tWinMin[2][iside][ipmt] << ", " << setw(15) << hhodo_tWinMin[3][iside][ipmt] << fixed << endl; 		
+		  }
+		  if(lim==1){
+		    out_hhodo << setw(32) << setprecision(2) << hhodo_tWinMax[0][iside][ipmt] << ", " << setw(15) << hhodo_tWinMax[1][iside][ipmt] << ", " << setw(15) << hhodo_tWinMax[2][iside][ipmt] << ", " << setw(15) << hhodo_tWinMax[3][iside][ipmt] << fixed << endl; 
+		  }
+		  
+		}
+
+	      }//end HMS Hodo PMT Loop
 	      
+	      //------Write out SHMS Hodo Param-------
 	      if(ipmt==0){
 		
 		if (lim==0){
-		  outPARAM << setprecision(2) << hhodo_tWinMin[0][iside][ipmt] << ", " << setw(15) << hhodo_tWinMin[1][iside][ipmt] << ", " << setw(15) << hhodo_tWinMin[2][iside][ipmt] << ", " << setw(15) << hhodo_tWinMin[3][iside][ipmt] << fixed << endl; 
+		  out_phodo << setprecision(2) << phodo_tWinMin[0][iside][ipmt] << ", " << setw(15) << phodo_tWinMin[1][iside][ipmt] << ", " << setw(15) << phodo_tWinMin[2][iside][ipmt] << ", " << setw(15) << phodo_tWinMin[3][iside][ipmt] << fixed << endl; 
 		}
 		if(lim==1){
-		  outPARAM << setprecision(2) << hhodo_tWinMax[0][iside][ipmt] << ", " << setw(15) << hhodo_tWinMax[1][iside][ipmt] << ", " << setw(15) << hhodo_tWinMax[2][iside][ipmt] << ", " << setw(15) << hhodo_tWinMax[3][iside][ipmt] << fixed << endl; 
+		  out_phodo << setprecision(2) << phodo_tWinMax[0][iside][ipmt] << ", " << setw(15) << phodo_tWinMax[1][iside][ipmt] << ", " << setw(15) << phodo_tWinMax[2][iside][ipmt] << ", " << setw(15) << phodo_tWinMax[3][iside][ipmt] << fixed << endl; 
 		}
 	      }
 	      
 	      else{
 		if(lim==0){
-		  outPARAM << setw(32) << setprecision(2) << hhodo_tWinMin[0][iside][ipmt] << ", " << setw(15) << hhodo_tWinMin[1][iside][ipmt] << ", " << setw(15) << hhodo_tWinMin[2][iside][ipmt] << ", " << setw(15) << hhodo_tWinMin[3][iside][ipmt] << fixed << endl; 		
+		  out_phodo << setw(32) << setprecision(2) << phodo_tWinMin[0][iside][ipmt] << ", " << setw(15) << phodo_tWinMin[1][iside][ipmt] << ", " << setw(15) << phodo_tWinMin[2][iside][ipmt] << ", " << setw(15) << phodo_tWinMin[3][iside][ipmt] << fixed << endl; 		
 		}
 		if(lim==1){
-		  outPARAM << setw(32) << setprecision(2) << hhodo_tWinMax[0][iside][ipmt] << ", " << setw(15) << hhodo_tWinMax[1][iside][ipmt] << ", " << setw(15) << hhodo_tWinMax[2][iside][ipmt] << ", " << setw(15) << hhodo_tWinMax[3][iside][ipmt] << fixed << endl; 
+		  out_phodo << setw(32) << setprecision(2) << phodo_tWinMax[0][iside][ipmt] << ", " << setw(15) << phodo_tWinMax[1][iside][ipmt] << ", " << setw(15) << phodo_tWinMax[2][iside][ipmt] << ", " << setw(15) << phodo_tWinMax[3][iside][ipmt] << fixed << endl; 
 		}
 		
 	      }
+
 	      
-	    } //end loop over Min/Max limits
+	    } //end loop over hms pmts
 	  
-	}// end loop over pmts
+	  //-----Write out HMS Calorimeter-------
+	  for(int layer=0; layer<4; layer++)
+	    {
+	      
+	      if(layer==0)
+		{
+		  if(lim==0){
+		    out_hcal << setprecision(2) << hCal_tWinMin[layer][iside][0]<<","
+			     << hCal_tWinMin[layer][iside][1]<<","
+			     << hCal_tWinMin[layer][iside][2]<<","
+			     << hCal_tWinMin[layer][iside][3]<<","
+			     << hCal_tWinMin[layer][iside][4]<<","
+			     << hCal_tWinMin[layer][iside][5]<<","
+			     << hCal_tWinMin[layer][iside][6]<<","
+			     << hCal_tWinMin[layer][iside][7]<<","
+			     << hCal_tWinMin[layer][iside][8]<<","
+			     << hCal_tWinMin[layer][iside][9]<<","
+			     << hCal_tWinMin[layer][iside][10]<<","
+			     << hCal_tWinMin[layer][iside][11]<<","
+			     << hCal_tWinMin[layer][iside][12]<< fixed << endl;
+		    
+		  } // end Min Limit
+		  
+		  if(lim==1){
+		    out_hcal << setprecision(2) << hCal_tWinMax[layer][iside][0]<<","
+			     << hCal_tWinMax[layer][iside][1]<<","
+			     << hCal_tWinMax[layer][iside][2]<<","
+			     << hCal_tWinMax[layer][iside][3]<<","
+			     << hCal_tWinMax[layer][iside][4]<<","
+			     << hCal_tWinMax[layer][iside][5]<<","
+			     << hCal_tWinMax[layer][iside][6]<<","
+			     << hCal_tWinMax[layer][iside][7]<<","
+			     << hCal_tWinMax[layer][iside][8]<<","
+			     << hCal_tWinMax[layer][iside][9]<<","
+			     << hCal_tWinMax[layer][iside][10]<<","
+			     << hCal_tWinMax[layer][iside][11]<<","
+			     << hCal_tWinMax[layer][iside][12]<< fixed << endl;
+		    
+		  } //end Max Limit
+		  
+		} //end layer==0 requirement
+	      
+	      else
+		{
+		  if(lim==0){
+		    out_hcal << setw(32) << setprecision(2) << hCal_tWinMin[layer][iside][0]<<","
+			     << hCal_tWinMin[layer][iside][1]<<","
+			     << hCal_tWinMin[layer][iside][2]<<","
+			     << hCal_tWinMin[layer][iside][3]<<","
+			     << hCal_tWinMin[layer][iside][4]<<","
+			     << hCal_tWinMin[layer][iside][5]<<","
+			     << hCal_tWinMin[layer][iside][6]<<","
+			     << hCal_tWinMin[layer][iside][7]<<","
+			     << hCal_tWinMin[layer][iside][8]<<","
+			     << hCal_tWinMin[layer][iside][9]<<","
+			     << hCal_tWinMin[layer][iside][10]<<","
+			     << hCal_tWinMin[layer][iside][11]<<","
+			     << hCal_tWinMin[layer][iside][12]<< fixed << endl;
+		    
+		  } // end Min Limit
+		  
+		  if(lim==1){
+		    out_hcal << setw(32) << setprecision(2) << hCal_tWinMax[layer][iside][0]<<","
+			     << hCal_tWinMax[layer][iside][1]<<","
+			     << hCal_tWinMax[layer][iside][2]<<","
+			     << hCal_tWinMax[layer][iside][3]<<","
+			     << hCal_tWinMax[layer][iside][4]<<","
+			     << hCal_tWinMax[layer][iside][5]<<","
+			     << hCal_tWinMax[layer][iside][6]<<","
+			     << hCal_tWinMax[layer][iside][7]<<","
+			     << hCal_tWinMax[layer][iside][8]<<","
+			     << hCal_tWinMax[layer][iside][9]<<","
+			     << hCal_tWinMax[layer][iside][10]<<","
+			     << hCal_tWinMax[layer][iside][11]<<","
+			     << hCal_tWinMax[layer][iside][12]<< fixed << endl;
+		    
+		  } //end Max Limit
+		  
+		} 
+
+	      
+	    } //end loop over layers
+	    
+	  //------Write SHMS PreShower Param-------
+	  //Lower Limit Time Window Cut
+	  if(lim==0){
+	    out_pprsh << setprecision(2) << pPrsh_tWinMin[iside][0] << ", " << pPrsh_tWinMin[iside][1] << ", " 
+		      <<  pPrsh_tWinMin[iside][2] << ", "  <<  pPrsh_tWinMin[iside][3]  << ", " 
+		      <<  pPrsh_tWinMin[iside][4] << ", "  <<  pPrsh_tWinMin[iside][5]  << ", " 
+		      <<  pPrsh_tWinMin[iside][6] << ", "  <<  pPrsh_tWinMin[iside][7]  << ", "
+		      <<  pPrsh_tWinMin[iside][8] << ", "  <<  pPrsh_tWinMin[iside][9]  << ", " 
+		      <<  pPrsh_tWinMin[iside][10] << ", " <<  pPrsh_tWinMin[iside][11] << ", " 
+		      <<  pPrsh_tWinMin[iside][12] << ", " <<  pPrsh_tWinMin[iside][13] << fixed << endl;
+	  }
+	  //Upper Limit Time WIndow Cut
+	  if(lim==1){
+	    out_pprsh << setprecision(2) << pPrsh_tWinMax[iside][0] << ", " << pPrsh_tWinMax[iside][1] << ", " 
+		      <<  pPrsh_tWinMax[iside][2] << ", "  <<  pPrsh_tWinMax[iside][3]  << ", " 
+		      <<  pPrsh_tWinMax[iside][4] << ", "  <<  pPrsh_tWinMax[iside][5]  << ", " 
+		      <<  pPrsh_tWinMax[iside][6] << ", "  <<  pPrsh_tWinMax[iside][7]  << ", "
+		      <<  pPrsh_tWinMax[iside][8] << ", "  <<  pPrsh_tWinMax[iside][9]  << ", " 
+		      <<  pPrsh_tWinMax[iside][10] << ", " <<  pPrsh_tWinMax[iside][11] << ", " 
+		      <<  pPrsh_tWinMax[iside][12] << ", " <<  pPrsh_tWinMax[iside][13] << fixed << endl;
+	  }
+	  
+
+	  
+	  //Write Out Param of Detectors without a SIDE (Fly's Eye, DC, Cher)
+	  if(iside==0)
+	    {
+
+	      //---------Write SHMS Fly's Eye Calorimeter Param-------------
+	      for(int ipmt=0; ipmt<224; ipmt++)
+		{
+		  //Lower Limit Time Window Cut
+		  if(lim==0){
+		    //pCal_tWinMin[ipmt];
+		    if(ipmt < 224 ){
+		      out_pcal << setw(2) << setprecision(2) << pCal_tWinMin[ipmt] << ( (ipmt+1) % 14 ? "," : "\n") << fixed; 
+		    }
+		    
+		  }
+		  
+		  //Upper Limit Time WIndow Cut
+		  if(lim==1){
+		    if(ipmt < 224 ){
+		      out_pcal << setw(2) << setprecision(2) << pCal_tWinMax[ipmt] << ( (ipmt+1) % 14 ? "," : "\n") << fixed; 
+		    }
+		  }
+		  
+		} //End Fly's Eye Cal PMT Loop
+	     
+	      
+	      //---------Write HMS/SHMS DC Param-------------
+	      
+	      //Loop over DC planes
+	      for(int npl=0; npl<dc_PLANES; npl++)
+		{
+		
+		  //Lower Limit Time Window Cut
+		  if(lim==0){
+		    out_hdc << setw(2) << setprecision(2) << hDC_tWinMin[npl] << ", " << fixed;
+		    out_pdc << setw(2) << setprecision(2) << pDC_tWinMin[npl] << ", " << fixed;
+
+		  }
+		  
+
+
+		  //Upper Limit Time Window Cut
+		  if(lim==1){
+		    out_hdc << setw(2) << setprecision(2) << hDC_tWinMax[npl] << ", " << fixed;
+		    out_pdc << setw(2) << setprecision(2) << pDC_tWinMax[npl] << ", " << fixed;
+
+		  }
+		
+		} //End loop over DC Planes
+
+	      //---------Write HMS/SHMS CER Param-------------
+	      
+	      //Loop over PMTs
+	      for (int ipmt = 0; ipmt<4; ipmt++){
+		//Lower Limit Time Window Cut
+		if(lim==0){
+		  //HMS Cer
+		  if(ipmt<2){
+		    out_hcer << setprecision(2) << hCer_tWinMin[ipmt] << ", " << fixed;
+		  }
+		  //SHMS HGCER
+		  out_phgcer << setprecision(2) << phgcer_tWinMin[ipmt] << ", " << fixed;
+		  //SHMS NGCER
+		  out_pngcer << setprecision(2) << pngcer_tWinMin[ipmt] << ", " << fixed;
+
+		  
+		}
+		 
+		//Upper Limit Time Window Cut
+		if(lim==1){
+		  //HMS Cer
+		  if(ipmt<2){
+		    out_hcer << setprecision(2) << hCer_tWinMax[ipmt] << ", " << fixed;
+		  }
+		  //SHMS HGCER
+		  out_phgcer << setprecision(2) << phgcer_tWinMax[ipmt] << ", " << fixed;
+		  //SHMS NGCER
+		  out_pngcer << setprecision(2) << pngcer_tWinMax[ipmt] << ", " << fixed;
+
+		}
+
+		
+	      }//end loop over Cher PMTs
+
+
+	    } //End loop over single side
+	  
+	}// end loop Min/Max Limits
       
     } // end loop over sides
-  
+
+
+
   /*
-  //--------Write Parameters to Param File-----
-  for (Int_t ipmt = 0; ipmt < 16; ipmt++){
-    if (ipmt==0){
-      outPARAM << setprecision(2) << hodo_tWinMin[0][0][ipmt] << ", " << setw(15) << hodo_tWinMin[1][0][ipmt] << ", " << setw(15) << hodo_tWinMin[2][0][ipmt] << ", " << setw(15) << hodo_tWinMin[3][0][ipmt] << fixed << endl; 
-    }
-    else{
-      outPARAM << setw(36) <<  setprecision(2) << hodo_tWinMin[0][0][ipmt] << ", " << setw(15) << hodo_tWinMin[1][0][ipmt] << ", " << setw(15) << hodo_tWinMin[2][0][ipmt] << ", " << setw(15) << hodo_tWinMin[3][0][ipmt] << fixed << endl; 
-    }
-  } //end pmt loop
-  
-  outPARAM << " " << endl;
-  outPARAM << " " << endl;
-  
-  outPARAM << "hhodo_PosAdcTimeWindowMax = ";
-  
-  //--------Write Parameters to Param File-----
-  for (Int_t ipmt = 0; ipmt < 16; ipmt++){
-    if (ipmt==0){
-      outPARAM << setprecision(2) << hodo_tWinMax[0][0][ipmt] << ", " << setw(15) << hodo_tWinMax[1][0][ipmt] << ", " << setw(15) << hodo_tWinMax[2][0][ipmt] << ", " << setw(15) << hodo_tWinMax[3][0][ipmt] << fixed << endl; 
-    }
-    else{
-      outPARAM << setw(36) <<  setprecision(2) << hodo_tWinMax[0][0][ipmt] << ", " << setw(15) << hodo_tWinMax[1][0][ipmt] << ", " << setw(15) << hodo_tWinMax[2][0][ipmt] << ", " << setw(15) << hodo_tWinMax[3][0][ipmt] << fixed << endl; 
-    }
-  } //end pmt loop
-  
-  outPARAM << " " << endl;
-  outPARAM << " " << endl;
-  
-  outPARAM << "hhodo_NegAdcTimeWindowMin = ";
-  
-  //--------Write Parameters to Param File-----
-  for (Int_t ipmt = 0; ipmt < 16; ipmt++){
-    if (ipmt==0){
-      outPARAM << setprecision(2) << hodo_tWinMin[0][1][ipmt] << ", " << setw(15) << hodo_tWinMin[1][1][ipmt] << ", " << setw(15) << hodo_tWinMin[2][1][ipmt] << ", " << setw(15) << hodo_tWinMin[3][1][ipmt] << fixed << endl; 
-    }
-    else{
-      outPARAM << setw(36) <<  setprecision(2) << hodo_tWinMin[0][1][ipmt] << ", " << setw(15) << hodo_tWinMin[1][1][ipmt] << ", " << setw(15) << hodo_tWinMin[2][1][ipmt] << ", " << setw(15) << hodo_tWinMin[3][1][ipmt] << fixed << endl; 
-    }
-  } //end pmt loop
-  
-  outPARAM << " " << endl;
-  outPARAM << " " << endl;
-  
-  outPARAM << "hhodo_NegAdcTimeWindowMax = ";
-  
-  //--------Write Parameters to Param File-----
-  for (Int_t ipmt = 0; ipmt < 16; ipmt++){
-    if (ipmt==0){
-     outPARAM << setprecision(2) << hodo_tWinMax[0][1][ipmt] << ", " << setw(15) << hodo_tWinMax[1][1][ipmt] << ", " << setw(15) << hodo_tWinMax[2][1][ipmt] << ", " << setw(15) << hodo_tWinMax[3][1][ipmt] << fixed << endl; 
-    }
-    else{
-      outPARAM << setw(36) <<  setprecision(2) << hodo_tWinMax[0][1][ipmt] << ", " << setw(15) << hodo_tWinMax[1][1][ipmt] << ", " << setw(15) << hodo_tWinMax[2][1][ipmt] << ", " << setw(15) << hodo_tWinMax[3][1][ipmt] << fixed << endl; 
-    }
-  } //end pmt loop
-  
-  outPARAM.close();
-
-  //---------------------WRITE CALORIMETER TIME WINDOW CUTS TO PARAM FILE--------------------
-  outPARAM.open(Form("../PARAM/HMS/CAL/hCal_tWin_%d.param", run));
-  //outPARAM.open(Form("./hCal_tWin_%d.param", run));
-
-  outPARAM << "; HMS Calorimeter Parameter File Containing TimeWindow Min/Max Cuts " << endl;
-  outPARAM << " " << endl;
-  outPARAM << " " << endl;
-  outPARAM << " " << endl;
-  
-  outPARAM << "hcal_pos_AdcTimeWindowMin = ";
-  
-  //Loop over layers
-  for (Int_t layer = 0; layer < 4; layer++){
-    
-    if (layer == 0)
-      {
-outPARAM << setprecision(2) << hCal_tWinMin[layer][0][0]<<","
-	 << hCal_tWinMin[layer][0][1]<<","
-	 << hCal_tWinMin[layer][0][2]<<","
-	 << hCal_tWinMin[layer][0][3]<<","
-	 << hCal_tWinMin[layer][0][4]<<","
-	 << hCal_tWinMin[layer][0][5]<<","
-	 << hCal_tWinMin[layer][0][6]<<","
-	 << hCal_tWinMin[layer][0][7]<<","
-	 << hCal_tWinMin[layer][0][8]<<","
-	 << hCal_tWinMin[layer][0][9]<<","
-	 << hCal_tWinMin[layer][0][10]<<","
-	 << hCal_tWinMin[layer][0][11]<<","
-	 << hCal_tWinMin[layer][0][12]<< fixed << endl;
-      }
-    else{
-      outPARAM << setprecision(2) << setw(33)<< hCal_tWinMin[layer][0][0]<<","
-	       << hCal_tWinMin[layer][0][1]<<","
-	       << hCal_tWinMin[layer][0][2]<<","
-	       << hCal_tWinMin[layer][0][3]<<","
-	       << hCal_tWinMin[layer][0][4]<<","
-	       << hCal_tWinMin[layer][0][5]<<","
-	       << hCal_tWinMin[layer][0][6]<<","
-	       << hCal_tWinMin[layer][0][7]<<","
-	       << hCal_tWinMin[layer][0][8]<<","
-	       << hCal_tWinMin[layer][0][9]<<","
-	       << hCal_tWinMin[layer][0][10]<<","
-	       << hCal_tWinMin[layer][0][11]<<","
-	       << hCal_tWinMin[layer][0][12]<< fixed << endl;
-      
-    }
-    
-  }
-
-  outPARAM << "" << endl;
-  outPARAM << "" << endl;
-
-  outPARAM << "hcal_pos_AdcTimeWindowMax = ";
-
-  //Loop over layers
-  for (Int_t layer = 0; layer < 4; layer++){
-    
-    if (layer == 0)
-      {
-	outPARAM << setprecision(2) << hCal_tWinMax[layer][0][0]<<","
-		 << hCal_tWinMax[layer][0][1]<<","
-		 << hCal_tWinMax[layer][0][2]<<","
-		 << hCal_tWinMax[layer][0][3]<<","
-		 << hCal_tWinMax[layer][0][4]<<","
-		 << hCal_tWinMax[layer][0][5]<<","
-		 << hCal_tWinMax[layer][0][6]<<","
-		 << hCal_tWinMax[layer][0][7]<<","
-		 << hCal_tWinMax[layer][0][8]<<","
-		 << hCal_tWinMax[layer][0][9]<<","
-		 << hCal_tWinMax[layer][0][10]<<","
-		 << hCal_tWinMax[layer][0][11]<<","
-		 << hCal_tWinMax[layer][0][12]<< fixed << endl;
-      }
-    else{
-      outPARAM << setprecision(2) << setw(33)<< hCal_tWinMax[layer][0][0]<<","
-	       << hCal_tWinMax[layer][0][1]<<","
-	       << hCal_tWinMax[layer][0][2]<<","
-	       << hCal_tWinMax[layer][0][3]<<","
-	       << hCal_tWinMax[layer][0][4]<<","
-	       << hCal_tWinMax[layer][0][5]<<","
-	       << hCal_tWinMax[layer][0][6]<<","
-	       << hCal_tWinMax[layer][0][7]<<","
-	       << hCal_tWinMax[layer][0][8]<<","
-	       << hCal_tWinMax[layer][0][9]<<","
-	       << hCal_tWinMax[layer][0][10]<<","
-	       << hCal_tWinMax[layer][0][11]<<","
-	       << hCal_tWinMax[layer][0][12]<< fixed << endl;
-      
-    }
-    
-  }
-   
-  outPARAM << "hcal_neg_AdcTimeWindowMin = ";
-  //Loop over layers
-  for (Int_t layer = 0; layer < 4; layer++){
-    
-    if (layer == 0)
-      {
-	outPARAM << setprecision(2) << hCal_tWinMin[layer][1][0]<<","
-		 << hCal_tWinMin[layer][1][1]<<","
-		 << hCal_tWinMin[layer][1][2]<<","
-		 << hCal_tWinMin[layer][1][3]<<","
-		 << hCal_tWinMin[layer][1][4]<<","
-		 << hCal_tWinMin[layer][1][5]<<","
-		 << hCal_tWinMin[layer][1][6]<<","
-		 << hCal_tWinMin[layer][1][7]<<","
-		 << hCal_tWinMin[layer][1][8]<<","
-		 << hCal_tWinMin[layer][1][9]<<","
-		 << hCal_tWinMin[layer][1][10]<<","
-		 << hCal_tWinMin[layer][1][11]<<","
-		 << hCal_tWinMin[layer][1][12]<< fixed << endl;
-      }
-    else{
-      outPARAM << setprecision(2) << setw(33)<< hCal_tWinMin[layer][1][0]<<","
-	       << hCal_tWinMin[layer][1][1]<<","
-	       << hCal_tWinMin[layer][1][2]<<","
-	       << hCal_tWinMin[layer][1][3]<<","
-	       << hCal_tWinMin[layer][1][4]<<","
-	       << hCal_tWinMin[layer][1][5]<<","
-	       << hCal_tWinMin[layer][1][6]<<","
-	       << hCal_tWinMin[layer][1][7]<<","
-	       << hCal_tWinMin[layer][1][8]<<","
-	       << hCal_tWinMin[layer][1][9]<<","
-	       << hCal_tWinMin[layer][1][10]<<","
-	       << hCal_tWinMin[layer][1][11]<<","
-	       << hCal_tWinMin[layer][1][12]<< fixed << endl;
-      
-    }
-    
-  }
-
-  outPARAM << "" << endl;
-  outPARAM << "" << endl;
-
-  outPARAM << "hcal_neg_AdcTimeWindowMax = ";
-  //Loop over layers
-  for (Int_t layer = 0; layer < 4; layer++){
-    
-    if (layer == 0)
-      {
-	outPARAM << setprecision(2) << hCal_tWinMax[layer][1][0]<<","
-		 << hCal_tWinMax[layer][1][1]<<","
-		 << hCal_tWinMax[layer][1][2]<<","
-		 << hCal_tWinMax[layer][1][3]<<","
-		 << hCal_tWinMax[layer][1][4]<<","
-		 << hCal_tWinMax[layer][1][5]<<","
-		 << hCal_tWinMax[layer][1][6]<<","
-		 << hCal_tWinMax[layer][1][7]<<","
-		 << hCal_tWinMax[layer][1][8]<<","
-		 << hCal_tWinMax[layer][1][9]<<","
-		 << hCal_tWinMax[layer][1][10]<<","
-		 << hCal_tWinMax[layer][1][11]<<","
-		 << hCal_tWinMax[layer][1][12]<< fixed << endl;
-      }
-    else{
-      outPARAM << setprecision(2) << setw(33)<< hCal_tWinMax[layer][1][0]<<","
-	       << hCal_tWinMax[layer][1][1]<<","
-	       << hCal_tWinMax[layer][1][2]<<","
-	       << hCal_tWinMax[layer][1][3]<<","
-	       << hCal_tWinMax[layer][1][4]<<","
-	       << hCal_tWinMax[layer][1][5]<<","
-	       << hCal_tWinMax[layer][1][6]<<","
-	       << hCal_tWinMax[layer][1][7]<<","
-	       << hCal_tWinMax[layer][1][8]<<","
-	       << hCal_tWinMax[layer][1][9]<<","
-	       << hCal_tWinMax[layer][1][10]<<","
-	       << hCal_tWinMax[layer][1][11]<<","
-	       << hCal_tWinMax[layer][1][12]<< fixed << endl;
-      
-    }
-    
-  }  
-
-  outPARAM.close();
-
   //------------------Write CHerenkov Time Window Cuts to Param File------------------------
  
   outPARAM.open(Form("../PARAM/HMS/CER/hCer_tWin_%d.param", run));

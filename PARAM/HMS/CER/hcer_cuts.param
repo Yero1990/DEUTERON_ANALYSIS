@@ -22,8 +22,8 @@ hcer_adc_tdc_window= 200.
 ;hcer_adcTimeWindowMax = 1000.
 
 ; HMS Cherenkov Parameter File Containing TimeWindow Min/Max Cuts                                                                                         
-hcer_adcTimeWindowMin =-1000.,-1000.                                       
-hcer_adcTimeWindowMax =1000.,1000.                                                                                                              
+hcer_adcTimeWindowMin = 80., 90.      ;-1000.,-1000.                                       
+hcer_adcTimeWindowMax = 105., 110.    ;1000.,1000.                                                                                                              
 
 ; NPE Threshold for good hit (for measureing effic.)
 hcer_npe_thresh = 0.5
