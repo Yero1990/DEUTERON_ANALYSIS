@@ -104,9 +104,10 @@ void setTimeWindows_v2(int run, string trg)
   string rtype = "coin";  //or "hms", "shms"  (singles in coin mode)
   
   //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3288_-1_noCUTSset.root";
-  
+  TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3288_-1.root";                                                                                        
+
   //TString filename = "../../../ROOTfiles/shms_replay_timeWin_check_1791_-1.root";
-  TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3288_-1_refCUTset.root";
+  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3288_-1_refCUTset.root";
    
   //read ROOTfile and Get TTree
   TFile *data_file = new TFile(filename, "READ"); 
