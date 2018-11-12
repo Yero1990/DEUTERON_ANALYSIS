@@ -32,8 +32,6 @@ static const string pdc_pl_names[dc_PLANES] = {"1u1", "1u2", "1x1", "1x2", "1v1"
 static const Int_t hnwires[dc_PLANES] = {96, 96, 102, 102, 96, 96, 96, 96, 102, 102, 96, 96};
 static const Int_t pnwires[dc_PLANES] = {107, 107, 79, 79, 107, 107, 107, 107, 79, 79, 107, 107};
 
-
-
 static const string side_names[SIDES] = {"GoodPos", "GoodNeg"};
 static const string cal_side_names[SIDES] = {"goodPos", "goodNeg"};
 
@@ -114,8 +112,8 @@ TCanvas *hdcResCanvProf;	       	     TCanvas *pdcResCanvProf;
 TCanvas *hcalCanv;		       	     TCanvas *pcalCanv;		       
 				       	     				       
 //==CHERENKOV===		       	     //==CHERENKOV===		       
-TCanvas *hcerCanv;                     	     TCanvas *phgerCanv; TCanvas *pngcerCanv;                     
-
+TCanvas *hcerCanv;                     	     TCanvas *phgcerCanv; TCanvas *pngcerCanv;                     
+                                             TCanvas *phgcerSumCanv; TCanvas *pngcerSumCanv;   
 
 //===================
 //Define Histograms

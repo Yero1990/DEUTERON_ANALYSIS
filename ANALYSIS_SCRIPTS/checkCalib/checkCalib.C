@@ -1,586 +1,927 @@
 //Script to check if the detectors are calibrated properly
+#include <sys/stat.h>
+#include "checkCalib.h"
 
-
-void checkCalib(string detector, int runNUM)
+void checkCalib_v2(string spec, int run)
 {
-
-  //the user may input the following for detector: "dc", "cal"
-
-  gROOT->SetBatch(kTRUE);
-  // TString filename = "../../ROOTfiles/hms_replay_cal_calib_1263_100000.root";
-  TString filename = "../../ROOTfiles/hms_replay_dc_calib_1161_-1.root";
-
-
-  //read the file and get the tree
-  TFile *data_file = new TFile(filename, "READ");
-  TTree *T = (TTree*)data_file->Get("T");
+  //spec --> "hms" or "shms"
+  //the user may input the following for detector: "dc", "cal", "hod", "cer"
   
+  //Prevent plot 
+  gROOT->SetBatch(kTRUE);
   
 
   //Create a directory where to store the plots and output root file
-  const char* dir_log = Form("mkdir -p ./%s_Calib_%d/", detector.c_str(), runNUM);
-  
-  //Check if directory exists
-  if (system(dir_log) != 0) 
-    {
-      cout << "Creating Directory to store HMS Calibration Results . . ." << endl; 
-      system(dir_log);  //create directory to log calibration results
-    }
+  mkdir(Form("./%s_Calib_%d", spec.c_str(), run), S_IRWXU);
 
+  
+  //=============================
+  //INITIALIZE HISTOGRAM BINNING
+  //=============================
+
+  //HMS			                     //SHMS			     
+  hcalEtrkNorm_nbins = 100,         	     pcalEtrkNorm_nbins = 100  ;
+  hcalEtrkNorm_xmin = 0.001, 		     pcalEtrkNorm_xmin = 0.001 ;
+  hcalEtrkNorm_xmax = 2.0,   		     pcalEtrkNorm_xmax = 2.0;   
+			     		   			     
+  hcalEtot_nbins = 100,      		     pcalEtot_nbins = 100;      
+  hcalEtot_xmin = 0.001,     		     pcalEtot_xmin = 0.001;     
+  hcalEtot_xmax = 3.0,	     		     pcalEtot_xmax = 3.0;	     
+			     		   			     
+  hcalXtrk_nbins = 100,      		     pcalXtrk_nbins = 100;      
+  hcalXtrk_xmin = -50, 	     		     pcalXtrk_xmin = -50; 	     
+  hcalXtrk_xmax = 50,  	     		     pcalXtrk_xmax = 50;  	     
+  			     		     			     
+  hcalYtrk_nbins = 100,      		     pcalYtrk_nbins = 100;      
+  hcalYtrk_xmin = -50, 	     		     pcalYtrk_xmin = -50; 	     
+  hcalYtrk_xmax = 50, 	     		     pcalYtrk_xmax = 50; 	     
+  			     		     			     
+  hdcTime_nbins = 300,	     		     pdcTime_nbins = 300;	     
+  hdcTime_xmin = -50.,	     		     pdcTime_xmin = -50.;	     
+  hdcTime_xmax = 250.,	     		     pdcTime_xmax = 250.;	     
+  			     		     			     
+  hdcRes_nbins = 100.,	     		     pdcRes_nbins = 100.;	     
+  hdcRes_xmin = -0.1,	     		     pdcRes_xmin = -0.1;	     
+  hdcRes_xmax = 0.1,	     		     pdcRes_xmax = 0.1;	     
+  			     		     			     
+  hdcDist_nbins = 70.,	     		     pdcDist_nbins = 70.;	     
+  hdcDist_xmin = -0.1,	     		     pdcDist_xmin = -0.1;	     
+  hdcDist_xmax = 0.6,	     		     pdcDist_xmax = 0.6;	     
+			     		   			     
+  hhodBeta_nbins = 100,	     		     phodBeta_nbins = 100;	     
+  hhodBeta_xmin = 0.3,	     		     phodBeta_xmin = 0.3;	     
+  hhodBeta_xmax = 1.6,	     		     phodBeta_xmax = 1.6;	     
+  			     		     			     
+  hhodXtrk_nbins = 80,	     		     phodXtrk_nbins = 80;	     
+  hhodXtrk_xmin = -60,	     		     phodXtrk_xmin = -60;	     
+  hhodXtrk_xmax = 60,	     		     phodXtrk_xmax = 60;	     
+			     		   			     
+  hhodYtrk_nbins = 80,	     		     phodYtrk_nbins = 80;	     
+  hhodYtrk_xmin = -60,	     		     phodYtrk_xmin = -60;	     
+  hhodYtrk_xmax = 60,	     		     phodYtrk_xmax = 60;	     
+  			     		     			     
+  hcer_nbins = 100,	     		     phgcer_nbins = 100,  pngcer_nbins = 100;	     
+  hcer_xmin = 0.01,	     		     phgcer_xmin = 0.01,  pngcer_xmin = 0.01;     
+  hcer_xmax = 10,           		     phgcer_xmax = 20,    pngcer_xmax = 20;        
+
+
+  //=========================
+  //====OPEN ROOT FILE=======
+  //=========================
+  TString filename = "../../../ROOTfiles/coin_replay_coin_all_3288_20000.root";
+
+
+  TFile *data_file = new TFile(filename, "READ");
+  TTree *T = (TTree*)data_file->Get("T");
+  
 
   //Create output root file where histograms will be stored
-  TFile *outROOT = new TFile(Form("./%s_Calib_%d/hms_%sCalib_histos%d.root", detector.c_str(), runNUM, detector.c_str(), runNUM), "recreate");
-
-  //Set Histogram Binning
-  Double_t dcTime_nbins, dcTime_xmin, dcTime_xmax;
-  Double_t dcDist_nbins, dcDist_xmin, dcDist_xmax;
-  Double_t dcRes_nbins, dcRes_xmin, dcRes_xmax;
-
-  Double_t hodBeta_nbins, hodBeta_xmin, hodBeta_xmax;
-  Double_t hodXtrk_nbins, hodXtrk_xmin, hodXtrk_xmax;  
-  Double_t hodYtrk_nbins, hodYtrk_xmin, hodYtrk_xmax;  
-  
-  Double_t calEtrkNorm_nbins, calEtrkNorm_xmin, calEtrkNorm_xmax;
-  Double_t calEtot_nbins, calEtot_xmin, calEtot_xmax;
-  Double_t calXtrk_nbins, calXtrk_xmin, calXtrk_xmax;  
-  Double_t calYtrk_nbins, calYtrk_xmin, calYtrk_xmax; 
-
-  calEtrkNorm_nbins = 100  ;
-  calEtrkNorm_xmin = 0.001 ; 
-  calEtrkNorm_xmax = 2.0;
-
-  calEtot_nbins = 100; 
-  calEtot_xmin = 0.001; 
-  calEtot_xmax = 3.0;
-
-  calXtrk_nbins = 100; 
-  calXtrk_xmin = -50; 
-  calXtrk_xmax = 50;  
-  
-  calYtrk_nbins = 100; 
-  calYtrk_xmin = -50; 
-  calYtrk_xmax = 50; 
-  
-  dcTime_nbins = 300;
-  dcTime_xmin = -50.;
-  dcTime_xmax = 250.;
-  
-  dcRes_nbins = 100.;
-  dcRes_xmin = -0.1;
-  dcRes_xmax = 0.1;
-  
-  dcDist_nbins = 70.;
-  dcDist_xmin = -0.1;
-  dcDist_xmax = 0.6;
-
-  hodBeta_nbins = 100;
-  hodBeta_xmin = 0.3;
-  hodBeta_xmax = 1.6;
-  
-  hodXtrk_nbins = 80;
-  hodXtrk_xmin = -60;
-  hodXtrk_xmax = 60;
-
-  hodYtrk_nbins = 80;
-  hodYtrk_xmin = -60;
-  hodYtrk_xmax = 60;
-  
-  //Define Fixed Quantities
-  static const Int_t dcPLANES = 12;
-  static const Int_t hodPLANES = 4;
-  string dc_pl_names[dcPLANES] = {"1u1", "1u2", "1x1", "1x2", "1v2", "1v1", "2v1", "2v2", "2x2", "2x1", "2u2", "2u1"};
-  string hod_pl_names[hodPLANES] = {"1x", "1y", "2x", "2y"};
-  Int_t nwires[dcPLANES] = {96, 96, 102, 102, 96, 96, 96, 96, 102, 102, 96, 96};
-  Int_t maxBar[hodPLANES] = {16, 10, 16, 10};
- 
-  //Define Canvas
-
-  //==HODOSCOPES===
-  TCanvas *hodCanv;
-  TCanvas *hodCanv2D;
-  TCanvas *hodProfCanv;
-
-  //==DRIFT CHAMBERS===
-  TCanvas *dcTimeCanv;
-  TCanvas *dcDistCanv;
-  TCanvas *dcResCanv;
-  TCanvas *dcResGraphCanv;
-  
-  //Canvas to Draw 2D variales vs. wire num and Profile Histos
-  TCanvas *dcResCanv2D;
-  TCanvas *dcTimeCanv2D;
-  TCanvas *dcDistCanv2D;
-  TCanvas *dcResCanvProf;
-
-  //==CALORIMETER===
-  TCanvas *calEtrkNormCanv;
-
-  //Define Histograms
-
-  //===DRIFT CHAMBERS====
-  TH1F *H_dcDist[dcPLANES];
-  TH1F *H_dcTime[dcPLANES];
-  TH1F *H_dcRes[dcPLANES];
-  
-  TH2F *H_res_vs_wire[dcPLANES];
-  TH2F *H_time_vs_wire[dcPLANES];
-  TH2F *H_dist_vs_wire[dcPLANES];
-  
-  TProfile *dcResProf[dcPLANES];
-
-  //==CALORIMETER HISTOGRAMS===
-  TH1F *H_calEtrkNorm;
-  TH1F *H_calEtot;
-  TH2F *H_calEtrkNorm_vs_xtrk;
-  TH2F *H_calEtrkNorm_vs_ytrk;
-
-  //===HODOSCOPES===
-  TH1F *H_hodBeta;
-  TH1F *H_hodBetaNoTrk;
-  TH2F *H_hodBeta_v_Xtrk[hodPLANES];
-  TH2F *H_hodBeta_v_Ytrk[hodPLANES];
-
-  //Profile Histos of beta vs. xtrk (or ytrk)
-  TProfile *hod_xProfX[hodPLANES];
-  TProfile *hod_yProfX[hodPLANES];
-
-  if (detector=="hod")
-    {
-      H_hodBeta = new TH1F("Hodoscope Beta", "Hodoscope Beta w/ Tracking", hodBeta_nbins, hodBeta_xmin, hodBeta_xmax);
-      H_hodBetaNoTrk = new TH1F("Hodoscope Beta noTracks", "Hodoscope Beta w/out Tracking", hodBeta_nbins, hodBeta_xmin, hodBeta_xmax);
-  
-    }
-
-  if (detector=="cal")
-    {
-      H_calEtrkNorm = new TH1F("Calorimeter eTrkNorm", "Calorimeter Normalized Track Energy", calEtrkNorm_nbins, calEtrkNorm_xmin, calEtrkNorm_xmax);
-      H_calEtot = new TH1F("Calorimeter eTot", "Calorimeter Total Energy", calEtot_nbins, calEtot_xmin, calEtot_xmax);
-      H_calEtrkNorm_vs_xtrk = new TH2F("eTrkNorm_v_xtrack", "Norm. Trk E v. xTrack", calXtrk_nbins, calXtrk_xmin, calXtrk_xmax, calEtrkNorm_nbins, calEtrkNorm_xmin, calEtrkNorm_xmax);
-      H_calEtrkNorm_vs_ytrk = new TH2F("eTrkNorm_v_ytrack", "Norm. Trk E v. yTrack", calYtrk_nbins, calYtrk_xmin, calYtrk_xmax, calEtrkNorm_nbins, calEtrkNorm_xmin, calEtrkNorm_xmax);
-    }
+  TFile *outROOT = new TFile(Form("./%s_Calib_%d/%s_Calib_histos%d.root", spec.c_str(), run, spec.c_str(), run), "recreate");
 
 
-  //Define DC/Hod/Cer/Cal Leafs to be read from TTree
-  //---Names---
-  TString base;
-  TString ndc_wire;
-  TString ndc_time;
-  TString ndc_ndata;
-  TString ndc_dist;
-  TString ndc_nhit;
-  TString ndc_res = "H.dc.residualExclPlane";
-  
-  TString nhod_beta = "H.hod.beta";
-  TString nhod_beta_notrk = "H.hod.betanotrack";
-  TString nhod_xtrack;
-  TString nhod_ytrack;
+  //===========================
+  //===Set Branch Address======
+  //===========================
 
-  TString ncer_npe = "H.cer.npeSum";
-  TString ncal_etot = "H.cal.etot";
-  TString ncal_etrknorm = "H.cal.etracknorm";
-  TString ncal_xtrack = "H.cal.xtrack";
-  TString ncal_ytrack = "H.cal.ytrack";
+  nhdc_res = "H.dc.residualExclPlane";	       npdc_res = "P.dc.residualExclPlane";	     
+  nhhod_beta = "H.hod.beta";		       nphod_beta = "P.hod.beta";		     
+  nhhod_beta_notrk = "H.hod.betanotrack";      nphod_beta_notrk = "P.hod.betanotrack";    
+  					       					     
+  nhcer_npesum = "H.cer.npeSum";	       nphgcer_npesum = "P.hgcer.npeSum";    npngcer_npesum = "P.ngcer.npeSum";	     
+  nhcer_npe = "H.cer.npe";		       nphgcer_npe = "P.hgcer.npe";	     npngcer_npe = "P.ngcer.npe";	     
+					     					     
+  nhcal_etot = "H.cal.etot";	     	       npcal_etot = "P.cal.etot";	     	     
+  nhcal_etrknorm = "H.cal.etracknorm"; 	       npcal_etrknorm = "P.cal.etracknorm"; 	     
+  nhcal_xtrack = "H.cal.xtrack";	       npcal_xtrack = "P.cal.xtrack";	     
+  nhcal_ytrack = "H.cal.ytrack";               npcal_ytrack = "P.cal.ytrack";             
+    
 
 
-  //--Variables
-  Double_t dc_wire[dcPLANES][1000];
-  Double_t dc_time[dcPLANES][1000];
-  Int_t dc_ndata[dcPLANES];
-  Double_t dc_dist[dcPLANES][1000];
-  Double_t dc_res[dcPLANES]; 
-  Double_t dc_nhit[dcPLANES];
-  
-  Double_t hod_beta;
-  Double_t hod_beta_notrk;
-  Double_t hod_xtrack[hodPLANES];
-  Double_t hod_ytrack[hodPLANES];
-  
-  
-  Double_t cer_npe;
-  Double_t cal_etot;
-  Double_t cal_etrknorm;
-  Double_t cal_xtrack;
-  Double_t cal_ytrack;
+
+  //Initialize Some Histograms
+  //===HMS====
+  H_hhodBeta = new TH1F("hHod_Beta", "HMS Hodoscope Beta w/ Tracking", hhodBeta_nbins, hhodBeta_xmin, hhodBeta_xmax);
+  H_hhodBetaNoTrk = new TH1F("hHod_Beta_noTracks", "HMS Hodoscope Beta w/out Tracking", hhodBeta_nbins, hhodBeta_xmin, hhodBeta_xmax);
+  H_hcalEtrkNorm = new TH1F("hCal_eTrkNorm", "HMS Calorimeter Normalized Track Energy", hcalEtrkNorm_nbins, hcalEtrkNorm_xmin, hcalEtrkNorm_xmax);
+  H_hcalEtot = new TH1F("hCal_eTot", "HMS Calorimeter Total Energy", hcalEtot_nbins, hcalEtot_xmin, hcalEtot_xmax);
+  H_hcalEtrkNorm_vs_xtrk = new TH2F("hCal_eTrkNorm_v_xtrack", "HMS Norm. Trk E v. xTrack", hcalXtrk_nbins, hcalXtrk_xmin, hcalXtrk_xmax, hcalEtrkNorm_nbins, hcalEtrkNorm_xmin, hcalEtrkNorm_xmax);
+  H_hcalEtrkNorm_vs_ytrk = new TH2F("hCal_eTrkNorm_v_ytrack", "HMS Norm. Trk E v. yTrack", hcalYtrk_nbins, hcalYtrk_xmin, hcalYtrk_xmax, hcalEtrkNorm_nbins, hcalEtrkNorm_xmin, hcalEtrkNorm_xmax);
+  H_hcerNpeSum = new TH1F("hCer_npeSum", "HMS Cherenkov Total P.E. Sum", hcer_nbins, hcer_xmin, hcer_xmax);
+  //===SHMS===
+  H_phodBeta = new TH1F("pHod_Beta", "SHMS Hodoscope Beta w/ Tracking", phodBeta_nbins, phodBeta_xmin, phodBeta_xmax);
+  H_phodBetaNoTrk = new TH1F("pHod_Beta_noTracks", "SHMS Hodoscope Beta w/out Tracking", phodBeta_nbins, phodBeta_xmin, phodBeta_xmax);
+  H_pcalEtrkNorm = new TH1F("pCal_eTrkNorm", "SHMS Calorimeter Normalized Track Energy", pcalEtrkNorm_nbins, pcalEtrkNorm_xmin, pcalEtrkNorm_xmax);
+  H_pcalEtot = new TH1F("pCal_eTot", "SHMS Calorimeter Total Energy", pcalEtot_nbins, pcalEtot_xmin, pcalEtot_xmax);
+  H_pcalEtrkNorm_vs_xtrk = new TH2F("pCal_eTrkNorm_v_xtrack", "SHMS Norm. Trk E v. xTrack", pcalXtrk_nbins, pcalXtrk_xmin, pcalXtrk_xmax, pcalEtrkNorm_nbins, pcalEtrkNorm_xmin, pcalEtrkNorm_xmax);
+  H_pcalEtrkNorm_vs_ytrk = new TH2F("pCal_eTrkNorm_v_ytrack", "SHMS Norm. Trk E v. yTrack", pcalYtrk_nbins, pcalYtrk_xmin, pcalYtrk_xmax, pcalEtrkNorm_nbins, pcalEtrkNorm_xmin, pcalEtrkNorm_xmax);  
+  H_phgcerNpeSum = new TH1F("phgCer_npeSum", "SHMS HGCER Total P.E. Sum", phgcer_nbins, phgcer_xmin, phgcer_xmax);
+  H_pngcerNpeSum = new TH1F("pngCer_npeSum", "SHMS NGCER Total P.E. Sum", pngcer_nbins, pngcer_xmin, pngcer_xmax);
+
 
   //Set Branch Address for Hodo, Calo, and Cherenkov
-  T->SetBranchAddress(nhod_beta, &hod_beta);
-  T->SetBranchAddress(nhod_beta_notrk, &hod_beta_notrk);
-  T->SetBranchAddress(ncer_npe, &cer_npe);
-  T->SetBranchAddress(ncal_etot, &cal_etot);
-  T->SetBranchAddress(ncal_etrknorm, &cal_etrknorm);
-  T->SetBranchAddress(ncal_xtrack, &cal_xtrack);
-  T->SetBranchAddress(ncal_ytrack, &cal_ytrack);
+  //HMS
+  T->SetBranchAddress(nhhod_beta, &hhod_beta);
+  T->SetBranchAddress(nhhod_beta_notrk, &hhod_beta_notrk);
+  T->SetBranchAddress(nhcer_npesum, &hcer_npesum);
+  T->SetBranchAddress(nhcal_etot, &hcal_etot);
+  T->SetBranchAddress(nhcal_etrknorm, &hcal_etrknorm);
+  T->SetBranchAddress(nhcal_xtrack, &hcal_xtrack);
+  T->SetBranchAddress(nhcal_ytrack, &hcal_ytrack);
+  //SHMS
+  T->SetBranchAddress(nphod_beta, &phod_beta);
+  T->SetBranchAddress(nphod_beta_notrk, &phod_beta_notrk);
+  T->SetBranchAddress(nphgcer_npesum, &phgcer_npesum);
+  T->SetBranchAddress(npngcer_npesum, &pngcer_npesum);
+  T->SetBranchAddress(npcal_etot, &pcal_etot);
+  T->SetBranchAddress(npcal_etrknorm, &pcal_etrknorm);
+  T->SetBranchAddress(npcal_xtrack, &pcal_xtrack);
+  T->SetBranchAddress(npcal_ytrack, &pcal_ytrack);
 
 
-  //Define Mean/Sigma to be used for residuals
-  Double_t mean[dcPLANES];
-  Double_t sigma[dcPLANES];
-  Double_t x[dcPLANES];
+
+  //Loop over DC Planes
+  for (Int_t npl = 0; npl < dc_PLANES; npl++ )
+    {
+      x[npl] = npl+1;  //set x-axis for use with TGraph
+      
+      //Initialize DC Histograms
+      
+      //HMS DC
+      H_hdcDist[npl] = new TH1F(Form("hDC_%s_DriftDist", hdc_pl_names[npl].c_str()), Form("HMS DC Drift Distance, Plane %s", hdc_pl_names[npl].c_str()), hdcDist_nbins, hdcDist_xmin, hdcDist_xmax);
+      H_hdcDist[npl]->GetXaxis()->SetTitle("Drift Distance (cm) ");
+      H_hdcDist[npl]->GetXaxis()->CenterTitle();
+      H_hdcDist[npl]->GetYaxis()->SetTitle("Counts");
+      H_hdcDist[npl]->GetYaxis()->CenterTitle();
+      
+      H_hdcTime[npl] = new TH1F(Form("hDC_%s_DriftTime", hdc_pl_names[npl].c_str()), Form("HMS DC Drift Time, Plane %s", hdc_pl_names[npl].c_str()), hdcTime_nbins, hdcTime_xmin, hdcTime_xmax);
+      H_hdcTime[npl]->GetXaxis()->SetTitle("Drift Time (ns) ");
+      H_hdcTime[npl]->GetXaxis()->CenterTitle();
+      H_hdcTime[npl]->GetYaxis()->SetTitle("Counts");
+      H_hdcTime[npl]->GetYaxis()->CenterTitle();
+      
+      H_hdcRes[npl] = new TH1F(Form("hDC_%s_DriftResiduals", hdc_pl_names[npl].c_str()), Form("HMS DC Residuals, Plane %s", hdc_pl_names[npl].c_str()), hdcRes_nbins, hdcRes_xmin, hdcRes_xmax);
+      H_hdcRes[npl]->GetXaxis()->SetTitle("Drift Residuals (cm) ");
+      H_hdcRes[npl]->GetXaxis()->CenterTitle();
+      H_hdcRes[npl]->GetYaxis()->SetTitle("Counts");
+      H_hdcRes[npl]->GetYaxis()->CenterTitle();
+      
+      //SHMS DC
+      H_pdcDist[npl] = new TH1F(Form("pDC_%s_DriftDist", pdc_pl_names[npl].c_str()), Form("SHMS DC Drift Distance, Plane %s", pdc_pl_names[npl].c_str()), pdcDist_nbins, pdcDist_xmin, pdcDist_xmax);
+      H_pdcDist[npl]->GetXaxis()->SetTitle("Drift Distance (cm) ");
+      H_pdcDist[npl]->GetXaxis()->CenterTitle();
+      H_pdcDist[npl]->GetYaxis()->SetTitle("Counts");
+      H_pdcDist[npl]->GetYaxis()->CenterTitle();
+      
+      H_pdcTime[npl] = new TH1F(Form("pDC_%s_DriftTime", pdc_pl_names[npl].c_str()), Form("SHMS DC Drift Time, Plane %s", pdc_pl_names[npl].c_str()), pdcTime_nbins, pdcTime_xmin, pdcTime_xmax);
+      H_pdcTime[npl]->GetXaxis()->SetTitle("Drift Time (ns) ");
+      H_pdcTime[npl]->GetXaxis()->CenterTitle();
+      H_pdcTime[npl]->GetYaxis()->SetTitle("Counts");
+      H_pdcTime[npl]->GetYaxis()->CenterTitle();
+      
+      H_pdcRes[npl] = new TH1F(Form("pDC_%s_DriftResiduals", pdc_pl_names[npl].c_str()), Form("SHMS DC Residuals, Plane %s", pdc_pl_names[npl].c_str()), pdcRes_nbins, pdcRes_xmin, pdcRes_xmax);
+      H_pdcRes[npl]->GetXaxis()->SetTitle("Drift Residuals (cm) ");
+      H_pdcRes[npl]->GetXaxis()->CenterTitle();
+      H_pdcRes[npl]->GetYaxis()->SetTitle("Counts");
+      H_pdcRes[npl]->GetYaxis()->CenterTitle();
+
+
+      //2D Histos
+      //HMS
+      H_hres_vs_wire[npl] = new TH2F(Form("hRes_vs_Wire, %s", hdc_pl_names[npl].c_str()), Form("HMS DC Residuals vs. Wire, Plane %s", hdc_pl_names[npl].c_str()), hnwires[npl], 0., hnwires[npl], hdcRes_nbins, hdcRes_xmin, hdcRes_xmax);
+      H_hres_vs_wire[npl]->GetXaxis()->SetTitle("Wire Number ");
+      H_hres_vs_wire[npl]->GetXaxis()->CenterTitle();
+      H_hres_vs_wire[npl]->GetYaxis()->SetTitle("Drift Residuals (cm)");
+      H_hres_vs_wire[npl]->GetYaxis()->CenterTitle();
+      
+      H_htime_vs_wire[npl] = new TH2F(Form("hTime_vs_Wire, %s", hdc_pl_names[npl].c_str()), Form("HMS DC Time vs. Wire, Plane %s", hdc_pl_names[npl].c_str()), hnwires[npl], 0., hnwires[npl], hdcTime_nbins, hdcTime_xmin, hdcTime_xmax);
+      H_htime_vs_wire[npl]->GetXaxis()->SetTitle("Wire Number ");
+      H_htime_vs_wire[npl]->GetXaxis()->CenterTitle();
+      H_htime_vs_wire[npl]->GetYaxis()->SetTitle("Drift Time (ns)");
+      H_htime_vs_wire[npl]->GetYaxis()->CenterTitle();
+      
+      H_hdist_vs_wire[npl] = new TH2F(Form("hDist_vs_Wire, %s", hdc_pl_names[npl].c_str()), Form("HMS DC Distance vs. Wire, Plane %s", hdc_pl_names[npl].c_str()), hnwires[npl], 0., hnwires[npl], hdcDist_nbins, hdcDist_xmin, hdcDist_xmax);
+      H_hdist_vs_wire[npl]->GetXaxis()->SetTitle("Wire Number ");
+      H_hdist_vs_wire[npl]->GetXaxis()->CenterTitle();
+      H_hdist_vs_wire[npl]->GetYaxis()->SetTitle("Drift Distance (cm)");
+      H_hdist_vs_wire[npl]->GetYaxis()->CenterTitle();
+    
+      //SHMS
+      H_pres_vs_wire[npl] = new TH2F(Form("pRes_vs_Wire, %s", pdc_pl_names[npl].c_str()), Form("SHMS DC Residuals vs. Wire, Plane %s", pdc_pl_names[npl].c_str()), pnwires[npl], 0., pnwires[npl], pdcRes_nbins, pdcRes_xmin, pdcRes_xmax);
+      H_pres_vs_wire[npl]->GetXaxis()->SetTitle("Wire Number ");
+      H_pres_vs_wire[npl]->GetXaxis()->CenterTitle();
+      H_pres_vs_wire[npl]->GetYaxis()->SetTitle("Drift Residuals (cm)");
+      H_pres_vs_wire[npl]->GetYaxis()->CenterTitle();
+      
+      H_ptime_vs_wire[npl] = new TH2F(Form("pTime_vs_Wire, %s", pdc_pl_names[npl].c_str()), Form("SHMS DC Time vs. Wire, Plane %s", pdc_pl_names[npl].c_str()), pnwires[npl], 0., pnwires[npl], pdcTime_nbins, pdcTime_xmin, pdcTime_xmax);
+      H_ptime_vs_wire[npl]->GetXaxis()->SetTitle("Wire Number ");
+      H_ptime_vs_wire[npl]->GetXaxis()->CenterTitle();
+      H_ptime_vs_wire[npl]->GetYaxis()->SetTitle("Drift Time (ns)");
+      H_ptime_vs_wire[npl]->GetYaxis()->CenterTitle();
+      
+      H_pdist_vs_wire[npl] = new TH2F(Form("pDist_vs_Wire, %s", pdc_pl_names[npl].c_str()), Form("SHMS DC Distance vs. Wire, Plane %s", pdc_pl_names[npl].c_str()), pnwires[npl], 0., pnwires[npl], pdcDist_nbins, pdcDist_xmin, pdcDist_xmax);
+      H_pdist_vs_wire[npl]->GetXaxis()->SetTitle("Wire Number ");
+      H_pdist_vs_wire[npl]->GetXaxis()->CenterTitle();
+      H_pdist_vs_wire[npl]->GetYaxis()->SetTitle("Drift Distance (cm)");
+      H_pdist_vs_wire[npl]->GetYaxis()->CenterTitle();
+
+      //===HMS===
+      //----Define TTree Leaf Names-----
+      base = "H.dc." + hdc_pl_names[npl];
+      nhdc_time = base + "." + "time";
+      nhdc_wire = base + "." + "wirenum";
+      nhdc_dist = base + "." + "dist";
+      nhdc_nhit = base + "." + "nhit";
+      nhdc_ndata = "Ndata." + base + "." + "time";
+      
+      //------Set Branch Address-------
+      T->SetBranchAddress(nhdc_ndata, &hdc_ndata[npl]);
+      T->SetBranchAddress(nhdc_time, hdc_time[npl]);
+      T->SetBranchAddress(nhdc_wire, hdc_wire[npl]);
+      T->SetBranchAddress(nhdc_dist, hdc_dist[npl]);
+      T->SetBranchAddress(nhdc_nhit, &hdc_nhit[npl]);
+      T->SetBranchAddress("H.dc.residualExclPlane", &hdc_res[0]);
+         
+      //===SHMS===
+      //----Define TTree Leaf Names-----
+      base = "P.dc." + pdc_pl_names[npl];
+      npdc_time = base + "." + "time";
+      npdc_wire = base + "." + "wirenum";
+      npdc_dist = base + "." + "dist";
+      npdc_nhit = base + "." + "nhit";
+      npdc_ndata = "Ndata." + base + "." + "time";
+      
+      //------Set Branch Address-------
+      T->SetBranchAddress(npdc_ndata, &pdc_ndata[npl]);
+      T->SetBranchAddress(npdc_time, pdc_time[npl]);
+      T->SetBranchAddress(npdc_wire, pdc_wire[npl]);
+      T->SetBranchAddress(npdc_dist, pdc_dist[npl]);
+      T->SetBranchAddress(npdc_nhit, &pdc_nhit[npl]);
+      T->SetBranchAddress("P.dc.residualExclPlane", &pdc_res[0]);
+
       
 
-
-      //Loop over DC Planes
-      for (Int_t npl = 0; npl < dcPLANES; npl++ )
-	{
-	  x[npl] = npl+1;  //set x-axis for use with TGraph
-	  
-	  if (detector=="dc")
-	    {
-	      //Initialize DC Histograms
-	      H_dcDist[npl] = new TH1F(Form("DC_%s_DriftDist", dc_pl_names[npl].c_str()), Form("DC Drift Distance, Plane %s", dc_pl_names[npl].c_str()), dcDist_nbins, dcDist_xmin, dcDist_xmax);
-	      H_dcDist[npl]->GetXaxis()->SetTitle("Drift Distance (cm) ");
-	      H_dcDist[npl]->GetXaxis()->CenterTitle();
-	      H_dcDist[npl]->GetYaxis()->SetTitle("Counts");
-	      H_dcDist[npl]->GetYaxis()->CenterTitle();
-	      
-	      H_dcTime[npl] = new TH1F(Form("DC_%s_DriftTime", dc_pl_names[npl].c_str()), Form("DC Drift Time, Plane %s", dc_pl_names[npl].c_str()), dcTime_nbins, dcTime_xmin, dcTime_xmax);
-	      H_dcTime[npl]->GetXaxis()->SetTitle("Drift Time (ns) ");
-	      H_dcTime[npl]->GetXaxis()->CenterTitle();
-	      H_dcTime[npl]->GetYaxis()->SetTitle("Counts");
-	      H_dcTime[npl]->GetYaxis()->CenterTitle();
-	      
-	      H_dcRes[npl] = new TH1F(Form("DC_%s_DriftResiduals", dc_pl_names[npl].c_str()), Form("DC Residuals, Plane %s", dc_pl_names[npl].c_str()), dcRes_nbins, dcRes_xmin, dcRes_xmax);
-	      H_dcRes[npl]->GetXaxis()->SetTitle("Drift Residuals (cm) ");
-	      H_dcRes[npl]->GetXaxis()->CenterTitle();
-	      H_dcRes[npl]->GetYaxis()->SetTitle("Counts");
-	      H_dcRes[npl]->GetYaxis()->CenterTitle();
-	      
-	      //2D Histos
-	      H_res_vs_wire[npl] = new TH2F(Form("2D: Residuals_vs_Wire, %s", dc_pl_names[npl].c_str()), Form("DC Residuals vs. Wire, Plane %s", dc_pl_names[npl].c_str()), nwires[npl], 0., nwires[npl], dcRes_nbins, dcRes_xmin, dcRes_xmax);
-	      H_res_vs_wire[npl]->GetXaxis()->SetTitle("Wire Number ");
-	      H_res_vs_wire[npl]->GetXaxis()->CenterTitle();
-	      H_res_vs_wire[npl]->GetYaxis()->SetTitle("Drift Residuals (cm)");
-	      H_res_vs_wire[npl]->GetYaxis()->CenterTitle();
-	      
-	      H_time_vs_wire[npl] = new TH2F(Form("2D: Time_vs_Wire, %s", dc_pl_names[npl].c_str()), Form("DC Time vs. Wire, Plane %s", dc_pl_names[npl].c_str()), nwires[npl], 0., nwires[npl], dcTime_nbins, dcTime_xmin, dcTime_xmax);
-	      H_time_vs_wire[npl]->GetXaxis()->SetTitle("Wire Number ");
-	      H_time_vs_wire[npl]->GetXaxis()->CenterTitle();
-	      H_time_vs_wire[npl]->GetYaxis()->SetTitle("Drift Time (ns)");
-	      H_time_vs_wire[npl]->GetYaxis()->CenterTitle();
-	      
-	      H_dist_vs_wire[npl] = new TH2F(Form("2D: Distance_vs_Wire, %s", dc_pl_names[npl].c_str()), Form("DC Distance vs. Wire, Plane %s", dc_pl_names[npl].c_str()), nwires[npl], 0., nwires[npl], dcDist_nbins, dcDist_xmin, dcDist_xmax);
-	      H_dist_vs_wire[npl]->GetXaxis()->SetTitle("Wire Number ");
-	      H_dist_vs_wire[npl]->GetXaxis()->CenterTitle();
-	      H_dist_vs_wire[npl]->GetYaxis()->SetTitle("Drift Distance (cm)");
-	      H_dist_vs_wire[npl]->GetYaxis()->CenterTitle();
-	      
-	    } //end DC requirement
-	  
-	  //----Define TTree Leaf Names-----
-	  base = "H.dc." + dc_pl_names[npl];
-	  ndc_time = base + "." + "time";
-	  ndc_wire = base + "." + "wirenum";
-	  ndc_dist = base + "." + "dist";
-	  ndc_nhit = base + "." + "nhit";
-	  ndc_ndata = "Ndata." + base + "." + "time";
-	  
-	  //------Set Branch Address-------
-	  T->SetBranchAddress(ndc_ndata, &dc_ndata[npl]);
-	  T->SetBranchAddress(ndc_time, dc_time[npl]);
-	  T->SetBranchAddress(ndc_wire, dc_wire[npl]);
-	  T->SetBranchAddress(ndc_dist, dc_dist[npl]);
-	  T->SetBranchAddress(ndc_nhit, &dc_nhit[npl]);
-	  T->SetBranchAddress("H.dc.residualExclPlane", &dc_res[0]);
-	  
-	} //end dc plane loop
+    } //end dc plane loop
+  
+  //Loop over HODO Planes
+  for (Int_t npl = 0; npl < hod_PLANES; npl++ )
+    {
       
-      //Loop over HODO Planes
-      for (Int_t npl = 0; npl < hodPLANES; npl++ )
+      //Initialize HMS HODO Histograms
+      H_hhodBeta_v_Xtrk[npl] = new TH2F(Form("hHod_%s_Beta_v_Xtrk", hod_pl_names[npl].c_str()), Form("HMS Hodo Beta vs. X-track, Plane %s", hod_pl_names[npl].c_str()), hhodXtrk_nbins, hhodXtrk_xmin, hhodXtrk_xmax,  hhodBeta_nbins, hhodBeta_xmin, hhodBeta_xmax);
+      H_hhodBeta_v_Xtrk[npl]->GetXaxis()->SetTitle("Hodoscope X-Track (cm)");
+      H_hhodBeta_v_Xtrk[npl]->GetXaxis()->CenterTitle();
+      H_hhodBeta_v_Xtrk[npl]->GetYaxis()->SetTitle("Hodoscope Beta");
+      H_hhodBeta_v_Xtrk[npl]->GetYaxis()->CenterTitle();
+      
+      H_hhodBeta_v_Ytrk[npl] = new TH2F(Form("hHod_%s_Beta_v_Ytrk", hod_pl_names[npl].c_str()), Form("HMS Hodo Beta vs. Y-track, Plane %s", hod_pl_names[npl].c_str()), hhodYtrk_nbins, hhodYtrk_xmin, hhodYtrk_xmax,  hhodBeta_nbins, hhodBeta_xmin, hhodBeta_xmax);
+      H_hhodBeta_v_Ytrk[npl]->GetXaxis()->SetTitle("Hodoscope Y-Track (cm)");
+      H_hhodBeta_v_Ytrk[npl]->GetXaxis()->CenterTitle();
+      H_hhodBeta_v_Ytrk[npl]->GetYaxis()->SetTitle("Hodoscope Beta");
+      H_hhodBeta_v_Ytrk[npl]->GetYaxis()->CenterTitle();
+      
+      //Initialize SHMS HODO Histograms
+      H_phodBeta_v_Xtrk[npl] = new TH2F(Form("pHod_%s_Beta_v_Xtrk", hod_pl_names[npl].c_str()), Form("SHMS Hodo Beta vs. X-track, Plane %s", hod_pl_names[npl].c_str()), phodXtrk_nbins, phodXtrk_xmin, phodXtrk_xmax,  phodBeta_nbins, phodBeta_xmin, phodBeta_xmax);
+      H_phodBeta_v_Xtrk[npl]->GetXaxis()->SetTitle("Hodoscope X-Track (cm)");
+      H_phodBeta_v_Xtrk[npl]->GetXaxis()->CenterTitle();
+      H_phodBeta_v_Xtrk[npl]->GetYaxis()->SetTitle("Hodoscope Beta");
+      H_phodBeta_v_Xtrk[npl]->GetYaxis()->CenterTitle();
+      
+      H_phodBeta_v_Ytrk[npl] = new TH2F(Form("pHod_%s_Beta_v_Ytrk", hod_pl_names[npl].c_str()), Form("SHMS Hodo Beta vs. Y-track, Plane %s", hod_pl_names[npl].c_str()), phodYtrk_nbins, phodYtrk_xmin, phodYtrk_xmax,  phodBeta_nbins, phodBeta_xmin, phodBeta_xmax);
+      H_phodBeta_v_Ytrk[npl]->GetXaxis()->SetTitle("Hodoscope Y-Track (cm)");
+      H_phodBeta_v_Ytrk[npl]->GetXaxis()->CenterTitle();
+      H_phodBeta_v_Ytrk[npl]->GetYaxis()->SetTitle("Hodoscope Beta");
+      H_phodBeta_v_Ytrk[npl]->GetYaxis()->CenterTitle();
+
+      //----Define HMS TTree Leaf Names-----
+      base = "H.hod." + hod_pl_names[npl];
+      nhhod_xtrack = "H.hod." + hod_pl_names[npl] + ".TrackXPos";
+      nhhod_ytrack = "H.hod." + hod_pl_names[npl] + ".TrackYPos";
+      
+      //------Set HMS Branch Address-------
+      T->SetBranchAddress(nhhod_xtrack, &hhod_xtrack[npl]);
+      T->SetBranchAddress(nhhod_ytrack, &hhod_ytrack[npl]);
+      
+      
+      //----Define SHMS TTree Leaf Names-----
+      base = "P.hod." + hod_pl_names[npl];
+      nphod_xtrack = "P.hod." + hod_pl_names[npl] + ".TrackXPos";
+      nphod_ytrack = "P.hod." + hod_pl_names[npl] + ".TrackYPos";
+      
+      //------Set SHMS Branch Address-------
+      T->SetBranchAddress(nphod_xtrack, &phod_xtrack[npl]);
+      T->SetBranchAddress(nphod_ytrack, &phod_ytrack[npl]);
+    
+
+      if(npl==0)
 	{
-	  	  
-	  if (detector=="hod")
+	  //Loop over Cherenkov PMTs
+	  for (int ipmt = 0; ipmt < 4; ipmt++)
 	    {
-	      //Initialize HODO Histograms
-	      H_hodBeta_v_Xtrk[npl] = new TH2F(Form("HOD_%s_Beta_v_Xtrk", hod_pl_names[npl].c_str()), Form("Hodo Beta vs. X-track, Plane %s", hod_pl_names[npl].c_str()), hodXtrk_nbins, hodXtrk_xmin, hodXtrk_xmax,  hodBeta_nbins, hodBeta_xmin, hodBeta_xmax);
-	      H_hodBeta_v_Xtrk[npl]->GetXaxis()->SetTitle("Hodoscope X-Track (cm)");
-	      H_hodBeta_v_Xtrk[npl]->GetXaxis()->CenterTitle();
-	      H_hodBeta_v_Xtrk[npl]->GetYaxis()->SetTitle("Hodoscope Beta");
-	      H_hodBeta_v_Xtrk[npl]->GetYaxis()->CenterTitle();
-   
-	      H_hodBeta_v_Ytrk[npl] = new TH2F(Form("HOD_%s_Beta_v_Ytrk", hod_pl_names[npl].c_str()), Form("Hodo Beta vs. Y-track, Plane %s", hod_pl_names[npl].c_str()), hodYtrk_nbins, hodYtrk_xmin, hodYtrk_xmax,  hodBeta_nbins, hodBeta_xmin, hodBeta_xmax);
-	      H_hodBeta_v_Ytrk[npl]->GetXaxis()->SetTitle("Hodoscope Y-Track (cm)");
-	      H_hodBeta_v_Ytrk[npl]->GetXaxis()->CenterTitle();
-	      H_hodBeta_v_Ytrk[npl]->GetYaxis()->SetTitle("Hodoscope Beta");
-	      H_hodBeta_v_Ytrk[npl]->GetYaxis()->CenterTitle();
-	    } //end hodo detec. requirement
+	      //Initialize HGC/NGC Histos
+	      H_phgcerNpe[ipmt] = new TH1F(Form("pHGCER_pmt%d", ipmt+1), Form("SHMS HGC PMT %d", ipmt+1), phgcer_nbins, phgcer_xmin, phgcer_xmax);
+	      H_pngcerNpe[ipmt] = new TH1F(Form("pNGCER_pmt%d", ipmt+1), Form("SHMS NGC PMT %d", ipmt+1), pngcer_nbins, pngcer_xmin, pngcer_xmax);
+     
 
-	  	  //----Define TTree Leaf Names-----
-	  base = "H.hod." + hod_pl_names[npl];
-	  nhod_xtrack = "H.hod." + hod_pl_names[npl] + ".TrackXPos";
-	  nhod_ytrack = "H.hod." + hod_pl_names[npl] + ".TrackYPos";
+	      //------Set Branch Address-------
+	      T->SetBranchAddress(nphgcer_npe, phgcer_npe);
+	      T->SetBranchAddress(npngcer_npe, pngcer_npe);
+
+	      //HMS Gas Cherenkov
+	      if(ipmt<2)
+		{
+		  H_hcerNpe[ipmt] = new TH1F(Form("hCER_pmt%d", ipmt+1), Form("HMS Cherenkov PMT %d", ipmt+1), hcer_nbins, hcer_xmin, hcer_xmax);
+
+		  //------Set Branch Address-------
+		  T->SetBranchAddress(nhcer_npe, hcer_npe);
+
+		} //end HMS Cer PMT Loop
+
+	      
+	    } //end SHMS Cer PMT Loop
 	  
-	  //------Set Branch Address-------
-	  T->SetBranchAddress(nhod_xtrack, &hod_xtrack[npl]);
-	  T->SetBranchAddress(nhod_ytrack, &hod_ytrack[npl]);
+	
 
+	} //end Plane==0 requirement, for cer pmt loop
 
-	} //end hodo plane loop
+    } //end hodo plane loop
+  
+  
 
-  //-----LOOP OVER ALL EVENTS
+  //==============================
+  //=====LOOP OVER ALL EVENTS=====
+  //==============================
+  
   Long64_t nentries = T->GetEntries();
   
   //Loop over all entries
-  for(Long64_t i=0; i<100000; i++)
+  for(Long64_t i=0; i<nentries; i++)
     {
       
       T->GetEntry(i);  
 
-
-      if(detector=="dc")
+      //======HMS DRIFT CHAMBERS=====
+      //Loop over all DC planes
+      for (Int_t npl = 0; npl < dc_PLANES; npl++ )
 	{
-	  
-	  //Loop over all DC planes
-	  for (Int_t npl = 0; npl < dcPLANES; npl++ )
+	  //Loop over hits
+	  for (Int_t j=0; j < hdc_ndata[npl]; j++)
 	    {
 	      
-	      //Loop over hits
-	      for (Int_t j=0; j < dc_ndata[npl]; j++)
-		{
-		  //Fill Histograms
-		  
-		  if(dc_nhit[npl]==1)
-		    {
-		      H_dcTime[npl]->Fill(dc_time[npl][j]);
-		      H_dcDist[npl]->Fill(dc_dist[npl][j]);
-		      
-		      //Fill 2D Histos
-		      H_res_vs_wire[npl]->Fill(dc_wire[npl][j], dc_res[npl]);
-		      H_time_vs_wire[npl]->Fill(dc_wire[npl][j], dc_time[npl][j]);
-		      H_dist_vs_wire[npl]->Fill(dc_wire[npl][j], dc_dist[npl][j]);
-		      
-		    } //end single hit requirement
-		} //end loop over hits
+	      if(hdc_ndata[npl]==1){
+	      //Fill Histograms
+	      H_hdcTime[npl]->Fill(hdc_time[npl][j]);
+	      H_hdcDist[npl]->Fill(hdc_dist[npl][j]);
 	      
-	      if(dc_nhit[npl]==1)
-		{
-		  H_dcRes[npl]->Fill(dc_res[npl]);
-		}
-	      
-	    }
+	      //Fill 2D Histos
+	      H_hres_vs_wire[npl]->Fill(hdc_wire[npl][j], hdc_res[npl]);
+	      H_htime_vs_wire[npl]->Fill(hdc_wire[npl][j], hdc_time[npl][j]);
+	      H_hdist_vs_wire[npl]->Fill(hdc_wire[npl][j], hdc_dist[npl][j]);
+	      	     
+	      //Fill Residual
+	      H_hdcRes[npl]->Fill(hdc_res[npl]);
+	      } // end single hit requirement
+	    
+	    } //end loop over hits
 	  
-	} //end entry loop for "dc" detector
-      
-      if (detector=="cal")
+	} //end DC Plane loop
+
+    
+      //====HMS CALORIMETER=====
+      H_hcalEtrkNorm->Fill(hcal_etrknorm);
+      H_hcalEtot->Fill(hcal_etot); 
+      H_hcalEtrkNorm_vs_xtrk->Fill(hcal_xtrack, hcal_etrknorm);
+      H_hcalEtrkNorm_vs_ytrk->Fill(hcal_ytrack, hcal_etrknorm);
+	
+      //====HMS HODOSCOPES=====
+      H_hhodBeta->Fill(hhod_beta);
+      H_hhodBetaNoTrk->Fill(hhod_beta_notrk);
+
+
+      //Loop over all HODO planes
+      for (Int_t npl = 0; npl < hod_PLANES; npl++ )
 	{
-	  H_calEtrkNorm->Fill(cal_etrknorm);
-	  H_calEtot->Fill(cal_etot); 
-	  H_calEtrkNorm_vs_xtrk->Fill(cal_xtrack, cal_etrknorm);
-	  H_calEtrkNorm_vs_ytrk->Fill(cal_ytrack, cal_etrknorm);
-	}
+	  H_hhodBeta_v_Xtrk[npl]->Fill(hhod_xtrack[npl], hhod_beta);
+	  H_hhodBeta_v_Ytrk[npl]->Fill(hhod_ytrack[npl], hhod_beta);
+
+
+	} //end hodo plane loop      
 
       
-      if(detector=="hod")
+      //---------------------------------------------------------------------
+      
+      //======sHMS DRIFT CHAMBERS=====
+      //Loop over all DC planes
+      for (Int_t npl = 0; npl < dc_PLANES; npl++ )
 	{
-	  if(cal_etrknorm>0.7)
+	  //Loop over hits
+	  for (Int_t j=0; j < pdc_ndata[npl]; j++)
 	    {
-	      H_hodBeta->Fill(hod_beta);
-	      H_hodBetaNoTrk->Fill(hod_beta_notrk);
 	      
-	      //Loop over all HODO planes
-	      for (Int_t npl = 0; npl < hodPLANES; npl++ )
-		{
-		  
-		  H_hodBeta_v_Xtrk[npl]->Fill(hod_xtrack[npl], hod_beta);
-		  H_hodBeta_v_Ytrk[npl]->Fill(hod_ytrack[npl], hod_beta);
-		  
-		} //end hodo plane loop
-	    } //end cut
-	} //end hodo requirement
+	      if(pdc_ndata[npl]==1){
+		//Fill Histograms
+		H_pdcTime[npl]->Fill(pdc_time[npl][j]);
+		H_pdcDist[npl]->Fill(pdc_dist[npl][j]);
+		//Fill 2D Histos
+		H_pres_vs_wire[npl]->Fill(pdc_wire[npl][j], pdc_res[npl]);
+		H_ptime_vs_wire[npl]->Fill(pdc_wire[npl][j], pdc_time[npl][j]);
+		H_pdist_vs_wire[npl]->Fill(pdc_wire[npl][j], pdc_dist[npl][j]);
+		
+		//Fill Residual
+		H_pdcRes[npl]->Fill(pdc_res[npl]);
+	      } // end single hit requirement
+	      
+	    } //end loop over hits
+	  
+	} //end DC Plane loop
+      
+      
+      //====SHMS CALORIMETER=====
+      H_pcalEtrkNorm->Fill(pcal_etrknorm);
+      H_pcalEtot->Fill(pcal_etot); 
+      H_pcalEtrkNorm_vs_xtrk->Fill(pcal_xtrack, pcal_etrknorm);
+      H_pcalEtrkNorm_vs_ytrk->Fill(pcal_ytrack, pcal_etrknorm);
+      
+      //====SHMS HODOSCOPES=====
+      H_phodBeta->Fill(phod_beta);
+      H_phodBetaNoTrk->Fill(phod_beta_notrk);
+      
 
-    } //end entry loop
+      //Loop over all HODO planes
+      for (Int_t npl = 0; npl < hod_PLANES; npl++ )
+	{
+	  H_phodBeta_v_Xtrk[npl]->Fill(phod_xtrack[npl], phod_beta);
+	  H_phodBeta_v_Ytrk[npl]->Fill(phod_ytrack[npl], phod_beta);
+	  
+	  
+	} //end hodo plane loop      
+      
+      //---------------------------------------------------------------------
+
+
+
+      //===CHERENKOVS===
+      for (int ipmt = 0; ipmt<4; ipmt++)
+	{
+	  //HMS
+	  if(ipmt<2)
+	    {
+	      H_hcerNpe[ipmt]->Fill(hcer_npe[ipmt]);
+	      
+	    }//end hms cherenkov pmt loop
+
+	  H_phgcerNpe[ipmt]->Fill(phgcer_npe[ipmt]);
+	  H_pngcerNpe[ipmt]->Fill(pngcer_npe[ipmt]);
+	}//end shms cherenkov pmt loop
+
+      H_hcerNpeSum->Fill(hcer_npesum);
+      H_phgcerNpeSum->Fill(phgcer_npesum);
+      H_pngcerNpeSum->Fill(pngcer_npesum);
+
+    }// end loop over entries
   
 
+ 
   
-  /***********DRAW HISTOGRAMS TO CANVAS***************/
-
-  if (detector=="dc")
+  //========================
+  //===== DRAW CANVAS ======
+  //========================
+  
+  if(spec.compare("hms")==0)
     {
+      //===HMS===
       
-      dcTimeCanv = new TCanvas("DC Times", "HMS DC TIMES",  1500, 500);
-      dcTimeCanv->Divide(6,2);
+      hdcTimeCanv = new TCanvas("hDC Times", "HMS DC TIMES",  1500, 500);
+      hdcTimeCanv->Divide(6,2);
       
-      dcDistCanv = new TCanvas("DC Dist", "HMS DC Distance",  1500, 500);
-      dcDistCanv->Divide(6,2);
+      hdcDistCanv = new TCanvas("hDC Dist", "HMS DC Distance",  1500, 500);
+      hdcDistCanv->Divide(6,2);
       
-      dcResCanv = new TCanvas("DC Residuals", "HMS DC Residuals",  1500, 500);
-      dcResCanv->Divide(6,2);
+      hdcResCanv = new TCanvas("hDC Residuals", "HMS DC Residuals",  1500, 500);
+      hdcResCanv->Divide(6,2);
       
-      dcResGraphCanv = new TCanvas("DC Residuals Graph", "HMS DC Residuals Graph",  1500, 500);
-      dcResGraphCanv->Divide(2,1);
+      hdcResGraphCanv = new TCanvas("hDC Residuals Graph", "HMS DC Residuals Graph",  1500, 500);
+      hdcResGraphCanv->Divide(2,1);
       
       //2d histos 
-      dcResCanv2D = new TCanvas("DC Residuals vs. Wire", "HMS DC Residuals vs. Wire",  1500, 500);
-      dcResCanv2D->Divide(6,2);
+      hdcResCanv2D = new TCanvas("hDC Residuals vs. Wire", "HMS DC Residuals vs. Wire",  1500, 500);
+      hdcResCanv2D->Divide(6,2);
       
-      dcTimeCanv2D = new TCanvas("DC Time vs. Wire", "HMS DC Time vs. Wire",  1500, 500);
-      dcTimeCanv2D->Divide(6,2);
+      hdcTimeCanv2D = new TCanvas("hDC Time vs. Wire", "HMS DC Time vs. Wire",  1500, 500);
+      hdcTimeCanv2D->Divide(6,2);
       
-      dcDistCanv2D = new TCanvas("DC Dist vs. Wire", "HMS DC Dist vs. Wire",  1500, 500);
-      dcDistCanv2D->Divide(6,2);
+      hdcDistCanv2D = new TCanvas("hDC Dist vs. Wire", "HMS DC Dist vs. Wire",  1500, 500);
+      hdcDistCanv2D->Divide(6,2);
       
       //Profile Histograms
-      dcResCanvProf = new TCanvas("DC Residuals vs. Wire: Profile", "HMS DC Residuals vs. Wire, Profile",  1500, 500);
-      dcResCanvProf->Divide(6,2);
+      hdcResCanvProf = new TCanvas("hDC Residuals vs. Wire: Profile", "HMS DC Residuals vs. Wire, Profile",  1500, 500);
+      hdcResCanvProf->Divide(6,2);
       
       //Loop over DC planes
-      for (Int_t npl = 0; npl < dcPLANES; npl++ )
+      for (Int_t npl = 0; npl < dc_PLANES; npl++ )
 	{
 	  
-	  dcTimeCanv->cd(npl+1);
+	  hdcTimeCanv->cd(npl+1);
 	  gPad->SetLogy();
-	  H_dcTime[npl]->Draw();
+	  H_hdcTime[npl]->Draw();
 	  
-	  dcDistCanv->cd(npl+1);
-	  H_dcDist[npl]->Draw();
+	  hdcDistCanv->cd(npl+1);
+	  H_hdcDist[npl]->Draw();
 	  
 	  //Get Mean/Sigma for residuals and conver to microns
-	  mean[npl] =  H_dcRes[npl]->GetMean()*1e4; 
-	  sigma[npl] =  H_dcRes[npl]->GetStdDev()*1e4;
+	  mean[npl] =  H_hdcRes[npl]->GetMean()*1e4; 
+	  sigma[npl] =  H_hdcRes[npl]->GetStdDev()*1e4;
 	  
-	  dcResCanv->cd(npl+1);
-	  H_dcRes[npl]->Draw();
+	  hdcResCanv->cd(npl+1);
+	  H_hdcRes[npl]->Draw();
 	  
 	  //2D and Profile Histograms
-	  dcResCanv2D->cd(npl+1);
-	  H_res_vs_wire[npl]->Draw("COLZ");
+	  hdcResCanv2D->cd(npl+1);
+	  H_hres_vs_wire[npl]->Draw("COLZ");
 	  
-	  dcTimeCanv2D->cd(npl+1);
-	  H_time_vs_wire[npl]->Draw("COLZ");
+	  hdcTimeCanv2D->cd(npl+1);
+	  H_htime_vs_wire[npl]->Draw("COLZ");
 	  
-	  dcDistCanv2D->cd(npl+1);
-	  H_dist_vs_wire[npl]->Draw("COLZ");
+	  hdcDistCanv2D->cd(npl+1);
+	  H_hdist_vs_wire[npl]->Draw("COLZ");
 	  
 	  
-	  dcResCanvProf->cd(npl+1);
-	  dcResProf[npl] = H_res_vs_wire[npl]->ProfileX(Form("Profile of Residuals, Plane %s", dc_pl_names[npl].c_str()), 0., nwires[npl]);
-	  dcResProf[npl]->Draw();
-	}
+	  hdcResCanvProf->cd(npl+1);
+	  hdcResProf[npl] = H_hres_vs_wire[npl]->ProfileX(Form("HMS Profile of Residuals, Plane %s", hdc_pl_names[npl].c_str()), 0., hnwires[npl]);
+	  hdcResProf[npl]->Draw();
+	  
+	} //END LOOP OVER DC PLANES
       
-      TGraph *gr_mean = new TGraph(12, x, mean);
       
-      //Change to SupPad 2 to plot mean
-      dcResGraphCanv->cd(1);
-      //dcResGraphCanv->SetGrid();
-      gr_mean->SetMarkerStyle(22);
-      gr_mean->SetMarkerColor(kBlue);
-      gr_mean->SetMarkerSize(2);
-      gr_mean->GetYaxis()->SetRangeUser(-250, 250);
       
-      //Set Axis Titles
-      gr_mean->GetXaxis()->SetTitle("HMS DC Planes Residuals");
-      gr_mean->GetXaxis()->CenterTitle();
-      gr_mean->GetYaxis()->SetTitle("HMS DC Residual Mean (#mum)");
-      gr_mean->GetYaxis()->CenterTitle();
-      gr_mean->SetTitle("HMS DC Plane Residuals Mean");
+  TGraph *gr_mean = new TGraph(12, x, mean);
+  
+  //Change to SupPad 2 to plot mean
+  hdcResGraphCanv->cd(1);
+  //dcResGraphCanv->SetGrid();
+  gr_mean->SetMarkerStyle(22);
+  gr_mean->SetMarkerColor(kBlue);
+  gr_mean->SetMarkerSize(2);
+  gr_mean->GetYaxis()->SetRangeUser(-250, 250);
+  
+  //Set Axis Titles
+  gr_mean->GetXaxis()->SetTitle("HMS DC Planes Residuals");
+  gr_mean->GetXaxis()->CenterTitle();
+  gr_mean->GetYaxis()->SetTitle("HMS DC Residual Mean (#mum)");
+  gr_mean->GetYaxis()->CenterTitle();
+  gr_mean->SetTitle("HMS DC Plane Residuals Mean");
+  
+  gr_mean->Draw("AP");
+  
+  
+  //Change to SubPad 1 to plot sigma
+  hdcResGraphCanv->cd(2);
+  TGraph *gr_residual = new TGraph(12, x, sigma);
+  //dcResGraphCanv->SetGrid();
+  gr_residual->SetMarkerStyle(22);
+  gr_residual->SetMarkerColor(kRed);
+  gr_residual->SetMarkerSize(2);
+  gr_residual->GetYaxis()->SetRangeUser(0, 1000.);
+  
+  //Set Axis Titles
+  gr_residual->GetXaxis()->SetTitle("HMS DC Planes Residuals");
+  gr_residual->GetXaxis()->CenterTitle();
+  gr_residual->GetYaxis()->SetTitle("HMS DC Residual #sigma (#mum)");
+  gr_residual->GetYaxis()->CenterTitle();
+  gr_residual->SetTitle("HMS DC Plane Residuals Sigma");
+  gr_residual->Draw("AP");
+  hdcResGraphCanv->Update();
 
-      gr_mean->Draw("AP");
+  hdcTimeCanv->SaveAs(Form("./%s_Calib_%d/hDC_Times.pdf", spec.c_str(), run));
+  hdcDistCanv->SaveAs(Form("./%s_Calib_%d/hDC_Dist.pdf", spec.c_str(), run));
+  hdcResCanv->SaveAs(Form("./%s_Calib_%d/hDC_Res.pdf", spec.c_str(), run));
+  
+  hdcResCanv2D->SaveAs(Form("./%s_Calib_%d/hDC_Res2D.pdf", spec.c_str(), run));
+  hdcTimeCanv2D->SaveAs(Form("./%s_Calib_%d/hDC_Time2D.pdf", spec.c_str(), run));
+  hdcDistCanv2D->SaveAs(Form("./%s_Calib_%d/hDC_Dist2D.pdf", spec.c_str(), run));
+  
+  
+  hdcResCanvProf->SaveAs(Form("./%s_Calib_%d/hDC_ResProfile.pdf", spec.c_str(), run));
+  hdcResGraphCanv->SaveAs(Form("./%s_Calib_%d/hDC_ResPlot.pdf", spec.c_str(), run));
+  
+  
+  //====CALORIMETERS====
+  hcalCanv = new TCanvas("HMS Calorimeter Canv" , "HMS Calorimeter Plots", 1500, 500);
+  hcalCanv->Divide(3,2);
+      
+  hcalCanv->cd(1);
+  H_hcalEtrkNorm->Draw();
+  hcalCanv->Update();
+  
+  hcalCanv->cd(2);
+  H_hcalEtot->Draw();
+  
+  hcalCanv->cd(3);
+  H_hcalEtrkNorm_vs_xtrk->Draw("COLZ");
+  
+  hcalCanv->cd(4);
+  H_hcalEtrkNorm_vs_ytrk->Draw("COLZ");
+  
 
-      
-      //Change to SubPad 1 to plot sigma
-      dcResGraphCanv->cd(2);
-      TGraph *gr_residual = new TGraph(12, x, sigma);
-      //dcResGraphCanv->SetGrid();
-      gr_residual->SetMarkerStyle(22);
-      gr_residual->SetMarkerColor(kRed);
-      gr_residual->SetMarkerSize(2);
-      gr_residual->GetYaxis()->SetRangeUser(0, 1000.);
-      
-      //Set Axis Titles
-      gr_residual->GetXaxis()->SetTitle("HMS DC Planes Residuals");
-      gr_residual->GetXaxis()->CenterTitle();
-      gr_residual->GetYaxis()->SetTitle("HMS DC Residual #sigma (#mum)");
-      gr_residual->GetYaxis()->CenterTitle();
-      gr_residual->SetTitle("HMS DC Plane Residuals Sigma");
-      cout << "sigma = " << sigma[0] << endl;
-      gr_residual->Draw("AP");
-      dcResGraphCanv->Update();
-
-      dcTimeCanv->SaveAs(Form("./%s_Calib_%d/HMS_DC_Times.pdf", detector.c_str(), runNUM));
-      dcDistCanv->SaveAs(Form("./%s_Calib_%d/HMS_DC_Dist.pdf", detector.c_str(), runNUM));
-      dcResCanv->SaveAs(Form("./%s_Calib_%d/HMS_DC_Res.pdf", detector.c_str(), runNUM));
-      
-      dcResCanv2D->SaveAs(Form("./%s_Calib_%d/HMS_DC_Res2D.pdf", detector.c_str(), runNUM));
-      dcTimeCanv2D->SaveAs(Form("./%s_Calib_%d/HMS_DC_Time2D.pdf", detector.c_str(), runNUM));
-      dcDistCanv2D->SaveAs(Form("./%s_Calib_%d/HMS_DC_Dist2D.pdf", detector.c_str(), runNUM));
-      
-      
-      dcResCanvProf->SaveAs(Form("./%s_Calib_%d/HMS_DC_ResProfile.pdf", detector.c_str(), runNUM));
-      dcResGraphCanv->SaveAs(Form("./%s_Calib_%d/HMS_DC_ResPlot.pdf", detector.c_str(), runNUM));
-      
-    }
-
-  if (detector=="cal")
+  hcalCanv->SaveAs(Form("./%s_Calib_%d/hCal_CalibPlots.pdf", spec.c_str(), run));
+						
+  
+  //======HODOSCOPOES=====
+  hhodCanv = new TCanvas("HMS Hodoscope Beta Canv" , "HMS Hodoscope Beta Plots", 1500, 500);
+  hhodCanv->Divide(2,1);
+  hhodCanv->cd(1);
+  H_hhodBetaNoTrk->Draw();
+  hhodCanv->cd(2);
+  H_hhodBeta->Draw();    
+  
+  
+  hhodCanv2D = new TCanvas("HMS Hodoscope 2D Beta Canvas" , "2D HMS Hodoscope Beta Plots", 1500, 500);
+  hhodCanv2D->Divide(4,2);
+  
+  hhodProfCanv = new TCanvas("Hodoscope Beta Profile Canvas", "Hodoscope Beta ProfileX", 1500, 500);
+  hhodProfCanv->Divide(4,2);
+  
+  
+  //Loop over Hodo planes
+  for (Int_t npl = 0; npl < hod_PLANES; npl++ )
     {
-
-      calEtrkNormCanv = new TCanvas("Calorimeter Canv" , "Calorimeter Plots", 1500, 500);
-      calEtrkNormCanv->Divide(3,2);
       
-      calEtrkNormCanv->cd(1);
-      H_calEtrkNorm->Draw();
-      
-      calEtrkNormCanv->cd(2);
-      H_calEtot->Draw();
-      
-      calEtrkNormCanv->cd(3);
-      H_calEtrkNorm_vs_xtrk->Draw("COLZ");
-
-      calEtrkNormCanv->cd(4);
-      H_calEtrkNorm_vs_ytrk->Draw("COLZ");
-
-      calEtrkNormCanv->SaveAs(Form("./%s_Calib_%d/Calorimeter_CalibPlots.pdf", detector.c_str(), runNUM));
-      
-    }
-  
-  if (detector=="hod")
-    {
-      
-      hodCanv = new TCanvas("Hodoscope Beta Canv" , "Hodoscope Beta Plots", 1500, 500);
-      hodCanv->Divide(2,1);
-      hodCanv->cd(1);
-      H_hodBetaNoTrk->Draw();
-      hodCanv->cd(2);
-      H_hodBeta->Draw();    
-
-      hodCanv2D = new TCanvas("Hodoscope 2D Beta Canvas" , "Hodoscope Beta Plots", 1500, 500);
-      hodCanv2D->Divide(4,2);
-      
-      hodProfCanv = new TCanvas("Hodoscope Beta Profile Canvas", "Hodoscope Beta ProfileX", 1500, 500);
-      hodProfCanv->Divide(4,2);
-      
-  
-      //Loop over Hodo planes
-      for (Int_t npl = 0; npl < hodPLANES; npl++ )
-	{
-	 
-	  hodCanv2D->cd(npl + 1);
-	  H_hodBeta_v_Xtrk[npl]->Draw("COLZ");
+      hhodCanv2D->cd(npl + 1);
+      H_hhodBeta_v_Xtrk[npl]->Draw("COLZ");
 	  
-	  hodCanv2D->cd(npl + 5);
-	  H_hodBeta_v_Ytrk[npl]->Draw("COLZ");
+      hhodCanv2D->cd(npl + 5);
+      H_hhodBeta_v_Ytrk[npl]->Draw("COLZ");
+      
+      //X-Profile of 2D Histos beta vs xtrk (or ytrk)
+      hhod_xProfX[npl] = new TProfile();
+      hhod_yProfX[npl] = new TProfile();
+      
+      hhodProfCanv->cd(npl + 1);
+      hhod_xProfX[npl] = H_hhodBeta_v_Xtrk[npl]->ProfileX(Form("h%s_betaXtrk_ProfileX", hod_pl_names[npl].c_str()), 0, 200);
+      hhod_xProfX[npl]->Draw();
+      hhodProfCanv->cd(npl + 5);
+      hhod_yProfX[npl] = H_hhodBeta_v_Ytrk[npl]->ProfileX(Form("h%s_betaYtrk_ProfileX", hod_pl_names[npl].c_str()), 0, 200);
+      hhod_yProfX[npl]->Draw();
+      
+    } // END LOOP OVER HODO PLANES
+    
+  hhodCanv->SaveAs(Form("./%s_Calib_%d/hHodBetaPlots.pdf", spec.c_str(), run));
+  hhodCanv2D->SaveAs(Form("./%s_Calib_%d/hHodBeta2DPlots.pdf", spec.c_str(), run));
+  hhodProfCanv->SaveAs(Form("./%s_Calib_%d/hHodBetaProfilePlots.pdf", spec.c_str(), run));
 
-	  //X-Profile of 2D Histos beta vs xtrk (or ytrk)
-	  hod_xProfX[npl] = new TProfile();
-	  hod_yProfX[npl] = new TProfile();
 
-	  hodProfCanv->cd(npl + 1);
-	  hod_xProfX[npl] = H_hodBeta_v_Xtrk[npl]->ProfileX(Form("h%s_betaXtrk_ProfileX", hod_pl_names[npl].c_str()), 0, 200);
-	  hod_xProfX[npl]->Draw();
-	  hodProfCanv->cd(npl + 5);
-	  hod_yProfX[npl] = H_hodBeta_v_Ytrk[npl]->ProfileX(Form("h%s_betaYtrk_ProfileX", hod_pl_names[npl].c_str()), 0, 200);
-	  hod_yProfX[npl]->Draw();
-
-	}
-
-      hodCanv->SaveAs(Form("./%s_Calib_%d/HodBetaPlots.pdf", detector.c_str(), runNUM));
-      hodCanv2D->SaveAs(Form("./%s_Calib_%d/HodBeta2DPlots.pdf", detector.c_str(), runNUM));
-      hodProfCanv->SaveAs(Form("./%s_Calib_%d/HodBetaProfilePlots.pdf", detector.c_str(), runNUM));
-    }
+  //====CHERENKOVS====
+  hcerCanv = new TCanvas("HMS Cherenkov", "HMS Cherenkov Calib. Plots", 1500, 500);
+  hcerCanv->Divide(3,1);
+  hcerCanv->cd(1);
+  H_hcerNpe[0]->Draw();
+  hcerCanv->cd(2);
+  H_hcerNpe[1]->Draw();
+  hcerCanv->cd(3);
+  H_hcerNpeSum->Draw();
   
- //Write Histograms to ROOT file
+  hcerCanv->SaveAs(Form("./%s_Calib_%d/hCer.pdf", spec.c_str(), run));
+  
+  
+  //Write Histograms to ROOT file
   outROOT->Write();
   outROOT->Close();
-
+    }
   
+  if(spec.compare("shms")==0)
+    {
+      //===SHMS===
+      
+      pdcTimeCanv = new TCanvas("pDC Times", "SHMS DC TIMES",  1500, 500);
+      pdcTimeCanv->Divide(6,2);
+  
+      pdcDistCanv = new TCanvas("pDC Dist", "SHMS DC Distance",  1500, 500);
+      pdcDistCanv->Divide(6,2);
+      
+      pdcResCanv = new TCanvas("pDC Residuals", "SHMS DC Residuals",  1500, 500);
+      pdcResCanv->Divide(6,2);
+      
+      pdcResGraphCanv = new TCanvas("pDC Residuals Graph", "SHMS DC Residuals Graph",  1500, 500);
+      pdcResGraphCanv->Divide(2,1);
+      
+      //2d histos 
+      pdcResCanv2D = new TCanvas("pDC Residuals vs. Wire", "SHMS DC Residuals vs. Wire",  1500, 500);
+      pdcResCanv2D->Divide(6,2);
+      
+      pdcTimeCanv2D = new TCanvas("pDC Time vs. Wire", "SHMS DC Time vs. Wire",  1500, 500);
+      pdcTimeCanv2D->Divide(6,2);
+      
+      pdcDistCanv2D = new TCanvas("pDC Dist vs. Wire", "SHMS DC Dist vs. Wire",  1500, 500);
+      pdcDistCanv2D->Divide(6,2);
+      
+      //Profile Histograms
+      pdcResCanvProf = new TCanvas("pDC Residuals vs. Wire: Profile", "SHMS DC Residuals vs. Wire, Profile",  1500, 500);
+      pdcResCanvProf->Divide(6,2);
+      
+      //Loop over DC planes
+      for (Int_t npl = 0; npl < dc_PLANES; npl++ )
+	{
+      
+	  pdcTimeCanv->cd(npl+1);
+	  gPad->SetLogy();
+	  H_pdcTime[npl]->Draw();
+	  
+	  pdcDistCanv->cd(npl+1);
+	  H_pdcDist[npl]->Draw();
+	  
+	  //Get Mean/Sigma for residuals and conver to microns
+	  mean[npl] =  H_pdcRes[npl]->GetMean()*1e4; 
+	  sigma[npl] =  H_pdcRes[npl]->GetStdDev()*1e4;
+	  
+	  pdcResCanv->cd(npl+1);
+	  H_pdcRes[npl]->Draw();
+	  
+	  //2D and Profile Histograms
+	  pdcResCanv2D->cd(npl+1);
+	  H_pres_vs_wire[npl]->Draw("COLZ");
+	  
+	  pdcTimeCanv2D->cd(npl+1);
+	  H_ptime_vs_wire[npl]->Draw("COLZ");
+	  
+	  pdcDistCanv2D->cd(npl+1);
+	  H_pdist_vs_wire[npl]->Draw("COLZ");
+      
+	  
+	  pdcResCanvProf->cd(npl+1);
+	  pdcResProf[npl] = H_pres_vs_wire[npl]->ProfileX(Form("SHMS Profile of Residuals, Plane %s", pdc_pl_names[npl].c_str()), 0., pnwires[npl]);
+	  pdcResProf[npl]->Draw();
+	  
+	} //END LOOP OVER DC PLANES
+      
+      
+      
+  TGraph *gr_mean = new TGraph(12, x, mean);
+  
+  //Change to SupPad 2 to plot mean
+  pdcResGraphCanv->cd(1);
+  //dcResGraphCanv->SetGrid();
+  gr_mean->SetMarkerStyle(22);
+  gr_mean->SetMarkerColor(kBlue);
+  gr_mean->SetMarkerSize(2);
+  gr_mean->GetYaxis()->SetRangeUser(-250, 250);
+  
+  //Set Axis Titles
+  gr_mean->GetXaxis()->SetTitle("SHMS DC Planes Residuals");
+  gr_mean->GetXaxis()->CenterTitle();
+  gr_mean->GetYaxis()->SetTitle("SHMS DC Residual Mean (#mum)");
+  gr_mean->GetYaxis()->CenterTitle();
+  gr_mean->SetTitle("SHMS DC Plane Residuals Mean");
+  
+  gr_mean->Draw("AP");
+  
+  
+  //Change to SubPad 1 to plot sigma
+  pdcResGraphCanv->cd(2);
+  TGraph *gr_residual = new TGraph(12, x, sigma);
+  //dcResGraphCanv->SetGrid();
+  gr_residual->SetMarkerStyle(22);
+  gr_residual->SetMarkerColor(kRed);
+  gr_residual->SetMarkerSize(2);
+  gr_residual->GetYaxis()->SetRangeUser(0, 1000.);
+  
+  //Set Axis Titles
+  gr_residual->GetXaxis()->SetTitle("SHMS DC Planes Residuals");
+  gr_residual->GetXaxis()->CenterTitle();
+  gr_residual->GetYaxis()->SetTitle("SHMS DC Residual #sigma (#mum)");
+  gr_residual->GetYaxis()->CenterTitle();
+  gr_residual->SetTitle("SHMS DC Plane Residuals Sigma");
+  gr_residual->Draw("AP");
+  pdcResGraphCanv->Update();
+
+  pdcTimeCanv->SaveAs(Form("./%s_Calib_%d/pDC_Times.pdf", spec.c_str(), run));
+  pdcDistCanv->SaveAs(Form("./%s_Calib_%d/pDC_Dist.pdf", spec.c_str(), run));
+  pdcResCanv->SaveAs(Form("./%s_Calib_%d/pDC_Res.pdf", spec.c_str(), run));
+  
+  pdcResCanv2D->SaveAs(Form("./%s_Calib_%d/pDC_Res2D.pdf", spec.c_str(), run));
+  pdcTimeCanv2D->SaveAs(Form("./%s_Calib_%d/pDC_Time2D.pdf", spec.c_str(), run));
+  pdcDistCanv2D->SaveAs(Form("./%s_Calib_%d/pDC_Dist2D.pdf", spec.c_str(), run));
+  
+  
+  pdcResCanvProf->SaveAs(Form("./%s_Calib_%d/pDC_ResProfile.pdf", spec.c_str(), run));
+  pdcResGraphCanv->SaveAs(Form("./%s_Calib_%d/pDC_ResPlot.pdf", spec.c_str(), run));
+  
+  
+  //====CALORIMETERS====
+  pcalCanv = new TCanvas("SHMS Calorimeter Canv" , "SHMS Calorimeter Plots", 1500, 500);
+  pcalCanv->Divide(3,2);
+      
+  pcalCanv->cd(1);
+  H_pcalEtrkNorm->Draw();
+  pcalCanv->Update();
+  
+  pcalCanv->cd(2);
+  H_pcalEtot->Draw();
+  
+  pcalCanv->cd(3);
+  H_pcalEtrkNorm_vs_xtrk->Draw("COLZ");
+  
+  pcalCanv->cd(4);
+  H_pcalEtrkNorm_vs_ytrk->Draw("COLZ");
+  
+
+  pcalCanv->SaveAs(Form("./%s_Calib_%d/pCal_CalibPlots.pdf", spec.c_str(), run));
+						
+  
+  //======HODOSCOPOES=====
+  phodCanv = new TCanvas("SHMS Hodoscope Beta Canv" , "SHMS Hodoscope Beta Plots", 1500, 500);
+  phodCanv->Divide(2,1);
+  phodCanv->cd(1);
+  H_phodBetaNoTrk->Draw();
+  phodCanv->cd(2);
+  H_phodBeta->Draw();    
+  
+  
+  phodCanv2D = new TCanvas("SHMS Hodoscope 2D Beta Canvas" , "2D SHMS Hodoscope Beta Plots", 1500, 500);
+  phodCanv2D->Divide(4,2);
+  
+  phodProfCanv = new TCanvas("SHMS Hodoscope Beta Profile Canvas", "SHMS Hodoscope Beta ProfileX", 1500, 500);
+  phodProfCanv->Divide(4,2);
+  
+  
+  //Loop over Hodo planes
+  for (Int_t npl = 0; npl < hod_PLANES; npl++ )
+    {
+      
+      phodCanv2D->cd(npl + 1);
+      H_phodBeta_v_Xtrk[npl]->Draw("COLZ");
+	  
+      phodCanv2D->cd(npl + 5);
+      H_phodBeta_v_Ytrk[npl]->Draw("COLZ");
+      
+      //X-Profile of 2D Histos beta vs xtrk (or ytrk)
+      phod_xProfX[npl] = new TProfile();
+      phod_yProfX[npl] = new TProfile();
+      
+      phodProfCanv->cd(npl + 1);
+      phod_xProfX[npl] = H_phodBeta_v_Xtrk[npl]->ProfileX(Form("p%s_betaXtrk_ProfileX", hod_pl_names[npl].c_str()), 0, 200);
+      phod_xProfX[npl]->Draw();
+      phodProfCanv->cd(npl + 5);
+      phod_yProfX[npl] = H_phodBeta_v_Ytrk[npl]->ProfileX(Form("p%s_betaYtrk_ProfileX", hod_pl_names[npl].c_str()), 0, 200);
+      phod_yProfX[npl]->Draw();
+      
+    } // END LOOP OVER HODO PLANES
+    
+  phodCanv->SaveAs(Form("./%s_Calib_%d/pHodBetaPlots.pdf", spec.c_str(), run));
+  phodCanv2D->SaveAs(Form("./%s_Calib_%d/pHodBeta2DPlots.pdf", spec.c_str(), run));
+  phodProfCanv->SaveAs(Form("./%s_Calib_%d/pHodBetaProfilePlots.pdf", spec.c_str(), run));
+
+
+  //====CHERENKOVS====
+  phgcerCanv = new TCanvas("SHMS HGCER", "SHMS HGCER Calib. Plots", 1500, 1500);
+  pngcerCanv = new TCanvas("SHMS NGCER", "SHMS NGCER Calib. Plots", 1500, 1500);
+  
+  phgcerSumCanv = new TCanvas("SHMS HGCER SUM", "SHMS HGCER SUM Calib. Plots", 1500, 500);
+  pngcerSumCanv = new TCanvas("SHMS NGCER SUM", "SHMS NGCER SUM Calib. Plots", 1500, 500);
+
+  phgcerCanv->Divide(2,2);
+  pngcerCanv->Divide(2,2);
+
+  //HGCER
+  phgcerCanv->cd(1);
+  H_phgcerNpe[0]->Draw();
+  phgcerCanv->cd(2);
+  H_phgcerNpe[1]->Draw();
+  phgcerCanv->cd(3);
+  H_phgcerNpe[2]->Draw();
+  phgcerCanv->cd(4);
+  H_phgcerNpe[3]->Draw();
+
+  phgcerSumCanv->cd();
+  H_phgcerNpeSum->Draw();
+
+  //NGCER
+  pngcerCanv->cd(1);
+  H_pngcerNpe[0]->Draw();
+  pngcerCanv->cd(2);
+  H_pngcerNpe[1]->Draw();
+  pngcerCanv->cd(3);
+  H_pngcerNpe[2]->Draw();
+  pngcerCanv->cd(4);
+  H_pngcerNpe[3]->Draw();
+  
+  pngcerSumCanv->cd();
+  H_pngcerNpeSum->Draw();
+  
+  phgcerCanv->SaveAs(Form("./%s_Calib_%d/pHGCER_PMTs.pdf", spec.c_str(), run));
+  pngcerCanv->SaveAs(Form("./%s_Calib_%d/pNGCER_PMTs.pdf", spec.c_str(), run));
+
+  phgcerSumCanv->SaveAs(Form("./%s_Calib_%d/pHGCER_SUM.pdf", spec.c_str(), run));
+  pngcerSumCanv->SaveAs(Form("./%s_Calib_%d/pNGCER_SUM.pdf", spec.c_str(), run));
+
+  //Write Histograms to ROOT file
+  outROOT->Write();
+  outROOT->Close();
+  
+
+    }
+
+
 }
+
+
 
 
