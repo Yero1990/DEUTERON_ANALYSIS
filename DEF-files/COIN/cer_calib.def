@@ -1,0 +1,12 @@
+block P.tr.x
+block P.tr.y
+block P.tr.th
+block P.tr.ph
+block P.tr.beta
+block P.gtr.dp
+block P.cal.fly.earray
+block P.cal.pr.eplane
+block P.cal.etotnorm
+
+block P.hgcer.*
+block P.ngcer.*

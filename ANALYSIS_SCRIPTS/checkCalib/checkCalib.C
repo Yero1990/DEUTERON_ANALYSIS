@@ -2,10 +2,11 @@
 #include <sys/stat.h>
 #include "checkCalib.h"
 
-void checkCalib_v2(string spec, int run)
+void checkCalib(string spec, string detec, int run)
 {
+  
   //spec --> "hms" or "shms"
-  //the user may input the following for detector: "dc", "cal", "hod", "cer"
+  //detec ---> "dc", "hod", "cal", "cer"
   
   //Prevent plot 
   gROOT->SetBatch(kTRUE);
@@ -68,9 +69,9 @@ void checkCalib_v2(string spec, int run)
   //=========================
   //====OPEN ROOT FILE=======
   //=========================
-  TString filename = "../../../ROOTfiles/coin_replay_coin_all_3288_20000.root";
-
-
+  //TString filename = "../../../ROOTfiles/coin_replay_coin_all_3288_20000.root";
+  //TString filename = "../../../ROOTfiles/coin_replay_hod_calib_3288_50000.root"; 
+  TString filename = "../../../ROOTfiles/coin_replay_pdc_calib_3288_-1.root";
   TFile *data_file = new TFile(filename, "READ");
   TTree *T = (TTree*)data_file->Get("T");
   
@@ -488,7 +489,9 @@ void checkCalib_v2(string spec, int run)
   
   if(spec.compare("hms")==0)
     {
-      //===HMS===
+      if(detec.compare("dc")==0)
+	{
+      //===HMS Drift Chambers===
       
       hdcTimeCanv = new TCanvas("hDC Times", "HMS DC TIMES",  1500, 500);
       hdcTimeCanv->Divide(6,2);
@@ -602,8 +605,10 @@ void checkCalib_v2(string spec, int run)
   
   hdcResCanvProf->SaveAs(Form("./%s_Calib_%d/hDC_ResProfile.pdf", spec.c_str(), run));
   hdcResGraphCanv->SaveAs(Form("./%s_Calib_%d/hDC_ResPlot.pdf", spec.c_str(), run));
-  
-  
+	}
+
+      if(detec.compare("cal")==0)
+	{
   //====CALORIMETERS====
   hcalCanv = new TCanvas("HMS Calorimeter Canv" , "HMS Calorimeter Plots", 1500, 500);
   hcalCanv->Divide(3,2);
@@ -623,8 +628,9 @@ void checkCalib_v2(string spec, int run)
   
 
   hcalCanv->SaveAs(Form("./%s_Calib_%d/hCal_CalibPlots.pdf", spec.c_str(), run));
-						
-  
+	}					
+      if(detec.compare("hod")==0)
+	{
   //======HODOSCOPOES=====
   hhodCanv = new TCanvas("HMS Hodoscope Beta Canv" , "HMS Hodoscope Beta Plots", 1500, 500);
   hhodCanv->Divide(2,1);
@@ -667,9 +673,11 @@ void checkCalib_v2(string spec, int run)
   hhodCanv->SaveAs(Form("./%s_Calib_%d/hHodBetaPlots.pdf", spec.c_str(), run));
   hhodCanv2D->SaveAs(Form("./%s_Calib_%d/hHodBeta2DPlots.pdf", spec.c_str(), run));
   hhodProfCanv->SaveAs(Form("./%s_Calib_%d/hHodBetaProfilePlots.pdf", spec.c_str(), run));
-
-
-  //====CHERENKOVS====
+	}
+      
+      if(detec.compare("cer")==0)
+	{
+  //====CHERENKOV====
   hcerCanv = new TCanvas("HMS Cherenkov", "HMS Cherenkov Calib. Plots", 1500, 500);
   hcerCanv->Divide(3,1);
   hcerCanv->cd(1);
@@ -680,7 +688,7 @@ void checkCalib_v2(string spec, int run)
   H_hcerNpeSum->Draw();
   
   hcerCanv->SaveAs(Form("./%s_Calib_%d/hCer.pdf", spec.c_str(), run));
-  
+	}
   
   //Write Histograms to ROOT file
   outROOT->Write();
@@ -689,7 +697,11 @@ void checkCalib_v2(string spec, int run)
   
   if(spec.compare("shms")==0)
     {
-      //===SHMS===
+
+      if(detec.compare("dc")==0)
+	{
+
+      //===SHMS Drift Chambers===
       
       pdcTimeCanv = new TCanvas("pDC Times", "SHMS DC TIMES",  1500, 500);
       pdcTimeCanv->Divide(6,2);
@@ -803,8 +815,10 @@ void checkCalib_v2(string spec, int run)
   
   pdcResCanvProf->SaveAs(Form("./%s_Calib_%d/pDC_ResProfile.pdf", spec.c_str(), run));
   pdcResGraphCanv->SaveAs(Form("./%s_Calib_%d/pDC_ResPlot.pdf", spec.c_str(), run));
-  
-  
+	}
+
+      if(detec.compare("cal")==0)
+	{
   //====CALORIMETERS====
   pcalCanv = new TCanvas("SHMS Calorimeter Canv" , "SHMS Calorimeter Plots", 1500, 500);
   pcalCanv->Divide(3,2);
@@ -824,8 +838,11 @@ void checkCalib_v2(string spec, int run)
   
 
   pcalCanv->SaveAs(Form("./%s_Calib_%d/pCal_CalibPlots.pdf", spec.c_str(), run));
-						
-  
+	}
+   
+
+      if(detec.compare("hod")==0)					
+	{
   //======HODOSCOPOES=====
   phodCanv = new TCanvas("SHMS Hodoscope Beta Canv" , "SHMS Hodoscope Beta Plots", 1500, 500);
   phodCanv->Divide(2,1);
@@ -868,8 +885,10 @@ void checkCalib_v2(string spec, int run)
   phodCanv->SaveAs(Form("./%s_Calib_%d/pHodBetaPlots.pdf", spec.c_str(), run));
   phodCanv2D->SaveAs(Form("./%s_Calib_%d/pHodBeta2DPlots.pdf", spec.c_str(), run));
   phodProfCanv->SaveAs(Form("./%s_Calib_%d/pHodBetaProfilePlots.pdf", spec.c_str(), run));
+	}
 
-
+      if(detec.compare("cer")==0)
+	{
   //====CHERENKOVS====
   phgcerCanv = new TCanvas("SHMS HGCER", "SHMS HGCER Calib. Plots", 1500, 1500);
   pngcerCanv = new TCanvas("SHMS NGCER", "SHMS NGCER Calib. Plots", 1500, 1500);
@@ -911,7 +930,7 @@ void checkCalib_v2(string spec, int run)
 
   phgcerSumCanv->SaveAs(Form("./%s_Calib_%d/pHGCER_SUM.pdf", spec.c_str(), run));
   pngcerSumCanv->SaveAs(Form("./%s_Calib_%d/pNGCER_SUM.pdf", spec.c_str(), run));
-
+	}
   //Write Histograms to ROOT file
   outROOT->Write();
   outROOT->Close();
