@@ -60,7 +60,7 @@ ppartmass = 0.00051099
 htheta_lab = -37.338
 ptheta_lab = 12.194
 hpcentral = 2.938*0.995
-ppcentral = 8.7
+ppcentral = 8.7*0.98848
 
 3371
 gpbeam = 10.6005
