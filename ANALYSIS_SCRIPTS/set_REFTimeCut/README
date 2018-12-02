@@ -16,7 +16,7 @@ setTimeWindows:  Code to set reference time cuts (adc/tdc ref time)
 
 
 LIST OF REF TIME HISTOGRAMS:
-** This list was obtained by looking in /MAPS/{SPEC}/DETEC/STACK/{spec}_stack.map  (also look at htrip.map)
+** This list was obtained by looking in /MAPS/{SPEC}/DETEC/STACK/{spec}_stack.map  (also look at htrig.map)
 ** Look for the value 1000, since it is associated to what the map points to, to use as ref. time
 ** the 'sig' column represents the REFINDEX value. To determine which index is each ROC pointing to,
    look at the REFINDEX or REFCHAN (shms DC) value below each SLOT assignment

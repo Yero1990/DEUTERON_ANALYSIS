@@ -105,7 +105,8 @@ void setTimeWindows(int run, string trg)
   
   //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3288_-1_noCUTSset.root";
   //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3288_-1.root";                                         
-  TString filename = "../../../ROOTfiles/hms_replay_timeWin_check_1649_25000.root";                                 
+  //TString filename = "../../../ROOTfiles/hms_replay_timeWin_check_1649_25000.root";                                 
+  TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3374_-1.root";                                         
 
   //TString filename = "../../../ROOTfiles/shms_replay_timeWin_check_1791_-1.root";
   //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3288_-1_refCUTset.root";

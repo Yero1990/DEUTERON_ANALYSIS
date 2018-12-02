@@ -59,8 +59,14 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.338
 ptheta_lab = 12.194
-hpcentral = 2.938*0.995
-ppcentral = 8.7*0.98848
+hpcentral = 2.938*0.995*0.99959
+ppcentral = 8.7*0.984371*0.998830
+hmispointing_x = 0.083189 
+hmispointing_y = 0.286047
+pmispointing_x =  -0.126 ;sign flip in x  
+pmispointing_y = -0.06
+gbeam_x = -0.147996
+gbeam_y = -0.125249
 
 3371
 gpbeam = 10.6005
@@ -69,20 +75,31 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -33.545
 ptheta_lab = 13.93
-hpcentral = 3.48*0.995
-ppcentral = 8.7
+hpcentral = 3.48*0.995*0.99930
+ppcentral = 8.7*0.984371*0.999774
+hmispointing_x = 0.083545 
+hmispointing_y = 0.236799
+pmispointing_x = -0.126 ;sign flip in x  
+pmispointing_y = -0.06
+gbeam_x = -0.147913
+gbeam_y = -0.125861
 
-
-3374
+3374     
 gpbeam = 10.6005
 gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -42.9
 ptheta_lab = 9.928
-hpcentral = 2.31*0.995
-ppcentral = 8.7
-
+;hpcentral = 2.31*0.995
+hpcentral = 2.31*0.996*0.999568
+ppcentral = 8.7*0.984371*0.999443
+hmispointing_x = 0.088909 
+hmispointing_y = 0.324
+pmispointing_x = -0.126 ;sign flip in x  
+pmispointing_y = -0.06
+gbeam_x = -0.147769
+gbeam_y = -0.125685
 
 3376
 gpbeam = 10.6005
@@ -91,8 +108,15 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -47.605
 ptheta_lab = 8.495
-hpcentral = 1.8899*0.995
-ppcentral = 8.7
+;hpcentral = 1.8899*0.995
+hpcentral = 1.8899*0.997*0.99922
+ppcentral = 8.7*0.984371*0.999613
+hmispointing_x = 0.099531
+hmispointing_y = 0.324
+pmispointing_x = -0.126 ;sign flip in x  
+pmispointing_y = -0.06
+gbeam_x = -0.148365
+gbeam_y = -0.128636
 
 3377
 gpbeam = 10.6005
@@ -101,8 +125,16 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -47.605
 ptheta_lab = 8.495
-hpcentral = 1.8899*0.995
-ppcentral = 8.7
+;hpcentral = 1.8899*0.995
+hpcentral = 1.8899*0.997*0.999088
+ppcentral = 8.7*0.984371*0.999575
+hmispointing_x = 0.099531
+hmispointing_y = 0.324
+pmispointing_x = -0.126 ;sign flip in x  
+pmispointing_y = -0.06
+gbeam_x = -0.147856
+gbeam_y = -0.124581
+
 
 3379
 gpbeam = 10.6005
@@ -112,5 +144,10 @@ ppartmass = 0.00051099
 htheta_lab = -47.605
 ptheta_lab = 8.495
 hpcentral = 1.8898*0.995
-ppcentral = 8.7
-
+ppcentral = 8.7*0.984371
+hmispointing_x = 0.099531
+hmispointing_y = 0.324
+pmispointing_x = -0.126 ;sign flip in x  
+pmispointing_y = -0.06
+gbeam_x = -0.148275
+gbeam_y = -0.124151

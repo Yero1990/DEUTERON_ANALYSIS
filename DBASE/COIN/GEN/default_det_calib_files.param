@@ -19,3 +19,27 @@
 #include "UTIL_COMM_ONEPASS/PARAM/SHMS/HODO/phodo_Vpcalib.param"
 #include "UTIL_COMM_ONEPASS/PARAM/SHMS/AERO/paero_calib.param"
 #include "UTIL_COMM_ONEPASS/PARAM/SHMS/CAL/pcal_calib.param"
+
+3371
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/DC/hdc_calib_3371.param"
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/DC/hdc_tzero_per_wire_3371.param"
+#include "UTIL_COMM_ONEPASS/PARAM/SHMS/DC/pdc_calib_3371.param"
+#include "UTIL_COMM_ONEPASS/PARAM/SHMS/DC/pdc_tzero_per_wire_3371.param"
+
+3374
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/DC/hdc_calib_3374.param"
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/DC/hdc_tzero_per_wire_3374.param"
+#include "UTIL_COMM_ONEPASS/PARAM/SHMS/DC/pdc_calib_3374.param"
+#include "UTIL_COMM_ONEPASS/PARAM/SHMS/DC/pdc_tzero_per_wire_3374.param"
+
+3376
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/DC/hdc_calib_3376.param"
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/DC/hdc_tzero_per_wire_3376.param"
+#include "UTIL_COMM_ONEPASS/PARAM/SHMS/DC/pdc_calib_3376.param"
+#include "UTIL_COMM_ONEPASS/PARAM/SHMS/DC/pdc_tzero_per_wire_3376.param"
+
+3377-3379
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/DC/hdc_calib_3377.param"
+#include "UTIL_COMM_ONEPASS/PARAM/HMS/DC/hdc_tzero_per_wire_3377.param"
+#include "UTIL_COMM_ONEPASS/PARAM/SHMS/DC/pdc_calib_3377.param"
+#include "UTIL_COMM_ONEPASS/PARAM/SHMS/DC/pdc_tzero_per_wire_3377.param"

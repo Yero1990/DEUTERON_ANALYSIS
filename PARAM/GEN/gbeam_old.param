@@ -12,6 +12,9 @@ gbpmb_zpos = 224.86 ; cm
 gbpmc_zpos = 129.44 ; cm
 
 
+gbeam_x = 0.
+gbeam_y = 0.
+
 ;             Fast Raster calibration constants
 ;             =================================
   gusefr               = 1  

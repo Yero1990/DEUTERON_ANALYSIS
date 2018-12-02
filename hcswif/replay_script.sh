@@ -4,10 +4,10 @@
 
 
 #RUN DATA
-CMD1_data="cd /u/group/E12-10-003/cyero/hallc_replay"
-CMD2_data="./hcana -q \"UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C(3288, -1)\" "
-eval ${CMD1_data}
-eval ${CMD2_data}
+#CMD1_data="cd /u/group/E12-10-003/cyero/hallc_replay"
+#CMD2_data="./hcana -q \"UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C(3288, -1)\" "
+#eval ${CMD1_data}
+#eval ${CMD2_data}
 
 #RUN SIMC
 CMD1="cd /u/group/E12-10-003/cyero/simc_heep"

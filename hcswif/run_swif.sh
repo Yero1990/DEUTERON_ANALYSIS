@@ -3,7 +3,7 @@
 #code usage:  ./run_swif.sh [options]
 #where [options] ---> status,  delete
 
-workflow_name="hdc_calib_3288"
+workflow_name="D2_heep_3288_SHMSPCorr"
 
 runlist_name="h2.dat"
 
@@ -13,7 +13,7 @@ spec=" --spectrometer COIN "
 events="--events -1"
 filelist=" --run file $runlist_name "
 replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C "
-disk_usage=" --disk 4000000000 "   #in bytes (or 1 Gb default)
+disk_usage=" --disk 3000000000 "   #in bytes (or 1 Gb default)
 cpu_cores="--cpu 8"   #number of cpu cores requested 
 project=" --project c-comm2017 "
 workflow=" --name $workflow_name"

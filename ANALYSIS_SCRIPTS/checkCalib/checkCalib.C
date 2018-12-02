@@ -72,7 +72,7 @@ void checkCalib(string spec, string detec, int run)
   //TString filename = "../../../ROOTfiles/coin_replay_coin_all_3288_20000.root";
   //TString filename = "../../../ROOTfiles/coin_replay_hod_calib_3288_50000.root"; 
   //TString filename = "../../../ROOTfiles/coin_replay_hdc_calib_3288_-1_hdcCalib.root";
-  TString filename = "../../../ROOTfiles/coin_replay_phod_calib_3288_-1_VpCalib.root";
+  TString filename = Form("../../../ROOTfiles/coin_replay_dc_calib_%d_-1.root", run);
   
   TFile *data_file = new TFile(filename, "READ");
   TTree *T = (TTree*)data_file->Get("T");
