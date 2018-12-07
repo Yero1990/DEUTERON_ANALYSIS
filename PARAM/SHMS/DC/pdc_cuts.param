@@ -6,7 +6,7 @@ p_using_tzero_per_wire = 1
 ; data with no tracking.
 psel_using_scin = 0
 
-; TDC window limits for each plane.
+; Default TDC window limits for each plane.
 ;pdc_tdc_min_win = -30000, -30000, -30000, -30000, -30000, -30000
 ;                  -30000, -30000, -30000, -30000, -30000, -30000
 ;pdc_tdc_max_win = 30000, 30000, 30000, 30000, 30000, 30000

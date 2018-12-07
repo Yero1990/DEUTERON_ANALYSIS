@@ -15,4 +15,11 @@ phgcer_adcrefcut=-3000.
 paero_adcrefcut=-3000.
 pcal_adcrefcut=-3000.
 
-
+; Default Ref TImes Set
+;pdc_tdcrefcut=-10000.
+;phodo_tdcrefcut=-1000.
+;phodo_adcrefcut=-1000.
+;pngcer_adcrefcut=-1000.
+;phgcer_adcrefcut=-1000.
+;paero_adcrefcut=-1000.
+;pcal_adcrefcut=-1000.

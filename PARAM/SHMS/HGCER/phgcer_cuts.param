@@ -16,6 +16,8 @@ phgcer_dp_max = 25.0
 
 ; ADC time window cut values used to select "good" ADC events
 phgcer_adc_tdc_offset = 200.0
+
+;Default Time WIndow
 ;phgcer_adcTimeWindowMin = -1000.,-1000.,-1000.,-1000.
 ;phgcer_adcTimeWindowMax = 1000.,1000.,1000.,1000.
 

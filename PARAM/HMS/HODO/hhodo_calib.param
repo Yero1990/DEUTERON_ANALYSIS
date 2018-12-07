@@ -2,7 +2,6 @@
 ; use htofusinginvadc=1 if want invadc_offset
 ;  invadc_linear, and invadc_adc to be used
 htofusinginvadc=0
-;hscin_tdc_to_time = 0.1                                                 
 
 hhodo_pos_invadc_offset =   -0.00,   -0.00,   -1.02,   -2.75
                             -0.00,   -1.47,   -1.00,   -3.24

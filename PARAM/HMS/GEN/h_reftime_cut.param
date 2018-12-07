@@ -6,6 +6,7 @@
 ; positive value refcut means that the the first reference time greater than the abs(refcut)
 ;     is used as reftime. If no ref time is found  greater than the abs(refcut) then no
 ;     reference time is used and warning message is produced.
+
 ; Cut is on reference time per detector.
 hdc_tdcrefcut=-15100.
 hhodo_tdcrefcut=-1600.
@@ -13,4 +14,10 @@ hhodo_adcrefcut=-2300.
 hcer_adcrefcut=-2300.
 hcal_adcrefcut=-2300.
 
+;Default Values
+;hdc_tdcrefcut=-10000.
+;hhodo_tdcrefcut=-1000.
+;hhodo_adcrefcut=-1000.
+;hcer_adcrefcut=-1000.
+;hcal_adcrefcut=-1000.
 
