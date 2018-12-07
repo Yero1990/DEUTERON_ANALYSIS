@@ -14,7 +14,7 @@
 ; do not change pdelta_offset from zero, use ppcentral_offset
 pdelta_offset = 0.0; (%)   hdelta_tar = hdelta_tar + hdelta_offset
 ; 
-ptheta_offset = 0.0 ; (rad) hyp_tar = hyp_tar + htheta_offset
+ptheta_offset = +5.77866424e-4 -2.4895872904e-4 + 1e-4; (rad) hyp_tar = hyp_tar + htheta_offset
 ;pphi_offset = -8.681269905E-4; (rad) hxp_tar = hxp_tar + hphi_offset
 pphi_offset = 0; (rad) hxp_tar = hxp_tar + hphi_offset
 
