@@ -28,7 +28,7 @@ void replay_production_hms_coin (Int_t RunNumber=0, Int_t MaxEvent=0, const char
   // Load Global parameters
   // Add variables to global list.
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
-  gHcParms->AddString("g_ctp_database_filename", "UTIL_COMM_ONEPASS/DBASE/COIN/STD/standard.database");
+  gHcParms->AddString("g_ctp_database_filename", "DEUTERON_ANALYSIS/DBASE/COIN/STD/standard.database");
   gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"), RunNumber);
   gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
   gHcParms->Load(gHcParms->GetString("g_ctp_calib_filename"));
@@ -170,11 +170,11 @@ void replay_production_hms_coin (Int_t RunNumber=0, Int_t MaxEvent=0, const char
   
 
   // Define output DEF-file 
-  TString DefTreeFile=Form("UTIL_COMM_ONEPASS/DEF-files/HMS/%s.def",ftype); 
+  TString DefTreeFile=Form("DEUTERON_ANALYSIS/DEF-files/HMS/%s.def",ftype); 
   analyzer->SetOdefFile(DefTreeFile);
   
   // Define cuts file
-  DefTreeFile="UTIL_COMM_ONEPASS/DEF-files/HMS/CUTS/hstackana_production_cuts.def"; 
+  DefTreeFile="DEUTERON_ANALYSIS/DEF-files/HMS/CUTS/hstackana_production_cuts.def"; 
   analyzer->SetCutFile(DefTreeFile);    // optional
  
   // File to record cuts accounting information for cuts
@@ -199,7 +199,7 @@ void replay_production_hms_coin (Int_t RunNumber=0, Int_t MaxEvent=0, const char
    }
 
   // Create report file from template.
-  analyzer->PrintReport("UTIL_COMM_ONEPASS/TEMPLATES/HMS/"+temp_file,
+  analyzer->PrintReport("DEUTERON_ANALYSIS/TEMPLATES/HMS/"+temp_file,
 			Form("REPORT_OUTPUT/HMS/PRODUCTION/replay_hms_coin_%s_%d_%d.report", ftype, RunNumber, MaxEvent));
 
 }

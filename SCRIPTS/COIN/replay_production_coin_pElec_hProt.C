@@ -1,4 +1,4 @@
-void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="heep_check") {
+void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="scaler") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -28,14 +28,14 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
-  gHcParms->AddString("g_ctp_database_filename", "UTIL_COMM_ONEPASS/DBASE/COIN/STD/standard.database");
+  gHcParms->AddString("g_ctp_database_filename", "DEUTERON_ANALYSIS/DBASE/COIN/STD/standard.database");
   gHcParms->Load(gHcParms->GetString("g_ctp_database_filename"),RunNumber);
   gHcParms->Load(gHcParms->GetString("g_ctp_parm_filename"));
   gHcParms->Load(gHcParms->GetString("g_ctp_calib_filename"), RunNumber);
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
 
   // Load params for COIN trigger configuration
-  gHcParms->Load("UTIL_COMM_ONEPASS/PARAM/TRIG/tcoin.param");
+  gHcParms->Load("DEUTERON_ANALYSIS/PARAM/TRIG/tcoin.param");
   //gHcParms->Load("PARAM/TRIG/tcoin.param");
 
   // Load the Hall C detector map
@@ -257,10 +257,10 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   // Define output ROOT file
   analyzer->SetOutFile(ROOTFileName.Data());
   // Define DEF-file+
-  TString DefTreeFile=Form("UTIL_COMM_ONEPASS/DEF-files/COIN/%s.def",ftype);
+  TString DefTreeFile=Form("DEUTERON_ANALYSIS/DEF-files/COIN/%s.def",ftype);
   analyzer->SetOdefFile(DefTreeFile);
   // Define cuts file
-    DefTreeFile="UTIL_COMM_ONEPASS/DEF-files/COIN/CUTS/coin_production_cuts.def";
+    DefTreeFile="DEUTERON_ANALYSIS/DEF-files/COIN/CUTS/coin_production_cuts.def";
   analyzer->SetCutFile(DefTreeFile);  // optional
   // File to record accounting information for cuts
   analyzer->SetSummaryFile(Form("REPORT_OUTPUT/COIN/PRODUCTION/summary_production_%s_%d_%d.report", ftype, RunNumber, MaxEvent));  // optional
@@ -272,7 +272,7 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   analyzer->Process(run);
   // Create report file from template
 
-  TString TemplateFile=Form("UTIL_COMM_ONEPASS/TEMPLATES/COIN/coin_production.template");
+  TString TemplateFile=Form("DEUTERON_ANALYSIS/TEMPLATES/COIN/coin_production.template");
 
 
 

@@ -3,17 +3,19 @@
 #code usage:  ./run_swif.sh [options]
 #where [options] ---> status,  delete
 
-workflow_name="D2_heep_3288_SHMSPCorr"
+workflow_name="Deuteron_Scaler_Replay"
 
-runlist_name="h2.dat"
+runlist_name="d2.dat"
 
 #Various optional flags to add to hcswif workflow
 mode=" --mode replay "
 spec=" --spectrometer COIN "
 events="--events -1"
+#range="--run 3368"   #"--run 3242-3387"
 filelist=" --run file $runlist_name "
-replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C "
-disk_usage=" --disk 3000000000 "   #in bytes (or 1 Gb default)
+#replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C "
+replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C " 
+disk_usage=" --disk 1000000000 "   #in bytes (or 1 Gb default)
 cpu_cores="--cpu 8"   #number of cpu cores requested 
 project=" --project c-comm2017 "
 workflow=" --name $workflow_name"

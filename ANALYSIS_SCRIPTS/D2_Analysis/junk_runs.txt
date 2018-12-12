@@ -1,0 +1,17 @@
+3242   -- Carbon Hole
+3265   -- Junk (NO beam)
+3319   -- Junk (NO beam)
+
+3369   -- Carbon Hole
+3370   -- Carbon Hole
+
+3378   -- Junk (NO beam)
+
+
+#! Run[f,0]/   hQ1_set[f,1]/   hQ2_set[f,2]/   hQ3_set[f,3]/    hD_set[f,4]/    NMR_TRUE[f,5]/  sHB_set[f,6]/    sQ1_set[f,7]/   sQ2_set[f,8]/   sQ3_set[f,9]/    sD_set[f,10]/   hms_Collimator[f,11]/  shms_Collimator[f,12]/  Target[f,13]/    Target_Mass[f,14]/    Raster[f,15]/   TFE[f,16]/    hms_Angle[f,17]/    shms_Angle[f,18]/
+3242    -nan    -nan    -nan    -nan    -nan    -nan    -nan    -nan    -nan    -nan    Home    Home    C-Hole    12.0107    -2147483648x-2147483648    10.5979
+3265    -nan    -nan    -nan    -nan    -nan    -nan    -nan    -nan    -nan    -nan    Large_Coll    Coll    LD2    2.0141    -2147483648x-2147483648    -nan
+3319    -nan    -nan    -nan    -nan    -nan    -nan    -nan    -nan    -nan    -nan    Large_Coll    Coll    LD2    2.0141    -2147483648x-2147483648    -nan
+3369    453.368    360.475    175.332    1069.2    0.952715    2941.44    1795.68    3016.17    1984.61    2732.87    Large_Coll    Coll    C-Hole    12.0107    2x2    10.5987
+3370    453.368    360.475    175.332    1069.2    0.952715    2941.44    1795.68    3016.17    1984.61    2732.87    Large_Coll    Coll    C-Hole    12.0107    2x2    10.5987
+3378    -nan    -nan    -nan    -nan    -nan    -nan    -nan    -nan    -nan    -nan    Large_Coll    Coll    LH2    1.00794    -2147483648x-2147483648    -nan
