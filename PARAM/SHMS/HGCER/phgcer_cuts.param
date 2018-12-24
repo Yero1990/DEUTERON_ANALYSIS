@@ -21,7 +21,7 @@ phgcer_adc_tdc_offset = 200.0
 ;phgcer_adcTimeWindowMin = -1000.,-1000.,-1000.,-1000.
 ;phgcer_adcTimeWindowMax = 1000.,1000.,1000.,1000.
 
-;Determined from run 3288
+;Determined from run 3288/3289
 phgcer_adcTimeWindowMin = -80, -80.00, -80.00, -80.00 
 phgcer_adcTimeWindowMax = 40.00, 40.00, 40.00, 40.00
 

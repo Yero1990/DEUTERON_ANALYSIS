@@ -3,30 +3,31 @@
 #code usage:  ./run_swif.sh [options]
 #where [options] ---> status,  delete
 
-workflow_name="Deuteron_Scaler_Replay"
+workflow_name="Deuteron_3286_Sieve"
 
-runlist_name="d2.dat"
+runlist_name=""
 
 #Various optional flags to add to hcswif workflow
 mode=" --mode replay "
 spec=" --spectrometer COIN "
 events="--events -1"
-#range="--run 3368"   #"--run 3242-3387"
-filelist=" --run file $runlist_name "
-#replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C "
-replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C " 
-disk_usage=" --disk 1000000000 "   #in bytes (or 1 Gb default)
+range="--run 3286"   #"--run 3242-3387"
+#filelist=" --run file $runlist_name "
+#replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C "
+replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_shms_coin.C " 
+disk_usage=" --disk 3000000000 "   #in bytes (or 1 Gb default)
 cpu_cores="--cpu 8"   #number of cpu cores requested 
 project=" --project c-comm2017 "
 workflow=" --name $workflow_name"
 
 
-CMD="python3 hcswif.py $mode $filelist $replay_script $disk_usage $cpu_cores $spec $events $project $workflow"
+CMD="python3 hcswif.py $mode $range $replay_script $disk_usage $cpu_cores $spec $events $project $workflow"
 #echo $CMD
 
 view_file="python3 -m json.tool ${workflow_name}.json"
 #echo $view_file
-import="swif import -file ${workflow_name}.json"                                                                                                                                                                              
+import="swif import -file ${workflow_name}.json"                
+                                                                                                                                                              
 #echo $import
 run="swif run $workflow_name"
 #echo $run

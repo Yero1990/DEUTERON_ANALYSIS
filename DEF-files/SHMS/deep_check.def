@@ -1,0 +1,31 @@
+#****************************
+#H(e,e'p) Check Definitions *
+#****************************
+
+#Kinematics
+block P.kin.*       
+
+#Focal Plane/Target Variables
+block P.dc.*fp*
+block P.dc.ntrack
+block P.gtr.*
+block P.react.*
+
+#Calibration checks 
+block P.dc.*wirenum*
+block P.dc.*time* 
+block P.dc.*dist*
+block P.dc.*residual*  
+block P.dc.*nhit* 
+block P.hod.beta*
+block P.hgcer.npeSum*
+block P.ngcer.npeSum* 
+block P.cal.etot*
+block P.cal.etrack*
+block P.cal.*track*
+block P.hod.*Track*
+
+#Rastered Beam
+block P.rb.*
+
+block P.extcor.*

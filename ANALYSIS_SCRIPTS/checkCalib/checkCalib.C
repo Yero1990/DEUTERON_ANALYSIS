@@ -13,8 +13,15 @@ void checkCalib(string spec, string detec, int run)
   
 
   //Create a directory where to store the plots and output root file
-  mkdir(Form("./%s_Calib_%d", spec.c_str(), run), S_IRWXU);
+  if (spec.compare("all")==0 ){
+    mkdir(Form("./hms_Calib_%d", run), S_IRWXU);
+    mkdir(Form("./shms_Calib_%d", run), S_IRWXU);
+	
+  }
 
+  else{
+  mkdir(Form("./%s_Calib_%d", spec.c_str(), run), S_IRWXU);
+  }
   
   //=============================
   //INITIALIZE HISTOGRAM BINNING
@@ -72,15 +79,22 @@ void checkCalib(string spec, string detec, int run)
   //TString filename = "../../../ROOTfiles/coin_replay_coin_all_3288_20000.root";
   //TString filename = "../../../ROOTfiles/coin_replay_hod_calib_3288_50000.root"; 
   //TString filename = "../../../ROOTfiles/coin_replay_hdc_calib_3288_-1_hdcCalib.root";
-  TString filename = Form("../../../ROOTfiles/coin_replay_dc_calib_%d_-1.root", run);
+  TString filename = Form("../../../ROOTfiles/coin_replay_deep_check_%d_-1.root", run);
   
   TFile *data_file = new TFile(filename, "READ");
   TTree *T = (TTree*)data_file->Get("T");
   
-
+  TFile *houtROOT;
+  TFile *poutROOT;
+  TFile *outROOT;
   //Create output root file where histograms will be stored
-  TFile *outROOT = new TFile(Form("./%s_Calib_%d/%s_Calib_histos%d.root", spec.c_str(), run, spec.c_str(), run), "recreate");
-
+  if (spec.compare("all")==0 ){
+    houtROOT = new TFile(Form("./hms_Calib_%d/hms_Calib_histos%d.root", run, run), "recreate");
+    poutROOT = new TFile(Form("./shms_Calib_%d/shms_Calib_histos%d.root", run, run), "recreate");
+  }
+  else{
+    outROOT = new TFile(Form("./%s_Calib_%d/%s_Calib_histos%d.root", spec.c_str(), run, spec.c_str(), run), "recreate");
+  }
 
   //===========================
   //===Set Branch Address======
@@ -489,10 +503,12 @@ void checkCalib(string spec, string detec, int run)
   //===== DRAW CANVAS ======
   //========================
   
-  if(spec.compare("hms")==0)
-    {
-      if(detec.compare("dc")==0)
-	{
+  //if(spec.compare("hms")==0 || spec.compare("all")==0)
+  //{
+      spec = "hms";
+      //  if(detec.compare("dc")==0 || detec.compare("all")==0)
+      //{
+      //  detec = "dc";
       //===HMS Drift Chambers===
       
       hdcTimeCanv = new TCanvas("hDC Times", "HMS DC TIMES",  1500, 500);
@@ -558,42 +574,42 @@ void checkCalib(string spec, string detec, int run)
       
       
       
-  TGraph *gr_mean = new TGraph(12, x, mean);
+  TGraph *hgr_mean = new TGraph(12, x, mean);
   
   //Change to SupPad 2 to plot mean
   hdcResGraphCanv->cd(1);
   //dcResGraphCanv->SetGrid();
-  gr_mean->SetMarkerStyle(22);
-  gr_mean->SetMarkerColor(kBlue);
-  gr_mean->SetMarkerSize(2);
-  gr_mean->GetYaxis()->SetRangeUser(-250, 250);
+  hgr_mean->SetMarkerStyle(22);
+  hgr_mean->SetMarkerColor(kBlue);
+  hgr_mean->SetMarkerSize(2);
+  hgr_mean->GetYaxis()->SetRangeUser(-250, 250);
   
   //Set Axis Titles
-  gr_mean->GetXaxis()->SetTitle("HMS DC Planes Residuals");
-  gr_mean->GetXaxis()->CenterTitle();
-  gr_mean->GetYaxis()->SetTitle("HMS DC Residual Mean (#mum)");
-  gr_mean->GetYaxis()->CenterTitle();
-  gr_mean->SetTitle("HMS DC Plane Residuals Mean");
+  hgr_mean->GetXaxis()->SetTitle("HMS DC Planes Residuals");
+  hgr_mean->GetXaxis()->CenterTitle();
+  hgr_mean->GetYaxis()->SetTitle("HMS DC Residual Mean (#mum)");
+  hgr_mean->GetYaxis()->CenterTitle();
+  hgr_mean->SetTitle("HMS DC Plane Residuals Mean");
   
-  gr_mean->Draw("AP");
+  hgr_mean->Draw("AP");
   
   
   //Change to SubPad 1 to plot sigma
   hdcResGraphCanv->cd(2);
-  TGraph *gr_residual = new TGraph(12, x, sigma);
+  TGraph *hgr_residual = new TGraph(12, x, sigma);
   //dcResGraphCanv->SetGrid();
-  gr_residual->SetMarkerStyle(22);
-  gr_residual->SetMarkerColor(kRed);
-  gr_residual->SetMarkerSize(2);
-  gr_residual->GetYaxis()->SetRangeUser(0, 1000.);
+  hgr_residual->SetMarkerStyle(22);
+  hgr_residual->SetMarkerColor(kRed);
+  hgr_residual->SetMarkerSize(2);
+  hgr_residual->GetYaxis()->SetRangeUser(0, 1000.);
   
   //Set Axis Titles
-  gr_residual->GetXaxis()->SetTitle("HMS DC Planes Residuals");
-  gr_residual->GetXaxis()->CenterTitle();
-  gr_residual->GetYaxis()->SetTitle("HMS DC Residual #sigma (#mum)");
-  gr_residual->GetYaxis()->CenterTitle();
-  gr_residual->SetTitle("HMS DC Plane Residuals Sigma");
-  gr_residual->Draw("AP");
+  hgr_residual->GetXaxis()->SetTitle("HMS DC Planes Residuals");
+  hgr_residual->GetXaxis()->CenterTitle();
+  hgr_residual->GetYaxis()->SetTitle("HMS DC Residual #sigma (#mum)");
+  hgr_residual->GetYaxis()->CenterTitle();
+  hgr_residual->SetTitle("HMS DC Plane Residuals Sigma");
+  hgr_residual->Draw("AP");
   hdcResGraphCanv->Update();
 
   hdcTimeCanv->SaveAs(Form("./%s_Calib_%d/hDC_Times.pdf", spec.c_str(), run));
@@ -607,10 +623,11 @@ void checkCalib(string spec, string detec, int run)
   
   hdcResCanvProf->SaveAs(Form("./%s_Calib_%d/hDC_ResProfile.pdf", spec.c_str(), run));
   hdcResGraphCanv->SaveAs(Form("./%s_Calib_%d/hDC_ResPlot.pdf", spec.c_str(), run));
-	}
+  //}
 
-      if(detec.compare("cal")==0)
-	{
+  //  if(detec.compare("cal")==0 || detec.compare("all")==0)
+  //	{
+  //	  detec = "cal";
   //====CALORIMETERS====
   hcalCanv = new TCanvas("HMS Calorimeter Canv" , "HMS Calorimeter Plots", 1500, 500);
   hcalCanv->Divide(3,2);
@@ -630,9 +647,10 @@ void checkCalib(string spec, string detec, int run)
   
 
   hcalCanv->SaveAs(Form("./%s_Calib_%d/hCal_CalibPlots.pdf", spec.c_str(), run));
-	}					
-      if(detec.compare("hod")==0)
-	{
+  //	}					
+  //  if(detec.compare("hod")==0 || detec.compare("all")==0)
+  //	{
+  //	  detec = "hod";
   //======HODOSCOPOES=====
   hhodCanv = new TCanvas("HMS Hodoscope Beta Canv" , "HMS Hodoscope Beta Plots", 1500, 500);
   hhodCanv->Divide(2,1);
@@ -675,10 +693,11 @@ void checkCalib(string spec, string detec, int run)
   hhodCanv->SaveAs(Form("./%s_Calib_%d/hHodBetaPlots.pdf", spec.c_str(), run));
   hhodCanv2D->SaveAs(Form("./%s_Calib_%d/hHodBeta2DPlots.pdf", spec.c_str(), run));
   hhodProfCanv->SaveAs(Form("./%s_Calib_%d/hHodBetaProfilePlots.pdf", spec.c_str(), run));
-	}
+  //	}
       
-      if(detec.compare("cer")==0)
-	{
+  //  if(detec.compare("cer")==0 || detec.compare("all")==0)
+  //	{
+  //	  detec = "cer";
   //====CHERENKOV====
   hcerCanv = new TCanvas("HMS Cherenkov", "HMS Cherenkov Calib. Plots", 1500, 500);
   hcerCanv->Divide(3,1);
@@ -690,19 +709,30 @@ void checkCalib(string spec, string detec, int run)
   H_hcerNpeSum->Draw();
   
   hcerCanv->SaveAs(Form("./%s_Calib_%d/hCer.pdf", spec.c_str(), run));
-	}
+  //	}
   
   //Write Histograms to ROOT file
-  outROOT->Write();
-  outROOT->Close();
-    }
+        if (spec.compare("all")==0 || spec.compare("hms")==0  ){
+	  
+	  houtROOT->Write();
+	  houtROOT->Close();
+	  
+	}
+	else{
+	  outROOT->Write();
+	  outROOT->Close();
+	}
+
+	//}
   
-  if(spec.compare("shms")==0)
-    {
+	//if(spec.compare("shms")==0 || spec.compare("all")==0)
+	//{
 
-      if(detec.compare("dc")==0)
-	{
+	spec = "shms";
 
+      //if(detec.compare("dc")==0 || detec.compare("all")==0)
+      //{
+      //  detec = "dc";
       //===SHMS Drift Chambers===
       
       pdcTimeCanv = new TCanvas("pDC Times", "SHMS DC TIMES",  1500, 500);
@@ -768,42 +798,42 @@ void checkCalib(string spec, string detec, int run)
       
       
       
-  TGraph *gr_mean = new TGraph(12, x, mean);
+  TGraph *pgr_mean = new TGraph(12, x, mean);
   
   //Change to SupPad 2 to plot mean
   pdcResGraphCanv->cd(1);
   //dcResGraphCanv->SetGrid();
-  gr_mean->SetMarkerStyle(22);
-  gr_mean->SetMarkerColor(kBlue);
-  gr_mean->SetMarkerSize(2);
-  gr_mean->GetYaxis()->SetRangeUser(-250, 250);
+  pgr_mean->SetMarkerStyle(22);
+  pgr_mean->SetMarkerColor(kBlue);
+  pgr_mean->SetMarkerSize(2);
+  pgr_mean->GetYaxis()->SetRangeUser(-250, 250);
   
   //Set Axis Titles
-  gr_mean->GetXaxis()->SetTitle("SHMS DC Planes Residuals");
-  gr_mean->GetXaxis()->CenterTitle();
-  gr_mean->GetYaxis()->SetTitle("SHMS DC Residual Mean (#mum)");
-  gr_mean->GetYaxis()->CenterTitle();
-  gr_mean->SetTitle("SHMS DC Plane Residuals Mean");
+  pgr_mean->GetXaxis()->SetTitle("SHMS DC Planes Residuals");
+  pgr_mean->GetXaxis()->CenterTitle();
+  pgr_mean->GetYaxis()->SetTitle("SHMS DC Residual Mean (#mum)");
+  pgr_mean->GetYaxis()->CenterTitle();
+  pgr_mean->SetTitle("SHMS DC Plane Residuals Mean");
   
-  gr_mean->Draw("AP");
+  pgr_mean->Draw("AP");
   
   
   //Change to SubPad 1 to plot sigma
   pdcResGraphCanv->cd(2);
-  TGraph *gr_residual = new TGraph(12, x, sigma);
+  TGraph *pgr_residual = new TGraph(12, x, sigma);
   //dcResGraphCanv->SetGrid();
-  gr_residual->SetMarkerStyle(22);
-  gr_residual->SetMarkerColor(kRed);
-  gr_residual->SetMarkerSize(2);
-  gr_residual->GetYaxis()->SetRangeUser(0, 1000.);
+  pgr_residual->SetMarkerStyle(22);
+  pgr_residual->SetMarkerColor(kRed);
+  pgr_residual->SetMarkerSize(2);
+  pgr_residual->GetYaxis()->SetRangeUser(0, 1000.);
   
   //Set Axis Titles
-  gr_residual->GetXaxis()->SetTitle("SHMS DC Planes Residuals");
-  gr_residual->GetXaxis()->CenterTitle();
-  gr_residual->GetYaxis()->SetTitle("SHMS DC Residual #sigma (#mum)");
-  gr_residual->GetYaxis()->CenterTitle();
-  gr_residual->SetTitle("SHMS DC Plane Residuals Sigma");
-  gr_residual->Draw("AP");
+  pgr_residual->GetXaxis()->SetTitle("SHMS DC Planes Residuals");
+  pgr_residual->GetXaxis()->CenterTitle();
+  pgr_residual->GetYaxis()->SetTitle("SHMS DC Residual #sigma (#mum)");
+  pgr_residual->GetYaxis()->CenterTitle();
+  pgr_residual->SetTitle("SHMS DC Plane Residuals Sigma");
+  pgr_residual->Draw("AP");
   pdcResGraphCanv->Update();
 
   pdcTimeCanv->SaveAs(Form("./%s_Calib_%d/pDC_Times.pdf", spec.c_str(), run));
@@ -817,10 +847,11 @@ void checkCalib(string spec, string detec, int run)
   
   pdcResCanvProf->SaveAs(Form("./%s_Calib_%d/pDC_ResProfile.pdf", spec.c_str(), run));
   pdcResGraphCanv->SaveAs(Form("./%s_Calib_%d/pDC_ResPlot.pdf", spec.c_str(), run));
-	}
+  //}
 
-      if(detec.compare("cal")==0)
-	{
+  //  if(detec.compare("cal")==0 || detec.compare("all")==0)
+  //	{
+  //	  detec = "cal";
   //====CALORIMETERS====
   pcalCanv = new TCanvas("SHMS Calorimeter Canv" , "SHMS Calorimeter Plots", 1500, 500);
   pcalCanv->Divide(3,2);
@@ -840,11 +871,12 @@ void checkCalib(string spec, string detec, int run)
   
 
   pcalCanv->SaveAs(Form("./%s_Calib_%d/pCal_CalibPlots.pdf", spec.c_str(), run));
-	}
+  //	}
    
 
-      if(detec.compare("hod")==0)					
-	{
+  //  if(detec.compare("hod")==0 || detec.compare("all")==0)					
+  //	{
+  //	  detec = "hod";
   //======HODOSCOPOES=====
   phodCanv = new TCanvas("SHMS Hodoscope Beta Canv" , "SHMS Hodoscope Beta Plots", 1500, 500);
   phodCanv->Divide(2,1);
@@ -887,10 +919,11 @@ void checkCalib(string spec, string detec, int run)
   phodCanv->SaveAs(Form("./%s_Calib_%d/pHodBetaPlots.pdf", spec.c_str(), run));
   phodCanv2D->SaveAs(Form("./%s_Calib_%d/pHodBeta2DPlots.pdf", spec.c_str(), run));
   phodProfCanv->SaveAs(Form("./%s_Calib_%d/pHodBetaProfilePlots.pdf", spec.c_str(), run));
-	}
+  //	}
 
-      if(detec.compare("cer")==0)
-	{
+  //  if(detec.compare("cer")==0 || detec.compare("all")==0)
+  //	{
+  //	  detec = "cer";
   //====CHERENKOVS====
   phgcerCanv = new TCanvas("SHMS HGCER", "SHMS HGCER Calib. Plots", 1500, 1500);
   pngcerCanv = new TCanvas("SHMS NGCER", "SHMS NGCER Calib. Plots", 1500, 1500);
@@ -932,13 +965,18 @@ void checkCalib(string spec, string detec, int run)
 
   phgcerSumCanv->SaveAs(Form("./%s_Calib_%d/pHGCER_SUM.pdf", spec.c_str(), run));
   pngcerSumCanv->SaveAs(Form("./%s_Calib_%d/pNGCER_SUM.pdf", spec.c_str(), run));
-	}
+  //	}
   //Write Histograms to ROOT file
-  outROOT->Write();
-  outROOT->Close();
-  
+      if (spec.compare("all")==0 || spec.compare("shms")==0){
+	poutROOT->Write();
+	poutROOT->Close();
+      }
+      else{
+	outROOT->Write();
+	outROOT->Close();
+      }
 
-    }
+      //}
 
 
 }

@@ -32,15 +32,24 @@ block P.cal.etrack*
 block P.cal.*track*
 block P.hod.*Track*
 
+
 block H.dc.*wirenum*                  
 block H.dc.*time*
 block H.dc.*dist*               
 block H.dc.*residual*       
 block H.dc.*nhit*             
-          
 block H.hod.beta*                    
 block H.cer.npeSum*                  
 block H.cal.etot*                 
 block H.cal.etrack*            
 block H.cal.*track* 
 block H.hod.*Track*    
+
+
+#Sieve Analysis
+block P.extcor.*
+block H.extcor.*
+
+#Rastered Beam
+block P.rb.*
+block H.rb.*

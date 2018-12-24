@@ -31,22 +31,22 @@ void setTimeWindows(int run, string trg)
   //========================================
   //====Create Directories to Save Plots====
   //========================================
-  mkdir(Form("refTime_cuts_%d", run), S_IRWXU);
-  mkdir(Form("refTime_cuts_%d/HMS", run), S_IRWXU);
-  mkdir(Form("refTime_cuts_%d/SHMS", run), S_IRWXU);
+  mkdir(Form("Time_cuts_%d", run), S_IRWXU);
+  mkdir(Form("Time_cuts_%d/HMS", run), S_IRWXU);
+  mkdir(Form("Time_cuts_%d/SHMS", run), S_IRWXU);
   //Create HMS Detectors Dir
-  mkdir(Form("refTime_cuts_%d/HMS/TRG", run), S_IRWXU);
-  mkdir(Form("refTime_cuts_%d/HMS/CER", run), S_IRWXU);
-  mkdir(Form("refTime_cuts_%d/HMS/HODO", run), S_IRWXU);
-  mkdir(Form("refTime_cuts_%d/HMS/CAL", run), S_IRWXU);
-  mkdir(Form("refTime_cuts_%d/HMS/DC", run), S_IRWXU);
+  mkdir(Form("Time_cuts_%d/HMS/refTime", run), S_IRWXU);
+  mkdir(Form("Time_cuts_%d/HMS/CER", run), S_IRWXU);
+  mkdir(Form("Time_cuts_%d/HMS/HODO", run), S_IRWXU);
+  mkdir(Form("Time_cuts_%d/HMS/CAL", run), S_IRWXU);
+  mkdir(Form("Time_cuts_%d/HMS/DC", run), S_IRWXU);
   
   //Create sHMS Detectors Dir
-  mkdir(Form("refTime_cuts_%d/SHMS/TRG", run), S_IRWXU);
-  mkdir(Form("refTime_cuts_%d/SHMS/CER", run), S_IRWXU);
-  mkdir(Form("refTime_cuts_%d/SHMS/HODO", run), S_IRWXU);
-  mkdir(Form("refTime_cuts_%d/SHMS/CAL", run), S_IRWXU);
-  mkdir(Form("refTime_cuts_%d/SHMS/DC", run), S_IRWXU);
+  mkdir(Form("Time_cuts_%d/SHMS/refTime", run), S_IRWXU);
+  mkdir(Form("Time_cuts_%d/SHMS/CER", run), S_IRWXU);
+  mkdir(Form("Time_cuts_%d/SHMS/HODO", run), S_IRWXU);
+  mkdir(Form("Time_cuts_%d/SHMS/CAL", run), S_IRWXU);
+  mkdir(Form("Time_cuts_%d/SHMS/DC", run), S_IRWXU);
 
 
   
@@ -100,13 +100,19 @@ void setTimeWindows(int run, string trg)
   //====OPEN ROOT FILE=======
   //=========================
   
-  string daq = "coin";    //or hms, shms  (single arm mode)
   string rtype = "coin";  //or "hms", "shms"  (singles in coin mode)
-  
-  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3288_-1_noCUTSset.root";
-  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3288_-1.root";                                         
-  //TString filename = "../../../ROOTfiles/hms_replay_timeWin_check_1649_25000.root";                                 
-  TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3374_-1.root";                                         
+                                
+  //Random Deuteron Experiemtn Runs, to verify that the quantities we are placing a cut on DO NOT MOVE significantly.
+  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3248_-1.root";                                         
+  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3268_-1.root";                                         
+  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3289_-1.root";                                         
+  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3305_-1.root";                                         
+  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3342_-1.root";                                         
+  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3371_-1.root";                                         
+  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3386_-1.root";                                         
+
+  TString filename = Form("../../../ROOTfiles/coin_replay_timeWin_check_%d_-1.root", run);                                         
+
 
   //TString filename = "../../../ROOTfiles/shms_replay_timeWin_check_1791_-1.root";
   //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3288_-1_refCUTset.root";
@@ -116,7 +122,7 @@ void setTimeWindows(int run, string trg)
   TTree *T = (TTree*)data_file->Get("T");
   
   //Create output root file where histograms will be stored
-  TFile *outROOT = new TFile(Form("./refTime_cuts_%d/%s_histos_run%d.root", run, rtype.c_str(), run), "recreate");
+  TFile *outROOT = new TFile(Form("./Time_cuts_%d/%s_histos_run%d.root", run, rtype.c_str(), run), "recreate");
         
 
 
@@ -693,7 +699,7 @@ void setTimeWindows(int run, string trg)
   hFADC_Line->SetLineWidth(3);
   hFADC_Line->Draw();
   
-  hms_REF_Canv->SaveAs(Form("refTime_cuts_%d/HMS/TRG/hms_REFTime_cuts.pdf", run));
+  hms_REF_Canv->SaveAs(Form("Time_cuts_%d/HMS/refTime/hms_REFTime_cuts.pdf", run));
   
   
   //SHMS
@@ -741,7 +747,7 @@ void setTimeWindows(int run, string trg)
   pFADC_Line->SetLineWidth(3);
   pFADC_Line->Draw();
   
-  shms_REF_Canv->SaveAs(Form("refTime_cuts_%d/SHMS/TRG/shms_REFTime_cuts.pdf", run));
+  shms_REF_Canv->SaveAs(Form("Time_cuts_%d/SHMS/refTime/shms_REFTime_cuts.pdf", run));
   
   
   
@@ -799,7 +805,7 @@ void setTimeWindows(int run, string trg)
   ptrg4r2_LineMin->Draw();
   ptrg4r2_LineMax->Draw();
 
-  pTRG_Canv->SaveAs(Form("refTime_cuts_%d/coin_trg_tWin.pdf",run));
+  pTRG_Canv->SaveAs(Form("Time_cuts_%d/coin_trg_tWin.pdf",run));
   
   //===========
   //Cherenkovs
@@ -898,9 +904,9 @@ void setTimeWindows(int run, string trg)
   
 
   //Save CHerenkovs to Canvas
-  hCer_Canv->SaveAs(Form("refTime_cuts_%d/HMS/CER/hCER_timeWindow.pdf",run));
-  phgCer_Canv->SaveAs(Form("refTime_cuts_%d/SHMS/CER/pHGCER_timeWindow.pdf",run));
-  pngCer_Canv->SaveAs(Form("refTime_cuts_%d/SHMS/CER/pNGCER_timeWindow.pdf",run));
+  hCer_Canv->SaveAs(Form("Time_cuts_%d/HMS/CER/hCER_timeWindow.pdf",run));
+  phgCer_Canv->SaveAs(Form("Time_cuts_%d/SHMS/CER/pHGCER_timeWindow.pdf",run));
+  pngCer_Canv->SaveAs(Form("Time_cuts_%d/SHMS/CER/pNGCER_timeWindow.pdf",run));
   
   //==================
   //==Drift Chambers==
@@ -958,8 +964,8 @@ void setTimeWindows(int run, string trg)
   
   
   //Save DC to Canvas
-  hdcCanv->SaveAs(Form("refTime_cuts_%d/HMS/DC/hDC_rawTDC_window.pdf",run));
-  pdcCanv->SaveAs(Form("refTime_cuts_%d/SHMS/DC/pDC_rawTDC_window.pdf",run));
+  hdcCanv->SaveAs(Form("Time_cuts_%d/HMS/DC/hDC_rawTDC_window.pdf",run));
+  pdcCanv->SaveAs(Form("Time_cuts_%d/SHMS/DC/pDC_rawTDC_window.pdf",run));
   
   
   //HODOSCOPES / CALORIMETERS
@@ -1254,19 +1260,19 @@ void setTimeWindows(int run, string trg)
 	
 	  
 	  
-	  hhodoCanv[npl][iside]->SaveAs(Form("refTime_cuts_%d/HMS/HODO/hHodo_%s%s.pdf",run, hod_pl_names[npl].c_str(), side_names[iside].c_str()));
-	  phodoCanv[npl][iside]->SaveAs(Form("refTime_cuts_%d/SHMS/HODO/pHodo_%s%s.pdf",run, hod_pl_names[npl].c_str(), side_names[iside].c_str()));
+	  hhodoCanv[npl][iside]->SaveAs(Form("Time_cuts_%d/HMS/HODO/hHodo_%s%s.pdf",run, hod_pl_names[npl].c_str(), side_names[iside].c_str()));
+	  phodoCanv[npl][iside]->SaveAs(Form("Time_cuts_%d/SHMS/HODO/pHodo_%s%s.pdf",run, hod_pl_names[npl].c_str(), side_names[iside].c_str()));
 	  
 	  if (!(npl==2&&iside==1) && !(npl==3&&iside==1)){
-	    hcaloCanv[npl][iside]->SaveAs(Form("refTime_cuts_%d/HMS/CAL/hCalo_%s%s.pdf", run,cal_pl_names[npl].c_str(), side_names[iside].c_str()));
+	    hcaloCanv[npl][iside]->SaveAs(Form("Time_cuts_%d/HMS/CAL/hCalo_%s%s.pdf", run,cal_pl_names[npl].c_str(), side_names[iside].c_str()));
 	  }
 	  
 	  if(npl==0){
-	    pPrshCanv[iside]->SaveAs(Form("refTime_cuts_%d/SHMS/CAL/pPrsh_%s.pdf",run, side_names[iside].c_str()));
+	    pPrshCanv[iside]->SaveAs(Form("Time_cuts_%d/SHMS/CAL/pPrsh_%s.pdf",run, side_names[iside].c_str()));
 	  }
 	  
 	  if(npl==0&&iside==0){
-	    pcalCanv->SaveAs(Form("refTime_cuts_%d/SHMS/CAL/pCal.pdf",run));
+	    pcalCanv->SaveAs(Form("Time_cuts_%d/SHMS/CAL/pCal.pdf",run));
 	  }
 	  
 	} //end side loop
@@ -1322,7 +1328,7 @@ void setTimeWindows(int run, string trg)
        }//end loop over rows
      
      //Save Each Cal. Column
-     pcalCanv_alt[row]->SaveAs(Form("refTime_cuts_%d/SHMS/CAL/pCal_row%d.pdf",run, row+1));
+     pcalCanv_alt[row]->SaveAs(Form("Time_cuts_%d/SHMS/CAL/pCal_row%d.pdf",run, row+1));
      
    }//end loop over columns
  

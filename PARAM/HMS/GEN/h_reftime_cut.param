@@ -8,6 +8,8 @@
 ;     reference time is used and warning message is produced.
 
 ; Cut is on reference time per detector.
+
+;Determiend from D2 Heep Coin Run 3288/3289
 hdc_tdcrefcut=-15100.
 hhodo_tdcrefcut=-1600.
 hhodo_adcrefcut=-2300.
