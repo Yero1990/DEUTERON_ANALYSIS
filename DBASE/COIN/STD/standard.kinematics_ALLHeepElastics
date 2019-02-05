@@ -1,0 +1,195 @@
+#---------ALL H(e,e'p) RUNS (Spring 2018)----------
+
+#HMS Electrons: Coincidence Runs (NOT all runs in a group are necessarily good. There is a list of good runs.)
+
+#g1_coin
+1871-1877
+gpbeam = 6.42765
+gtargmass_amu = 1.00794
+hpartmass = 0.00051099
+ppartmass = 0.938272
+htheta_lab = -27.502
+ptheta_lab = 27.619
+hpcentral = 3.6096
+ppcentral = 3.609
+
+#g2_coin
+1878-1883
+gpbeam = 6.42765
+gtargmass_amu = 1.00794
+hpartmass = 0.00051099
+ppartmass = 0.938272
+htheta_lab = -27.511
+ptheta_lab = 27.62
+hpcentral = 3.6096
+ppcentral = 3.609
+
+#g3_coin
+1951-1952
+gpbeam = 6.42765
+gtargmass_amu = 1.00794
+hpartmass = 0.00051099
+ppartmass = 0.938272
+htheta_lab = -50.002
+ptheta_lab = 15.38
+hpcentral = 1.864
+ppcentral = 5.41
+
+#g4_coin
+2046-2066
+gpbeam = 6.42765
+gtargmass_amu = 1.00794
+hpartmass = 0.00051099
+ppartmass = 0.938272
+htheta_lab = -45.109
+ptheta_lab = 17.119
+hpcentral = 2.131
+ppcentral = 5.122
+
+#g6_coin
+2406-2435
+gpbeam = 10.6005
+gtargmass_amu = 1.00794
+hpartmass = 0.00051099
+ppartmass = 0.938272
+htheta_lab = -39.28
+ptheta_lab = 12.799
+hpcentral = 2.982
+ppcentral = 8.505
+
+#g7_coin
+2452-2464
+gpbeam = 10.6005
+gtargmass_amu = 1.00794
+hpartmass = 0.00051099
+ppartmass = 0.938272
+htheta_lab = -28.505
+ptheta_lab = 17.829
+hpcentral = 4.478
+ppcentral = 7.001
+
+#g8_coin
+1722
+gpbeam = 2.22178
+gtargmass_amu = 1.00794
+hpartmass = 0.00051099
+ppartmass = 0.938272
+htheta_lab = -65.109
+ptheta_lab = 24.995
+hpcentral = 0.936
+ppcentral = 2.012
+
+#g9_coin
+1920
+gpbeam = 6.42765
+gtargmass_amu = 1.00794
+hpartmass = 0.00051099
+ppartmass = 0.938272
+htheta_lab = -22.009
+ptheta_lab = 33.078
+hpcentral = 4.3139
+ppcentral = 2.925
+
+#g10_coin
+1929
+gpbeam = 6.42765
+gtargmass_amu = 1.00794
+hpartmass = 0.00051099
+ppartmass = 0.938272
+htheta_lab = -35.0
+ptheta_lab = 22.049
+hpcentral = 2.8714
+ppcentral = 4.38
+
+
+
+#HMS Protons: Coincidence Runs (NOT all runs in a group are necessarily good. There is a list of good runs.)
+
+#kg_1
+1719
+gpbeam = 2.22178
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+ppartmass = 0.00051099
+htheta_lab = -47.915
+ptheta_lab = 29.995
+hpcentral = 1.136
+ppcentral = 1.555
+
+#kg_2
+1851-1867
+gpbeam = 6.42765
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+ppartmass = 0.00051099
+htheta_lab = -27.502
+ptheta_lab = 27.619
+hpcentral = 3.6196
+ppcentral = 3.609
+
+#kg_3
+1894-1901
+gpbeam = 6.42765
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+ppartmass = 0.00051099
+htheta_lab = -27.511
+ptheta_lab = 27.615
+hpcentral = 3.6
+ppcentral = 3.6
+
+#-----DEUTERON EXPERIMENT HEEP ELASTICS-----
+#kg_4
+3248
+gpbeam = 10.6005
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+ppartmass = 0.00051099
+htheta_lab = -37.29
+ptheta_lab = 12.2
+hpcentral = 2.9382
+ppcentral = 8.7
+
+#kg_5
+3288
+gpbeam = 10.6005*1.0008
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+ppartmass = 0.00051099
+htheta_lab = -37.338
+ptheta_lab = 12.194
+hpcentral = 2.938*0.999
+ppcentral = 8.7
+
+#kg_6
+3371
+gpbeam = 10.6005*1.0008
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+ppartmass = 0.00051099
+htheta_lab = -33.545
+ptheta_lab = 13.93
+hpcentral = 3.48*0.999
+ppcentral = 8.7
+
+#kg_7
+3374
+gpbeam = 10.6005*1.0008
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+ppartmass = 0.00051099
+htheta_lab = -42.9
+ptheta_lab = 9.928
+hpcentral = 2.31*0.999
+ppcentral = 8.7
+
+#kg_8
+3377
+gpbeam = 10.6005*1.0008
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+ppartmass = 0.00051099
+htheta_lab = -47.605
+ptheta_lab = 8.495
+hpcentral = 1.8899*0.999
+ppcentral = 8.7

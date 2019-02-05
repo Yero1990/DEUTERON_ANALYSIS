@@ -2,7 +2,7 @@
 ; The pdelta_offset,ptheta_offset,pphi_offset effect the
 ; reconstructed target quantities. 
 ; For transport x is in the dispersive direction with + down
-;               y is in the horizontal + towards small angles.
+;               y is in the horizontal + towards larger angles.
 ;               z is along the central optics axis.
 ; In transport coordinates phi = hyptar = dy/dz and theta = hxptar = dx/dz 
 ;    but for unknown reasons the yp offset is named  htheta_offset
@@ -13,19 +13,38 @@
 
 ; do not change pdelta_offset from zero, use ppcentral_offset
 pdelta_offset = 0.0; (%)   hdelta_tar = hdelta_tar + hdelta_offset
-; 
-;ptheta_offset = +5.77866424e-4 -2.4895872904e-4 + 1e-4; (rad) hyp_tar = hyp_tar + htheta_offset
-ptheta_offset = 4.29e-4; ;Determined on Dec 1-6, 2018 for Deuteron Heep Elastics
+
+ 
+
+;ptheta_offset = 0.0  ; (rad) hyp_tar = hyp_tar + htheta_offset
+;ptheta_offset = -4.75e-4   ;Determined on Jan 26, 2019, 3288 D2 Heep run
+;ptheta_offset = -2.04e-5   ;Determined on Jan 26, 2019, 3371 D2 Heep run
+;ptheta_offset = -1.81e-4   ;Determined on Jan 26, 2019, 3374 D2 Heep run
+;ptheta_offset = -7.20e-5   ;Determined on Jan 26, 2019, 3377 D2 Heep run
+
+                             
+
 
 ;pphi_offset = -8.681269905E-4; (rad) hxp_tar = hxp_tar + hphi_offset
 pphi_offset = 0; (rad) hxp_tar = hxp_tar + hphi_offset
 
 ; The following offsets are applied to the central kinematic variables
-;      ptheta_lab=htheta_lab + pthetacentral_offset/degree 
+;ptheta_lab=ptheta_lab + pthetacentral_offset   [rad]
+
 pthetacentral_offset = 0.0
+
 p_oopcentral_offset = 0.0
+
+
 ;  SHMS central momentum offset determined from carbon elastic data fall 2017
 ; sets ppcentral = ppcentral * ( 1. + ppcentral_offset / 100. )
-ppcentral_offset = 0.0
 
+;ppcentral_offset = 0.0   ; (in %)
+
+;-FIRST - SECOND --> "00000" coefficients from iterative delta optimizations (in %)   
+;(100 + (-1.75647222 - 0.008546) = 98.234982% )  --> SHMS P corr = P_epics * 0.98234982 = 8.7 * 0.98234982 = 8.546443 GeV
+;The THIRD term added was obtained from Emiss Alignment, dEm = Em_simc - Em_data
+
+;ppcentral_offset =  -1.75647222 - 0.008546 - 0.04833959315003744                                              
+ppcentral_offset = 0.
 

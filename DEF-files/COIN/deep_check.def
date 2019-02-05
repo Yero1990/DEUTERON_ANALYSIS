@@ -47,8 +47,8 @@ block H.hod.*Track*
 
 
 #Sieve Analysis
-block P.extcor.*
-block H.extcor.*
+#block P.extcor.*
+#block H.extcor.*
 
 #Rastered Beam
 block P.rb.*

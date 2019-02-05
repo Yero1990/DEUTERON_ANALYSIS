@@ -3,19 +3,25 @@
 #code usage:  ./run_swif.sh [options]
 #where [options] ---> status,  delete
 
-workflow_name="Deuteron_3286_Sieve"
+#workflow_name="heep_coin_elec"
+workflow_name="D2_heep"
 
-runlist_name=""
+#runlist_name="current_elec.data"
+#runlist_name="current_prot.data"
+runlist_name="h2.dat"
 
 #Various optional flags to add to hcswif workflow
 mode=" --mode replay "
 spec=" --spectrometer COIN "
+#spec=" --spectrometer HMS_COIN "
 events="--events -1"
-range="--run 3286"   #"--run 3242-3387"
+range="--run 3377"   #"--run 3242-3387"
 #filelist=" --run file $runlist_name "
-#replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C "
-replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_shms_coin.C " 
+replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C"     
+#replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_coin_hElec_pProt.C "
+#replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_hms_coin.C " 
 disk_usage=" --disk 3000000000 "   #in bytes (or 1 Gb default)
+ram="--ram 1000000000 "
 cpu_cores="--cpu 8"   #number of cpu cores requested 
 project=" --project c-comm2017 "
 workflow=" --name $workflow_name"

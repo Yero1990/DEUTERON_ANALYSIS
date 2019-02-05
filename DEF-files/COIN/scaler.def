@@ -1,5 +1,5 @@
-#block H.bcm.*
-#block P.bcm.*
+block H.bcm.*
+block P.bcm.*
 #block H.rb.*       
 #block P.rb.*  
 #block D.*

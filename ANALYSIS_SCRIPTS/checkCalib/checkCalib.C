@@ -2,11 +2,11 @@
 #include <sys/stat.h>
 #include "checkCalib.h"
 
-void checkCalib(string spec, string detec, int run)
+void checkCalib(string spec, int run)
 {
   
-  //spec --> "hms" or "shms"
-  //detec ---> "dc", "hod", "cal", "cer"
+  //spec --> "hms" or "shms" or "all"
+  //detec ---> "dc", "hod", "cal", "cer" or "all"
   
   //Prevent plot 
   gROOT->SetBatch(kTRUE);
@@ -79,8 +79,15 @@ void checkCalib(string spec, string detec, int run)
   //TString filename = "../../../ROOTfiles/coin_replay_coin_all_3288_20000.root";
   //TString filename = "../../../ROOTfiles/coin_replay_hod_calib_3288_50000.root"; 
   //TString filename = "../../../ROOTfiles/coin_replay_hdc_calib_3288_-1_hdcCalib.root";
-  TString filename = Form("../../../ROOTfiles/coin_replay_deep_check_%d_-1.root", run);
+  //TString filename = Form("../../../ROOTfiles/coin_replay_deep_check_%d_-1.root", run);
+  //TString filename = Form("../../../ROOTfiles/D2_heep_updated/Emiss_alignment/coin_replay_heep_check_%d_-1.root", run);
   
+  //TString filename = Form("../../../ROOTfiles/good_Heep_hmsElec/coin_replay_heep_check_%d_-1.root", run);
+  //TString filename = Form("../../../ROOTfiles/good_Heep_hmsElec/g%d_coin.root", run);
+  //TString filename = Form("../../../ROOTfiles/good_Heep_hmsProt/hprot_kg%d.root", run);
+  TString filename = Form("../../../ROOTfiles/coin_replay_dc_calib_%d_100000.root", run);
+
+
   TFile *data_file = new TFile(filename, "READ");
   TTree *T = (TTree*)data_file->Get("T");
   

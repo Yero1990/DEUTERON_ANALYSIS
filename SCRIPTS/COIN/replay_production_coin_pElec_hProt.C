@@ -1,4 +1,4 @@
-void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="deep_check") {
+void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="trkStudy") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -38,6 +38,21 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   gHcParms->Load("DEUTERON_ANALYSIS/PARAM/TRIG/tcoin.param");
   //gHcParms->Load("PARAM/TRIG/tcoin.param");
 
+
+  //----------------------------------------
+  //------------BCM Current Module----------
+  //----------------------------------------
+  ifstream hbcmFile;                                                                                
+  TString hbcmParamFile = Form("DEUTERON_ANALYSIS/PARAM/HMS/BCM/hms_bcmcurrent_file_%d.param",  RunNumber);       
+  hbcmFile.open(hbcmParamFile);       
+  
+  ifstream pbcmFile;                                                                                
+  TString pbcmParamFile = Form("DEUTERON_ANALYSIS/PARAM/SHMS/BCM/shms_bcmcurrent_file_%d.param",  RunNumber);   
+  pbcmFile.open(pbcmParamFile);   
+
+  //-----------------------------------------
+
+
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
   
@@ -53,8 +68,8 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   }
   
  //Add Module to explicitly plot all TDC hits from the trigger signals
-  THaDecData* decdata= new THaDecData("D","Decoder raw data");
-  gHaApps->Add(decdata);
+  //THaDecData* decdata= new THaDecData("D","Decoder raw data");
+  //gHaApps->Add(decdata);
   
   //=:=:=:=
   // SHMS 
@@ -161,6 +176,32 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   THcHodoEff* heff = new THcHodoEff("hhodeff", "HMS hodo efficiency", "H.hod");
   gHaPhysics->Add(heff);
 
+
+  //BCM CUrrent Module
+  
+  if (hbcmFile.is_open())                                                        
+    {                                                                                    
+      THcBCMCurrent* hbc = new THcBCMCurrent("H.bcm", "BCM current check");
+      gHaPhysics->Add(hbc);                                 
+      gHcParms->Load(hbcmParamFile);                                                                         
+    }                                                                 
+  else if (!hbcmFile.is_open())                     
+    {                                                                                                    
+      cout << "HMS BCM Current Module will NOT be loaded . . ." << endl;                               
+    } 
+
+    if (pbcmFile.is_open())                                                        
+    {                                                                                    
+      THcBCMCurrent* pbc = new THcBCMCurrent("P.bcm", "BCM current check");
+      gHaPhysics->Add(pbc);                                 
+      gHcParms->Load(pbcmParamFile);                                                                         
+    }                                                                 
+  else if (!pbcmFile.is_open())                     
+    {                                                                                                    
+      cout << "SHMS BCM Current Module will NOT be loaded . . ." << endl;                               
+    } 
+  
+
   // Add event handler for scaler events
   THcScalerEvtHandler *hscaler = new THcScalerEvtHandler("H", "Hall C scaler event type 4");  
   hscaler->AddEvtType(2);
@@ -225,7 +266,7 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   // A simple event class to be output to the resulting tree.
   // Creating your own descendant of THaEvent is one way of
   // defining and controlling the output.
-  THaEvent* event = new THaEvent;
+  THaEvent* event = new THaEvent();
 
   // Define the run(s) that we want to analyze.
   // We just set up one, but this could be many.

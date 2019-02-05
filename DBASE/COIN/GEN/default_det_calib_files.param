@@ -21,17 +21,39 @@
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/AERO/paero_calib.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/CAL/pcal_calib.param"
 
+1722
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_1722.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_1722.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib_1722.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_1722.param"
+
+1920
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_1920.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_1920.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib_1920.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_1920.param"
+
+3288
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_3288.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_3288.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib_3288.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_3288.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/CAL/pcal_calib_3288.param"
+
 3371
 #include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_3371.param"
 #include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_3371.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib_3371.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_3371.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/CAL/pcal_calib_3371.param"
+
 
 3374
 #include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_3374.param"
 #include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_3374.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib_3374.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_3374.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/CAL/pcal_calib_3374.param"
 
 3376
 #include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_3376.param"
@@ -40,7 +62,10 @@
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_3376.param"
 
 3377-3379
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_TWcalib_3377.param" 
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_Vpcalib_3377.param"  
 #include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_3377.param"
 #include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_3377.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib_3377.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_3377.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/CAL/pcal_calib_3377.param"

@@ -15,6 +15,7 @@ block P.dc.*time*
 block P.dc.*dist*
 block P.dc.*residual*  
 block P.dc.*nhit* 
+block P.dc.*ntrack*
 
 block P.hod.beta*
 block P.hgcer.npeSum*

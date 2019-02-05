@@ -6,6 +6,8 @@
 //==============DEFINE SOME CONSTANTS==================
 //=====================================================
 
+static const Double_t tdc_nsperch = 0.09766;   //TDC Conv. ns/channel 
+
 //Define some detectors planes and sides
 static const Int_t hod_PLANES = 4;
 static const Int_t cal_PLANES = 4;
@@ -37,13 +39,13 @@ static const Int_t pmaxPMT[hod_PLANES] = {13, 13, 14, 21};
 
 //(See /PARAM/HMS/GEN/h_reftime_cut.param, units in Channel)
 static const Double_t hhod_trefcut = 1600.;      //hodo tdc ref cut
-static const Double_t hdc_trefcut = 15100.;      //dc tdc ref cut
+static const Double_t hdc_trefcut = 15075.;      //dc tdc ref cut
 static const Double_t hadc_trefcut = 2300.;      //hodo/cer/cal adc ref cut
 
 //(See /PARAM/SHMS/GEN/p_reftime_cut.param, units in Channel)
-static const Double_t phod_trefcut = 2850.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
-static const Double_t pdc_trefcut = 13700.;
-static const Double_t padc_trefcut = 3000.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
+static const Double_t phod_trefcut = 2800.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
+static const Double_t pdc_trefcut = 13550.;
+static const Double_t padc_trefcut = 2850.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
 
 //=======================================================
 
@@ -122,8 +124,12 @@ Double_t pngcer_tWinMax[4] = {40., 40., 40., 40.};
 //----------------------------------
 //------ HMS DRIFT CHAMBERS --------
 //----------------------------------
-Double_t pDC_tWinMin[dc_PLANES] = {-13.5e3, -13.5e3,  -13.5e3,   -13.5e3,   -13.5e3,   -13.5e3,   -13.5e3,  -13.5e3,   -13.5e3,  -13.5e3,  -13.5e3,  -13.5e3 };
-Double_t pDC_tWinMax[dc_PLANES] = {-10.5e3,  -10.5e3, -10.5e3, -10.5e3,  -10.5e3,  -10.5e3,  -10.5e3,   -10.5e3,  -10.5e3, -10.5e3, -10.5e3, -10.5e3};
+//Double_t pDC_tWinMin[dc_PLANES] = {-13.5e3, -13.5e3,  -13.5e3,   -13.5e3,   -13.5e3,   -13.5e3,   -13.5e3,  -13.5e3,   -13.5e3,  -13.5e3,  -13.5e3,  -13.5e3 };
+//Double_t pDC_tWinMax[dc_PLANES] = {-10.5e3,  -10.5e3, -10.5e3, -10.5e3,  -10.5e3,  -10.5e3,  -10.5e3,   -10.5e3,  -10.5e3, -10.5e3, -10.5e3, -10.5e3};
+
+//Tighter SHMS DC Time Window Lower Limitcuts (Used run3377), to study the W yield
+Double_t pDC_tWinMin[dc_PLANES] = {-13.2e3, -13.2e3,  -13.2e3,   -13.2e3,   -13.2e3,   -13.2e3,   -13.2e3,  -13.2e3,   -13.2e3,  -13.2e3,  -13.2e3,  -13.2e3 };        
+Double_t pDC_tWinMax[dc_PLANES] = {-10.5e3,  -10.5e3, -10.5e3, -10.5e3,  -10.5e3,  -10.5e3,  -10.5e3,   -10.5e3,  -10.5e3, -10.5e3, -10.5e3, -10.5e3};      
 
 //---------------------------------------
 //----Define and set Multiple of Sigma 
@@ -147,16 +153,16 @@ Double_t pcal_nSig = 10.0;
 //**NOTE** : These are found in the PARAM/TRIG/tcoin.param file
 
 static const Double_t ptrg1r1_tWinMin = 1900;    //pTRIG1_ROC1
-static const Double_t ptrg1r1_tWinMax = 3010;
+static const Double_t ptrg1r1_tWinMax = 3050;
 
 static const Double_t ptrg1r2_tWinMin = 2600;    //pTRIG1_ROC2
-static const Double_t ptrg1r2_tWinMax = 3750;
+static const Double_t ptrg1r2_tWinMax = 3800;
 
-static const Double_t ptrg4r1_tWinMin = 2460;
-static const Double_t ptrg4r1_tWinMax = 2820;
+static const Double_t ptrg4r1_tWinMin = 1900;
+static const Double_t ptrg4r1_tWinMax = 3000;
 
-static const Double_t ptrg4r2_tWinMin = 3160;
-static const Double_t ptrg4r2_tWinMax = 3510;
+static const Double_t ptrg4r2_tWinMin = 2600;
+static const Double_t ptrg4r2_tWinMax = 3550;
 
 //==============================================================
 
@@ -183,12 +189,14 @@ Double_t padc_tref_nbins, padc_tref_xmin, padc_tref_xmax;
 
 //HMS
 Double_t hhod_nbins, hhod_xmin, hhod_xmax;
+Double_t hhod_tnbins, hhod_txmin, hhod_txmax;
 Double_t hdc_nbins, hdc_xmin, hdc_xmax;
 Double_t hcer_nbins, hcer_xmin, hcer_xmax;                                                                                              
 Double_t hcal_nbins, hcal_xmin, hcal_xmax;                                                                                                                    
 
 //SHMS
 Double_t phod_nbins, phod_xmin, phod_xmax;
+Double_t phod_tnbins, phod_txmin, phod_txmax;
 Double_t pdc_nbins, pdc_xmin, pdc_xmax;
 Double_t phgcer_nbins, phgcer_xmin, phgcer_xmax;                                                                                              
 Double_t pngcer_nbins, pngcer_xmin, pngcer_xmax;
@@ -230,6 +238,7 @@ TH1F *P_FADC_Tref_CUT;
 //-------Define Histograms for Time Window Cuts--------
 
 //HMS Histograms
+TH1F *H_hod_TdcTimeUnCorr[hod_PLANES][SIDES][16];
 TH1F *H_hod_TdcAdcTimeDiff[hod_PLANES][SIDES][16];
 TH1F *H_cal_TdcAdcTimeDiff[cal_PLANES][SIDES][13];
 TH1F *H_dc_rawTDC[dc_PLANES];
@@ -242,6 +251,7 @@ TH1F *H_dc_rawTDC_CUT[dc_PLANES];
 TH1F *H_cer_TdcAdcTimeDiff_CUT[2];
 
 //SHMS Histograms
+TH1F *P_hod_TdcTimeUnCorr[hod_PLANES][SIDES][21];
 TH1F *P_hod_TdcAdcTimeDiff[hod_PLANES][SIDES][21];
 TH1F *P_cal_TdcAdcTimeDiff[224];  //fly's eye (224 pmt-channels)
 TH1F *P_prSh_TdcAdcTimeDiff[SIDES][14];
@@ -271,6 +281,7 @@ TH1F *pTrig4_ROC2_rawTdcTime;
 //HMS
 TCanvas *hms_REF_Canv;                      //canvas to save reference time histograms
 TCanvas *hhodoCanv[hod_PLANES][SIDES];
+TCanvas *hhodo_tdcCanv[hod_PLANES][SIDES];
 TCanvas *hcaloCanv[cal_PLANES][SIDES];
 TCanvas *hdcCanv;
 TCanvas *hCer_Canv;
@@ -278,6 +289,7 @@ TCanvas *hCer_Canv;
 //SHMS
 TCanvas *shms_REF_Canv;                      //canvas to save reference time histograms
 TCanvas *phodoCanv[hod_PLANES][SIDES];
+TCanvas *phodo_tdcCanv[hod_PLANES][SIDES];
 TCanvas *pcalCanv;
 TCanvas *pcalCanv_alt[16];
 TCanvas *pPrshCanv[SIDES];
@@ -367,7 +379,8 @@ TLine *ptrg4r2_LineMax;
 
 TString base;
                                                                                                                                   
-//HMS Detector Leaf Names                                                                                                                                                                     
+//HMS Detector Leaf Names                                                                                                                                         
+TString n_hhod_TdcTimeUnCorr;                                                                                                                                
 TString n_hhod_TdcAdcTimeDiff;                                                                                                                                             
 TString n_hhod_AdcMult;                                                                                                                                                   
 TString n_hcal_TdcAdcTimeDiff;                                                                                                                                               
@@ -386,7 +399,8 @@ TString n_hT1_tdcMult;
 TString n_hDC_tdcMult;
 TString n_hFADC_adcMult;
 
-//SHMS Detector Leaf Names              
+//SHMS Detector Leaf Names    
+TString n_phod_TdcTimeUnCorr;                                                                                                                                 
 TString n_phod_TdcAdcTimeDiff;                                                                                                                                                         
 TString n_phod_AdcMult;                                                                                                                                                              
 TString n_pcal_TdcAdcTimeDiff;                                                                                                                                                        
@@ -422,6 +436,7 @@ TString n_ptrg4_r2;
 //========================================
 
 //HMS Leaf Variables
+Double_t hhod_TdcTimeUnCorr[hod_PLANES][SIDES][16];
 Double_t hhod_TdcAdcTimeDiff[hod_PLANES][SIDES][16];
 Double_t hhod_AdcMult[hod_PLANES][SIDES][16];
 Double_t hcer_TdcAdcTimeDiff[2];
@@ -438,6 +453,7 @@ Double_t hDC_tdcMult[4];
 Double_t hFADC_adcMult;
 
 //SHMS Leaf Variables
+Double_t phod_TdcTimeUnCorr[hod_PLANES][SIDES][21];
 Double_t phod_TdcAdcTimeDiff[hod_PLANES][SIDES][21];
 Double_t phod_AdcMult[hod_PLANES][SIDES][21];
 Double_t pcal_TdcAdcTimeDiff[1][224];

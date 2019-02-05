@@ -19,7 +19,7 @@ using namespace std;
 void setTimeWindows(int run, string trg)
 {
   
-  //user input: trg --> "hms", "shms", "coin" for 
+  //user input: trg --> "hms", "shms", "coin" (DAQ Mode) 
   //                                       |--------------------- Time Window Cuts -------------------------------|
   //                          refTime_cuts | Hodoscopes   Calorimeters       Cherenkovs         Drift Chambers    |
   //User input: detector ---> htrig/ptrig, | hhod/pphod,  hcal/pcal/pprsh, hcer/phgcer/pngcer,  hdc/pdc           |
@@ -69,16 +69,20 @@ void setTimeWindows(int run, string trg)
   hadc_tref_xmax = 3300,          padc_tref_xmax = 4500;
   
   //TRG
-  ptrg1_roc1_nbins=100, ptrg1_roc1_xmin=1600, ptrg1_roc1_xmax=3100;
-  ptrg1_roc2_nbins=100, ptrg1_roc2_xmin=2400, ptrg1_roc2_xmax=3800;
-  ptrg4_roc1_nbins=100, ptrg4_roc1_xmin=1800, ptrg4_roc1_xmax=3000;
-  ptrg4_roc2_nbins=100, ptrg4_roc2_xmin=2600, ptrg4_roc2_xmax=3600;
+  ptrg1_roc1_nbins=100, ptrg1_roc1_xmin=500, ptrg1_roc1_xmax=3100;
+  ptrg1_roc2_nbins=100, ptrg1_roc2_xmin=500, ptrg1_roc2_xmax=3800;
+  ptrg4_roc1_nbins=100, ptrg4_roc1_xmin=500, ptrg4_roc1_xmax=3000;
+  ptrg4_roc2_nbins=100, ptrg4_roc2_xmin=500, ptrg4_roc2_xmax=3600;
   
   //ADC-TDC Time Diff Histos
   //HMS               SHMS
   hhod_nbins = 100,   phod_nbins = 100;    
-  hhod_xmin = -70,    phod_xmin = -50;    
-  hhod_xmax = -40,    phod_xmax = 70;                                              
+  hhod_xmin = -70,    phod_xmin = -80;    
+  hhod_xmax = -40,    phod_xmax = 70;  
+  
+  hhod_tnbins = 100,   phod_tnbins = 100;    
+  hhod_txmin = -1000,    phod_txmin = -1000;    
+  hhod_txmax = 2000,    phod_txmax = 2000;  
   
   hdc_nbins = 100,    pdc_nbins = 100;                                                      
   hdc_xmin = -16000,  pdc_xmin = -15000;                                                                
@@ -306,13 +310,16 @@ void setTimeWindows(int run, string trg)
 	  for (Int_t ipmt = 0; ipmt < hmaxPMT[npl]; ipmt++)
 	    {
 	      base = "H.hod." + hod_pl_names[npl];
-	      
+	      	  
+	      n_hhod_TdcTimeUnCorr = base + "." + side_names[iside] + "TdcTimeUnCorr";
 	      n_hhod_TdcAdcTimeDiff = base + "." + side_names[iside] + "AdcTdcDiffTime";
 	      n_hhod_AdcMult = base + "." + side_names[iside] + "AdcMult";
-	      
+	      	      
+	      T->SetBranchAddress(n_hhod_TdcTimeUnCorr, hhod_TdcTimeUnCorr[npl][iside]);
 	      T->SetBranchAddress(n_hhod_TdcAdcTimeDiff, hhod_TdcAdcTimeDiff[npl][iside]);
 	      T->SetBranchAddress(n_hhod_AdcMult, hhod_AdcMult[npl][iside]);
-	      
+	      	      
+	      H_hod_TdcTimeUnCorr[npl][iside][ipmt] = new TH1F(Form("hHod%s%d%s_TdcTimeUnCorr", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str() ), Form("HMS Hodo %s%d%s TdcTimeUnCorr", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str()),hhod_tnbins,hhod_txmin,hhod_txmax);
 	      H_hod_TdcAdcTimeDiff[npl][iside][ipmt] = new TH1F(Form("hHod%s%d%s_timeDiff", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str() ), Form("HMS Hodo %s%d%s AdcTdcTimeDiff", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str()),hhod_nbins,hhod_xmin,hhod_xmax);
 	      H_hod_TdcAdcTimeDiff_CUT[npl][iside][ipmt] = new TH1F(Form("hHod%s%d%s_timeDiff_CUT", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str() ), Form("HMS Hodo %s%d%s AdcTdcTimeDiff (CUT)", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str()),hhod_nbins,hhod_xmin,hhod_xmax);
 	      
@@ -339,13 +346,16 @@ void setTimeWindows(int run, string trg)
 	  for (Int_t ipmt = 0; ipmt < pmaxPMT[npl]; ipmt++)
 	    {
 	      base = "P.hod." + hod_pl_names[npl];
-	      
+
+	      n_phod_TdcTimeUnCorr = base + "." + side_names[iside] + "TdcTimeUnCorr";
 	      n_phod_TdcAdcTimeDiff = base + "." + side_names[iside] + "AdcTdcDiffTime";
 	      n_phod_AdcMult = base + "." + side_names[iside] + "AdcMult";
-	  	
+	  		  
+	      T->SetBranchAddress(n_phod_TdcTimeUnCorr, phod_TdcTimeUnCorr[npl][iside]);
 	      T->SetBranchAddress(n_phod_TdcAdcTimeDiff, phod_TdcAdcTimeDiff[npl][iside]);
 	      T->SetBranchAddress(n_phod_AdcMult, phod_AdcMult[npl][iside]);
-	    	     
+	    	     	      
+	      P_hod_TdcTimeUnCorr[npl][iside][ipmt] = new TH1F(Form("pHod%s%d%s_TdcTimeUnCorr", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str() ), Form("SHMS Hodo %s%d%s TdcTimeUnCorr", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str()),phod_tnbins,phod_txmin,phod_txmax);
 	      P_hod_TdcAdcTimeDiff[npl][iside][ipmt] = new TH1F(Form("pHod%s%d%s_timeDiff", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str() ), Form("SHMS Hodo %s%d%s AdcTdcTimeDiff", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str()),phod_nbins,phod_xmin,phod_xmax);
 	      P_hod_TdcAdcTimeDiff_CUT[npl][iside][ipmt] = new TH1F(Form("pHod%s%d%s_timeDiff_CUT", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str() ), Form("SHMS Hodo %s%d%s AdcTdcTimeDiff (CUT)", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str()),phod_nbins,phod_xmin,phod_xmax);
 
@@ -570,6 +580,8 @@ void setTimeWindows(int run, string trg)
 		  
 
 		  //-------------HMS Hodoscopoes--------------
+		  
+		  H_hod_TdcTimeUnCorr[ip][iside][ipmt]->Fill(hhod_TdcTimeUnCorr[ip][iside][ipmt]/tdc_nsperch);
 
 		  if(abs(hhod_TdcAdcTimeDiff[ip][iside][ipmt])<1000.)
 		    {
@@ -603,7 +615,13 @@ void setTimeWindows(int run, string trg)
 	      for (Int_t ipmt = 0; ipmt < pmaxPMT[ip]; ipmt++)
 		{
 		  
+		
+
 		  //------------SHMS Hodoscopes----------------
+		
+		  //UnCorrected TdcTime
+		  P_hod_TdcTimeUnCorr[ip][iside][ipmt]->Fill(phod_TdcTimeUnCorr[ip][iside][ipmt]/tdc_nsperch);
+		  
 		  if(abs(phod_TdcAdcTimeDiff[ip][iside][ipmt])<1000.)
 		    {
 		      good_Mult = phod_AdcMult[ip][iside][ipmt] == 1;   //SHMS HODO Multiplicity CUT
@@ -780,6 +798,25 @@ void setTimeWindows(int run, string trg)
   ptrg4r1_LineMax->SetLineColor(kBlack);
   ptrg4r2_LineMin->SetLineColor(kBlack);
   ptrg4r2_LineMax->SetLineColor(kBlack);
+
+  ptrg1r1_LineMin->SetLineStyle(2);                                                                                                                                      
+  ptrg1r1_LineMax->SetLineStyle(2);                                                                                                                                      
+  ptrg1r2_LineMin->SetLineStyle(2);                                                                                                                                      
+  ptrg1r2_LineMax->SetLineStyle(2);                                                                                                                                        
+  ptrg4r1_LineMin->SetLineStyle(2);                                                                                                                                       
+  ptrg4r1_LineMax->SetLineStyle(2);                                                                                                                                           
+  ptrg4r2_LineMin->SetLineStyle(2);                                                                                                                                            
+  ptrg4r2_LineMax->SetLineStyle(2);                                                                                                                                          
+                                         
+
+  ptrg1r1_LineMin->SetLineWidth(3);                                                                                                                          
+  ptrg1r1_LineMax->SetLineWidth(3);                                                                                                                                           
+  ptrg1r2_LineMin->SetLineWidth(3);                                                                                                                                        
+  ptrg1r2_LineMax->SetLineWidth(3);                                                                                                                          
+  ptrg4r1_LineMin->SetLineWidth(3);                                                                                                                                 
+  ptrg4r1_LineMax->SetLineWidth(3);                                                                                                                                          
+  ptrg4r2_LineMin->SetLineWidth(3);                                                                                                                                      
+  ptrg4r2_LineMax->SetLineWidth(3);  
 
   pTRG_Canv->cd(1);
   gPad->SetLogy();
@@ -979,11 +1016,13 @@ void setTimeWindows(int run, string trg)
 	  
 	  //Define HMS Hodo Canv
 	  hhodoCanv[npl][iside] = new TCanvas(Form("hhodo_TDC:ADC Time Diff. Hod Plane %s%s", hod_pl_names[npl].c_str(), side_names[iside].c_str()), Form("HMS Hodo TDC-ADC Time Diff, Plane %s%s", hod_pl_names[npl].c_str(), side_names[iside].c_str()),  1500, 600);
-	  
+	  hhodo_tdcCanv[npl][iside] = new TCanvas(Form("hhodo_TDC UnCorr Time Hod Plane %s%s", hod_pl_names[npl].c_str(), side_names[iside].c_str()), Form("HMS Hodo TDC Time UnCorr, Plane %s%s", hod_pl_names[npl].c_str(), side_names[iside].c_str()),  1500, 600);
+
 	  
 	  //Define SHMS Hodo Canv
 	  phodoCanv[npl][iside] = new TCanvas(Form("phodo_TDC:ADC Time Diff. Hod Plane %s%s", hod_pl_names[npl].c_str(), side_names[iside].c_str()), Form("SHMS Hodo TDC-ADC Time Diff, Plane %s%s", hod_pl_names[npl].c_str(), side_names[iside].c_str()),  1500, 600);
-	  
+	  phodo_tdcCanv[npl][iside] = new TCanvas(Form("phodo_TDC UnCorr Time Hod Plane %s%s", hod_pl_names[npl].c_str(), side_names[iside].c_str()), Form("SHMS Hodo TDC Time UnCorr, Plane %s%s", hod_pl_names[npl].c_str(), side_names[iside].c_str()),  1500, 600);
+
 	  
 	  //Define HMS Calorimeter Canvas for all planes
 	  if (!(npl==2&&iside==1) && !(npl==3&&iside==1)){
@@ -1010,11 +1049,14 @@ void setTimeWindows(int run, string trg)
 	  if(npl == 0 || npl == 2)
 	    {
 	      hhodoCanv[npl][iside]->Divide(4,4);
+	      hhodo_tdcCanv[npl][iside]->Divide(4,4);
+
 	    }
 	  
 	  else if (npl==1 || npl==3)
 	    {
 	      hhodoCanv[npl][iside]->Divide(5,2);
+	      hhodo_tdcCanv[npl][iside]->Divide(5,2);
 	    }
 	  
 	  
@@ -1022,11 +1064,15 @@ void setTimeWindows(int run, string trg)
 	  if(npl == 0 || npl == 1 || npl==2)
 	    {
 	      phodoCanv[npl][iside]->Divide(7,2);
+	      phodo_tdcCanv[npl][iside]->Divide(7,2);
+
 	    }
 	  
 	  else if (npl==3)
 	    {
 	      phodoCanv[npl][iside]->Divide(7,3);
+	      phodo_tdcCanv[npl][iside]->Divide(7,3);
+
 	    }
 	  
 	  
@@ -1122,7 +1168,13 @@ void setTimeWindows(int run, string trg)
 	      H_hod_TdcAdcTimeDiff_CUT[npl][iside][ipmt]->Draw("sames");
 	      hhod_LineMin[npl][iside][ipmt]->Draw();
 	      hhod_LineMax[npl][iside][ipmt]->Draw();
+	         
+	      hhodo_tdcCanv[npl][iside]->cd(ipmt+1);
+	      gPad->SetLogy();
+	      H_hod_TdcTimeUnCorr[npl][iside][ipmt]->Draw();
+
 	      
+
 	    } //end hms hodo pmt loop
 	  
 	  //Loop over SHMS HODO PMTs
@@ -1156,6 +1208,11 @@ void setTimeWindows(int run, string trg)
 	      phod_LineMin[npl][iside][ipmt]->Draw();
 	      phod_LineMax[npl][iside][ipmt]->Draw();
 	      
+	      phodo_tdcCanv[npl][iside]->cd(ipmt+1);
+	      gPad->SetLogy();
+	      P_hod_TdcTimeUnCorr[npl][iside][ipmt]->Draw();
+
+
 	      } //end shms hodo pmt loop
 	  
 	  
@@ -1262,7 +1319,10 @@ void setTimeWindows(int run, string trg)
 	  
 	  hhodoCanv[npl][iside]->SaveAs(Form("Time_cuts_%d/HMS/HODO/hHodo_%s%s.pdf",run, hod_pl_names[npl].c_str(), side_names[iside].c_str()));
 	  phodoCanv[npl][iside]->SaveAs(Form("Time_cuts_%d/SHMS/HODO/pHodo_%s%s.pdf",run, hod_pl_names[npl].c_str(), side_names[iside].c_str()));
-	  
+	  	  
+	  hhodo_tdcCanv[npl][iside]->SaveAs(Form("Time_cuts_%d/HMS/HODO/hHodo_TdcUnCorr%s%s.pdf",run, hod_pl_names[npl].c_str(), side_names[iside].c_str()));
+	  phodo_tdcCanv[npl][iside]->SaveAs(Form("Time_cuts_%d/SHMS/HODO/pHodo_TdcUnCorr%s%s.pdf",run, hod_pl_names[npl].c_str(), side_names[iside].c_str()));
+
 	  if (!(npl==2&&iside==1) && !(npl==3&&iside==1)){
 	    hcaloCanv[npl][iside]->SaveAs(Form("Time_cuts_%d/HMS/CAL/hCalo_%s%s.pdf", run,cal_pl_names[npl].c_str(), side_names[iside].c_str()));
 	  }

@@ -8,7 +8,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.29
 ptheta_lab = 12.2
-hpcentral = 2.9382*0.995
+hpcentral = 2.9382
 ppcentral = 8.7
 
 3245
@@ -18,7 +18,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.29
 ptheta_lab = 12.2
-hpcentral = 2.9382*0.995
+hpcentral = 2.9382
 ppcentral = 8.7
 
 3246
@@ -28,7 +28,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.29
 ptheta_lab = 12.2
-hpcentral = 2.9382*0.995
+hpcentral = 2.9382
 ppcentral = 8.7
 
 3247
@@ -38,7 +38,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.29
 ptheta_lab = 12.2
-hpcentral = 2.9382*0.995
+hpcentral = 2.9382
 ppcentral = 8.7
 
 3248
@@ -48,7 +48,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.29
 ptheta_lab = 12.2
-hpcentral = 2.9382*0.995
+hpcentral = 2.9382
 ppcentral = 8.7
 
 
@@ -59,7 +59,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.338
 ptheta_lab = 12.194
-hpcentral = 2.938*0.995
+hpcentral = 2.938
 ppcentral = 8.7
 
 3371
@@ -69,7 +69,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -33.545
 ptheta_lab = 13.93
-hpcentral = 3.48*0.995
+hpcentral = 3.48
 ppcentral = 8.7
 
 
@@ -80,7 +80,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -42.9
 ptheta_lab = 9.928
-hpcentral = 2.31*0.995
+hpcentral = 2.31
 ppcentral = 8.7
 
 
@@ -91,7 +91,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -47.605
 ptheta_lab = 8.495
-hpcentral = 1.8899*0.995
+hpcentral = 1.8899
 ppcentral = 8.7
 
 3377
@@ -101,7 +101,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -47.605
 ptheta_lab = 8.495
-hpcentral = 1.8899*0.995
+hpcentral = 1.8899
 ppcentral = 8.7
 
 3379
@@ -111,6 +111,6 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -47.605
 ptheta_lab = 8.495
-hpcentral = 1.8898*0.995
+hpcentral = 1.8898
 ppcentral = 8.7
 

@@ -14,10 +14,13 @@
 ;  CMOP matrix elements. If you do change then your hms sieve
 ;  plots will be screwed up.
   hdelta_offset = 0.       ; (%)   hdelta_tar = hdelta_tar + hdelta_offset
-;  htheta_offset = 0.  ; (rad) hyp_tar = hyp_tar + htheta_offset
-  htheta_offset = 0.00122141
-  hphi_offset   = -4.946337367e-6 ; (rad) hxp_tar = hxp_tar + hphi_offset
-;
+
+  htheta_offset = 0.  ; (rad) hyp_tar = hyp_tar + htheta_offset
+; htheta_offset = 0.00122141
+;  htheta_offset = 0.0005   ;(rad)  determined from H(e,e'p) Minimization, Jan. 17, 2019
+
+;  hphi_offset   = 0         ; (rad) hxp_tar = hxp_tar + hphi_offset
+  hphi_offset   = 3.4353e-3  ; (rad)  Determined on Januray 4, 2018, by comparing HMS xptar SIMC-DATA
 
 ;saturation correction flag
 ;  hsatcorr = 2000 ; 

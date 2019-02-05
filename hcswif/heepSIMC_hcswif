@@ -1,4 +1,4 @@
-./hcswif.py --mode command --command /u/group/E12-10-003/cyero/hallc_replay/UTIL_COMM_ONEPASS/hcswif/run_simc_heep.sh --disk 4000000000 --shell bash --name hms_HeeP_SIMC --project c-comm2017  
+./hcswif.py --mode command --command /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/hcswif/run_simc_heep.sh --disk 1000000000 --shell bash --name hms_HeeP_SIMC --project c-comm2017  
 swif import -file hms_HeeP_SIMC.json
 swif run hms_HeeP_SIMC
 

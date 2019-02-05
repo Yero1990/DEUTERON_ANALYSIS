@@ -6,37 +6,37 @@ Run #: {gen_run_number}
 Beam energy : {gpbeam}
 Target mass (amu) : {gtargmass_amu} 
 
-HMS Particle Mass : {hpartmass}
-HMS P Central : {hpcentral}
-HMS Angle : {htheta_lab}
+hHMS Particle Mass : {hpartmass}
+hHMS P Central : {hpcentral}
+hHMS Angle : {htheta_lab}
 
-SHMS Particle Mass : {ppartmass}
-SHMS P Central : {ppcentral}
-SHMS Angle : {ptheta_lab}
+pSHMS Particle Mass : {ppartmass}
+pSHMS P Central : {ppcentral}
+pSHMS Angle : {ptheta_lab}
 
-SHMS Run Length   : {P.1MHz.scalerTime:%.3f} sec
-HMS  Run Length   : {H.1MHz.scalerTime:%.3f} sec
+pSHMS Run Length   : {P.1MHz.scalerTime:%.3f} sec
+hHMS  Run Length   : {H.1MHz.scalerTime:%.3f} sec
 
 *****************************
 *SPECTROMETER MISPOINTING*
 *****************************
 
-HMS X Mispointing   : {hmispointing_x} cm
-HMS Y Mispointing   : {hmispointing_y} cm
+hHMS X Mispointing   : {hmispointing_x} cm
+hHMS Y Mispointing   : {hmispointing_y} cm
 
-SHMS X Mispointing   : {pmispointing_x} cm
-SHMS Y Mispointing   : {pmispointing_y} cm
+pSHMS X Mispointing   : {pmispointing_x} cm
+pSHMS Y Mispointing   : {pmispointing_y} cm
 
 
 ************************************
 *Calibrated Beam Positions @ Target 
 ************************************
 
-HMS X BPM   : {h_XBPM_AVG} cm
-HMS Y BPM   : {h_YBPM_AVG} cm
+hHMS X BPM   : {h_XBPM_AVG} cm
+hHMS Y BPM   : {h_YBPM_AVG} cm
 
-SHMS X BPM   : {p_XBPM_AVG} cm
-SHMS Y BPM   : {p_YBPM_AVG} cm
+pSHMS X BPM   : {p_XBPM_AVG} cm
+pSHMS Y BPM   : {p_YBPM_AVG} cm
 
 
 ***********
@@ -44,65 +44,65 @@ SHMS Y BPM   : {p_YBPM_AVG} cm
 ***********
  With no cuts on BCM{gBCM_Current_threshold_index+1}.
   
-HMS BCM1 Current: {H.BCM1.scalerCharge/H.1MHz.scalerTime:%.3f} uA		  
-HMS BCM2 Current: {H.BCM2.scalerCharge/H.1MHz.scalerTime:%.3f} uA		 
-HMS BCM4A Current: {H.BCM4A.scalerCharge/H.1MHz.scalerTime:%.3f} uA		  
-HMS BCM4B Current: {H.BCM4B.scalerCharge/H.1MHz.scalerTime:%.3f} uA		 
-HMS BCM4C Current: {H.BCM4C.scalerCharge/H.1MHz.scalerTime:%.3f} uA		 
-HMS Unser Current: {H.Unser.scalerCharge/H.1MHz.scalerTime:%.3f} uA		  
+hHMS BCM1 Current: {H.BCM1.scalerCharge/H.1MHz.scalerTime:%.3f} uA		  
+hHMS BCM2 Current: {H.BCM2.scalerCharge/H.1MHz.scalerTime:%.3f} uA		 
+hHMS BCM4A Current: {H.BCM4A.scalerCharge/H.1MHz.scalerTime:%.3f} uA		  
+hHMS BCM4B Current: {H.BCM4B.scalerCharge/H.1MHz.scalerTime:%.3f} uA		 
+hHMS BCM4C Current: {H.BCM4C.scalerCharge/H.1MHz.scalerTime:%.3f} uA		 
+hHMS Unser Current: {H.Unser.scalerCharge/H.1MHz.scalerTime:%.3f} uA		  
 
-HMS BCM1  Charge: {H.BCM1.scalerCharge/1000.:%.3f} mC
-HMS BCM2  Charge: {H.BCM2.scalerCharge/1000.:%.3f} mC	
-HMS BCM4A Charge: {H.BCM4A.scalerCharge/1000.:%.3f} mC		  
-HMS BCM4B Charge: {H.BCM4B.scalerCharge/1000.:%.3f} mC		 
-HMS BCM4C Charge: {H.BCM4C.scalerCharge/1000.:%.3f} mC		 
-HMS Unser Charge: {H.Unser.scalerCharge/1000.:%.3f} mC
+hHMS BCM1  Charge: {H.BCM1.scalerCharge/1000.:%.3f} mC
+hHMS BCM2  Charge: {H.BCM2.scalerCharge/1000.:%.3f} mC	
+hHMS BCM4A Charge: {H.BCM4A.scalerCharge/1000.:%.3f} mC		  
+hHMS BCM4B Charge: {H.BCM4B.scalerCharge/1000.:%.3f} mC		 
+hHMS BCM4C Charge: {H.BCM4C.scalerCharge/1000.:%.3f} mC		 
+hHMS Unser Charge: {H.Unser.scalerCharge/1000.:%.3f} mC
 
 Cut on BCM{gBCM_Current_threshold_index+1} current of {gBCM_Current_threshold} uA. Beam over threshold for {H.1MHz.scalerTimeCut:%.3f}s, or {((H.1MHz.scalerTimeCut/H.1MHz.scalerTime)*100.):%.3f}% of total run time.
-HMS BCM1 Beam Cut Current: {H.BCM1.scalerCharge/H.1MHz.scalerTime:%.3f} uA		  
-HMS BCM2 Beam Cut Current: {H.BCM2.scalerCharge/H.1MHz.scalerTime:%.3f} uA		 
-HMS BCM4A Beam Cut Current: {H.BCM4A.scalerCharge/H.1MHz.scalerTime:%.3f} uA		  
-HMS BCM4B Beam Cut Current: {H.BCM4B.scalerCharge/H.1MHz.scalerTime:%.3f} uA		 
-HMS BCM4C Beam Cut Current: {H.BCM4C.scalerCharge/H.1MHz.scalerTime:%.3f} uA		 
-HMS Unser Beam Cut Current: {H.Unser.scalerCharge/H.1MHz.scalerTime:%.3f} uA		  
+hHMS BCM1 Beam Cut Current: {H.BCM1.scalerChargeCut/H.1MHz.scalerTime:%.3f} uA		  
+hHMS BCM2 Beam Cut Current: {H.BCM2.scalerChargeCut/H.1MHz.scalerTime:%.3f} uA		 
+hHMS BCM4A Beam Cut Current: {H.BCM4A.scalerChargeCut/H.1MHz.scalerTime:%.3f} uA		  
+hHMS BCM4B Beam Cut Current: {H.BCM4B.scalerChargeCut/H.1MHz.scalerTime:%.3f} uA		 
+hHMS BCM4C Beam Cut Current: {H.BCM4C.scalerChargeCut/H.1MHz.scalerTime:%.3f} uA		 
+hHMS Unser Beam Cut Current: {H.Unser.scalerChargeCut/H.1MHz.scalerTime:%.3f} uA		  
 
-HMS BCM1  Beam Cut Charge: {H.BCM1.scalerChargeCut/1000. :%.3f} mC
-HMS BCM2  Beam Cut Charge: {H.BCM2.scalerChargeCut/1000.:%.3f} mC
-HMS BCM4A Beam Cut Charge: {H.BCM4A.scalerChargeCut/1000.:%.3f} mC		  
-HMS BCM4B Beam Cut Charge: {H.BCM4B.scalerChargeCut/1000.:%.3f} mC		 
-HMS BCM4C Beam Cut Charge: {H.BCM4C.scalerChargeCut/1000.:%.3f} mC		 
-HMS Unser Beam Cut Charge: {H.Unser.scalerChargeCut/1000.:%.3f} mC
+hHMS BCM1  Beam Cut Charge: {H.BCM1.scalerChargeCut/1000. :%.3f} mC
+hHMS BCM2  Beam Cut Charge: {H.BCM2.scalerChargeCut/1000.:%.3f} mC
+hHMS BCM4A Beam Cut Charge: {H.BCM4A.scalerChargeCut/1000.:%.3f} mC		  
+hHMS BCM4B Beam Cut Charge: {H.BCM4B.scalerChargeCut/1000.:%.3f} mC		 
+hHMS BCM4C Beam Cut Charge: {H.BCM4C.scalerChargeCut/1000.:%.3f} mC		 
+hHMS Unser Beam Cut Charge: {H.Unser.scalerChargeCut/1000.:%.3f} mC
  
  With no cuts on BCM{gBCM_Current_threshold_index+1}.
   
-SHMS BCM1 Current: {P.BCM1.scalerCharge/P.1MHz.scalerTime:%.3f} uA		  
-SHMS BCM2 Current: {P.BCM2.scalerCharge/P.1MHz.scalerTime:%.3f} uA		 
-SHMS BCM4A Current: {P.BCM4A.scalerCharge/P.1MHz.scalerTime:%.3f} uA		  
-SHMS BCM4B Current: {P.BCM4B.scalerCharge/P.1MHz.scalerTime:%.3f} uA		 
-SHMS BCM4C Current: {P.BCM4C.scalerCharge/P.1MHz.scalerTime:%.3f} uA		 
-SHMS Unser Current: {P.Unser.scalerCharge/P.1MHz.scalerTime:%.3f} uA		  
+pSHMS BCM1 Current: {P.BCM1.scalerCharge/P.1MHz.scalerTime:%.3f} uA		  
+pSHMS BCM2 Current: {P.BCM2.scalerCharge/P.1MHz.scalerTime:%.3f} uA		 
+pSHMS BCM4A Current: {P.BCM4A.scalerCharge/P.1MHz.scalerTime:%.3f} uA		  
+pSHMS BCM4B Current: {P.BCM4B.scalerCharge/P.1MHz.scalerTime:%.3f} uA		 
+pSHMS BCM4C Current: {P.BCM4C.scalerCharge/P.1MHz.scalerTime:%.3f} uA		 
+pSHMS Unser Current: {P.Unser.scalerCharge/P.1MHz.scalerTime:%.3f} uA		  
 
-SHMS BCM1  Charge: {P.BCM1.scalerCharge/1000.:%.3f} mC
-SHMS BCM2  Charge: {P.BCM2.scalerCharge/1000.:%.3f} mC	
-SHMS BCM4A Charge: {P.BCM4A.scalerCharge/1000.:%.3f} mC		  
-SHMS BCM4B Charge: {P.BCM4B.scalerCharge/1000.:%.3f} mC		 
-SHMS BCM4C Charge: {P.BCM4C.scalerCharge/1000.:%.3f} mC		 
-SHMS Unser Charge: {P.Unser.scalerCharge/1000.:%.3f} mC
+pSHMS BCM1  Charge: {P.BCM1.scalerCharge/1000.:%.3f} mC
+pSHMS BCM2  Charge: {P.BCM2.scalerCharge/1000.:%.3f} mC	
+pSHMS BCM4A Charge: {P.BCM4A.scalerCharge/1000.:%.3f} mC		  
+pSHMS BCM4B Charge: {P.BCM4B.scalerCharge/1000.:%.3f} mC		 
+pSHMS BCM4C Charge: {P.BCM4C.scalerCharge/1000.:%.3f} mC		 
+pSHMS Unser Charge: {P.Unser.scalerCharge/1000.:%.3f} mC
 
 Cut on BCM{gBCM_Current_threshold_index+1} current of {gBCM_Current_threshold} uA. Beam over threshold for {P.1MHz.scalerTimeCut:%.3f}s, or {((P.1MHz.scalerTimeCut/P.1MHz.scalerTime)*100.):%.3f}% of total run time.
-SHMS BCM1 Beam Cut Current: {P.BCM1.scalerCharge/P.1MHz.scalerTime:%.3f} uA		  
-SHMS BCM2 Beam Cut Current: {P.BCM2.scalerCharge/P.1MHz.scalerTime:%.3f} uA		 
-SHMS BCM4A Beam Cut Current: {P.BCM4A.scalerCharge/P.1MHz.scalerTime:%.3f} uA		  
-SHMS BCM4B Beam Cut Current: {P.BCM4B.scalerCharge/P.1MHz.scalerTime:%.3f} uA		 
-SHMS BCM4C Beam Cut Current: {P.BCM4C.scalerCharge/P.1MHz.scalerTime:%.3f} uA		 
-SHMS Unser Beam Cut Current: {P.Unser.scalerCharge/P.1MHz.scalerTime:%.3f} uA		  
+pSHMS BCM1 Beam Cut Current: {P.BCM1.scalerChargeCut/P.1MHz.scalerTime:%.3f} uA		  
+pSHMS BCM2 Beam Cut Current: {P.BCM2.scalerChargeCut/P.1MHz.scalerTime:%.3f} uA		 
+pSHMS BCM4A Beam Cut Current: {P.BCM4A.scalerChargeCut/P.1MHz.scalerTime:%.3f} uA		  
+pSHMS BCM4B Beam Cut Current: {P.BCM4B.scalerChargeCut/P.1MHz.scalerTime:%.3f} uA		 
+pSHMS BCM4C Beam Cut Current: {P.BCM4C.scalerChargeCut/P.1MHz.scalerTime:%.3f} uA		 
+pSHMS Unser Beam Cut Current: {P.Unser.scalerChargeCut/P.1MHz.scalerTime:%.3f} uA		  
 
-SHMS BCM1  Beam Cut Charge: {P.BCM1.scalerChargeCut/1000.:%.3f} mC
-SHMS BCM2  Beam Cut Charge: {P.BCM2.scalerChargeCut/1000.:%.3f} mC
-SHMS BCM4A Beam Cut Charge: {P.BCM4A.scalerChargeCut/1000.:%.3f} mC		  
-SHMS BCM4B Beam Cut Charge: {P.BCM4B.scalerChargeCut/1000.:%.3f} mC		 
-SHMS BCM4C Beam Cut Charge: {P.BCM4C.scalerChargeCut/1000.:%.3f} mC		 
-SHMS Unser Beam Cut Charge: {P.Unser.scalerChargeCut/1000.:%.3f} mC
+pSHMS BCM1  Beam Cut Charge: {P.BCM1.scalerChargeCut/1000.:%.3f} mC
+pSHMS BCM2  Beam Cut Charge: {P.BCM2.scalerChargeCut/1000.:%.3f} mC
+pSHMS BCM4A Beam Cut Charge: {P.BCM4A.scalerChargeCut/1000.:%.3f} mC		  
+pSHMS BCM4B Beam Cut Charge: {P.BCM4B.scalerChargeCut/1000.:%.3f} mC		 
+pSHMS BCM4C Beam Cut Charge: {P.BCM4C.scalerChargeCut/1000.:%.3f} mC		 
+pSHMS Unser Beam Cut Charge: {P.Unser.scalerChargeCut/1000.:%.3f} mC
  
 
 ********************
@@ -513,9 +513,9 @@ pdidh                          : {shmsScinDidh.npassed}
 pscinshould                    : {shmsScinShould.npassed}
 pscinshoulde                   : {shmsScinShoulde.npassed}
 pscinshouh                     : {shmsScinShouldh.npassed}
-SING FID TRACK EFFIC           : {shmsScinDid.npassed / (shmsScinShould.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShould.npassed-shmsScinDid.npassed) / (shmsScinShould.npassed+.0001)):%8.4f}
-E SING FID TRACK EFFIC         : {shmsScinDide.npassed / (shmsScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShoulde.npassed-shmsScinDide.npassed) / (shmsScinShoulde.npassed+.0001)):%8.4f}
-HADRON SING FID TRACK EFFIC    : {shmsScinDidh.npassed / (shmsScinShouldh.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShouldh.npassed-shmsScinDidh.npassed) / (shmsScinShouldh.npassed+.0001)):%8.4f}
+pSING FID TRACK EFFIC           : {shmsScinDid.npassed / (shmsScinShould.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShould.npassed-shmsScinDid.npassed) / (shmsScinShould.npassed+.0001)):%8.4f}
+pE SING FID TRACK EFFIC         : {shmsScinDide.npassed / (shmsScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShoulde.npassed-shmsScinDide.npassed) / (shmsScinShoulde.npassed+.0001)):%8.4f}
+pHADRON SING FID TRACK EFFIC    : {shmsScinDidh.npassed / (shmsScinShouldh.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShouldh.npassed-shmsScinDidh.npassed) / (shmsScinShouldh.npassed+.0001)):%8.4f}
 
 =:=:=:=:=:=:=:=:=
 = HMS Chambers  =
@@ -654,9 +654,9 @@ hdidh                          :   {HMSScinDidh.npassed}
 hscinshould                    :   {HMSScinShould.npassed}
 hscinshoulde                   :   {HMSScinShoulde.npassed}
 hscinshouldh                   :   {HMSScinShouldh.npassed}
-SING FID TRACK EFFIC           :   {HMSScinDid.npassed/(HMSScinShould.npassed+0.0001):%8.4f} +- {(sqrt(HMSScinShould.npassed-HMSScinDid.npassed)/(HMSScinShould.npassed+.0001)):%8.4f}
-E SING FID TRACK EFFIC         :   {HMSScinDide.npassed/(HMSScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt(HMSScinShoulde.npassed-HMSScinDide.npassed)/(HMSScinShoulde.npassed+.0001)):%8.4f}
-HADRON SING FID TRACK EFFIC    :   {HMSScinDidh.npassed/(HMSScinShouldh.npassed+0.0001):%8.4f} +- {(sqrt(HMSScinShouldh.npassed-HMSScinDidh.npassed)/(HMSScinShouldh.npassed+.0001)):%8.4f}
+hSING FID TRACK EFFIC           :   {HMSScinDid.npassed/(HMSScinShould.npassed+0.0001):%8.4f} +- {(sqrt(HMSScinShould.npassed-HMSScinDid.npassed)/(HMSScinShould.npassed+.0001)):%8.4f}
+hE SING FID TRACK EFFIC         :   {HMSScinDide.npassed/(HMSScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt(HMSScinShoulde.npassed-HMSScinDide.npassed)/(HMSScinShoulde.npassed+.0001)):%8.4f}
+hHADRON SING FID TRACK EFFIC    :   {HMSScinDidh.npassed/(HMSScinShouldh.npassed+0.0001):%8.4f} +- {(sqrt(HMSScinShouldh.npassed-HMSScinDidh.npassed)/(HMSScinShouldh.npassed+.0001)):%8.4f}
 
 
 

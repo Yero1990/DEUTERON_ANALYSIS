@@ -1,4 +1,4 @@
-void replay_production_hms_coin (Int_t RunNumber=0, Int_t MaxEvent=0, const char* ftype="deep_check") {
+void replay_production_hms_coin (Int_t RunNumber=0, Int_t MaxEvent=0, const char* ftype="heep_check") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -49,8 +49,8 @@ void replay_production_hms_coin (Int_t RunNumber=0, Int_t MaxEvent=0, const char
     }
 
   //Add Module to explicitly plot all TDC hits from the trigger signals
-  THaDecData* decdata= new THaDecData("D","Decoder raw data");
-  gHaApps->Add(decdata);
+  //THaDecData* decdata= new THaDecData("D","Decoder raw data");
+  //gHaApps->Add(decdata);
 
   // Set up the equipment to be analyzed.
   THcHallCSpectrometer* HMS = new THcHallCSpectrometer("H", "HMS");
@@ -135,7 +135,7 @@ void replay_production_hms_coin (Int_t RunNumber=0, Int_t MaxEvent=0, const char
   // A simple event class to be output to the resulting tree.
   // Creating your own descendant of THaEvent is one way of
   // defining and controlling the output.
-  THaEvent* event = new THaEvent;
+  THaEvent* event = new THaEvent();
 
   // Define the run(s) that we want to analyze.
   // We just set up one, but this could be many.
