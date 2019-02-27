@@ -32,6 +32,7 @@ block P.dc.*ntrack*
 block P.hod.beta*
 block P.hod.starttime
 block P.hod.*Counter*
+block P.hod.goodscinhit
 block P.hgcer.npeSum*
 block P.ngcer.npeSum* 
 block P.cal.etot*
@@ -48,7 +49,8 @@ block H.dc.*hit*
 block H.dc.*ntrack*           
 block H.hod.beta*   
 block H.hod.starttime
-block H.hod.*Counter*	
+block H.hod.*Counter*
+block H.hod.goodscinhit	
 block H.cer.npeSum*                  
 block H.cal.etot*                 
 block H.cal.etrack*            

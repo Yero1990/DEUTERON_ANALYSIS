@@ -5,7 +5,7 @@ pcut_Clean1Track     P.gtr.index == 0
 pcut_Clean2Track     P.gtr.index == 1
 pcut_Clean3Track     P.gtr.index == 2
 pcut_Clean4Track     P.gtr.index == 3
-test                 P.dc.1u1.rawtdc>-13200.
+
 
 pcut_CleanTrack_cer_elec     (P.gtr.index > -1) && pcut_cer_elec_both
 pcut_p1hit1_cer_elec	     p1hit1 && pcut_cer_elec_both

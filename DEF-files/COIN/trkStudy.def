@@ -1,5 +1,5 @@
 #******************************
-#Tracking Studies Using Prune *
+#Tracking Efficiency Studies  *
 #******************************
 
 #BCM CUrrent Module
@@ -28,6 +28,11 @@ block H.react.*
 
 #Calibration checks 
 block P.hod.beta*
+block P.hod.*starttime*
+block P.hod.*scinhit*
+block P.hod.*HitsTime*
+block P.hod.*fptime*
+block P.hod.goodscinhit
 block P.hgcer.npeSum*
 block P.ngcer.npeSum* 
 block P.cal.etot*
@@ -35,7 +40,12 @@ block P.cal.etrack*
 block P.cal.*track*
 block P.hod.*Track*
          
-block H.hod.beta*                    
+block H.hod.beta*
+block H.hod.*starttime*                                  
+block H.hod.*scinhit*                   
+block H.hod.*HitsTime* 
+block H.hod.*fptime*
+block H.hod.goodscinhit  
 block H.cer.npeSum*                  
 block H.cal.etot*                 
 block H.cal.etrack*            

@@ -202,7 +202,8 @@ Double_t phgcer_nbins, phgcer_xmin, phgcer_xmax;
 Double_t pngcer_nbins, pngcer_xmin, pngcer_xmax;
 Double_t pPrsh_nbins, pPrsh_xmin, pPrsh_xmax;                                                                                                                                                                                                   
 Double_t pcal_nbins, pcal_xmin, pcal_xmax;                                                                                                                    
-
+Double_t pPrshAdc_nbins, pPrshAdc_xmin, pPrshAdc_xmax;                                                                                                                                                                                                   
+Double_t pcalAdc_nbins, pcalAdc_xmin, pcalAdc_xmax;
 //TRG DETECTOR Components
 Double_t ptrg1_roc1_nbins, ptrg1_roc1_xmin, ptrg1_roc1_xmax;
 Double_t ptrg1_roc2_nbins, ptrg1_roc2_xmin, ptrg1_roc2_xmax;
@@ -255,6 +256,8 @@ TH1F *P_hod_TdcTimeUnCorr[hod_PLANES][SIDES][21];
 TH1F *P_hod_TdcAdcTimeDiff[hod_PLANES][SIDES][21];
 TH1F *P_cal_TdcAdcTimeDiff[224];  //fly's eye (224 pmt-channels)
 TH1F *P_prSh_TdcAdcTimeDiff[SIDES][14];
+TH1F *P_cal_AdcTime[224];  //fly's eye (224 pmt-channels)
+TH1F *P_prSh_AdcTime[SIDES][14];
 TH1F *P_dc_rawTDC[dc_PLANES];
 TH1F *P_hgcer_TdcAdcTimeDiff[4];
 TH1F *P_ngcer_TdcAdcTimeDiff[4];
@@ -290,9 +293,13 @@ TCanvas *hCer_Canv;
 TCanvas *shms_REF_Canv;                      //canvas to save reference time histograms
 TCanvas *phodoCanv[hod_PLANES][SIDES];
 TCanvas *phodo_tdcCanv[hod_PLANES][SIDES];
-TCanvas *pcalCanv;
-TCanvas *pcalCanv_alt[16];
+TCanvas *pcalCanv[16];
 TCanvas *pPrshCanv[SIDES];
+
+TCanvas *pcalAdcCanv[16];
+TCanvas *pPrshAdcCanv[SIDES];
+
+
 TCanvas *pdcCanv;
 TCanvas *pngCer_Canv;
 TCanvas *phgCer_Canv;
@@ -407,6 +414,8 @@ TString n_pcal_TdcAdcTimeDiff;
 TString n_pcal_AdcMult;                                                                                                                                                               
 TString n_pPrSh_TdcAdcTimeDiff;
 TString n_pPrSh_AdcMult;
+TString n_pcal_AdcTime;                                                                                                                                                        
+TString n_pPrSh_AdcTime;
 TString n_phgcer_TdcAdcTimeDiff;                                                                                                                                          
 TString n_phgcer_AdcMult;
 TString n_pngcer_TdcAdcTimeDiff;                                                                                                                                                      
@@ -459,7 +468,9 @@ Double_t phod_AdcMult[hod_PLANES][SIDES][21];
 Double_t pcal_TdcAdcTimeDiff[1][224];
 Double_t pcal_AdcMult[1][224];
 Double_t pPrSh_TdcAdcTimeDiff[1][SIDES][14]; 
-Double_t pPrSh_AdcMult[1][SIDES][14]; 
+Double_t pPrSh_AdcMult[1][SIDES][14];
+Double_t pcal_AdcTime[1][224];
+Double_t pPrSh_AdcTime[1][SIDES][14]; 
 Double_t phgcer_TdcAdcTimeDiff[4];
 Double_t phgcer_AdcMult[4];
 Double_t pngcer_TdcAdcTimeDiff[4];

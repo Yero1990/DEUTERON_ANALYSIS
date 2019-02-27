@@ -96,6 +96,10 @@ void setTimeWindows(int run, string trg)
   hcal_xmin = -140,   pPrsh_xmin = -300,      pcal_xmin = -100;                                                                                                                    
   hcal_xmax = -60,    pPrsh_xmax = 210,       pcal_xmax = 50; 
   
+  pPrshAdc_nbins = 200,         pcalAdc_nbins = 200;
+  pPrshAdc_xmin = -300.,        pcalAdc_xmin = -300.;
+  pPrshAdc_xmax = 500.,         pcalAdc_xmax = 500.;
+
   //=====================================
   
 
@@ -370,12 +374,16 @@ void setTimeWindows(int run, string trg)
 		  
 		  n_pPrSh_TdcAdcTimeDiff = base + "." + cal_side_names[iside] + "AdcTdcDiffTime";
 		  n_pPrSh_AdcMult = base + "." + cal_side_names[iside] + "AdcMult";
-		  
+		  n_pPrSh_AdcTime = base + "." +  cal_side_names[iside] + "AdcPulseTime";
+
 		  T->SetBranchAddress(n_pPrSh_TdcAdcTimeDiff, pPrSh_TdcAdcTimeDiff[npl][iside]);
 		  T->SetBranchAddress(n_pPrSh_AdcMult, pPrSh_AdcMult[npl][iside]);
-	      
+		  T->SetBranchAddress(n_pPrSh_AdcTime, pPrSh_AdcTime[npl][iside]);
+
 		  P_prSh_TdcAdcTimeDiff[iside][ipmt] = new TH1F(Form("pPrSh_pmt%d%s", ipmt+1, nsign[iside].c_str()), Form("SHMS Pre-Shower PMT_%d%s", ipmt+1, nsign[iside].c_str()), pPrsh_nbins, pPrsh_xmin, pPrsh_xmax);
 		  P_prSh_TdcAdcTimeDiff_CUT[iside][ipmt] = new TH1F(Form("pPrSh_pmt%d%s_CUT", ipmt+1, nsign[iside].c_str()), Form("SHMS Pre-Shower PMT_%d%s (CUT)", ipmt+1, nsign[iside].c_str()), pPrsh_nbins, pPrsh_xmin, pPrsh_xmax);
+		  P_prSh_AdcTime[iside][ipmt] = new TH1F(Form("pPrShAdcTime_pmt%d%s", ipmt+1, nsign[iside].c_str()), Form("SHMS Pre-Shower Adc Time: PMT_%d%s", ipmt+1, nsign[iside].c_str()), pPrshAdc_nbins, pPrshAdc_xmin, pPrshAdc_xmax);
+
 				  
 		}
 	      if(iside==0)
@@ -386,12 +394,16 @@ void setTimeWindows(int run, string trg)
 		      base =  "P.cal.fly";
 		      n_pcal_TdcAdcTimeDiff = base + "." + "goodAdcTdcDiffTime";
 		      n_pcal_AdcMult = base + "." + "goodAdcMult";
+		      n_pcal_AdcTime = base + "." + "goodAdcPulseTime";
+
 		      //For multiplicity, see THcSHowerArray.cxx, for totNumGoodAdcHits, 
 		      T->SetBranchAddress(n_pcal_TdcAdcTimeDiff, pcal_TdcAdcTimeDiff[iside]);
 		      T->SetBranchAddress(n_pcal_AdcMult, pcal_AdcMult[iside]);
+		      T->SetBranchAddress(n_pcal_AdcTime, pcal_AdcTime[iside]);
 
 		      P_cal_TdcAdcTimeDiff[ipmt] = new TH1F(Form("pSh_pmt%d", ipmt+1), Form("SHMS Shower PMT_%d", ipmt+1), pcal_nbins, pcal_xmin, pcal_xmax);
 		      P_cal_TdcAdcTimeDiff_CUT[ipmt] = new TH1F(Form("pSh_pmt%d_CUT", ipmt+1), Form("SHMS Shower PMT_%d (CUT)", ipmt+1), pcal_nbins, pcal_xmin, pcal_xmax);
+		      P_cal_AdcTime[ipmt] = new TH1F(Form("pShAdcTime_pmt%d", ipmt+1), Form("SHMS Shower Adc Time: PMT_%d", ipmt+1), pcalAdc_nbins, pcalAdc_xmin, pcalAdc_xmax);
 
 		    }
 		
@@ -644,6 +656,7 @@ void setTimeWindows(int run, string trg)
 		    if(good_Mult){P_prSh_TdcAdcTimeDiff_CUT[iside][ipmt]->Fill(pPrSh_TdcAdcTimeDiff[ip][iside][ipmt]);}
 		  }
 		  
+		  P_prSh_AdcTime[iside][ipmt]->Fill(pPrSh_AdcTime[ip][iside][ipmt]);
 
 		} //End loop over SHMS PrSH PMTs
 
@@ -657,6 +670,11 @@ void setTimeWindows(int run, string trg)
 		      P_cal_TdcAdcTimeDiff[ipmt]->Fill(pcal_TdcAdcTimeDiff[iside][ipmt]);
 		      if(good_Mult){P_cal_TdcAdcTimeDiff_CUT[ipmt]->Fill(pcal_TdcAdcTimeDiff[iside][ipmt]);}
 		    }
+		  
+		  if(iside==0){
+		    P_cal_AdcTime[ipmt]->Fill(pcal_AdcTime[iside][ipmt]);
+		  
+		  }
 		}
 	      
 
@@ -1035,13 +1053,8 @@ void setTimeWindows(int run, string trg)
 	  if(npl==0)
 	    {
 	      pPrshCanv[iside] =  new TCanvas(Form("pPrSh_TDC:ADC Time Diff %s", cal_side_names[iside].c_str()), Form("SHMS PreShower TDC:ADC Time Diff %s",  cal_side_names[iside].c_str()),  1500, 600);
-	      
-	      //Define Fly's Eye Calorimeter
-	      if(iside==0)
-		{
-		  pcalCanv =  new TCanvas("pCal_TDC:ADC Time Diff", "SHMS Calo TDC:ADC Time Diff",  2500, 2500);
-		}
-	     
+	      pPrshAdcCanv[iside] =  new TCanvas(Form("pPrSh_ADC Time %s", cal_side_names[iside].c_str()), Form("SHMS PreShower ADC Time %s",  cal_side_names[iside].c_str()),  1500, 600);
+
 	    }
 	  
 	  
@@ -1081,16 +1094,8 @@ void setTimeWindows(int run, string trg)
 	    {
 	      
 	      pPrshCanv[iside]->Divide(7,2);
-	      
-	      
-	      if(iside==0)
-		{
-		  
-		  pcalCanv->Divide(15,15);
-		  
-		
-		}
-	      
+	      pPrshAdcCanv[iside]->Divide(7,2);
+
 	    }
 	  
 	  
@@ -1272,7 +1277,13 @@ void setTimeWindows(int run, string trg)
 	      P_prSh_TdcAdcTimeDiff_CUT[iside][ipmt]->Draw("sames");
 	      pPrsh_LineMin[iside][ipmt]->Draw();
 	      pPrsh_LineMax[iside][ipmt]->Draw();
-	      
+	      	      
+	      pPrshAdcCanv[iside]->cd(ipmt+1);
+	      gPad->SetLogy();
+	      P_prSh_AdcTime[iside][ipmt]->Draw();
+
+
+
 	    } //end pmt loop
 	  	  
 	  if(iside==0)
@@ -1299,16 +1310,6 @@ void setTimeWindows(int run, string trg)
 		  pcal_LineMin[ipmt]->SetLineStyle(2);
 		  pcal_LineMax[ipmt]->SetLineStyle(2);
 
-		  pcalCanv->cd(ipmt+1);
-		  gPad->SetLogy();
-		  P_cal_TdcAdcTimeDiff_CUT[ipmt]->SetLineColor(kRed);
-		  P_cal_TdcAdcTimeDiff[ipmt]->Draw();
-		  P_cal_TdcAdcTimeDiff_CUT[ipmt]->Draw("sames");
-		  pcal_LineMin[ipmt]->Draw();
-		  pcal_LineMax[ipmt]->Draw();
-
-	
-
 		} // End FLys Eye PMT loop
 	      
 	     
@@ -1329,11 +1330,10 @@ void setTimeWindows(int run, string trg)
 	  
 	  if(npl==0){
 	    pPrshCanv[iside]->SaveAs(Form("Time_cuts_%d/SHMS/CAL/pPrsh_%s.pdf",run, side_names[iside].c_str()));
+	    pPrshAdcCanv[iside]->SaveAs(Form("Time_cuts_%d/SHMS/CAL/pPrshAdc_%s.pdf",run, side_names[iside].c_str()));
+
 	  }
 	  
-	  if(npl==0&&iside==0){
-	    pcalCanv->SaveAs(Form("Time_cuts_%d/SHMS/CAL/pCal.pdf",run));
-	  }
 	  
 	} //end side loop
 
@@ -1349,8 +1349,11 @@ void setTimeWindows(int run, string trg)
  for(int row=0; row < 16; row++)
    {
 
-     pcalCanv_alt[row] =  new TCanvas(Form("pCal_row_%d", row+1), Form("SHMS Calo TDC:ADC Time Diff, Row %d", row+1),  1500, 600);
-     pcalCanv_alt[row]->Divide(7,2);
+     pcalCanv[row] =  new TCanvas(Form("pCal_row_%d", row+1), Form("SHMS Calo TDC:ADC Time Diff, Row %d", row+1),  1500, 600);
+     pcalCanv[row]->Divide(7,2);
+
+     pcalAdcCanv[row] =  new TCanvas(Form("pCalAdc_row_%d", row+1), Form("SHMS Calo ADC Time, Row %d", row+1),  1500, 600);
+     pcalAdcCanv[row]->Divide(7,2);
 
      for(int col=0; col<14; col++)
        {
@@ -1376,20 +1379,30 @@ void setTimeWindows(int run, string trg)
 	 
 	 
 	 //cd to row pads / column
-	 pcalCanv_alt[row]->cd(col+1);
+	 pcalCanv[row]->cd(col+1);
 	 gPad->SetLogy();
 	 P_cal_TdcAdcTimeDiff_CUT[ipmt]->SetLineColor(kRed);
 	 P_cal_TdcAdcTimeDiff[ipmt]->Draw();
 	 P_cal_TdcAdcTimeDiff_CUT[ipmt]->Draw("sames");
 	 pcal_LineMin[ipmt]->Draw();
 	 pcal_LineMax[ipmt]->Draw();
+
+	 pcalAdcCanv[row]->cd(col+1);
+	 gPad->SetLogy();
+	 P_cal_AdcTime[ipmt]->Draw();
+
+
 	 //increment pmt counter
 	 ipmt++;
+
+
+
        }//end loop over rows
      
      //Save Each Cal. Column
-     pcalCanv_alt[row]->SaveAs(Form("Time_cuts_%d/SHMS/CAL/pCal_row%d.pdf",run, row+1));
-     
+     pcalCanv[row]->SaveAs(Form("Time_cuts_%d/SHMS/CAL/pCal_row%d.pdf",run, row+1));
+     pcalAdcCanv[row]->SaveAs(Form("Time_cuts_%d/SHMS/CAL/pCalAdc_row%d.pdf",run, row+1));
+
    }//end loop over columns
  
 

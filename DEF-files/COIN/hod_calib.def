@@ -8,8 +8,8 @@ block P.cal.etotnorm
 block P.cal.etracknorm
 block P.hgcer.npe*
 
-block H.hod.*
-block H.dc.ntrack
-block H.cal.etotnorm
-block H.cal.etracknorm
-block H.cer.npe*
+#block H.hod.*
+#block H.dc.ntrack
+#block H.cal.etotnorm
+#block H.cal.etracknorm
+#block H.cer.npe*

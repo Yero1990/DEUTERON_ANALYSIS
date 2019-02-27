@@ -4,19 +4,19 @@
 #where [options] ---> status,  delete
 
 #workflow_name="heep_coin_elec"
-workflow_name="D2_heep"
+workflow_name="D2_scalerReplay"
 
 #runlist_name="current_elec.data"
 #runlist_name="current_prot.data"
-runlist_name="h2.dat"
+runlist_name="d2.dat"
 
 #Various optional flags to add to hcswif workflow
 mode=" --mode replay "
 spec=" --spectrometer COIN "
-#spec=" --spectrometer HMS_COIN "
+#spec=" --spectrometer COIN "
 events="--events -1"
-range="--run 3377"   #"--run 3242-3387"
-#filelist=" --run file $runlist_name "
+#range="--run 3288"   #"--run 3242-3387"
+filelist=" --run file $runlist_name "
 replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C"     
 #replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_coin_hElec_pProt.C "
 #replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_hms_coin.C " 
@@ -27,7 +27,7 @@ project=" --project c-comm2017 "
 workflow=" --name $workflow_name"
 
 
-CMD="python3 hcswif.py $mode $range $replay_script $disk_usage $cpu_cores $spec $events $project $workflow"
+CMD="python3 hcswif.py $mode $filelist $replay_script $disk_usage $cpu_cores $spec $events $project $workflow"
 #echo $CMD
 
 view_file="python3 -m json.tool ${workflow_name}.json"

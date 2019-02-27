@@ -4,26 +4,27 @@ RawDecode_master  ALL_events
 
 Block: Decode
 #include "DEUTERON_ANALYSIS/DEF-files/COIN/CUTS/coin_decode_cuts.def"
-Decode_master     ALL_COIN_NO_EDTM
+Decode_master     ALL_events
 
 Block: CoarseTracking
 #include "DEUTERON_ANALYSIS/DEF-files/SHMS/CUTS/pstackana_coarsetracking_cuts.def"
 #include "DEUTERON_ANALYSIS/DEF-files/HMS/CUTS/hstackana_coarsetracking_cuts.def"
-CoarseTracking_master  ALL_COIN_NO_EDTM
+CoarseTracking_master  ALL_events
 
 Block: CoarseReconstruct
-CoarseReconstruct_master   ALL_COIN_NO_EDTM
+CoarseReconstruct_master   ALL_events
 
 Block: Tracking
-Tracking_master     ALL_COIN_NO_EDTM
+Tracking_master     ALL_events
 
 Block: Reconstruct
 #include "DEUTERON_ANALYSIS/DEF-files/SHMS/CUTS/pstackana_reconstruct_cuts.def"
 #include "DEUTERON_ANALYSIS/DEF-files/HMS/CUTS/hstackana_reconstruct_cuts.def"
 #include "DEUTERON_ANALYSIS/DEF-files/COIN/CUTS/coin_reconstruct_cuts.def"
-Reconstruct_master ALL_COIN_NO_EDTM
+Reconstruct_master ALL_events
 
 Block: Physics
 #include "DEUTERON_ANALYSIS/DEF-files/HMS/CUTS/hstackana_physics_cuts.def"
 #include "DEUTERON_ANALYSIS/DEF-files/SHMS/CUTS/pstackana_physics_cuts.def"
-Physics_master  ALL_COIN_NO_EDTM
+#include "DEUTERON_ANALYSIS/DEF-files/COIN/CUTS/coin_physics_cuts.def"
+Physics_master  ALL_COIN_NO_EDTM && P.bcm.CurrentFlag==1

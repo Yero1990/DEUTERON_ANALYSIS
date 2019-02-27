@@ -17,6 +17,7 @@ block H.hod.*starttime*
 block H.hod.*Mult*
 block H.cal.*AdcTdcDiffTime*
 block H.cal.*Mult*
+block H.cal.*PulseTime*
 
 block P.hgcer.*AdcTdcDiffTime
 block P.hgcer.*Mult*
@@ -32,6 +33,8 @@ block P.hod.*Mult*
 block P.cal.*AdcTdcDiffTime*
 block P.cal.*AdcHits*
 block P.cal.*Mult*
+block P.cal.*PulseTime*
+
 
 begin epics
 IBC3H00CRCUR4

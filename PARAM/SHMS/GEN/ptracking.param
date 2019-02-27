@@ -7,22 +7,23 @@ pntracks_max_fp = 10
 ;nominal
 pmin_hit = 5, 5
 
-;setting2, etrk eff 88%
-;pmin_hit = 4, 4
 
-; hmin_combos(i) minimum number of pairs in each space point ( one per chamber)
+; pmin_combos(i) minimum number of pairs in each space point ( one per chamber)
 ; should be 3/3 for 4/6 tracking, and 4/4 for 5/6 tracking (JRA)
 ;nominal
 pmin_combos = 4, 4
 
-;setting2,  etrk eff 88%
-;pmin_combos = 3, 3
 
 ; hspace_point_criterion(i) minimum separation of distinct space points
 ; recommended value for hspace_point_criterion ( based on meeting
 ; Feb 2003)
   pspace_point_criterion = 1.2, 1.2
+   
 
+; when selecting stub for chamber 
+;  be sure stub_xp - stub_x*fRatio_xpfp_to_xfp < pstub_max_xpdiff
+;   fRatio_xpfp_to_xfp is set in THcDriftChamber::ReadDatabase according to the spectrometer
+pstub_max_xpdiff=0.2
 
 ;----------------------------------------------------------------------------
 ; The following four criteria are applied to the stub fit results at the
@@ -31,28 +32,18 @@ pmin_combos = 4, 4
 ;nominal
  pxt_track_criterion = 20.0
  pyt_track_criterion = 5.0
- pxpt_track_criterion = .4
+ pxpt_track_criterion = 0.4
  pypt_track_criterion = 1.
  
-;setting1,2
-; pxt_track_criterion = 100.0
-; pyt_track_criterion = 20.0
-; pxpt_track_criterion = 1.
-; pypt_track_criterion = 1.
 
 
 ; Make a track of all single stubs normally 0
   psingle_stub = 0
 
 ; No small angle approximation for cosmic ray tests
-  pSmallAngleApprox = 0
+  pSmallAngleApprox = 1
 
 
-
-; when selecting stub for chamber 
-;  be sure stub_xp - stub_x*fRatio_xpfp_to_xfp < pstub_max_xpdiff
-;   fRatio_xpfp_to_xfp is set in THcDriftChamber::ReadDatabase according to the spectrometer
-pstub_max_xpdiff=.2
 ; psel_using_scin         uses scintillator for track selection
   psel_using_scin = 0
 
@@ -60,22 +51,24 @@ pstub_max_xpdiff=.2
 
 ;------------USING SELECTIVE TRACKS (PRUNING) ----------------------
 ; psel_using_prune         using prune
-  psel_using_prune = 1
+  psel_using_prune = 0
 
+; Calorimeter EtotNorm Prune Min
+  pprune_etotnorm = 1.7
 
 ; xptar prune min =  0.03
-  pprune_xp = .05
+  pprune_xp = .08
 
 ; yptar prune min= 0.04
-  pprune_yp = .05
+  pprune_yp = .04
 
 ; ytar prune min= 4
-  pprune_ytar = 6
+  pprune_ytar = 4
 
 ; delta prune  min = 13
-  pprune_delta = 30
+  pprune_delta = 25
 
-; beta track = beta mom diff prune  min = .1
+; (beta track - beta mom) diff prune  min = .1
   pprune_beta = .5
 
 ; min number of deg of freedom in track  prune min = 1.0
@@ -87,7 +80,7 @@ pstub_max_xpdiff=.2
 ; Number PMT hits    min = 6.0
   pprune_npmt=6
 
-; focal plane time - Start time center difference  min = 5.0
+; (focal plane time - Start time center) difference  min = 5.0
   pprune_fptime = 1000. 
 
 ; Hardcode to check if track has hit in plane 4.
@@ -133,11 +126,16 @@ pstub_max_xpdiff=.2
 
 ;Derek added this for scintillator based fiducial cuts.  Everything from
 ;loscin to hiscin inclusive will be included as "good" scintillator hits.
+;  pxloscin  = 4, 4
+;  pxhiscin  = 11, 10
+;  pyloscin  = 4, 6
+;  pyhiscin  = 11, 14
+;Fiducial Cuts based on Xfp vs. Yfp for D2 Heep Elastics
   pxloscin  = 4, 4
-  pxhiscin  = 11, 10
+  pxhiscin  = 11, 11
   pyloscin  = 4, 6
-  pyhiscin  = 11, 14
+  pyhiscin  = 11, 17
 
 ;  ptrack_eff_test_scin_planes is the number of planes nec needed to
 ;  set sweet spot to true. 4 is extra clean, 3 is good enough for e-'s.
-  ptrack_eff_test_num_scin_planes = 3
+  ptrack_eff_test_num_scin_planes = 4

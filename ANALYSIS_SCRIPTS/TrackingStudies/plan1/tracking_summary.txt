@@ -1,0 +1,95 @@
+
+#Nominal Values for Tracking Efficiency STUDIES
+#BCM Current is corrected for (BCMCurrent.cxx module)
+#Live Time is corrected by including only events > 5 uA (bcm current flag==1 cut)
+
+#Brief: The tracking efficiencies studies will consist of trying out different combinations of
+#tracking parameters along with the Track Fitting method. For example, using the best chi2 method,
+#how can we optimize the parameters to get a more realistic tracking efficiency?  We are mainly
+#interested in Run 3377, which is a high rate run, and the ratio of data/simc is 15% away from 0.9
+#so, we need to lower the tracking efficiency by ~15% somehow, or inrease the number of tracks formed.
+
+
+#----------------------------------------------------------------
+#NOMINAL SETTINGS:
+#ptracking.param (and htracking.param)
+#fSmall Angle Approximation is always=1
+
+#Track Fitting Method: BEST CHI2
+#                DC1,DC2                                                         ---Name in table---   
+#Max # of hits = 25, 25                                                            pmax_hits
+#Max # of focal_plane tracks = 10						   pntracks_max_fp						   
+#Min. # of hits in each spacepoint = 5,5					   pmin_hit (leave at 5,5  if using small angle approximation)
+#Min. # of pairs (combos) in each spacepoint = 4,4				   pmin_combos	
+#Min. separation of distinct spacepoints = 1.2, 1.2 cm (1.0, 1.0 for HMS)	   pspace_point_criterion
+#Stubs Criteria (Max. dist between DC1 & DC2 stubs difference) = 0.2		   pstub_max_xpdiff
+#ex. |dpos_x| = |(DC1_xstub - DC2_xstub)| < pxt_track_criterion
+#pxt_track_criterion = 20. [cm]							   pxt_track_criterion		
+#pyt_track criterion = 5.0 [cm]							   pyt_track_criterion
+#pxpt_track_criterion = 0.4 [rad]						   pxpt_track_criterion
+#pypt_track_criterion = 1.0 [rad]						   pypt_track_criterion (fixed. do not change)
+
+
+#good_pdchits ---> Number of good DC hits (P.dc.tnhit), CUT:P.dc.tnhit>=10&&P.dc.ntrack==0&&P.bcm.CurrentFlag==1 (minimum required good hits to form a track is 10. )
+#pdc_ntrack0 ---> P.dc.ntrack, CUT: P.dc.ntrack==0&&P.dc.tnhit>=10&&P.bcm.CurrentFlag==1
+#pdc_ntrack1 ---> P.dc.ntrack, CUT: P.dc.ntrack==1&&P.dc.tnhit>=10&&P.bcm.CurrentFlag==1
+#pdc_ntrack2plus ---> P.dc.ntrack, CUT: P.dc.ntrack>1&&P.dc.tnhit>=10&&P.bcm.CurrentFlag==1
+
+#The ntrack variables have a P.bcm.CurrentFlag==1 cut, to look only at events > 5 uA.  I will put this cut at the end of the "Physics_block" on the next replays.
+#This time I had to put the cut by hand in the tree, when looking at these variables. 
+
+#Ultimately, the ratio of dataY_to_trkEff should increase, indicating lower tracking efficiency or large data yields so that the Ratio increases
+#The cut on the data yield is: abs(H.gtr.dp)<8. && P.gtr.dp>-10&&P.gtr.dp<22 && H.kin.secondary.emiss<0.04,  W is integrated from (0.85, 1.05)
+
+#-----------------------------------------------------------
+#-----------------BEST CHI2 METHOD--------------------------
+#-----------------------------------------------------------
+#! Run[i,0]/  entries [i,1]/   setting[s,2]/    dataY[f,3]/     shms_etrkEff[f,4]/   dataY_to_trkEff[]       pdc_ntrack0[i,5]/     pdc_ntrack1[i,6]/   pdc_ntrack2plus[i,7]/   pmax_hits[s,8]/    pspace_point_criterion[s,9]/   pstub_max_xpdiff[f,10]/     pxt_track_criterion[f,11]/      pyt_track_criterion[s,12]/         pxpt_track_criterion[s,13]/                                                     
+   3288	      294857  	       nominal		133060		0.9729		     136766.3685       	     21337		   251282	       17693		       25,25              1.2,1.2              	      	  0.2           	      20.			      5.				 0.4                          	
+   3371	      41676	       nominal		18897		0.9744		     19393.472      	     3651		   34910	       2102		       25,25		  1.2,1.2			  0.2			      20.			      5.				 0.4
+   3374	      317763	       nominal		138946		0.9620		     144434.511       	     27815		   263620	       21018		       25,25		  1.2,1.2			  0.2			      20.			      5.				 0.4
+   3377	      601754	       nominal		249862		0.9488		     263345.2782       	     79033		   464121	       44179		       25,25		  1.2,1.2			  0.2			      20.			      5.				 0.4
+   3288	      48383  	       nominal		21914		0.9730       	     22522.096		     3527	  	   41189	       2962  		       25,25              1.2,1.2              	      	  0.2           	      20.			      5.				 0.4                          	
+   3371	      41676	       nominal		18897		0.9744       	     19393.472		     3651		   34910	       2102	     	       25,25		  1.2,1.2			  0.2			      20.			      5.				 0.4
+   3374	      49658	       nominal		21661		0.9615       	     22528.341		     4383		   41135	       3316		       25,25		  1.2,1.2			  0.2			      20.			      5.				 0.4
+   3377	      49756	       nominal		21014		0.9488       	     22147.976		     6084		   39069	       3521		       25,25		  1.2,1.2			  0.2			      20.			      5.				 0.4
+   3377	      49756   	       study1_1		21556		0.9738		     22135.962		     4642		   39970	       4062		       50,50              1.2,1.2			  0.2			      20.			      5.                                 0.4                                         	     			   		       			       		  
+   3377	      49756   	       study1_2		21564		0.9741		     22137.357		     4628		   39980	       4066  		       100,100            1.2,1.2			  0.2			      20.			      5.                                 0.4                        		  
+   3377	      49756   	       study1_3		21564		0.9741		     22137.357		     4628		   39980	       4066		       150,150		  1.2,1.2			  0.2			      20.			      5.				 0.4					  
+   3377	      49756   	       study1_4		20110		0.9153		     21970.938		     8183		   37664	       2827	   	       20,20		  1.2,1.2			  0.2			      20.			      5.				 0.4
+   3377	      49756   	       study1_5		17867		0.8185		     21828.955		     13217		   33794	       1663		       15,15              1.2,1.2                         0.2                         20.                             5.                                 0.4
+   3377	      49756   	       study2_1		21195		0.9586		     22110.369		     5784		   38635	       4255		       25,25		  1.0,1.0			  0.2			      20.			      5.				 0.4			      				      
+   3377	      49756   	       study2_2		21311       	0.9628		     22134.399	     	     5569		   37910     	       5195      	       25,25		  0.8,0.8			  0.2			      20.			      5.				 0.4			      				      
+   3377	      49756   	       study2_3		21369       	0.9634		     22180.817	     	     5557		   38707 	       4410	     	       25,25		  0.6,0.6			  0.2			      20.			      5.				 0.4			      				      
+   3377	      49756   	       study2_4		21403	     	0.9611       	     22269.274		     5564		   33569	       9541  		       25,25		  0.4,0.4			  0.2			      20.			      5.				 0.4			      				      
+   3377	      49756   	       study2_5		15745  		0.7165       	     21974.877		     16451		   28018	       4205	   	       25,25		  0.2,0.2			  0.2			      20.			      5.				 0.4			      				      
+   3377	      49756   	       study2_6		20797	   	0.9468     	     21965.568 		     6373		   38722 	       3579		       25,25		  1.4,1.4			  0.2			      20.			      5.				 0.4			      				      
+   3377	      49756   	       study3_1		20708		0.9519		     21754.385 		     6872		   38622	       3180     	       25,25		  1.2,1.2			  0.1			      20.			      5.				 0.4			      				      
+   3377	      49756   	       study3_2		20688		0.9515	      	     21742.511	     	     6999		   38590	       3085	     	       25,25		  1.2,1.2			  0.05			      20.			      5.				 0.4			      				      
+   3377	      49756   	       study3_3		20830		0.9535      	     21845.831	     	     6591		   38664	       3419   		       25,25		  1.2,1.2			  0.4			      20.			      5.				 0.4			      				      
+   3377	      49756   	       study4_1		21040		0.9532		     22073.017		     5888		   38575	       4211		       25,25		  1.2,1.2			  0.2			      100.			      5.				 0.4			      				      
+   3377	      49756   	       study4_2		21039		0.9532		     22071.968		     5908		   38616	       4150		       25,25		  1.2,1.2			  0.2			      50.			      5.				 0.4			      				      
+   3377	      49756   	       study4_3		21030		0.952		     22090.336	     	     5996		   38965	       3713		       25,25		  1.2,1.2			  0.2			      25.			      5.				 0.4			      				      
+   3377	      49756   	       study4_4		20926		0.9494		     22041.289		     6361		   39102	       3211		       25,25		  1.2,1.2			  0.2			      15.			      5.				 0.4			      				      
+   3377	      49756   	       study5_1		20963       	0.9540		     21973.794	     	     5636 		   36126  	       6912	      	       25,25		  1.2,1.2			  0.2			      20.			      100.				 0.4			      				      
+   3377	      49756   	       study5_2		20963       	0.9540		     21973.794	     	     5636		   36147  	       6884	   	       25,25		  1.2,1.2			  0.2			      20.			      50.				 0.4			      				      
+   3377	      49756   	       study5_3		20967       	0.9536		     21987.206	     	     5695		   37004  	       5975	   	       25,25		  1.2,1.2			  0.2			      20.			      25.				 0.4			      				      
+   3377	      49756   	       study5_4		20982       	0.9531		     22014.479		     5873		   38296	       4505		       25,25		  1.2,1.2			  0.2			      20.			      10.				 0.4			      				      
+   3377	      49756   	       study5_5		21097       	0.9317		     22643.554	     	     9304		   37767	       1603	    	       25,25		  1.2,1.2			  0.2			      20.			      1.				 0.4			      				      
+   3377	      49756   	       study5_6		20844	    	0.8669 	       	     24044.29	     	     12861		   34851  	       962	       	       25,25		  1.2,1.2			  0.2			      20.			      0.5				 0.4			      				      
+   3377	      49756   	       study5_7		20714	    	0.8322	       	     24890.651  	     14469		   33417  	       788		       25,25		  1.2,1.2			  0.2			      20.			      0.4				 0.4			      				      
+   3377	      49756	       study6_1		21157		0.9577		     22091.469		     5625		   38940	       4109		       25,25		  1.2,1.2			  0.2			      20.			      5.				 1.0			  
+   3377	      49756	       study6_2		20015		0.9292		     21540.034		     8393		   37754	       2527		       25,25		  1.2,1.2			  0.2			      20.			      5.				 0.2			    
+   
+   3288	      48383  	       study7_ntrkg0	21878		0.9714	  		       25,25              1.2,1.2              	      	  0.2           	      20.			      5.				 0.4                          	
+   3371	      41676	       study7_ntrkg0	19073		0.9725	     	       	       25,25		  1.2,1.2			  0.2			      20.			      5.				 0.4
+   3374	      49658	       study7_ntrkg0	21580		0.9601		       	       25,25		  1.2,1.2			  0.2			      20.			      5.				 0.4
+   3377	      49756	       study7_ntrkg0	21015		0.9531	       		       25,25		  1.2,1.2			  0.2			      20.			      5.				 0.4
+ 
+  3288	      48383  	       study7_ntrk_eq1	20191	  	0.9196	       		       25,25              1.2,1.2              	      	  0.2           	      20.			      5.				 0.4                          	
+   3371	      41676	       study7_ntrk_eq1	17898		0.9323         		       25,25		  1.2,1.2			  0.2			      20.			      5.				 0.4
+   3374	      49658	       study7_ntrk_eq1	19688		0.9042	       		       25,25		  1.2,1.2			  0.2			      20.			      5.				 0.4
+   3377	      49756	       study7_ntrk_eq1	19078	 	0.8948	       		       25,25		  1.2,1.2			  0.2			      20.			      5.				 0.4
+
+
+#------------------------------------------------------------

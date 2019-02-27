@@ -106,7 +106,6 @@ shmsHitsPlanes      (P.dc.Ch1.nhit <= 6) && (P.dc.Ch2.nhit <= 6) && shmsPlanesGT
 
 pSpacePoints         P.dc.Ch1.spacepoints >= 1 && P.dc.Ch2.spacepoints >= 1
 pSpacePointsStub     P.dc.stubtest == 1 && P.dc.Ch1.spacepoints >= 1 && P.dc.Ch2.spacepoints >= 1
-pcut_FoundTrack      P.dc.ntrack > 0 
 pStubLT              P.dc.stubtest == 1
 f1PSpacePoints       shms1HitsLt && shmsDC1PlanesGT && P.dc.Ch1.spacepoints == 0 && g.evtyp == 1
 f2PSpacePoints       shms2HitsLt && shmsDC2PlanesGT && P.dc.Ch2.spacepoints == 0 && g.evtyp == 1

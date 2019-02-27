@@ -1,0 +1,113 @@
+#In these studies, we define in the tracking efficiency calculations the pid cuts: [etotnorm >= 0.6 && etotnorm <=1.6 && pngcer_npeSum>0.5]--> single electron track
+#    	  	      	     	    	     			     	     	   [etotnorm > 1.6 && pngcer_npeSum>0.5]--> multiple electron tracks  
+#										   [etotnorm >= 0.6 && pngcer_npeSum>0.5]--> all tracks
+#These cuts should be applied to the data as well when determining the efficiency
+shmsScinGood        P.hod.goodscinhit == 1 
+shmsGoodBetanotrk   P.hod.betanotrack > 0.5 && P.hod.betanotrack < 1.5 
+shmsScinShould      shmsGoodBetanotrk && shmsScinGood
+
+
+#Single Track Efficiency
+bad_1trk            shmsScinShould && P.dc.ntrack==1 && P.cal.etotnorm > 1.6 && P.ngcer.npeSum > 0.5
+total_1trk          shmsScinShould && P.dc.ntrack==1 && P.cal.etotnorm >= 0.6 && P.cal.etotnorm <= 1.6 && P.ngcer.npeSum > 0.5
+shmsScinShoulde     shmsScinShould &&  P.cal.etotnorm >= 0.6  && P.cal.etotnorm <= 1.6 && P.ngcer.npeSum > 0.5 
+shmsScinDide        shmsScinShoulde && P.dc.ntrack == 1 
+
+
+#Multiple Tracking Efficiency (DETERMINED from D2 Elastic run 3377, but will have to check etotnorm limits of other runs)
+bad_multtrk         shmsScinShould && P.dc.ntrack > 1 && P.cal.etotnorm >= 0.6 && P.cal.etotnorm<=1.6 && P.ngcer.npeSum > 0.5
+total_multtrk       shmsScinShould && P.dc.ntrack > 1 && P.cal.etotnorm > 1.6 && P.ngcer.npeSum > 0.5
+shmsScinShoulde_mult     shmsScinShould &&  P.cal.etotnorm > 1.6  && P.ngcer.npeSum > 0.5 
+shmsScinDide_mult        shmsScinShoulde_mult && P.dc.ntrack > 1 
+
+***NOTE: I define bad single tracks as tracks as events that appear to have 1 track, but show up at calorimeter normalized energies > 1.6 (these events should be added to multiple tracks)
+         I define bad multiple tracks as tracks as events that appear to have multiple tracks, but show up at calorimeter normalized energies [0.6, 1.6] (these events should be added to single tracks)
+
+#Original calorimeter calibration from each run was used
+#!Run[i,0]/   hms3of4_rate[f,1]/    shms3of4_rate[f,2]/     coin_rate[f,3]/     bcm4a_charge[f,4]/    hms_trkEff[f,5]/	hms_trkEff_err[f,6]/    shms_1trkEff[f,7]/  shms_1trkEff_err[f,8]/   shms_mult_trkEff[f,9]/   shms_mult_trkEff_err[f,10]/   shms_all_trkEff[f,11]/   shms_all_trkEff_err[f,12]/    shms_corr_trkEff[f,13]/  shms_corr_trkEff_err[f,14]/  cpuLT[f,15]/    tLT[f,16]/   
+3288	      0.367		    76.859		    0.107		152.241		      0.9878		0.0003   		0.9193	 	    0.0006   		     0.3781   		      0.0321			    0.9704		     0.0004 			   0.9083 	    	    0.00087058			 0.980857	 0.924374     		 
+3371	      0.277		    44.447		    0.050		52.020		      0.9872		0.0009   		0.9308		    0.0017   		     0.2222		      0.2940	    		    0.9728		     0.0011			   0.9225	    	    0.00390158			 0.988501        0.944654     
+3374	      1.026		    271.992		    0.387		52.575		      0.9896		0.0004   		0.9061		    0.0007  		     0.3428	 	      0.0120	     		    0.9587		     0.0004 			   0.8658	    	    0.0010776 			 0.936735    	 0.845108     
+3377	      2.415		    588.849		    0.952		41.432		      0.9905		0.0003   		0.8931 	    	    0.0005   		     0.3219		      0.0052	     		    0.9432		     0.0004 			   0.8047	    	    0.00090887			 0.853053	 0.764917     
+
+#Fraction of Single/Multiple Tracks
+
+3288--> singles = 186900,   multiples =  228
+	bad_singles = 314,  bad_multiples = 10444
+	total = 186900 + 228 = 187128
+	singles_corr = 186900 + 10444 = 197344
+	multiples_corr = 228 + 314 = 542
+	total_corr = 197886
+
+	Pr_single = 186900/(186900 + 228)  = 0.9987
+	Pr_multiple =  228 / (186900 + 228) = 0.001218
+
+	Pr_single_corr = 197344 / 197886 = 0.9972            eff_single_corr =  197344/203315 = 0.970632
+	Pr_multiple_corr =   542 / 197886 =0.002738	     eff_mult_corr = 542/603 = 0.898839
+
+	true_trk_eff = 	Pr_single_corr * eff_single_corr + Pr_multiple_corr * eff_mult_corr
+		     = 0.9972* 0.970632 + 0.002738*0.898839 = 0.970375
+
+        true_trk_eff = 0.98* 0.970632 + 0.02*0.898839 = 0.9691  #using (shms 3/4 rate * 263 ns) as Pr_multiple
+
+
+3371--> singles = 21685,   multiples =  2
+	bad_singles = 7,  bad_multiples = 979
+
+	total = 21687
+	singles_corr = 21685 + 979 = 22664
+	multiples_corr = 2 +  7 = 9
+	total_corr = 22673
+
+	Pr_single = 21685 / 21687 = 0.999908
+	Pr_multiple =   2 / 21687 = 0.000092
+
+	Pr_single_corr = 0.999603         eff_single_corr =  22664/23298 = 0.972787
+	Pr_multiple_corr = 0.000397  	  eff_mult_corr = 9 / 9 = 1.0
+
+	true_trk_eff = 	Pr_single_corr * eff_single_corr + Pr_multiple_corr * eff_mult_corr
+		     = 0.999603 * 0.972787  + 0.000397 * 1.0 = 0.972798
+
+        true_trk_eff =  0.988 * 0.972787  + 0.000397 * 0.012  #using (shms 3/4 rate * 263 ns) as Pr_multiple
+	             = 0.961118
+
+3374--> singles = 195865,   multiples =  1575
+	bad_singles = 2556,  bad_multiples = 11640
+
+	total = 197440
+	singles_corr = 207505
+	multiples_corr = 4131
+	total_corr = 211636
+
+	Pr_single = 0.992023
+	Pr_multiple =  0.007977
+
+	Pr_single_corr = 0.980481             eff_single_corr =  0.959956
+	Pr_multiple_corr = 0.019519  	      eff_mult_corr = 0.899021
+
+	true_trk_eff = 	Pr_single_corr * eff_single_corr + Pr_multiple_corr * eff_mult_corr
+		     = 0.980481*0.959956 + 0.019519*0.899021 = 0.958767
+
+        true_trk_eff =  0.928*0.959956 + 0.072*0.899021 = 0.955569  #using (shms 3/4 rate * 263 ns) as Pr_multiple, 
+
+
+3377--> singles = 329085,   multiples =  7924
+	bad_singles = 13566,  bad_multiples =  20161
+
+	total = 
+	singles_corr = 
+	multiples_corr = 
+	total_corr = 
+
+	Pr_single = 
+	Pr_multiple =  
+
+	Pr_single_corr =             eff_single_corr =  
+	Pr_multiple_corr =   	     eff_mult_corr =
+
+	true_trk_eff = 	Pr_single_corr * eff_single_corr + Pr_multiple_corr * eff_mult_corr
+		     = 
+
+        true_trk_eff =   #using (shms 3/4 rate * 263 ns) as Pr_multiple
+
+------------------------------------------------------------

@@ -19,3 +19,4 @@ pe_cut_cer          P.hgcer.npeSum > 0.5
 pselect_e_cut       pe_cut_cal && pe_cut_cer
 pbetacut_proton     H.gtr.beta > 0.6 && H.gtr.beta < 0.8
 pcoincut_ep         ccleantrack && pselect_e_cut && pbetacut_proton
+
