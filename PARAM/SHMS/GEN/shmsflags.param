@@ -16,8 +16,8 @@ pdelta_offset = 0.0; (%)   hdelta_tar = hdelta_tar + hdelta_offset
 
  
 
-;ptheta_offset = 0.0  ; (rad) hyp_tar = hyp_tar + htheta_offset
-ptheta_offset = -4.75e-4   ;Determined on Jan 26, 2019, 3288 D2 Heep run
+ptheta_offset = 0.0  ; (rad) hyp_tar = hyp_tar + htheta_offset
+;ptheta_offset = -4.75e-4   ;Determined on Jan 26, 2019, 3288 D2 Heep run
 ;ptheta_offset = -2.04e-5   ;Determined on Jan 26, 2019, 3371 D2 Heep run
 ;ptheta_offset = -1.81e-4   ;Determined on Jan 26, 2019, 3374 D2 Heep run
 ;ptheta_offset = -7.20e-5   ;Determined on Jan 26, 2019, 3377 D2 Heep run

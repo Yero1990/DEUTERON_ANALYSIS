@@ -4,20 +4,20 @@ raddeg=3.14159265/180
 cminch=2.54
 
 ; General Hall-C parameter files
-#include "UTIL_COMM_ONEPASS/PARAM/GEN/genflags.param"
-#include "UTIL_COMM_ONEPASS/PARAM/GEN/gdebug.param"
-#include "UTIL_COMM_ONEPASS/PARAM/GEN/gtarget.param"
-#include "UTIL_COMM_ONEPASS/PARAM/GEN/gbeam.param"
-#include "UTIL_COMM_ONEPASS/PARAM/GEN/gscalers.param"
+#include "DEUTERON_ANALYSIS/PARAM/GEN/genflags.param"
+#include "DEUTERON_ANALYSIS/PARAM/GEN/gdebug.param"
+#include "DEUTERON_ANALYSIS/PARAM/GEN/gtarget.param"
+#include "DEUTERON_ANALYSIS/PARAM/GEN/gbeam.param"
+#include "DEUTERON_ANALYSIS/PARAM/GEN/gscalers.param"
 
 ; General SHMS parameter files
 ; Note: shmsflags.param includes spectrometer offsets and options.
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/GEN/pcana.param"
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/GEN/pdebug.param"
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/GEN/shmsflags.param"
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/GEN/ptracking.param"
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/GEN/p_reftime_cut.param"
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/GEN/p_fadc_debug.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/GEN/pcana.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/GEN/pdebug.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/GEN/shmsflags.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/GEN/ptracking.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/GEN/p_reftime_cut.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/GEN/p_fadc_debug.param"
 
 ; SHMS default geometry parameter files
 #include "PARAM/SHMS/NGCER/pngcer_geom.param"
@@ -28,10 +28,10 @@ cminch=2.54
 #include "PARAM/SHMS/CAL/pcal_geom.param"
 
 ; SHMS default cut parameter files
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/NGCER/pngcer_cuts.param"
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/DC/pdc_cuts.param"
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/HODO/phodo_cuts.param"
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/HGCER/phgcer_cuts.param"
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/AERO/paero_cuts.param"
-#include "UTIL_COMM_ONEPASS/PARAM/SHMS/CAL/pcal_cuts.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/NGCER/pngcer_cuts.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_cuts.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_cuts.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HGCER/phgcer_cuts.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/AERO/paero_cuts.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/CAL/pcal_cuts.param"
 

@@ -1,6 +1,5 @@
-block T.*
 block H.dc.*
-block H.cer.npeSum
+block H.cer.npe*
 block H.cal.etot
 block H.cal.etotnorm
 block H.cal.etracknorm
@@ -8,37 +7,3 @@ block H.hod.starttime
 block H.hod.beta*
 block H.hod.*Track*
 block H.bcm.*
-
-begin epics
-IBC3H00CRCUR4
-hac_bcm_average
-ibcm1
-ibcm2
-ibcm4a
-ibcm4b
-iunser
-HCCO:HMS:POSRB      #HMS Collimator Pos.
-HCCO:SHMS:POSRB     #SHMS Collimator Pos.
-ecQ1_Set_Current     #HMS Q1 Set Current
-ecQ1_I_True          #HMS Q1 Readback Current
-ecQ2_Set_Current 
-ecQ2_I_True
-ecQ3_Set_Current
-ecQ3_I_True 
-ecDI_Set_Current
-ecDI_I_True 
-ecDI_B_Set_NMR      #HMS DIpole Set NMR [T]
-ecDI_B_True_NMR     #HMS Dipole Readback NMR [T]
-ecSHB_Set_Current 
-ecSHB_I_True
-ecSQ1_Set_Current
-ecSQ1_I_True
-ecSQ2_Set_Current
-ecSQ2_I_True
-ecSQ3_Set_Current
-ecSQ3_I_True
-ecSDI_Set_Current
-ecSDI_I_True 
-itov3out
-itov4out
-end epics

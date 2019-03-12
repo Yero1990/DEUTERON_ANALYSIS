@@ -4,20 +4,20 @@ raddeg=3.14159265/180
 cminch=2.54
 
 ; General Hall-C parameter files
-#include "UTIL_COMM_ONEPASS/PARAM/GEN/genflags.param"
-#include "UTIL_COMM_ONEPASS/PARAM/GEN/gdebug.param"
-#include "UTIL_COMM_ONEPASS/PARAM/GEN/gtarget.param"
-#include "UTIL_COMM_ONEPASS/PARAM/GEN/gbeam.param"
-#include "UTIL_COMM_ONEPASS/PARAM/GEN/gscalers.param"
+#include "DEUTERON_ANALYSIS/PARAM/GEN/genflags.param"
+#include "DEUTERON_ANALYSIS/PARAM/GEN/gdebug.param"
+#include "DEUTERON_ANALYSIS/PARAM/GEN/gtarget.param"
+#include "DEUTERON_ANALYSIS/PARAM/GEN/gbeam.param"
+#include "DEUTERON_ANALYSIS/PARAM/GEN/gscalers.param"
 
 ; General HMS parameter files
 ; Note: hmsflags.param includes spectrometer offsets and options.
-#include "UTIL_COMM_ONEPASS/PARAM/HMS/GEN/hcana.param"
-#include "UTIL_COMM_ONEPASS/PARAM/HMS/GEN/hdebug.param"
-#include "UTIL_COMM_ONEPASS/PARAM/HMS/GEN/hmsflags.param"
-#include "UTIL_COMM_ONEPASS/PARAM/HMS/GEN/htracking.param"
-#include "UTIL_COMM_ONEPASS/PARAM/HMS/GEN/h_reftime_cut.param"
-#include "UTIL_COMM_ONEPASS/PARAM/HMS/GEN/h_fadc_debug.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/GEN/hcana.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/GEN/hdebug.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/GEN/hmsflags.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/GEN/htracking.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/GEN/h_reftime_cut.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/GEN/h_fadc_debug.param"
 
 ; HMS default geometry parameter files 
 #include "PARAM/HMS/CER/hcer_geom.param"
@@ -27,9 +27,9 @@ cminch=2.54
 #include "PARAM/HMS/CAL/hcal_geom.param"
 
 ; HMS default cut parameter files
-#include "UTIL_COMM_ONEPASS/PARAM/HMS/CER/hcer_cuts.param"
-#include "UTIL_COMM_ONEPASS/PARAM/HMS/DC/hdc_cuts.param"
-#include "UTIL_COMM_ONEPASS/PARAM/HMS/HODO/hhodo_cuts.param"
-#include "UTIL_COMM_ONEPASS/PARAM/HMS/AERO/haero_cuts.param"
-#include "UTIL_COMM_ONEPASS/PARAM/HMS/CAL/hcal_cuts.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/CER/hcer_cuts.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_cuts.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/HODO/hhodo_cuts.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/AERO/haero_cuts.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/CAL/hcal_cuts.param"
 

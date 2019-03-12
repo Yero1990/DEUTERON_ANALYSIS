@@ -149,7 +149,7 @@ ppcentral = 1.4
 
 # Q2 defocussed tune
 1791
-gpbeam = 6.430
+gpbeam = 6.42765
 gtargmass_amu=1.00794
 ppartmass = 0.00051099
 ptheta_lab = 25.015

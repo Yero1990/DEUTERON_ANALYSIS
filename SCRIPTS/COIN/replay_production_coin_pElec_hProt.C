@@ -1,4 +1,4 @@
-void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="scaler") {
+void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="heep_check") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -43,11 +43,11 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   //------------BCM Current Module----------
   //----------------------------------------
   ifstream hbcmFile;                                                                                
-  TString hbcmParamFile = Form("DEUTERON_ANALYSIS/PARAM/HMS/BCM/hms_bcmcurrent_file_%d.param",  RunNumber);       
+  TString hbcmParamFile = Form("DEUTERON_ANALYSIS/PARAM/HMS/BCM/Hbcmcurrent_%d.param",  RunNumber);       
   hbcmFile.open(hbcmParamFile);       
   
   ifstream pbcmFile;                                                                                
-  TString pbcmParamFile = Form("DEUTERON_ANALYSIS/PARAM/SHMS/BCM/shms_bcmcurrent_file_%d.param",  RunNumber);   
+  TString pbcmParamFile = Form("DEUTERON_ANALYSIS/PARAM/SHMS/BCM/Pbcmcurrent_%d.param",  RunNumber);   
   pbcmFile.open(pbcmParamFile);   
 
   //-----------------------------------------

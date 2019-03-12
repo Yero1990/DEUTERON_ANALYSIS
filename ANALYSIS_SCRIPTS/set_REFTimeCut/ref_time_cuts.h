@@ -43,9 +43,9 @@ static const Double_t hdc_trefcut = 15075.;      //dc tdc ref cut
 static const Double_t hadc_trefcut = 2300.;      //hodo/cer/cal adc ref cut
 
 //(See /PARAM/SHMS/GEN/p_reftime_cut.param, units in Channel)
-static const Double_t phod_trefcut = 2800.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
-static const Double_t pdc_trefcut = 13550.;
-static const Double_t padc_trefcut = 2850.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
+static const Double_t phod_trefcut = 3100.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
+static const Double_t pdc_trefcut = 13900.;
+static const Double_t padc_trefcut = 3400.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
 
 //=======================================================
 
@@ -80,6 +80,7 @@ Double_t hCer_tWinMax[2] = {105., 110.};
 //----------------------------------
 //------ HMS DRIFT CHAMBERS --------
 //----------------------------------
+// Deuteron H(e,e'p) Elastics
 Double_t hDC_tWinMin[dc_PLANES] = {-14e3, -14e3,   -14e3,   -14e3,  -14.e3,  -14e3,     -14e3,   -14e3,   -14e3,   -14e3,   -14e3,   -14e3   };
 Double_t hDC_tWinMax[dc_PLANES] = {-11.e3, -11.9e3, -11.8e3, -11.8e3,-10.6e3, -11.8e3, -10.8e3, -11.6e3, -11.8e3, -11.8e3, -10.6e3, -11.8e3 };
 
@@ -124,9 +125,8 @@ Double_t pngcer_tWinMax[4] = {40., 40., 40., 40.};
 //----------------------------------
 //------ HMS DRIFT CHAMBERS --------
 //----------------------------------
-//Double_t pDC_tWinMin[dc_PLANES] = {-13.5e3, -13.5e3,  -13.5e3,   -13.5e3,   -13.5e3,   -13.5e3,   -13.5e3,  -13.5e3,   -13.5e3,  -13.5e3,  -13.5e3,  -13.5e3 };
-//Double_t pDC_tWinMax[dc_PLANES] = {-10.5e3,  -10.5e3, -10.5e3, -10.5e3,  -10.5e3,  -10.5e3,  -10.5e3,   -10.5e3,  -10.5e3, -10.5e3, -10.5e3, -10.5e3};
 
+//Deuteron H(e,e'p) Elastics
 //Tighter SHMS DC Time Window Lower Limitcuts (Used run3377), to study the W yield
 Double_t pDC_tWinMin[dc_PLANES] = {-13.2e3, -13.2e3,  -13.2e3,   -13.2e3,   -13.2e3,   -13.2e3,   -13.2e3,  -13.2e3,   -13.2e3,  -13.2e3,  -13.2e3,  -13.2e3 };        
 Double_t pDC_tWinMax[dc_PLANES] = {-10.5e3,  -10.5e3, -10.5e3, -10.5e3,  -10.5e3,  -10.5e3,  -10.5e3,   -10.5e3,  -10.5e3, -10.5e3, -10.5e3, -10.5e3};      
@@ -152,14 +152,14 @@ Double_t pcal_nSig = 10.0;
 
 //**NOTE** : These are found in the PARAM/TRIG/tcoin.param file
 
-static const Double_t ptrg1r1_tWinMin = 1900;    //pTRIG1_ROC1
+static const Double_t ptrg1r1_tWinMin = 2200;    //pTRIG1_ROC1
 static const Double_t ptrg1r1_tWinMax = 3050;
 
-static const Double_t ptrg1r2_tWinMin = 2600;    //pTRIG1_ROC2
+static const Double_t ptrg1r2_tWinMin = 2850;    //pTRIG1_ROC2
 static const Double_t ptrg1r2_tWinMax = 3800;
 
 static const Double_t ptrg4r1_tWinMin = 1900;
-static const Double_t ptrg4r1_tWinMax = 3000;
+static const Double_t ptrg4r1_tWinMax = 2900;
 
 static const Double_t ptrg4r2_tWinMin = 2600;
 static const Double_t ptrg4r2_tWinMax = 3550;

@@ -85,7 +85,10 @@ void checkCalib(string spec, int run)
   //TString filename = Form("../../../ROOTfiles/good_Heep_hmsElec/coin_replay_heep_check_%d_-1.root", run);
   //TString filename = Form("../../../ROOTfiles/good_Heep_hmsElec/g%d_coin.root", run);
   //TString filename = Form("../../../ROOTfiles/good_Heep_hmsProt/hprot_kg%d.root", run);
-  TString filename = Form("../../../ROOTfiles/coin_replay_trkStudy_%d_-1.root", run);
+  //TString filename = Form("../../../ROOTfiles/coin_replay_trkStudy_%d_-1.root", run);
+  
+  //TString filename = Form("../../../ROOTfiles/coin_replay_deep_check_%d_-1.root", run);
+  TString filename = "../../../ROOTfiles/pm750_set3.root";
 
 
   TFile *data_file = new TFile(filename, "READ");

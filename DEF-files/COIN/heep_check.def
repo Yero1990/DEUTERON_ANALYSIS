@@ -48,10 +48,10 @@ block H.dc.*residual*
 block H.dc.*hit*  
 block H.dc.*ntrack*           
 block H.hod.beta*   
-block H.hod.starttime
+block H.hod.*starttime*
 block H.hod.*Counter*
 block H.hod.goodscinhit	
-block H.cer.npeSum*                  
+block H.cer.npe*                  
 block H.cal.etot*                 
 block H.cal.etrack*            
 block H.cal.*track* 
@@ -59,8 +59,8 @@ block H.hod.*Track*
 
 
 #Sieve Analysis
-#block P.extcor.*
-#block H.extcor.*
+block P.extcor.*
+block H.extcor.*
 
 #Rastered Beam
 block P.rb.*

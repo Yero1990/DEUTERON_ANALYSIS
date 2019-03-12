@@ -1,8 +1,8 @@
 0-99999
-g_ctp_parm_filename ="UTIL_COMM_ONEPASS/DBASE/SHMS/GEN/general.param"
-g_ctp_kinematics_filename ="UTIL_COMM_ONEPASS/DBASE/SHMS/STD/standard.kinematics"
-g_ctp_calib_filename ="UTIL_COMM_ONEPASS/DBASE/SHMS/GEN/default_det_calib_files.param"
+g_ctp_parm_filename ="DEUTERON_ANALYSIS/DBASE/SHMS/GEN/general.param"
+g_ctp_kinematics_filename ="DEUTERON_ANALYSIS/DBASE/SHMS/STD/standard.kinematics"
+g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/SHMS/GEN/default_det_calib_files.param"
 
 ;1586-1722
-;g_ctp_calib_filename ="UTIL_COMM_ONEPASS/DBASE/SHMS/GEN/calib_1586.param"
+;g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/SHMS/GEN/calib_1586.param"
 

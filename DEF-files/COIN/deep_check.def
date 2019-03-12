@@ -2,6 +2,10 @@
 #H(e,e'p) Check Definitions *
 #****************************
 
+#BCM Current Module
+block H.bcm*
+block P.bcm*
+
 #Only to be used for coincidence trigger
 block CTime*
 
@@ -23,10 +27,13 @@ block P.dc.*wirenum*
 block P.dc.*time* 
 block P.dc.*dist*
 block P.dc.*residual*  
-block P.dc.*nhit* 
+block P.dc.*hit* 
+block P.dc.*ntrack*
 block P.hod.beta*
-block P.hgcer.npeSum*
-block P.ngcer.npeSum* 
+block P.hod.starttime
+block P.hod.goodscinhit
+block P.hgcer.npe*
+block P.ngcer.npe* 
 block P.cal.etot*
 block P.cal.etrack*
 block P.cal.*track*
@@ -37,9 +44,12 @@ block H.dc.*wirenum*
 block H.dc.*time*
 block H.dc.*dist*               
 block H.dc.*residual*       
-block H.dc.*nhit*             
-block H.hod.beta*                    
-block H.cer.npeSum*                  
+block H.dc.*hit*  
+block H.dc.*ntrack*			
+block H.hod.beta*  
+block H.hod.*starttime* 
+block H.hod.goodscinhit
+block H.cer.npe*                  
 block H.cal.etot*                 
 block H.cal.etrack*            
 block H.cal.*track* 

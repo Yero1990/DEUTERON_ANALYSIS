@@ -3,8 +3,8 @@
 #block T.coin.*pT*
 
 #FOR SHMS Singles in Single Arm-MODE
-#block T.coin.*FADC*
-#block T.coin.*pT*
+block T.shms.*FADC*
+block T.shms.*pT*
 
 block P.hod.*
 block P.dc.ntrack

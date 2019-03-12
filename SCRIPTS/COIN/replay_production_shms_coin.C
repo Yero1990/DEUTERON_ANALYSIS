@@ -1,4 +1,4 @@
-void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const char* ftype="deep_check") {
+void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const char* ftype="heep_check") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {

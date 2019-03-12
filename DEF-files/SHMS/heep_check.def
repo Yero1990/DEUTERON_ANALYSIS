@@ -2,10 +2,15 @@
 #H(e,e'p) Check Definitions *
 #****************************
 
+#BCM CUrrent Module                                                                                                     
+block H.bcm*                                                                         
+block P.bcm*  
+
 #Kinematics
 block P.kin.*       
 
 #Focal Plane/Target Variables
+block P.dc.*fp*
 block P.gtr.*
 block P.react.*
 
@@ -24,3 +29,10 @@ block P.cal.etot*
 block P.cal.etrack*
 block P.cal.*track*
 block P.hod.*Track*
+
+#Sieve Analysis                                                                                                           
+block P.extcor.*                                                                                                                                        
+                                                                      
+#Rastered Beam                                                                                         
+block P.rb.*                  
+                   

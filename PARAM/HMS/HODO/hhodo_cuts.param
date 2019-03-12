@@ -29,12 +29,8 @@ hhodo_AdcTimeWindowMax = 200., 200., 200., 200.
     hscin_tdc_min = -500                                                           
 
 ; hscin_tdc_max       maximum allowed tdc value                                 
-;   hscin_tdc_max = 4000   ;nominal
 hscin_tdc_max = 1000.
-                             
-
-
-
+                            
 
 ; hscin_tdc_to_time   scin tdc time per channel                                 
 ; tof and you figured out good values
@@ -157,4 +153,3 @@ hhodo_NegAdcTimeWindowMax = -50.68,          -50.00,          -51.77,          -
                           -51.89,            0.00,          -50.19,            0.00
                           -50.42,            0.00,          -49.09,            0.00
                           -48.70,            0.00,          -49.54,            0.00
-

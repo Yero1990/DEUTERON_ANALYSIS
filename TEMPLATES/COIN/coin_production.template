@@ -198,6 +198,7 @@ SHMS_pEL_REAL  :    {P.pEL_REAL.scalerCut} [ {(P.pEL_REAL.scalerCut/P.1MHz.scale
 SHMS_pEL_CLEAN :    {P.pEL_CLEAN.scalerCut}    [ {(P.pEL_CLEAN.scalerCut/P.1MHz.scalerTimeCut)/1000.:%.3f} kHz ]
 SHMS_pSTOF     :    {P.pSTOF.scalerCut}    [ {(P.pSTOF.scalerCut/P.1MHz.scalerTimeCut)/1000.:%.3f} kHz ]
 
+
 SHMS_pTRIG1 :   {P.pTRIG1.scalerCut}   [ {(P.pTRIG1.scalerCut/P.1MHz.scalerTimeCut)/1000.:%.3f} kHz ]
 SHMS_pTRIG2 :   {P.pTRIG2.scalerCut}   [ {(P.pTRIG2.scalerCut/P.1MHz.scalerTimeCut)/1000.:%.3f} kHz ]
 SHMS_pTRIG3 :   {P.pTRIG3.scalerCut}   [ {(P.pTRIG3.scalerCut/P.1MHz.scalerTimeCut)/1000.:%.3f} kHz ]
@@ -211,6 +212,27 @@ SHMS_hTRIG3 :   {P.hTRIG3.scalerCut}   [ {(P.hTRIG3.scalerCut/P.1MHz.scalerTimeC
 SHMS_hTRIG4 :   {P.hTRIG4.scalerCut}   [ {(P.hTRIG4.scalerCut/P.1MHz.scalerTimeCut)/1000.:%.3f} kHz ]
 SHMS_hTRIG5 :   {P.hTRIG5.scalerCut}   [ {(P.hTRIG5.scalerCut/P.1MHz.scalerTimeCut)/1000.:%.3f} kHz ]
 SHMS_hTRIG6 :   {P.hTRIG6.scalerCut}   [ {(P.hTRIG6.scalerCut/P.1MHz.scalerTimeCut)/1000.:%.3f} kHz ]
+
+======================================
+EDTM Subtracted SHMS Trigger Scalers
+======================================
+SHMS_pTRIG1_corr :   {P.pTRIG1.scalerCut - P.EDTM.scalerCut}   [ {((P.pTRIG1.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut) )/1000.:%.3f} kHz ]
+SHMS_pTRIG2_corr :   {P.pTRIG2.scalerCut - P.EDTM.scalerCut}   [ {((P.pTRIG2.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut) )/1000.:%.3f} kHz ] 
+SHMS_pTRIG3_corr :   {P.pTRIG3.scalerCut - P.EDTM.scalerCut}   [ {((P.pTRIG3.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut) )/1000.:%.3f} kHz ]
+SHMS_pTRIG4_corr :   {P.pTRIG4.scalerCut - P.EDTM.scalerCut}   [ {((P.pTRIG4.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut) )/1000.:%.3f} kHz ]
+SHMS_pTRIG5_corr :   {P.pTRIG5.scalerCut - P.EDTM.scalerCut}   [ {((P.pTRIG5.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut) )/1000.:%.3f} kHz ]
+SHMS_pTRIG6_corr :   {P.pTRIG6.scalerCut - P.EDTM.scalerCut}   [ {((P.pTRIG6.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut) )/1000.:%.3f} kHz ]
+
+SHMS_hTRIG1_corr :   {P.hTRIG1.scalerCut - P.EDTM.scalerCut}   [ {((P.hTRIG1.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut) )/1000.:%.3f} kHz ]
+SHMS_hTRIG2_corr :   {P.hTRIG2.scalerCut - P.EDTM.scalerCut}   [ {((P.hTRIG2.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut) )/1000.:%.3f} kHz ] 
+SHMS_hTRIG3_corr :   {P.hTRIG3.scalerCut - P.EDTM.scalerCut}   [ {((P.hTRIG3.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut) )/1000.:%.3f} kHz ]
+SHMS_hTRIG4_corr :   {P.hTRIG4.scalerCut - P.EDTM.scalerCut}   [ {((P.hTRIG4.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut) )/1000.:%.3f} kHz ]
+SHMS_hTRIG5_corr :   {P.hTRIG5.scalerCut - P.EDTM.scalerCut}   [ {((P.hTRIG5.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut) )/1000.:%.3f} kHz ]
+SHMS_hTRIG6_corr :   {P.hTRIG6.scalerCut - P.EDTM.scalerCut}   [ {((P.hTRIG6.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut) )/1000.:%.3f} kHz ]
+
+======================================
+
+
 
 =:=:=:=:=:=:=:=:=:=:=:  
 = HMS Trigger ScalerCuts
@@ -515,10 +537,11 @@ pscinshould                    : {shmsScinShould.npassed}
 pscinshoulde                   : {shmsScinShoulde.npassed}
 pscinshoulde_multTrks          : {shmsScinShoulde_mult.npassed}
 pscinshouldh                   : {shmsScinShouldh.npassed}
-pbad_singleTrk                 : {bad_1trk.npassed}
 ptotal_singleTrk               : {total_1trk.npassed}
-pbad_multTrk                   : {bad_multtrk.npassed}
 ptotal_multTrk                 : {total_multtrk.npassed}
+pdide_all		       : {shmsScinDide_all.npassed}
+pshoulde_all		       : {shmsScinShoulde_all.npassed}
+
 pSING FID TRACK EFFIC           : {shmsScinDid.npassed / (shmsScinShould.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShould.npassed-shmsScinDid.npassed) / (shmsScinShould.npassed+.0001)):%8.4f}
 pE SING FID TRACK EFFIC         : {shmsScinDide.npassed / (shmsScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShoulde.npassed-shmsScinDide.npassed) / (shmsScinShoulde.npassed+.0001)):%8.4f}
 pE MULT FID TRACK EFFIC         : {shmsScinDide_mult.npassed / (shmsScinShoulde_mult.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShoulde_mult.npassed-shmsScinDide_mult.npassed) / (shmsScinShoulde_mult.npassed+.0001)):%8.4f}

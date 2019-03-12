@@ -1,7 +1,7 @@
 0-99999
-g_ctp_parm_filename ="UTIL_COMM_ONEPASS/DBASE/HMS/GEN/general.param"
-g_ctp_kinematics_filename ="UTIL_COMM_ONEPASS/DBASE/HMS/STD/standard.kinematics"
-g_ctp_calib_filename ="UTIL_COMM_ONEPASS/DBASE/HMS/GEN/default_det_calib_files.param"
+g_ctp_parm_filename ="DEUTERON_ANALYSIS/DBASE/HMS/GEN/general.param"
+g_ctp_kinematics_filename ="DEUTERON_ANALYSIS/DBASE/HMS/STD/standard.kinematics"
+g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/HMS/GEN/default_det_calib_files.param"
 
 ;1178-1178
-;g_ctp_calib_filename ="UTIL_COMM_ONEPASS/DBASE/HMS/GEN/calib_1178.param"
+;g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/HMS/GEN/calib_1178.param"

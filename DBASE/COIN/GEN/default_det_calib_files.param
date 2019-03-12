@@ -67,3 +67,55 @@
 #include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_3377.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib_3377.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_3377.param"
+
+;D2, Pm = 80 MeV
+3289
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_Vpcalib_3289.param"  
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_3289.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_3289.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib_3289.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_3289.param"
+
+;D2  Pm = 580 MeV
+3291-3305
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_Vpcalib_pm580.param"  
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_pm580.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_pm580.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib_pm580.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_pm580.param"
+
+
+;D2  Pm = 750 MeV
+3306-3340
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_Vpcalib_pm750.param"  
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_pm750.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_pm750.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib_pm750.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_pm750.param"
+
+
+;D2 Pm = 580 MeV Additional data
+3341-3356
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_Vpcalib_pm580.param"  
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_pm580.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_pm580.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib_pm580.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_pm580.param"
+
+
+;D2 Pm = 750 MeV Additional data
+3357-3367
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_Vpcalib_pm750.param"  
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_pm750.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_pm750.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib_pm750.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_pm750.param"
+
+
+;D2 Pm = 750 MeV Additional data
+3380-3387
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_Vpcalib_pm750.param"  
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_pm750.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_pm750.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib_pm750.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_pm750.param"

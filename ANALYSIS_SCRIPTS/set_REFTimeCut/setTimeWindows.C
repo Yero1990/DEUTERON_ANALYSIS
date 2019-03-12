@@ -119,7 +119,8 @@ void setTimeWindows(int run, string trg)
   //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3371_-1.root";                                         
   //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3386_-1.root";                                         
 
-  TString filename = Form("../../../ROOTfiles/coin_replay_timeWin_check_%d_-1.root", run);                                         
+  // TString filename = Form("../../../ROOTfiles/coin_replay_timeWin_check_%d_-1.root", run);                                         
+  TString filename = "../../../ROOTfiles/pm750_tWinCheck_TimeWinSet.root";
 
 
   //TString filename = "../../../ROOTfiles/shms_replay_timeWin_check_1791_-1.root";
