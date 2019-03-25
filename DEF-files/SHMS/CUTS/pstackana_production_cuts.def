@@ -24,4 +24,4 @@ Reconstruct_master  ALL_SHMS_NO_EDTM
 
 Block: Physics
 #include "DEF-files/SHMS/PRODUCTION/CUTS/pstackana_physics_cuts.def"
-Physics_master  ALL_SHMS_NO_EDTM
+Physics_master  ALL_SHMS_NO_EDTM&&P.bcm.CurrentFlag==1

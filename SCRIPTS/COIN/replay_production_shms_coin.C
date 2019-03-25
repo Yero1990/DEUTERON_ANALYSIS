@@ -35,6 +35,16 @@ void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const
   // Load parameters for SHMS trigger configuration
   gHcParms->Load("PARAM/TRIG/tshms.param");
 
+  //----------------------------------------
+  //------------BCM Current Module----------
+
+  ifstream pbcmFile;                                                                                
+  TString pbcmParamFile = Form("DEUTERON_ANALYSIS/PARAM/SHMS/BCM/Pbcmcurrent_%d.param",  RunNumber);   
+  pbcmFile.open(pbcmParamFile);   
+
+  //-----------------------------------------
+
+
   // Load the Hall C detector map
   gHcDetectorMap = new THcDetectorMap();
 
@@ -42,8 +52,8 @@ void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const
   gHcDetectorMap->Load("MAPS/SHMS/DETEC/STACK/shms_stack.map");
        
   //Add Module to explicitly plot all TDC hits from the trigger signals
-  THaDecData* decdata= new THaDecData("D","Decoder raw data");
-  gHaApps->Add(decdata);
+  //THaDecData* decdata= new THaDecData("D","Decoder raw data");
+  //gHaApps->Add(decdata);
   
   // Set up the equipment to be analyzed.
   THcHallCSpectrometer* SHMS = new THcHallCSpectrometer("P", "SHMS");
@@ -60,8 +70,8 @@ void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const
   THcDC* dc = new THcDC("dc", "Drift Chambers");
   SHMS->AddDetector(dc);
   // Add hodoscope to SHMS apparatus
-  THcHodoscope* hod = new THcHodoscope("hod", "Hodoscope");
-  SHMS->AddDetector(hod);
+  THcHodoscope* phod = new THcHodoscope("hod", "Hodoscope");
+  SHMS->AddDetector(phod);
   // Add Heavy Gas Cherenkov to SHMS apparatus
   THcCherenkov* hgcer = new THcCherenkov("hgcer", "Heavy Gas Cherenkov");
   SHMS->AddDetector(hgcer);
@@ -100,6 +110,20 @@ void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const
   THcHodoEff* peff = new THcHodoEff("phodeff", "SHMS hodo efficiency", "P.hod");
   gHaPhysics->Add(peff);   
 
+ //BCM CUrrent Module
+  
+    if (pbcmFile.is_open())                                                        
+    {                                                                                    
+      THcBCMCurrent* pbc = new THcBCMCurrent("P.bcm", "BCM current check");
+      gHaPhysics->Add(pbc);                                 
+      gHcParms->Load(pbcmParamFile);                                                                         
+    }                                                                 
+  else if (!pbcmFile.is_open())                     
+    {                                                                                                    
+      cout << "SHMS BCM Current Module will NOT be loaded . . ." << endl;                               
+    } 
+  
+
   // Add event handler for prestart event 125.
   THcConfigEvtHandler* ev125 = new THcConfigEvtHandler("HC", "Config Event type 125");
   gHaEvtHandlers->Add(ev125);
@@ -131,7 +155,7 @@ void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const
   // A simple event class to be output to the resulting tree.
   // Creating your own descendant of THaEvent is one way of
   // defining and controlling the output.
-  THaEvent* event = new THaEvent;
+  THaEvent* event = new THaEvent();
 
   // Define the run(s) that we want to analyze.
   // We just set up one, but this could be many.

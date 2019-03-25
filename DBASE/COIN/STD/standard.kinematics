@@ -442,9 +442,9 @@ gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.338
-ptheta_lab = 12.194
+ptheta_lab = 12.168   ;12.194
 hpcentral = 2.938*0.996742
-ppcentral = 8.544319 
+ppcentral = 8.543210
 
 #Pm = 80 MeV
 3289
@@ -453,9 +453,9 @@ gtargmass_amu = 2.014101
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -38.896
-ptheta_lab = 12.194
+ptheta_lab = 12.168   ;12.194
 hpcentral = 2.8438 * 0.99704738 
-ppcentral =  8.544319 
+ppcentral =  8.543210
 
 #Pm = 580 (Momentum seems significantly off --Run Not In Use)
 3290
@@ -475,9 +475,9 @@ gtargmass_amu = 2.014101
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -54.992
-ptheta_lab = 12.194
+ptheta_lab = 12.168    ;12.194
 hpcentral = 2.194 * 0.99782676
-ppcentral = 8.542812
+ppcentral = 8.543210
 
 #Pm = 750 MeV (set1)
 3306-3340
@@ -486,9 +486,9 @@ gtargmass_amu = 2.014101
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -58.391
-ptheta_lab = 12.194
+ptheta_lab = 12.168  ;12.194
 hpcentral = 2.091 * 0.99795030
-ppcentral = 8.542812
+ppcentral = 8.543210
 
 #Pm = 580 MeV (Additional. Set 2)
 3341-3356
@@ -497,9 +497,9 @@ gtargmass_amu = 2.014101
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -55.0
-ptheta_lab = 12.194 
+ptheta_lab = 12.168    ;12.194 
 hpcentral = 2.194 * 0.99782676 
-ppcentral = 8.542812
+ppcentral = 8.543210
 
 #Pm = 750 MeV (Additional. Set 2)
 3357-3367
@@ -508,9 +508,9 @@ gtargmass_amu = 2.014101
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -58.394
-ptheta_lab = 12.194
+ptheta_lab = 12.168   ;12.194
 hpcentral = 2.091 * 0.99795030
-ppcentral = 8.542812
+ppcentral = 8.543210
 
 
 3371
@@ -519,9 +519,9 @@ gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -33.545
-ptheta_lab = 13.93
+ptheta_lab = 13.899  ;13.93
 hpcentral = 3.48*0.996524
-ppcentral = 8.544319 
+ppcentral = 8.543210
 
 3372
 gpbeam = 10.6005
@@ -549,9 +549,9 @@ gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -42.9
-ptheta_lab =  9.928
+ptheta_lab =  9.922  ;9.928
 hpcentral = 2.31*0.997783
-ppcentral =  8.544319 
+ppcentral =  8.543210
 
 3375
 gpbeam = 10.6005
@@ -579,9 +579,9 @@ gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -47.605
-ptheta_lab = 8.495
+ptheta_lab = 8.551  ;8.495
 hpcentral = 1.8899*0.998217
-ppcentral = 8.544319 
+ppcentral = 8.543210
 
 3379
 gpbeam = 10.6005
@@ -590,8 +590,8 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -47.605
 ptheta_lab = 8.495
-hpcentral = 1.8898
-ppcentral = 8.541
+hpcentral = 1.8898*0.998217
+ppcentral = 8.544319 
 
 #Pm = 750 MeV (Additional. Set 3)
 3380-3387
@@ -602,6 +602,6 @@ ppartmass = 0.00051099
 htheta_lab = -58.391
 ptheta_lab = 12.21
 hpcentral = 2.091 * 0.99795030
-ppcentral = 8.542812
+ppcentral = 8.543210
 
 

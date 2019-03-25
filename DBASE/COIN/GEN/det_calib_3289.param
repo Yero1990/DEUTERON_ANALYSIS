@@ -1,0 +1,5 @@
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_Vpcalib_3289.param"  
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_3289.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_3289.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib_3289.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_3289.param"

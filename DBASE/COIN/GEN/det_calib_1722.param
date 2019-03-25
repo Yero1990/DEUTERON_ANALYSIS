@@ -1,0 +1,4 @@
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_1722.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_1722.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib_1722.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_1722.param"
