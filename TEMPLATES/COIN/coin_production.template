@@ -539,6 +539,7 @@ pscinshoulde_multTrks          : {shmsScinShoulde_mult.npassed}
 pscinshouldh                   : {shmsScinShouldh.npassed}
 ptotal_singleTrk               : {total_1trk.npassed}
 ptotal_multTrk                 : {total_multtrk.npassed}
+ptotal_multTrk_fraction        : {total_multtrk.npassed*1.0 / (total_multtrk.npassed + total_1trk.npassed)}
 pdide_all		       : {shmsScinDide_all.npassed}
 pshoulde_all		       : {shmsScinShoulde_all.npassed}
 
@@ -560,10 +561,18 @@ SHMS DC RATE ~ SHMS S1X Rate:   {(P.S1X.scalerCut/P.1MHz.scalerTimeCut)/1000.:%.
 SHMS 3/4 Trigger Rate:          {((P.pTRIG1.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut) )/1000.:%.3f} kHz
 
 SHMS DC Gate Width:             {263} ns           #determined from pdc_cuts.param (tdc_min_win - tdc_max_win)*0.09766 ns/Ch
-Pr_2   :   {((P.pTRIG1.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut) ) * 263./1000000000.:%.3f}  
-Pr_1   :   {1. - ((P.pTRIG1.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut))  * 263./1000000000.:%.3f}
+Pr_2   :   {((P.pTRIG1.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut) ) * 263./1000000000.:%.3f}              #probability of multiple tracks
+Pr_1   :   {1. - ((P.pTRIG1.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut))  * 263./1000000000.:%.3f}         #probability of single track
 
 Total SHMS e- trk Eff = {(1. - ((P.pTRIG1.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut) ) * 263./1000000000.)*shmsScinDide.npassed / (shmsScinShoulde.npassed+0.0001) + (((P.pTRIG1.scalerCut/P.1MHz.scalerTimeCut) - (P.EDTM.scalerCut/P.1MHz.scalerTimeCut)) * 263./1000000000.) * shmsScinDide_mult.npassed / (shmsScinShoulde_mult.npassed+0.0001):%8.4f}
+
+
+#Alternative Probabilities, based on total  fraction of single/multiple tracks (Based on calorimeter deposited energy, etotnorm ~ 1 (single tracks), and etotnorm > 1 (multiple tracks))
+Pr_1   : {total_1trk.npassed*1.0/(total_multtrk.npassed + total_1trk.npassed)}
+Pr_2   : {total_multtrk.npassed*1.0/(total_multtrk.npassed + total_1trk.npassed)}
+
+Alternate Total SHMS e- trk Eff = {(total_1trk.npassed*1.0/(total_multtrk.npassed + total_1trk.npassed))*shmsScinDide.npassed / (shmsScinShoulde.npassed+0.0001) + (total_multtrk.npassed*1.0/(total_multtrk.npassed + total_1trk.npassed))* shmsScinDide_mult.npassed / (shmsScinShoulde_mult.npassed+0.0001):%8.4f}
+
 
 =:=:=:=:=:=:=:=:=
 = HMS Chambers  =

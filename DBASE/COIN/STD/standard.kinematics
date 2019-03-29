@@ -2,407 +2,76 @@
 #Specifically, Working on Pm = 80 MeV, and High Missing Momentum, after run 3288
 #NOTE: H(e,e'p) elastics is not updated here. See the _CORRECTED kin. file for that.
 
-3243
+#H(e,e'p) Elastic
+3243-3248
 gpbeam = 10.6005
 gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.29
 ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
+hpcentral = 2.9382*0.9969341636
+ppcentral = 8.543210
 
-3244
+#Proton Absorption Measurements (SHMS e-arm triggers ONLY)
+3249-3251
 gpbeam = 10.6005
 gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.29
 ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
+hpcentral = 2.9382*0.9969341636
+ppcentral = 8.543210
 
-3245
-gpbeam = 10.6005
-gtargmass_amu = 1.00794
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.29
-ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
-
-3246
-gpbeam = 10.6005
-gtargmass_amu = 1.00794
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.29
-ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
-
-3247
-gpbeam = 10.6005
-gtargmass_amu = 1.00794
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.29
-ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
-
-3248
-gpbeam = 10.6005
-gtargmass_amu = 1.00794
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.29
-ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
-
-3249
-gpbeam = 10.6005
-gtargmass_amu = 1.00794
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.29
-ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
-
-3250
-gpbeam = 10.6005
-gtargmass_amu = 1.00794
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.29
-ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
-
-3251
-gpbeam = 10.6005
-gtargmass_amu = 1.00794
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.29
-ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
-
-3252
+#Al Dummy Runs for H(e,e'p)
+3252-3258
 gpbeam = 10.6005
 gtargmass_amu = 26.98
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.29
 ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
+hpcentral = 2.9382*0.9969341636
+ppcentral = 8.543210
 
-3253
-gpbeam = 10.6005
-gtargmass_amu = 26.98
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.29
-ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
-
-3254
-gpbeam = 10.6005
-gtargmass_amu = 26.98
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.29
-ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
-
-3255
-gpbeam = 10.6005
-gtargmass_amu = 26.98
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.29
-ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
-
-3256
-gpbeam = 10.6005
-gtargmass_amu = 26.98
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.29
-ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
-
-3257
-gpbeam = 10.6005
-gtargmass_amu = 26.98
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.29
-ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
-
-3258
-gpbeam = 10.6005
-gtargmass_amu = 26.98
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.29
-ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
-
-3259
+#Proton Absorption Measurements
+3259-3263
 gpbeam = 10.6005
 gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.29
 ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
+hpcentral = 2.9382*0.9969341636
+ppcentral = 8.543210
 
-3260
-gpbeam = 10.6005
-gtargmass_amu = 1.00794
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.29
-ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
-
-3261
-gpbeam = 10.6005
-gtargmass_amu = 1.00794
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.29
-ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
-
-3263
-gpbeam = 10.6005
-gtargmass_amu = 1.00794
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.29
-ptheta_lab = 12.2
-hpcentral = 2.9382
-ppcentral = 8.7
-
-3264
+#D2 - Low Missing Momentum Setting = 80 MeV
+3264-3268
 gpbeam = 10.6005
 gtargmass_amu = 2.014101
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -38.895
 ptheta_lab = 12.2
-hpcentral = 2.8438
-ppcentral = 8.7
+hpcentral = 2.8438*0.9970473876
+ppcentral = 8.543210
 
-3266
-gpbeam = 10.6005
-gtargmass_amu = 2.014101
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -38.895
-ptheta_lab = 12.2
-hpcentral = 2.8438
-ppcentral = 8.7
 
-3267
-gpbeam = 10.6005
-gtargmass_amu = 2.014101
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -38.895
-ptheta_lab = 12.2
-hpcentral = 2.8438
-ppcentral = 8.7
-
-3268
-gpbeam = 10.6005
-gtargmass_amu = 2.014101
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -38.895
-ptheta_lab = 12.2
-hpcentral = 2.8438
-ppcentral = 8.7
-
-3269
+#D2 - High Missing Momentum Setting = 580 MeV
+3269-3282
 gpbeam = 10.6005
 gtargmass_amu = 2.014101
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -54.945
 ptheta_lab = 12.2
-hpcentral = 2.1939
-ppcentral = 8.7
+hpcentral = 2.1939*0.9978268825
+ppcentral = 8.543210
 
-3270
-gpbeam = 10.6005
-gtargmass_amu = 2.014101
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -54.945
-ptheta_lab = 12.2
-hpcentral = 2.1939
-ppcentral = 8.7
 
-3271
-gpbeam = 10.6005
-gtargmass_amu = 2.014101
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -54.945
-ptheta_lab = 12.2
-hpcentral = 2.1943
-ppcentral = 8.7
-
-3272
-gpbeam = 10.6005
-gtargmass_amu = 2.014101
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -54.945
-ptheta_lab = 12.2
-hpcentral = 2.1943
-ppcentral = 8.7
-
-3273
-gpbeam = 10.6005
-gtargmass_amu = 2.014101
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -54.945
-ptheta_lab = 12.2
-hpcentral = 2.1943
-ppcentral = 8.7
-
-3274
-gpbeam = 10.6005
-gtargmass_amu = 2.014101
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -54.945
-ptheta_lab = 12.2
-hpcentral = 2.1943
-ppcentral = 8.7
-
-3275
-gpbeam = 10.6005
-gtargmass_amu = 2.014101
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -54.945
-ptheta_lab = 12.2
-hpcentral = 2.1943
-ppcentral = 8.7
-
-3276
-gpbeam = 10.6005
-gtargmass_amu = 2.014101
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -54.945
-ptheta_lab = 12.2
-hpcentral = 2.1943
-ppcentral = 8.7
-
-3277
-gpbeam = 10.6005
-gtargmass_amu = 2.014101
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -54.945
-ptheta_lab = 12.2
-hpcentral = 2.1943
-ppcentral = 8.7
-
-3278
-gpbeam = 10.6005
-gtargmass_amu = 2.014101
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -54.945
-ptheta_lab = 12.2
-hpcentral = 2.1943
-ppcentral = 8.7
-
-3279
-gpbeam = 10.6005
-gtargmass_amu = 2.014101
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -54.945
-ptheta_lab = 12.2
-hpcentral = 2.1943
-ppcentral = 8.7
-
-3280
-gpbeam = 10.6005
-gtargmass_amu = 2.014101
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -54.945
-ptheta_lab = 12.2
-hpcentral = 2.1943
-ppcentral = 8.7
-
-3281
-gpbeam = 10.6005
-gtargmass_amu = 2.014101
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -54.945
-ptheta_lab = 12.2
-hpcentral = 2.1943
-ppcentral = 8.7
-
-3282
-gpbeam = 10.6005
-gtargmass_amu = 2.014101
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -54.945
-ptheta_lab = 12.2
-hpcentral = 2.1943
-ppcentral = 8.7
-
-3283
-gpbeam = 10.6005
-gtargmass_amu = 12.0107
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -54.945
-ptheta_lab = 8.938
-hpcentral = 2.1943
-ppcentral = 8.7
-
-3284
-gpbeam = 10.6005
-gtargmass_amu = 12.0107
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -54.945
-ptheta_lab = 8.938
-hpcentral = 2.1943
-ppcentral = 8.7
-
-3285
+# optics scan for SHMS Q3 and HB with optics #1 and sieve
+3283-3287
 gpbeam = 10.6005
 gtargmass_amu = 12.0107
 hpartmass = 0.938272
@@ -413,26 +82,6 @@ hpcentral = 2.1943
 ppcentral = 8.7
 
 
-#SHMS Optics Run
-3286
-gpbeam = 10.6005
-gtargmass_amu = 12.0107
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.338
-ptheta_lab = 8.938
-hpcentral = 2.7659*0.99714
-ppcentral = 8.544319
-
-3287
-gpbeam = 10.6005
-gtargmass_amu = 1.00794
-hpartmass = 0.938272
-ppartmass = 0.00051099
-htheta_lab = -37.338
-ptheta_lab = 12.06
-hpcentral = 2.9383
-ppcentral = 8.7
 
 #---------------------- Hydrogen Elastic /Deuteron Data After SHMS Q1/Q3 Corr.--------------------------
 

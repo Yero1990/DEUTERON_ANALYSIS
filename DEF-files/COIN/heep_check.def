@@ -9,6 +9,8 @@ block P.bcm*
 #Only to be used for coincidence trigger
 block CTime*
 
+block T.coin.pTRIG*
+
 #Kinematics
 block P.kin.*       
 block H.kin.*

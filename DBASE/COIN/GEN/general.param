@@ -73,7 +73,7 @@ cminch=2.54
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/HGCER/phgcer_calib.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/NGCER/pngcer_calib.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib.param"
-;#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_calib.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_TWcalib.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_Vpcalib.param"

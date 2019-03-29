@@ -87,8 +87,8 @@ void checkCalib(string spec, int run)
   //TString filename = Form("../../../ROOTfiles/good_Heep_hmsProt/hprot_kg%d.root", run);
   //TString filename = Form("../../../ROOTfiles/coin_replay_trkStudy_%d_-1.root", run);
   
-  //TString filename = Form("../../../ROOTfiles/coin_replay_deep_check_%d_-1.root", run);
-  TString filename = "../../../ROOTfiles/pm750_set3.root";
+  TString filename = Form("../../../ROOTfiles/coin_replay_heep_check_%d_50000.root", run);
+  // TString filename = "../../../ROOTfiles/pm580_total.root";
 
 
   TFile *data_file = new TFile(filename, "READ");
@@ -118,7 +118,7 @@ void checkCalib(string spec, int run)
   nhcer_npe = "H.cer.npe";		       nphgcer_npe = "P.hgcer.npe";	     npngcer_npe = "P.ngcer.npe";	     
 					     					     
   nhcal_etot = "H.cal.etot";	     	       npcal_etot = "P.cal.etot";	     	     
-  nhcal_etrknorm = "H.cal.etracknorm"; 	       npcal_etrknorm = "P.cal.etracknorm"; 	     
+  nhcal_etrknorm = "H.cal.etottracknorm"; 	       npcal_etrknorm = "P.cal.etottracknorm"; 	     
   nhcal_xtrack = "H.cal.xtrack";	       npcal_xtrack = "P.cal.xtrack";	     
   nhcal_ytrack = "H.cal.ytrack";               npcal_ytrack = "P.cal.ytrack";             
     

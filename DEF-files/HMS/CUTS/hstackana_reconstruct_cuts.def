@@ -6,7 +6,7 @@ hcut_cer_elec       	  H.cer.npeSum>.5
 hcut_cer_pi       	  H.cer.npeSum<.5
 
 HMSScinGood           H.hod.goodscinhit == 1
-HMSGoodBetanotrk      H.hod.betanotrack > 0.5 && H.hod.betanotrack < 1.5
+HMSGoodBetanotrk      H.hod.betanotrack > 0.85 && H.hod.betanotrack < 1.5
 
 
 #HMSScinShould        HMSScinGood && HMSGoodBetanotrk && !hmsDCany_large #Min DC CHamber hit requirement is alreay done in htracking.param

@@ -208,7 +208,7 @@ Double_t sigma[dc_PLANES];
 Double_t x[dc_PLANES];
       
 
-/*
+
 //HMS Detector Leaf Names                                                                                          
 
 
@@ -289,7 +289,6 @@ TCanvas *hCer_Canv;
 //SHMS
 TCanvas *shms_REF_Canv;                      //canvas to save reference time histograms
 TCanvas *phodoCanv[hod_PLANES][SIDES];
-TCanvas *pcalCanv;
 TCanvas *pcalCanv_alt[16];
 TCanvas *pPrshCanv[SIDES];
 TCanvas *pdcCanv;
@@ -303,7 +302,7 @@ TCanvas *pTRG_Canv;
 
 //Mean and Sigma. Variables to determine TimeWindow Cut Region
 Int_t binmax;
-Double_t mean; 
+//Double_t mean; 
 Double_t sig;
   
 //=========================================
@@ -376,7 +375,7 @@ TLine *ptrg4r2_LineMax;
 //Define TTree Leaf Names 
 //========================
 
-TString base;
+
                                                                                                                                   
 //HMS Detector Leaf Names                                                                                                                                                                     
 TString n_hhod_TdcAdcTimeDiff;                                                                                                                                             
@@ -485,5 +484,5 @@ Double_t ptrg4_r2;
 
 //=========================================================
 
-*/
+
 #endif 

@@ -27,12 +27,10 @@ block P.hod.*start*
 block P.hgcer.npeSum*
 block P.ngcer.npeSum* 
 block P.cal.etot*
-#block P.cal.etrack*
-#block P.cal.*track*
-#block P.hod.*Track*
+block P.cal.*track*
 
 #Sieve Analysis                                                                                                           
-block P.extcor.*                                                                                                                               
+#block P.extcor.*                                                                                                                               
                                                                       
 #Rastered Beam                                                                                         
 block P.rb.*                  
