@@ -395,9 +395,12 @@ pdidh                          : {shmsScinDidh.npassed}
 pscinshould                    : {shmsScinShould.npassed}
 pscinshoulde                   : {shmsScinShoulde.npassed}
 pscinshouh                     : {shmsScinShouldh.npassed}
-SING FID TRACK EFFIC           : {shmsScinDid.npassed / (shmsScinShould.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShould.npassed-shmsScinDid.npassed) / (shmsScinShould.npassed+.0001)):%8.4f}
-E SING FID TRACK EFFIC         : {shmsScinDide.npassed / (shmsScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShoulde.npassed-shmsScinDide.npassed) / (shmsScinShoulde.npassed+.0001)):%8.4f}
-HADRON SING FID TRACK EFFIC    : {shmsScinDidh.npassed / (shmsScinShouldh.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShouldh.npassed-shmsScinDidh.npassed) / (shmsScinShouldh.npassed+.0001)):%8.4f}
+
+pSING FID TRACK EFFIC           : {shmsScinDid.npassed / (shmsScinShould.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShould.npassed-shmsScinDid.npassed) / (shmsScinShould.npassed+.0001)):%8.4f}
+pE SING FID TRACK EFFIC         : {shmsScinDide.npassed / (shmsScinShoulde.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShoulde.npassed-shmsScinDide.npassed) / (shmsScinShoulde.npassed+.0001)):%8.4f}
+pE MULT FID TRACK EFFIC         : {shmsScinDide_mult.npassed / (shmsScinShoulde_mult.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShoulde_mult.npassed-shmsScinDide_mult.npassed) / (shmsScinShoulde_mult.npassed+.0001)):%8.4f}
+pE ALL FID TRACK EFFIC         : {shmsScinDide_all.npassed / (shmsScinShoulde_all.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShoulde_all.npassed-shmsScinDide_all.npassed) / (shmsScinShoulde_all.npassed+.0001)):%8.4f}
+pHADRON SING FID TRACK EFFIC    : {shmsScinDidh.npassed / (shmsScinShouldh.npassed+0.0001):%8.4f} +- {(sqrt(shmsScinShouldh.npassed-shmsScinDidh.npassed) / (shmsScinShouldh.npassed+.0001)):%8.4f}
 
 ***************
 * HGC Cerenkov 

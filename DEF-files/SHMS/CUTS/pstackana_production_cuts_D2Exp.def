@@ -1,0 +1,27 @@
+# Report file for SHMS stack
+
+Block: RawDecode
+#include "DEUTERON_ANALYSIS/DEF-files/SHMS/CUTS/pstackana_rawdecode_cuts.def"
+RawDecode_master  1
+
+Block: Decode
+#include "DEUTERON_ANALYSIS/DEF-files/SHMS/CUTS/pstackana_decode_cuts.def"
+Decode_master     ALL_SHMS_NO_EDTM
+
+Block: CoarseTracking
+#include "DEUTERON_ANALYSIS/DEF-files/SHMS/CUTS/pstackana_coarsetracking_cuts.def"
+CoarseTracking_master  ALL_SHMS_NO_EDTM
+
+Block: CoarseReconstruct
+CoarseReconstruct_master  ALL_SHMS_NO_EDTM
+
+Block: Tracking
+Tracking_master   ALL_SHMS_NO_EDTM
+
+Block: Reconstruct
+#include "DEUTERON_ANALYSIS/DEF-files/SHMS/CUTS/pstackana_reconstruct_cuts.def"
+Reconstruct_master  ALL_SHMS_NO_EDTM
+
+Block: Physics
+#include "DEUTERON_ANALYSIS/DEF-files/SHMS/CUTS/pstackana_physics_cuts.def"
+Physics_master  ALL_SHMS_NO_EDTM&&P.bcm.CurrentFlag==1

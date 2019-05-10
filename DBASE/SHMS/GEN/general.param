@@ -16,7 +16,7 @@ cminch=2.54
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/GEN/pdebug.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/GEN/shmsflags.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/GEN/ptracking.param"
-#include "DEUTERON_ANALYSIS/PARAM/SHMS/GEN/p_reftime_cut.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/GEN/p_reftime_cut_default.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/GEN/p_fadc_debug.param"
 
 ; SHMS default geometry parameter files
@@ -27,11 +27,21 @@ cminch=2.54
 #include "PARAM/SHMS/AERO/paero_geom.param"
 #include "PARAM/SHMS/CAL/pcal_geom.param"
 
-; SHMS default cut parameter files
-#include "DEUTERON_ANALYSIS/PARAM/SHMS/NGCER/pngcer_cuts.param"
-#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_cuts.param"
-#include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_cuts.param"
-#include "DEUTERON_ANALYSIS/PARAM/SHMS/HGCER/phgcer_cuts.param"
-#include "DEUTERON_ANALYSIS/PARAM/SHMS/AERO/paero_cuts.param"
-#include "DEUTERON_ANALYSIS/PARAM/SHMS/CAL/pcal_cuts.param"
+; SHMS default calibration parameter files
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HGCER/phgcer_calib.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/NGCER/pngcer_calib.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_calib.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_TWcalib.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_Vpcalib.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/AERO/paero_calib.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/CAL/pcal_calib.param"
 
+; SHMS default cut parameter files
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/NGCER/pngcer_cuts_default.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_cuts_default.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_cuts_default.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HGCER/phgcer_cuts_default.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/AERO/paero_cuts_default.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/CAL/pcal_cuts_default.param"

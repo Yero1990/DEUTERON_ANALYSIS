@@ -1,0 +1,24 @@
+block T.hms.*FADC_TREF*
+block T.hms.*tdcTimeRaw*
+block T.hms.*Mult*
+
+block H.cer.*AdcTdcDiffTime
+block H.cer.*Mult*
+block H.dc.*rawtdc*
+block H.dc.*nhit*
+block H.hod.*AdcTdcDiffTime*
+block H.hod.*Mult*
+block H.cal.*AdcTdcDiffTime*
+block H.cal.*Mult*
+
+
+begin epics
+IBC3H00CRCUR4
+hac_bcm_average
+ibcm1
+ibcm2
+iunser
+itov3out
+itov4out
+end epics
+

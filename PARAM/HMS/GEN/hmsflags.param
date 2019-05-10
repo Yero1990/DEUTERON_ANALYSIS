@@ -15,12 +15,12 @@
 ;  plots will be screwed up.
   hdelta_offset = 0.       ; (%)   hdelta_tar = hdelta_tar + hdelta_offset
 
-  htheta_offset = 0.  ; (rad) hyp_tar = hyp_tar + htheta_offset
-; htheta_offset = 0.00122141
-;  htheta_offset = 0.0005   ;(rad)  determined from H(e,e'p) Minimization, Jan. 17, 2019
+;  htheta_offset = 0.00  ; (rad) hyp_tar = hyp_tar + htheta_offset
+ htheta_offset = 0.00095  ;(rad)  
+  
 
 ;  hphi_offset   = 0         ; (rad) hxp_tar = hxp_tar + hphi_offset
-  hphi_offset   = 3.4353e-3  ; (rad)  Determined on Januray 4, 2018, by comparing HMS xptar SIMC-DATA
+   hphi_offset   = 2.852e-3  ; (rad)  Determined on April 12, 2019, by comparing HMS xptar SIMC-DATA
 
 ;saturation correction flag
 ;  hsatcorr = 2000 ; 
@@ -35,9 +35,12 @@
 ; These offsets are determined from elastic ep data.
 ; central field  correction
   hpcentral_offset = 0.0 ;    
-  hthetacentral_offset = 0.000 ; (rad) 
-  h_oopcentral_offset = 0.00  ; (rad)
+
+; htheta_lab=htheta_lab + hthetacentral_offset/degree 
+  hthetacentral_offset = 0. ; (rad) 
+
+
+  h_oopcentral_offset = 1.521e-3  ; (rad)   Determined by dPmiss_Y / HMS_Pcent
 ; sets hpcentral = hpcentral * ( 1. + hpcentral_offset / 100. )
-;      htheta_lab=htheta_lab + hthetacentral_offset/degree 
 
 

@@ -17,7 +17,9 @@ spec=$1
 
 #for run in {1149..1171}
 #do
-filename='Al_dummy.dat'
+#filename='h2.dat'
+filename='target_boiling_study/Al_boiling_hms_Apr_02_2018.dat'
+
 for run in $(cat $filename) ; do    
     mss="/mss/hallc/spring17/raw/${spec}_all_0${run}.dat"
     #lustre="/lustre/expphy/cache/hallc/spring17/raw"

@@ -37,7 +37,7 @@ void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="hod
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
   
   // Load params for SHMS trigger configuration
-  gHcParms->Load("PARAM/TRIG/tshms.param");
+  gHcParms->Load("DEUTERON_ANALYSIS/PARAM/TRIG/tshms.param");
   
   ifstream bcmFile;
   TString bcmParamFile = Form("DEUTERON_ANALYSIS/PARAM/SHMS/BCM/bcmcurrent_%d.param",  RunNumber);

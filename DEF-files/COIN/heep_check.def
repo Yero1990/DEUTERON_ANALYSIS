@@ -10,6 +10,7 @@ block P.bcm*
 block CTime*
 
 block T.coin.pTRIG*
+block T.coin.hTRIG*
 
 #Kinematics
 block P.kin.*       
@@ -61,8 +62,8 @@ block H.hod.*Track*
 
 
 #Sieve Analysis
-#block P.extcor.*
-#block H.extcor.*
+block P.extcor.*
+block H.extcor.*
 
 #Rastered Beam
 block P.rb.*

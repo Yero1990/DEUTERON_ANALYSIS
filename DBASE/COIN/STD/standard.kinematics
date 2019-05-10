@@ -9,9 +9,11 @@ gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.29
-ptheta_lab = 12.2
+;ptheta_lab = 12.2
+ptheta_lab = 12.183
 hpcentral = 2.9382*0.9969341636
-ppcentral = 8.543210
+;ppcentral = 8.543210
+ppcentral = 8.532738
 
 #Proton Absorption Measurements (SHMS e-arm triggers ONLY)
 3249-3251
@@ -20,9 +22,9 @@ gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.29
-ptheta_lab = 12.2
+ptheta_lab = 12.183
 hpcentral = 2.9382*0.9969341636
-ppcentral = 8.543210
+ppcentral = 8.532738
 
 #Al Dummy Runs for H(e,e'p)
 3252-3258
@@ -31,9 +33,10 @@ gtargmass_amu = 26.98
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.29
-ptheta_lab = 12.2
+ptheta_lab = 12.183
 hpcentral = 2.9382*0.9969341636
-ppcentral = 8.543210
+;ppcentral = 8.543210
+ppcentral = 8.532738
 
 #Proton Absorption Measurements
 3259-3263
@@ -42,9 +45,9 @@ gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.29
-ptheta_lab = 12.2
+ptheta_lab = 12.183
 hpcentral = 2.9382*0.9969341636
-ppcentral = 8.543210
+ppcentral = 8.532738
 
 #D2 - Low Missing Momentum Setting = 80 MeV
 3264-3268
@@ -53,9 +56,9 @@ gtargmass_amu = 2.014101
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -38.895
-ptheta_lab = 12.2
+ptheta_lab = 12.183
 hpcentral = 2.8438*0.9970473876
-ppcentral = 8.543210
+ppcentral = 8.532738
 
 
 #D2 - High Missing Momentum Setting = 580 MeV
@@ -65,9 +68,9 @@ gtargmass_amu = 2.014101
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -54.945
-ptheta_lab = 12.2
+ptheta_lab = 12.183
 hpcentral = 2.1939*0.9978268825
-ppcentral = 8.543210
+ppcentral = 8.532738
 
 
 # optics scan for SHMS Q3 and HB with optics #1 and sieve
@@ -91,9 +94,9 @@ gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.338
-ptheta_lab = 12.168   ;12.194
-hpcentral = 2.938*0.996742
-ppcentral = 8.543210
+ptheta_lab = 12.194
+hpcentral = 2.935545    ; 2.938*0.996742
+ppcentral = 8.535956    ; 8.543210
 
 #Pm = 80 MeV
 3289
@@ -102,9 +105,9 @@ gtargmass_amu = 2.014101
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -38.896
-ptheta_lab = 12.168   ;12.194
-hpcentral = 2.8438 * 0.99704738 
-ppcentral =  8.543210
+ptheta_lab = 12.194
+hpcentral = 2.8438 * 0.999434
+ppcentral = 8.535956 ; 8.543210
 
 #Pm = 580 (Momentum seems significantly off --Run Not In Use)
 3290
@@ -168,9 +171,9 @@ gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -33.545
-ptheta_lab = 13.899  ;13.93
-hpcentral = 3.48*0.996524
-ppcentral = 8.543210
+ptheta_lab = 13.93     ;13.899
+hpcentral = 3.48*0.996524*1.0023
+ppcentral = 8.535956  ;8.543210
 
 3372
 gpbeam = 10.6005
@@ -190,7 +193,7 @@ ppartmass = 0.00051099
 htheta_lab = -42.9
 ptheta_lab = 9.928
 hpcentral = 3.0178
-ppcentral = 8.541
+ppcentral = 8.535956
 
 3374
 gpbeam = 10.6005
@@ -198,9 +201,9 @@ gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -42.9
-ptheta_lab =  9.922  ;9.928
-hpcentral = 2.31*0.997783
-ppcentral =  8.543210
+ptheta_lab =  9.928   ;9.922
+hpcentral = 2.31*0.997783*1.00239
+ppcentral = 8.535956   ;8.543210
 
 3375
 gpbeam = 10.6005
@@ -228,9 +231,9 @@ gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -47.605
-ptheta_lab = 8.551  ;8.495
-hpcentral = 1.8899*0.998217
-ppcentral = 8.543210
+ptheta_lab = 8.495    ;8.551
+hpcentral = 1.8899*0.998217*1.00249
+ppcentral = 8.535956  ;8.543210
 
 3379
 gpbeam = 10.6005

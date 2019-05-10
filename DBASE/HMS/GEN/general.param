@@ -16,7 +16,7 @@ cminch=2.54
 #include "DEUTERON_ANALYSIS/PARAM/HMS/GEN/hdebug.param"
 #include "DEUTERON_ANALYSIS/PARAM/HMS/GEN/hmsflags.param"
 #include "DEUTERON_ANALYSIS/PARAM/HMS/GEN/htracking.param"
-#include "DEUTERON_ANALYSIS/PARAM/HMS/GEN/h_reftime_cut.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/GEN/h_reftime_cut_default.param"
 #include "DEUTERON_ANALYSIS/PARAM/HMS/GEN/h_fadc_debug.param"
 
 ; HMS default geometry parameter files 
@@ -26,10 +26,20 @@ cminch=2.54
 #include "PARAM/HMS/AERO/haero_geom.param"
 #include "PARAM/HMS/CAL/hcal_geom.param"
 
-; HMS default cut parameter files
-#include "DEUTERON_ANALYSIS/PARAM/HMS/CER/hcer_cuts.param"
-#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_cuts.param"
-#include "DEUTERON_ANALYSIS/PARAM/HMS/HODO/hhodo_cuts.param"
-#include "DEUTERON_ANALYSIS/PARAM/HMS/AERO/haero_cuts.param"
-#include "DEUTERON_ANALYSIS/PARAM/HMS/CAL/hcal_cuts.param"
 
+; HMS default calibration parameter files
+#include "DEUTERON_ANALYSIS/PARAM/HMS/CER/hcer_calib.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/HODO/hhodo_calib.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/HODO/hhodo_TWcalib.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/HODO/hhodo_Vpcalib.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/AERO/haero_calib.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/CAL/hcal_calib.param"
+
+; HMS default cut parameter files
+#include "DEUTERON_ANALYSIS/PARAM/HMS/CER/hcer_cuts_default.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_cuts_default.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/HODO/hhodo_cuts_default.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/AERO/haero_cuts_default.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/CAL/hcal_cuts_default.param"

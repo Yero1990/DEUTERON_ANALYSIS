@@ -1,4 +1,4 @@
-#block P.bcm.*
+block P.bcm.*
 #block P.rb.*       
 #block D.*
 

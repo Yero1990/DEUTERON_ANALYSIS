@@ -1,0 +1,5 @@
+; HMS calibration files for combined runs 2075-2085 (HMS LH2 boiling study. April 02, 2018)      
+
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_2075.param"                      
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_2075.param"    
+#include "DEUTERON_ANALYSIS/PARAM/HMS/CAL/hcal_calib_2075.param"

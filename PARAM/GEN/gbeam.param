@@ -1,11 +1,10 @@
 ;                    BPM calibration constants
 ;                    =========================
 
-
-
 ; Add new variables for Hall C BPM A, B, and C, based on HARP calibration
 ; For Fall 2017-Spring 2018
 ;
+
   gbpmxa_slope = -1.00111
   gbpmxa_off   = -0.12309
   gbpmxb_slope = -1.24023

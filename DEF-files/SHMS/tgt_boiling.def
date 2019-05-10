@@ -1,0 +1,39 @@
+#****************************
+#Target Boiling Definitions *
+#****************************
+
+#Global Def
+block g.evtyp
+block g.evnum
+
+#Trigger Leafs
+block T.shms.*
+
+#Kinematics
+block P.kin.*       
+
+#Focal Plane/Target Variables
+block P.dc.*fp*
+block P.gtr.*
+block P.react.*
+
+#Calibration checks 
+block P.dc.*wirenum*
+block P.dc.*time* 
+block P.dc.*dist*
+block P.dc.*residual*  
+block P.dc.*nhit* 
+block P.dc.*ntrack* 
+
+block P.hod.goodscinhit
+block P.hod.beta*
+block P.hod.*start*
+block P.cer.npeSum*
+block P.cal.etot*
+block P.cal.etrack*
+block P.cal.*track*
+block P.hod.*Track*
+
+#Rastered Beam                 
+block P.rb.*                  
+         

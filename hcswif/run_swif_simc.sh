@@ -4,7 +4,7 @@
 #where [options] ---> status,  delete
 
 #workflow_name="heep_coin_elec"
-workflow_name="D2_simc_80MeV_test"
+workflow_name="D2_simc_80MeV"
 
 #runlist_name="current_elec.data"
 #runlist_name="current_prot.data"
@@ -23,7 +23,7 @@ project=" --project c-comm2017 "
 workflow=" --name $workflow_name"
 
 
-CMD="python3 hcswif.py $mode $shell_type $shell_script $disk_usage $cpu_cores $project $workflow"
+CMD="python3 hcswif.py $mode $shell_script $disk_usage $cpu_cores $project $workflow"
 #echo $CMD
 
 view_file="python3 -m json.tool ${workflow_name}.json"

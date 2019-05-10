@@ -1,5 +1,4 @@
 0-99999
-
 g_ctp_parm_filename ="DEUTERON_ANALYSIS/DBASE/COIN/GEN/general.param"
 g_ctp_kinematics_filename ="DEUTERON_ANALYSIS/DBASE/COIN/STD/standard.kinematics"
 g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/COIN/GEN/default_det_calib_files.param"
@@ -10,13 +9,15 @@ g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/COIN/GEN/det_calib_1722.param"
 g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/COIN/GEN/det_calib_1920.param"
 3259
 g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/COIN/GEN/det_calib_3259.param"
+3264
+g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/COIN/GEN/det_calib_3289.param"
 3288
 g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/COIN/GEN/det_calib_3288.param"
 3289
 g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/COIN/GEN/det_calib_3289.param"
 3371
 g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/COIN/GEN/det_calib_3371.param"
-3374
+3373-3374
 g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/COIN/GEN/det_calib_3374.param"
 3376
 g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/COIN/GEN/det_calib_3376.param"

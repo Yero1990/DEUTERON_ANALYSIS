@@ -7,7 +7,7 @@ export hallc_replay_dir=/u/group/E12-10-003/$USER/hallc_replay
 
 # -----------------------------------------------------------------------------
 #  Change if this gives you the wrong version of root, evio, etc
-source /site/12gev_phys/production.sh 2.1
+source /site/12gev_phys/softenv.csh 2.1
 
 # -----------------------------------------------------------------------------
 # Source setup scripts

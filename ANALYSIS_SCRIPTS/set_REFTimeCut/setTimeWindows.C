@@ -61,12 +61,12 @@ void setTimeWindows(int run, string trg)
   hhod_tref_xmax = 2500,          phod_tref_xmax = 4200;
   
   hdc_tref_nbins = 200,           pdc_tref_nbins = 200;
-  hdc_tref_xmin = 14600,          pdc_tref_xmin = 13000;
+  hdc_tref_xmin = 10600,          pdc_tref_xmin = 13000;
   hdc_tref_xmax = 16000,          pdc_tref_xmax = 15500;
   
   hadc_tref_nbins = 200,          padc_tref_nbins = 100;
   hadc_tref_xmin = 1000,          padc_tref_xmin = 2000;
-  hadc_tref_xmax = 3300,          padc_tref_xmax = 4500;
+  hadc_tref_xmax = 4300,          padc_tref_xmax = 4500;
   
   //TRG
   ptrg1_roc1_nbins=100, ptrg1_roc1_xmin=500, ptrg1_roc1_xmax=3100;
@@ -108,7 +108,7 @@ void setTimeWindows(int run, string trg)
   //====OPEN ROOT FILE=======
   //=========================
   
-  string rtype = "coin";  //or "hms", "shms"  (singles in coin mode)
+  string rtype = "shms";  //coin or "hms", "shms"  (singles in coin mode)
                                 
   //Random Deuteron Experiemtn Runs, to verify that the quantities we are placing a cut on DO NOT MOVE significantly.
   //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3248_-1.root";                                         
@@ -120,8 +120,10 @@ void setTimeWindows(int run, string trg)
   //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3386_-1.root";                                         
 
   // TString filename = Form("../../../ROOTfiles/coin_replay_timeWin_check_%d_-1.root", run);                                         
-  TString filename = "../../../ROOTfiles/pm750_tWinCheck_TimeWinSet.root";
+  //TString filename = "../../../ROOTfiles/pm750_tWinCheck_TimeWinSet.root";
 
+  //TString filename = "../../../ROOTfiles/hms_replay_timeWin_check_singles_setTimeWin.root";
+  TString filename = "../../../ROOTfiles/shms_replay_timeWin_check_3206_-1.root";
 
   //TString filename = "../../../ROOTfiles/shms_replay_timeWin_check_1791_-1.root";
   //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3288_-1_refCUTset.root";
@@ -441,7 +443,7 @@ void setTimeWindows(int run, string trg)
       //SHMS DC Ref Times
       for (int iref=0; iref<10; iref++)
 	{
-	  good_Mult =  pDC_tdcMult[iref] == 3;
+	  good_Mult =  pDC_tdcMult[iref] == 2;
 		  
 	  P_DC_Tref[iref]->Fill(pDC_ref[iref]);
 	  if( good_Mult) { P_DC_Tref_CUT[iref]->Fill(pDC_ref[iref]);}
@@ -450,7 +452,7 @@ void setTimeWindows(int run, string trg)
 
       for(int iref=0; iref<4; iref++)
 	{
-	  good_Mult =  hDC_tdcMult[iref] == 1;
+	  good_Mult =  hDC_tdcMult[iref] == 2;
 
 	  //HMS DC Ref. Times
 	  H_DC_Tref[iref]->Fill(hDC_ref[iref]);
@@ -718,9 +720,9 @@ void setTimeWindows(int run, string trg)
   H_DC_Tref_CUT[0]->SetLineColor(kRed);
   H_DC_Tref[0]->Draw();
   H_DC_Tref_CUT[0]->Draw("sames");
-  //  H_DC_Tref[1]->Draw("sames");
-  //H_DC_Tref[2]->Draw("sames");
-  //H_DC_Tref[3]->Draw("sames");
+  H_DC_Tref[1]->Draw("sames");
+  H_DC_Tref[2]->Draw("sames");
+  H_DC_Tref[3]->Draw("sames");
   hDCREF_Line->SetLineColor(kBlack);
   hDCREF_Line->SetLineStyle(2);
   hDCREF_Line->SetLineWidth(3);

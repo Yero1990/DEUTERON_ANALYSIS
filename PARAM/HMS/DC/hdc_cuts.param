@@ -6,14 +6,6 @@ hdc_fix_lr = 1 ; Let hit have different L/R assignment for different space point
 hdc_fix_propcorr = 1 ; do propagation along wire each time hit appeears
                      ; in a space point
 
-; Default TDC window limits for each plane.                                                                                                           
-;hdc_tdc_min_win = -30000, -30000, -30000, -30000, -30000, -30000                                                                           
-;                  -30000, -30000, -30000, -30000, -30000, -30000                                        
-                                    
-;hdc_tdc_max_win = 30000, 30000, 30000, 30000, 30000, 30000                                                                           
-;                  30000, 30000, 30000, 30000, 30000, 30000   
-                                                                                                                                                      
-
 ; Determined by Coin run 3288/3289
 hdc_tdc_min_win = -14000.00, -14000.00, -14000.00, -14000.00, -14000.00, -14000.00, -14000.00, -14000.00, -14000.00, -14000.00, -14000.00, -14000.00 
 hdc_tdc_max_win = -11000.00, -11900.00, -11800.00, -11800.00, -10600.00, -11800.00, -10800.00, -11600.00, -11800.00, -11800.00, -10600.00, -11800.00 

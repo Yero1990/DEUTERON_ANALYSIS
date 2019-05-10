@@ -248,9 +248,10 @@ ppartmass =  0.00051099
 ptheta_lab =15.0
 ppcentral = 3.0
 
+#SHMS Target Boiling (LH2) Jan. 2018
 1970-1979
 gpbeam = 6.430
-gtargmass_amu= 2.014101
+gtargmass_amu= 1.00794
 ppartmass =  0.00051099
 ptheta_lab =15.0
 ppcentral = 3.0
@@ -1712,29 +1713,33 @@ ppartmass = 0.00051099
 ptheta_lab = 24.97
 ppcentral = 4.4
 
+#SHMS LD2 Target Boiling Studies (April 02, 2018)
 3204-3205
-gpbeam = 10.59
+gpbeam = 10.6005
 gtargmass_amu = 2.014101
 ppartmass = 0.00051099
 ptheta_lab = 24.97
 ppcentral = 4.4
 
+#SHMS LH2 Target Boiling Studies (April 02, 2018)
 3206-3215
-gpbeam = 10.59
+gpbeam = 10.6005
 gtargmass_amu = 1.00794 
 ppartmass = 0.00051099
 ptheta_lab = 24.97
 ppcentral = 4.4
 
+#SHMS LD2 Target Boiling Studies (April 02, 2018)
 3216-3221
-gpbeam = 10.59
+gpbeam = 10.6005
 gtargmass_amu = 2.014101
 ppartmass = 0.00051099
 ptheta_lab = 24.97
 ppcentral = 4.4
 
+#Carbon Boiling Studies (April 02, 2018)
 3222-3225
-gpbeam = 10.59
+gpbeam = 10.6005
 gtargmass_amu = 12.0107 
 ppartmass = 0.00051099
 ptheta_lab = 24.97

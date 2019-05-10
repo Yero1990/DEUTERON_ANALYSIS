@@ -1,4 +1,4 @@
-void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="dc_calib") {
+void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="tgt_boiling") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -36,7 +36,8 @@ void replay_hms(Int_t RunNumber=0, Int_t MaxEvent=0,const char* ftype="dc_calib"
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
 
   // Load params for HMS trigger configuration
-  gHcParms->Load("PARAM/TRIG/thms.param");
+  gHcParms->Load("DEUTERON_ANALYSIS/PARAM/TRIG/thms_comm18.param");
+  //gHcParms->Load("DEUTERON_ANALYSIS/PARAM/TRIG/thms.param");                                                                                                            
 
   
   ifstream bcmFile;

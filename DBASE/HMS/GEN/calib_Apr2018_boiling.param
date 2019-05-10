@@ -1,0 +1,12 @@
+; HMS calibration / cuts files for HMS boiling study. April 02, 2018                                                   
+
+#include "DEUTERON_ANALYSIS/PARAM/HMS/GEN/h_reftime_cut_Apr2018_boiling.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/CER/hcer_cuts.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_cuts.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/HODO/hhodo_cuts_Apr2018_boiling.param"
+#include "DEUTERON_ANALYSIS/PARAM/HMS/CAL/hcal_cuts_Apr2018_boiling.param"
+
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_Apr2018_boiling.param"                                             
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_Apr2018_boiling.param"   
+#include "DEUTERON_ANALYSIS/PARAM/HMS/CAL/hcal_calib_Apr2018_boiling.param"
+

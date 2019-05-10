@@ -1,25 +1,25 @@
 Block: RawDecode
-#include "UTIL_COMM_ONEPASS/DEF-files/HMS/CUTS/hstackana_rawdecode_cuts.def"
-RawDecode_master  1
+#include "DEUTERON_ANALYSIS/DEF-files/HMS/CUTS/hstackana_rawdecode_cuts.def"
+RawDecode_master 1
 
 Block: Decode
-#include "UTIL_COMM_ONEPASS/DEF-files/HMS/CUTS/hstackana_decode_cuts.def"
-Decode_master      ALL_HMS_NO_EDTM   
+#include "DEUTERON_ANALYSIS/DEF-files/HMS/CUTS/hstackana_decode_cuts.def"
+Decode_master 1   
 
 Block: CoarseTracking
-#include "UTIL_COMM_ONEPASS/DEF-files/HMS/CUTS/hstackana_coarsetracking_cuts.def"
-CoarseTracking_master  ALL_HMS_NO_EDTM   
+#include "DEUTERON_ANALYSIS/DEF-files/HMS/CUTS/hstackana_coarsetracking_cuts.def"
+CoarseTracking_master 1   
 
 Block: CoarseReconstruct
-CoarseReconstruct_master  ALL_HMS_NO_EDTM   
+CoarseReconstruct_master 1   
 
 Block: Tracking
-Tracking_master    ALL_HMS_NO_EDTM   
+Tracking_master 1   
 
 Block: Reconstruct
-#include "UTIL_COMM_ONEPASS/DEF-files/HMS/CUTS/hstackana_reconstruct_cuts.def"
-Reconstruct_master   ALL_HMS_NO_EDTM   
+#include "DEUTERON_ANALYSIS/DEF-files/HMS/CUTS/hstackana_reconstruct_cuts.def"
+Reconstruct_master 1   
 
 Block: Physics
-#include "UTIL_COMM_ONEPASS/DEF-files/HMS/CUTS/hstackana_physics_cuts.def"
-Physics_master   ALL_HMS_NO_EDTM   
+#include "DEUTERON_ANALYSIS/DEF-files/HMS/CUTS/hstackana_physics_cuts.def"
+Physics_master 1

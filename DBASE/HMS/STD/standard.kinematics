@@ -395,6 +395,7 @@ hpartmass = 0.00051099
 htheta_lab = -25.01
 hpcentral = 3.
 
+#HMS Target Boiling Studies (LH2) Jan 2018
 1394-1402
 gpbeam = 6.430 
 gtargmass_amu= 1.00794
@@ -402,6 +403,7 @@ hpartmass = 0.00051099
 htheta_lab = -15.0
 hpcentral = 3.
 
+#HMS Target Boiling Studies (LD2) Jan 2018
 1403-1414
 gpbeam = 6.430 
 gtargmass_amu= 2.014101
@@ -1576,36 +1578,41 @@ hpartmass = 0.00051099
 htheta_lab = -24.99
 hpcentral = 4.4
 
+#HMS LD2 Target Boiling Studies (April 02, 2018)
 2073-2074
-gpbeam = 10.59
+gpbeam = 10.6005
 gtargmass_amu = 2.014101
 hpartmass = 0.00051099
 htheta_lab = -24.99
 hpcentral = 4.4
 
+#HMS LH2 Target Boiling Studies (April 02, 2018)
 2075-2085
-gpbeam = 10.59
+gpbeam = 10.6005
 gtargmass_amu = 1.00794
 hpartmass = 0.00051099
 htheta_lab = -24.99
 hpcentral = 4.4
 
+#HMS LD2 Target Boiling Studies (April 02, 2018)
 2086-2091
-gpbeam = 10.59
+gpbeam = 10.6005
 gtargmass_amu = 2.014101
 hpartmass = 0.00051099
 htheta_lab = -24.99
 hpcentral = 4.4
 
+#Carbon Boiling Studies (April 02, 2018)
 2092-2095
-gpbeam = 10.59
+gpbeam = 10.6005
 gtargmass_amu = 12.0107
 hpartmass = 0.00051099
 htheta_lab = -24.99
 hpcentral = 4.4
 
+#Al Dummy Boiling Studies (April 02, 2018)
 2096-2096
-gpbeam = 10.59
+gpbeam = 10.6005
 gtargmass_amu =  26.981539
 hpartmass = 0.00051099
 htheta_lab = -24.99

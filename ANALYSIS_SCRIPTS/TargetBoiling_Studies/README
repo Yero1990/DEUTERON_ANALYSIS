@@ -1,0 +1,25 @@
+***********************
+Target Boiling Studies
+***********************
+
+May 06, 2019
+
+The target boiling studies consist of determining the number of events that
+were lost due to local target boiling. The procedure is as follows:
+
+Determined the Normalized Yields vs. Beam Current for Carbon, LH2, LD2.
+
+ * Carbon target does NOT boil, so the expected Normalized yield should
+   NOT change with beam current. This will establish a reference point to 
+   which compare the LH2/LD2 liquid targets.
+
+ * For LH2/LD2, there is a negative slope expected, indicating lower normalized
+   yields with increasing beam current.  
+
+ * The difference between Carbon and LH2 (or LD2) indicated the the fraction
+   of yield lost due to boiling. 
+
+ * This is then added as a correction to the data yield used to calculate a
+   cross section. 
+
+   

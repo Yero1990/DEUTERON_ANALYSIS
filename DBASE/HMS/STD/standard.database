@@ -5,3 +5,8 @@ g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/HMS/GEN/default_det_calib_files.p
 
 ;1178-1178
 ;g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/HMS/GEN/calib_1178.param"
+
+;HMS Target Boiling Studies (April 02, 2018)
+2073-2096                                                                                                       
+g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/HMS/GEN/calib_Apr2018_boiling.param"   
+
