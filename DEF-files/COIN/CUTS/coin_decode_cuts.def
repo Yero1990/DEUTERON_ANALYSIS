@@ -11,5 +11,6 @@ pcut_good_S1_time         T.coin.p1T_tdcTime > 241 && T.coin.p1T_tdcTime < 243
 pcut_good_S2X_time        T.coin.p2X_tdcTime > 180 && T.coin.p2X_tdcTime < 220
 pcut_good_S1_S2X_time     pcut_good_S1_time && pcut_good_S2X_time
 
+no_edtm                   T.coin.pEDTM_tdcTimeRaw==0.0
 
 ALL_COIN_NO_EDTM  T.coin.hEDTM_tdcTimeRaw==0.0&&T.coin.pEDTM_tdcTimeRaw==0.0&&ALL_events

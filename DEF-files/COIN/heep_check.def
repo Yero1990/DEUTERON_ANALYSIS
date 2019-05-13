@@ -1,10 +1,11 @@
-#****************************
+s#****************************
 #H(e,e'p) Check Definitions *
 #****************************
 
 #BCM CUrrent Module
 block H.bcm*
 block P.bcm*
+
 
 #Only to be used for coincidence trigger
 block CTime*

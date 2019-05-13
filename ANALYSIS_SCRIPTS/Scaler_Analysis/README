@@ -1,0 +1,11 @@
+****************
+SCALER ANALYSIS
+****************
+
+This directory contains code to analyze the scaler tree,
+and properly calcuate the live time, bcm_charge, and tracking efficiencies
+by putting BCM current cuts, and counting scaler reads only if they passed the
+cut.
+
+For now,  the code will be used to test the D2 experiment elastic runs
+3288, 3371, 3374, and 3377

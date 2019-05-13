@@ -1,0 +1,6 @@
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_calib_Apr2018_boiling.param"                                             
+#include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_Apr2018_boiling.param"   
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib_3206.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_3206.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_TWcalib_Apr2018_LH2boiling.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/HODO/phodo_Vpcalib_Apr2018_LH2boiling.param" 

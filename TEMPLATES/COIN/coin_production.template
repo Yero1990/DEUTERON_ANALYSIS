@@ -289,7 +289,7 @@ ROC2 Pre-Scaled Ps3 ROC2 Computer Dead Time : {100.0 - (pTRIG3_ROC2.npassed / (P
 ROC2 Pre-Scaled Ps4 ROC2 Computer Live Time : {(pTRIG4_ROC2.npassed / (P.pTRIG4.scalerCut/gHC_ti_ps_factors[3]))*100.0:%3.4f} %
 ROC2 Pre-Scaled Ps4 ROC2 Computer Dead Time : {100.0 - (pTRIG4_ROC2.npassed / (P.pTRIG4.scalerCut/gHC_ti_ps_factors[3]))*100.0:%3.4f} %
 
-ROC2 Pre-Scaled Ps6 ROC2 Computer Live Time : {(pTRIG6_ROC2.npassed / (P.pTRIG6.scalerCut/gHC_ti_ps_factors[5]))*100.0:%3.4f} %
+ROC2 Pre-Scaled Ps6 ROC2 Computer Live Time : {((pTRIG6_ROC2.npassed-SHMS_edtm_accepted.npassed) / ((P.pTRIG6.scalerCut-P.EDTM.scalerCut)/gHC_ti_ps_factors[5]))*100.0:%3.4f} %
 ROC2 Pre-Scaled Ps6 ROC2 Computer Dead Time : {100.0 - (pTRIG6_ROC2.npassed / (P.pTRIG6.scalerCut/gHC_ti_ps_factors[5]))*100.0:%3.4f} %
 
 ROC2 Pre-Scaled Ps1 Total Live Time (EDTM) : {(SHMS_edtm_accepted.npassed / (P.EDTM.scalerCut/gHC_ti_ps_factors[0]))*100.0:%3.4f} %

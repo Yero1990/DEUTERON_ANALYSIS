@@ -27,4 +27,4 @@ Block: Physics
 #include "DEUTERON_ANALYSIS/DEF-files/HMS/CUTS/hstackana_physics_cuts.def"
 #include "DEUTERON_ANALYSIS/DEF-files/SHMS/CUTS/pstackana_physics_cuts.def"
 #include "DEUTERON_ANALYSIS/DEF-files/COIN/CUTS/coin_physics_cuts.def"
-Physics_master  ALL_COIN_NO_EDTM&&P.bcm.CurrentFlag==1 
+Physics_master  ALL_events

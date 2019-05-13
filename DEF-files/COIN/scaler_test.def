@@ -1,0 +1,76 @@
+s#****************************
+#H(e,e'p) Scaler Tests       *
+#****************************
+
+#BCM CUrrent Module
+block H.bcm*
+block P.bcm*
+
+block g.evtyp
+block g.evnum
+
+#Only to be used for coincidence trigger
+block CTime*
+
+block T.coin.pTRIG*
+block T.coin.hTRIG*
+
+block T.coin.pEDTM*
+block T.coin.hEDTM*
+
+#Kinematics
+block P.kin.*       
+block H.kin.*
+
+#Focal Plane/Target Variables
+block P.dc.*fp*
+block P.gtr.*
+block P.react.*
+
+block H.dc.*fp*
+block H.gtr.*
+block H.react.*
+
+#Calibration checks 
+block P.dc.*wirenum*
+block P.dc.*time* 
+block P.dc.*dist*
+block P.dc.*residual*  
+block P.dc.*hit* 
+block P.dc.*ntrack*
+block P.hod.beta*
+block P.hod.starttime
+block P.hod.*Counter*
+block P.hod.goodscinhit
+block P.hgcer.npeSum*
+block P.ngcer.npeSum* 
+block P.cal.etot*
+block P.cal.etrack*
+block P.cal.*track*
+block P.hod.*Track*
+
+
+block H.dc.*wirenum*                  
+block H.dc.*time*
+block H.dc.*dist*               
+block H.dc.*residual*       
+block H.dc.*hit*  
+block H.dc.*ntrack*           
+block H.hod.beta*   
+block H.hod.*starttime*
+block H.hod.*Counter*
+block H.hod.goodscinhit	
+block H.cer.npe*                  
+block H.cal.etot*                 
+block H.cal.etrack*            
+block H.cal.*track* 
+block H.hod.*Track*    
+
+
+#Sieve Analysis
+block P.extcor.*
+block H.extcor.*
+
+#Rastered Beam
+block P.rb.*
+block H.rb.*
