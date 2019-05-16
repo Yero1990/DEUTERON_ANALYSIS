@@ -69,13 +69,13 @@ void get_boiling(Int_t runNum, Double_t &set_current, Double_t &avg_current_bcm4
   Double_t  pTRIG3_scaler; 
   tscal->SetBranchAddress("P.pTRIG3.scaler",&pTRIG3_scaler);    //SHMS EL-CLEAN
   Double_t  pTRIG6_scaler; 
-  tscal->SetBranchAddress("P.pTRIG6.scaler",&pTRIG6_scaler);    //SHMS EL-CLEAN
+  tscal->SetBranchAddress("P.pTRIG6.scaler",&pTRIG6_scaler);    //HMS 3/4: SHMS 3/4 COin 
   
   Double_t  pEDTM_scaler; 
   tscal->SetBranchAddress("P.EDTM.scaler",&pEDTM_scaler);    //SHMS EDTM 
   
 
-  //Defive Quantities To Store Previous Reads and cumulative quantities
+  //Derive Quantities To Store Previous Reads and cumulative quantities
   Double_t prev_time = 0.;
   Double_t prev_charge_bcm4a = 0.;
   Double_t prev_charge_bcm4b = 0.;

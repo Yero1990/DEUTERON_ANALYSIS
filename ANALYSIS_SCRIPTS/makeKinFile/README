@@ -1,0 +1,4 @@
+*******************************************
+This directory has code to read relevant 
+EPICS variables, and make a kinematics file
+******************************************
