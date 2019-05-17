@@ -1,6 +1,8 @@
 #ifndef ANALYZE_H
 #define ANALYZE_H
 
+#include <string>
+
 class analyze
 {
   
@@ -29,6 +31,13 @@ class analyze
   void SetCentralAngles(Double_t th_cent, Double_t ph_cent);
   void TransportToLab( Double_t p, Double_t xptar, Double_t yptar, TVector3& pvect ); 
 
+  //Utilities Functions for String Parsing
+  string getString(char x);
+  vector <string> split(string str, char del=':');
+  vector <string> FindString(string keyword, string fname);
+
+  //Variables related to Utilities Functions
+
  private:
   
   //Initialization Parameters
@@ -50,8 +59,24 @@ class analyze
   Double_t MN; 
   Double_t me;
   Double_t tgt_mass;
+
+  //Set Varibales to be read from REPORT_FILE
+  Double_t e_th=0.;    //electron arm central angle
+  Double_t e_ph=0.;    
+  Double_t h_th=0.;    //hadron arm central angle
+  Double_t h_ph=0.;
+
+  Double_t xBPM;  //in cm
+  Double_t yBPM;  //in cm
   
-  Double_t e_th, e_ph, h_th, h_ph;  //In-plane and out-of-plane central spectrometer angles
+  Double_t e_xMisPoint;
+  Double_t e_yMisPoint;
+  Double_t h_xMisPoint;
+  Double_t h_yMisPoint;
+
+  //Central Spec. Momenta
+  Double_t e_Pcen;
+  Double_t h_Pcen;
 
   //Set Default histogram Binning
   Double_t nbins = 100;
@@ -73,6 +98,7 @@ class analyze
   Double_t total_ptrig1_accp = 0;
   Double_t total_ptrig2_accp = 0;
   Double_t total_ptrig3_accp = 0;
+  Double_t total_ptrig4_accp = 0;
   Double_t total_ptrig6_accp = 0;
   Double_t total_pedtm_accp = 0;
   
@@ -80,6 +106,7 @@ class analyze
   Double_t total_ptrig1_accp_bcm_cut = 0;
   Double_t total_ptrig2_accp_bcm_cut = 0;
   Double_t total_ptrig3_accp_bcm_cut = 0;
+  Double_t total_ptrig4_accp_bcm_cut = 0;
   Double_t total_ptrig6_accp_bcm_cut = 0;
   Double_t total_pedtm_accp_bcm_cut = 0;
 
@@ -146,6 +173,7 @@ class analyze
   Double_t pTRIG1_tdcTimeRaw;
   Double_t pTRIG2_tdcTimeRaw;
   Double_t pTRIG3_tdcTimeRaw;
+  Double_t pTRIG4_tdcTimeRaw;
   Double_t pTRIG6_tdcTimeRaw;
   Double_t pEDTM_tdcTimeRaw;
   
@@ -288,6 +316,7 @@ class analyze
   Double_t prev_ptrig1_scaler = 0;
   Double_t prev_ptrig2_scaler = 0;
   Double_t prev_ptrig3_scaler = 0;
+  Double_t prev_ptrig4_scaler = 0;
   Double_t prev_ptrig6_scaler = 0;
   Double_t prev_pedtm_scaler = 0;
 
@@ -298,6 +327,7 @@ class analyze
   Double_t total_ptrig1_scaler = 0;
   Double_t total_ptrig2_scaler = 0;
   Double_t total_ptrig3_scaler = 0;
+  Double_t total_ptrig4_scaler = 0;
   Double_t total_ptrig6_scaler = 0;
   Double_t total_pedtm_scaler = 0;
 
@@ -308,6 +338,7 @@ class analyze
   Double_t total_ptrig1_scaler_bcm_cut = 0;
   Double_t total_ptrig2_scaler_bcm_cut = 0;
   Double_t total_ptrig3_scaler_bcm_cut = 0;
+  Double_t total_ptrig4_scaler_bcm_cut = 0;
   Double_t total_ptrig6_scaler_bcm_cut = 0;
   Double_t total_pedtm_scaler_bcm_cut = 0;
 
@@ -316,6 +347,7 @@ class analyze
   Double_t pTRIG1scalerRate_bcm_cut;
   Double_t pTRIG2scalerRate_bcm_cut;
   Double_t pTRIG3scalerRate_bcm_cut;
+  Double_t pTRIG4scalerRate_bcm_cut;
   Double_t pTRIG6scalerRate_bcm_cut;
   Double_t pEDTMscalerRate_bcm_cut;
 
@@ -333,6 +365,7 @@ class analyze
   Double_t pTRIG1_scaler;   //SHMS 3/4 (in COIN MODE)
   Double_t pTRIG2_scaler;   //SHMS EL-REAL (in COIN MODE)
   Double_t pTRIG3_scaler;   //SHMS EL-CLEAN (in COIN MODE)
+  Double_t pTRIG4_scaler;   //HMS 3/4 (in COIN MODE)
   Double_t pTRIG6_scaler;   //HMS 3/4 : SHMS 3/4 Coin. Trigger
   Double_t pEDTM_scaler;     
 
@@ -341,9 +374,13 @@ class analyze
   TFile *inROOT;
   TFile *outROOT;
   
+
   //Input ROOTfile Name
   TString simc_InputFileName;
   TString data_InputFileName;
+
+  //Input REPORT_FILE
+  string data_InputReport;
 
   //Output ROOTfile Name
   TString simc_OutputFileName;

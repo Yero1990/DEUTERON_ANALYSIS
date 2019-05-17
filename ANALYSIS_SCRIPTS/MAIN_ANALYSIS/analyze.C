@@ -74,10 +74,14 @@ analyze::~analyze()
 void analyze::SetFileNames()
 {
   
+  cout << "Calling SetFileNames() . . . " << endl;
+
   //Set FileName Pattern
   data_InputFileName = Form("ROOTfiles/coin_replay_scaler_test_%d_-1.root", runNUM);
   simc_InputFileName = Form("worksim_voli/D2_heep_%d.root", runNUM);
-  
+
+  data_InputReport = Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_scaler_test_%d_-1.report", runNUM);
+
   data_OutputFileName = Form("heep_data_histos_%d.root",runNUM);;
   simc_OutputFileName = Form("heep_simc_histos_%d.root",runNUM);;
   
@@ -92,6 +96,7 @@ void analyze::SetDefinitions()
     Units: Mass [GeV]
    */
   
+  cout << "Calling SetDefinitions() . . . " << endl;
   
   pi = TMath::Pi();
   dtr = pi / 180.;    //degree-to-radians conversion factor
@@ -105,13 +110,43 @@ void analyze::SetDefinitions()
   //Target Mass (FIXME!)
   tgt_mass = MP;   //For now is the proton mass. Later on, add a flag to switch between "heep" and "deep"
 
-  //FIXME (Need to learn how to read/parse REPORT-FILES in C++ to get angles easily. These are needed for auxiliary functions.)
-  if(runNUM==3288){e_th = 12.194, e_ph = 0., h_th = -37.338, h_ph=0.;}
-  if(runNUM==3371){e_th = 13.93,  e_ph = 0., h_th = -33.545, h_ph=0.;}
-  if(runNUM==3374){e_th = 9.928,  e_ph = 0., h_th = -42.9,   h_ph=0.;}
-  if(runNUM==3377){e_th = 8.495,  e_ph = 0., h_th = -47.605, h_ph=0.;}
+  //Read Spectrometer Angles from REPORT_FILE
+  string temp;
 
+  //Read Angles (in deg)
+  temp = FindString("hHMS Angle", data_InputReport)[0];    //Find line containing string
+  h_th = stod(split(temp, ':')[1]);                              //split string, take the number part, and conver to double
+  
+  temp = FindString("pSHMS Angle", data_InputReport)[0];
+  e_th = stod(split(temp, ':')[1]);
 
+  //Read Central Momenta (in GeV)
+  temp = FindString("hHMS P Central", data_InputReport)[0]; 
+  h_Pcen = stod(split(temp, ':')[1]);
+  
+  temp = FindString("pSHMS P Central", data_InputReport)[0]; 
+  e_Pcen = stod(split(temp, ':')[1]);
+  
+  //Read Beam Positions (in cm, Hall Coord. System)
+  temp = FindString("pSHMS X BPM", data_InputReport)[0];
+  xBPM = stod(split(split(temp, ':')[1], 'c')[0]);
+    
+  temp = FindString("pSHMS Y BPM", data_InputReport)[0];
+  yBPM = stod(split(split(temp, ':')[1], 'c')[0]);
+  
+    
+  //Read MisPointings (in cm)
+  temp = FindString("hHMS X Mispointing", data_InputReport)[0];
+  h_xMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
+
+  temp = FindString("hHMS Y Mispointing", data_InputReport)[0];
+  h_yMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
+ 
+  temp = FindString("pSHMS X Mispointing", data_InputReport)[0];
+  e_xMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
+
+  temp = FindString("pSHMS Y Mispointing", data_InputReport)[0];
+  e_yMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
 
 }
 
@@ -172,6 +207,7 @@ void analyze::ReadScalerTree(string bcm_type="BCM4A")
       scaler_tree->SetBranchAddress("P.pTRIG1.scaler",&pTRIG1_scaler);
       scaler_tree->SetBranchAddress("P.pTRIG2.scaler",&pTRIG2_scaler);
       scaler_tree->SetBranchAddress("P.pTRIG3.scaler",&pTRIG3_scaler);
+      scaler_tree->SetBranchAddress("P.pTRIG4.scaler",&pTRIG4_scaler);
       scaler_tree->SetBranchAddress("P.pTRIG6.scaler",&pTRIG6_scaler);
       scaler_tree->SetBranchAddress("P.EDTM.scaler",&pEDTM_scaler);
 }
@@ -215,6 +251,7 @@ void analyze::ScalerEventLoop(Double_t current_thrs_bcm=5.)
       total_ptrig1_scaler = pTRIG1_scaler;
       total_ptrig2_scaler = pTRIG2_scaler;
       total_ptrig3_scaler = pTRIG3_scaler;
+      total_ptrig4_scaler = pTRIG4_scaler;
       total_ptrig6_scaler = pTRIG6_scaler;
       total_pedtm_scaler = pEDTM_scaler;
 
@@ -234,6 +271,7 @@ void analyze::ScalerEventLoop(Double_t current_thrs_bcm=5.)
 	  total_ptrig1_scaler_bcm_cut = total_ptrig1_scaler_bcm_cut + (pTRIG1_scaler-prev_ptrig1_scaler);
 	  total_ptrig2_scaler_bcm_cut = total_ptrig2_scaler_bcm_cut + (pTRIG2_scaler-prev_ptrig2_scaler);
 	  total_ptrig3_scaler_bcm_cut = total_ptrig3_scaler_bcm_cut + (pTRIG3_scaler-prev_ptrig3_scaler);
+	  total_ptrig4_scaler_bcm_cut = total_ptrig4_scaler_bcm_cut + (pTRIG4_scaler-prev_ptrig4_scaler);
 	  total_ptrig6_scaler_bcm_cut = total_ptrig6_scaler_bcm_cut + (pTRIG6_scaler-prev_ptrig6_scaler);
 	  total_pedtm_scaler_bcm_cut = total_pedtm_scaler_bcm_cut + (pEDTM_scaler - prev_pedtm_scaler);
 	
@@ -246,6 +284,7 @@ void analyze::ScalerEventLoop(Double_t current_thrs_bcm=5.)
       prev_ptrig1_scaler = pTRIG1_scaler;
       prev_ptrig2_scaler = pTRIG2_scaler;
       prev_ptrig3_scaler = pTRIG3_scaler;
+      prev_ptrig4_scaler = pTRIG4_scaler;
       prev_ptrig6_scaler = pTRIG6_scaler;
       prev_pedtm_scaler = pEDTM_scaler;
             
@@ -258,6 +297,7 @@ void analyze::ScalerEventLoop(Double_t current_thrs_bcm=5.)
   pTRIG1scalerRate_bcm_cut = total_ptrig1_scaler_bcm_cut / total_time_bcm_cut;
   pTRIG2scalerRate_bcm_cut = total_ptrig2_scaler_bcm_cut / total_time_bcm_cut;
   pTRIG3scalerRate_bcm_cut = total_ptrig3_scaler_bcm_cut / total_time_bcm_cut;
+  pTRIG4scalerRate_bcm_cut = total_ptrig4_scaler_bcm_cut / total_time_bcm_cut;
   pTRIG6scalerRate_bcm_cut = total_ptrig6_scaler_bcm_cut / total_time_bcm_cut;
   pEDTMscalerRate_bcm_cut =  total_pedtm_scaler_bcm_cut / total_time_bcm_cut;
   
@@ -293,6 +333,7 @@ void analyze::ReadTree()
       tree->SetBranchAddress("T.coin.pTRIG1_ROC2_tdcTimeRaw",&pTRIG1_tdcTimeRaw);
       tree->SetBranchAddress("T.coin.pTRIG2_ROC2_tdcTimeRaw",&pTRIG2_tdcTimeRaw);
       tree->SetBranchAddress("T.coin.pTRIG3_ROC2_tdcTimeRaw",&pTRIG3_tdcTimeRaw);
+      tree->SetBranchAddress("T.coin.pTRIG4_ROC2_tdcTimeRaw",&pTRIG4_tdcTimeRaw);
       tree->SetBranchAddress("T.coin.pTRIG6_ROC2_tdcTimeRaw",&pTRIG6_tdcTimeRaw);
       tree->SetBranchAddress("T.coin.pEDTM_tdcTimeRaw",&pEDTM_tdcTimeRaw);
 
@@ -676,6 +717,13 @@ void analyze::CalcEff()
   //Convert charge from uC to mC                                                                                                 
   total_charge_bcm_cut = total_charge_bcm_cut / 1000.; 
 
+  //COnvert SHMS Rates from Hz to kHz  (Keep EDTM, HMS and coin. rates in units of Hz)
+  pS1XscalerRate_bcm_cut = pS1XscalerRate_bcm_cut / 1000.;
+  pTRIG1scalerRate_bcm_cut = pTRIG1scalerRate_bcm_cut / 1000.;
+  pTRIG2scalerRate_bcm_cut = pTRIG2scalerRate_bcm_cut / 1000.;
+  pTRIG3scalerRate_bcm_cut = pTRIG3scalerRate_bcm_cut / 1000.;
+
+
   //Calculate  Live Time                                                                                                                        
   cpuLT =  total_ptrig6_accp_bcm_cut / (total_ptrig6_scaler_bcm_cut-total_pedtm_scaler_bcm_cut);                                      
   cpuLT_err = sqrt(total_ptrig6_accp_bcm_cut) / (total_ptrig6_scaler_bcm_cut-total_pedtm_scaler_bcm_cut);                                 
@@ -732,14 +780,14 @@ void analyze::WriteReport()
       
       out_file.open(report_OutputFileName);
       //out_file << std::left << std::setw(25) << "Column 1" << std::setw(25) << "Column 2" << endl;
-      out_file << "#Run[i,0]/" << std::setw(25) << "charge[f,1]/" << std::setw(25) << "cpuLT[f,2]/"  << std::setw(25) <<  "tLT[f,3]/"  << std::setw(25) <<  "hTrkEff[f,4]/" << std::setw(25) <<  "eTrkEff[f,5]/" << std::setw(25) <<   "avg_current[f,6]/" << endl;
+      out_file << "#Run[i,0]/" << std::setw(25) << "charge[f,1]/" << std::setw(25) << "cpuLT[f,2]/"  << std::setw(25) <<  "tLT[f,3]/"  << std::setw(25) <<  "hTrkEff[f,4]/" << std::setw(25) <<  "eTrkEff[f,5]/" << std::setw(25) <<   "avg_current[f,6]/"  << std::setw(25) << "pS1X_rate[f,7]/"  << std::setw(25) << "ptrig1_rate[f,8]/" << std::setw(25) << "ptrig2_rate[f,9]/" << std::setw(25) << "ptrig3_rate[f,10]/" << std::setw(25) << "ptrig4_rate[f,11]/" << std::setw(25) << "ptrig6_rate[f,12]/" << std::setw(25) << "HMS_Angle[f,13]/"  << std::setw(25) << "HMS_Pcen[f,14]/"  << std::setw(25) << "SHMS_Angle[f,15]/"   << std::setw(25) << "SHMS_Pcen[f,16]/"  << std::setw(25) << "HMS_Xmp[f,17]/" << std::setw(25) << "HMS_Ymp[f,18]/" << std::setw(25) << "SHMS_Xmp[f,19]/" << std::setw(25) << "SHMS_Ymp[f,20]/" << std::setw(25) << "xBPM[f,21]/" << std::setw(25) << "yBPM[f,22]/" << endl;
       out_file.close();
       
     }
     
     //Open Report FIle in append mode
     out_file.open(report_OutputFileName, ios::out | ios::app);
-    out_file << runNUM << std::setw(25) << total_charge_bcm_cut << std::setw(25) << cpuLT << std::setw(25) << tLT << std::setw(25) << hTrkEff  << std::setw(25) << eTrkEff  << std::setw(25) << avg_current_bcm_cut << endl;
+    out_file << runNUM << std::setw(25) << total_charge_bcm_cut << std::setw(25) << cpuLT << std::setw(25) << tLT << std::setw(25) << hTrkEff  << std::setw(25) << eTrkEff  << std::setw(25) << avg_current_bcm_cut << std::setw(25) << pS1XscalerRate_bcm_cut << std::setw(25) << pTRIG1scalerRate_bcm_cut << std::setw(25) << pTRIG2scalerRate_bcm_cut << std::setw(25) << pTRIG3scalerRate_bcm_cut << std::setw(25) << pTRIG4scalerRate_bcm_cut << std::setw(25) << pTRIG6scalerRate_bcm_cut << std::setw(25) << h_th  << std::setw(25) << h_Pcen << std::setw(25) << e_th << std::setw(25) << e_Pcen << std::setw(25) <<  h_xMisPoint << std::setw(25) <<  h_yMisPoint << std::setw(25) << e_xMisPoint << std::setw(25) << e_yMisPoint << std::setw(25) << xBPM << std::setw(25) << yBPM << endl;
     out_file.close();
   }  
   
@@ -792,3 +840,92 @@ void analyze::TransportToLab( Double_t p, Double_t xptar, Double_t yptar, TVecto
 }
 
 //------------------------------------------------------------------------------------------
+
+
+//----------------------------------UTILITIES FUNCTIONS--------------------------------------
+
+//_____________________________________________________________________________
+string analyze::getString(char x)
+{
+  //method to convert a character to a string
+  string s(1,x);
+  return s;
+}
+
+//__________________________________________________________________
+vector <string> analyze::split(string str, char del=':')
+{
+
+  //method to split a string into a vetor of strings separated by a delimiter del
+  //Returns a vector of strings, whose elements are separated by the delimiter del.
+
+  string temp1, temp2;
+
+  vector <string> parse_word;
+  int del_pos;  //delimiter position
+    
+    for (int i=0; i < str.size(); i++){
+
+      //Get position of delimiter
+      if(str[i]==del){
+	del_pos = i;
+      }
+
+    }
+
+    for (int i=0; i < str.size(); i++){
+
+      //append char to a string for char left of the delimiter
+      if(i<del_pos){
+	temp1.append(getString(str[i]));
+      }      
+
+      //append char to a string for char right of the delimiter
+      else if(i>del_pos){
+	temp2.append(getString(str[i]));
+      }
+
+    }
+    parse_word.push_back(temp1);
+    parse_word.push_back(temp2);
+    
+    return parse_word;
+}
+
+//_______________________________________________________________________________________
+vector <string> analyze::FindString(string keyword, string fname)
+{
+
+  //Method: Finds string keyword in a given txt file. 
+  //Returns the lines (stored in a vector) in which the keyword was found. Lines are counted from 0. 
+  
+  ifstream ifile(fname);
+
+  vector <string> line_found; //vector to store in which lines was the keyword found
+  
+  int line_cnt = 0;
+  string line;                  //line string to read
+  
+  int found = -1; //position of found keyword
+
+  while(getline(ifile, line))
+    {
+        
+      found = line.find(keyword);
+      
+      if(found<0||found>1000){found=-1;} //not found
+
+      if(found!=-1){
+	
+	line_found.push_back(line);
+	
+
+      } //end if statement
+    
+      line_cnt++;
+    } //end readlines
+
+  return line_found;
+
+}//end test.C
+
