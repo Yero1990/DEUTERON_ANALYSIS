@@ -9,12 +9,13 @@ class analyze
  public:
 
   //Consructor / Destructor
-  analyze(int run=0, string e_arm="SHMS", string type="data");
+  analyze(int run=-1, string e_arm="SHMS", string type="data", string react="heep");
   ~analyze();
   
   //Define Functions Prototypes
   void SetDefinitions();
   void SetFileNames();
+  void SetCuts();
   void SetHistBins();
   void CreateHist();
   void ReadScalerTree(string bcm_type="BCM4A");  
@@ -22,6 +23,7 @@ class analyze
   void ReadTree();
   void EventLoop();
   void CalcEff();
+  void ApplyWeight();
   void WriteHist();
   void WriteReport();
 
@@ -36,7 +38,6 @@ class analyze
   vector <string> split(string str, char del=':');
   vector <string> FindString(string keyword, string fname);
 
-  //Variables related to Utilities Functions
 
  private:
   
@@ -44,6 +45,7 @@ class analyze
   int runNUM;
   string e_arm_name;
   string analysis;
+  string reaction;
 
   string h_arm_name;
 
@@ -78,14 +80,364 @@ class analyze
   Double_t e_Pcen;
   Double_t h_Pcen;
 
-  //Set Default histogram Binning
+  //-----------Set Default histogram Binning--------------
   Double_t nbins = 100;
+
+  //Trigger Detector
+  Double_t coin_nbins;
+  Double_t coin_xmin;
+  Double_t coin_xmax;
+
+  //HMS DETECTORS
+  Double_t hbeta_nbins = 100;
+  Double_t hbeta_xmin = 0.5;
+  Double_t hbeta_xmax = 1.5;
+
+  Double_t hdc_dist_nbins = 100.;
+  Double_t hdc_dist_xmin = -0.05;
+  Double_t hdc_dist_xmax = 0.55;
+
+  Double_t hdc_res_nbins = 100;
+  Double_t hdc_res_xmin = -0.05;
+  Double_t hdc_res_xmax = 0.05;
+
+  Double_t hcer_nbins = 100;
+  Double_t hcer_xmin = 0.001;
+  Double_t hcer_xmax = 20.;
+
+  Double_t hcal_nbins = 100;
+  Double_t hcal_xmin = 0.001;
+  Double_t hcal_xmax = 1.5;
+
+  //SHMS Detectors
+  Double_t pbeta_nbins = 100;
+  Double_t pbeta_xmin = 0.5;
+  Double_t pbeta_xmax = 1.5;
+
+  Double_t pdc_dist_nbins = 100.;
+  Double_t pdc_dist_xmin = -0.05;
+  Double_t pdc_dist_xmax = 0.55;
+
+  Double_t pdc_res_nbins = 100;
+  Double_t pdc_res_xmin = -0.05;
+  Double_t pdc_res_xmax = 0.05;
+
+  Double_t pngcer_nbins = 100;
+  Double_t pngcer_xmin = 0.001;
+  Double_t pngcer_xmax = 20.;
+
+  Double_t pcal_nbins = 100;
+  Double_t pcal_xmin = 0.001;
+  Double_t pcal_xmax = 1.5;
+
+  //---------KINEMATICS-----
+  
+  //Missing Energy
   Double_t Em_nbins = 100;
   Double_t Em_xmin = -0.05;
   Double_t Em_xmax = 0.1;
   
+  //Missing Momentum (and its components)
+  Double_t Pm_nbins = nbins;
+  Double_t Pm_xmin = -0.02;
+  Double_t Pm_xmax = 0.08;
+  
+  Double_t Pmx_nbins = nbins;
+  Double_t Pmx_xmin = -0.15;
+  Double_t Pmx_xmax = 0.15;
+  
+  Double_t Pmy_nbins = nbins;
+  Double_t Pmy_xmin = -0.15;
+  Double_t Pmy_xmax = 0.15;
+  
+  Double_t Pmz_nbins = nbins;
+  Double_t Pmz_xmin = -0.15;
+  Double_t Pmz_xmax = 0.15;
+  
+  //Missing Mass 
+  Double_t MM_nbins = nbins;
+  Double_t MM_xmin = -0.1;
+  Double_t MM_xmax = 0.1;
+  
+  //Missing Mass Squared
+  Double_t MM2_nbins = nbins;
+  Double_t MM2_xmin = -0.01;
+  Double_t MM2_xmax = 0.01;
+  
+
+  //Q2
+  Double_t Q2_nbins = nbins;
+  Double_t Q2_xmin = 2.5;
+  Double_t Q2_xmax = 5;
+ 
+  //omega (E-E')
+  Double_t om_nbins = nbins;
+  Double_t om_xmin = 1.8;
+  Double_t om_xmax = 2.6;
+
+  //W_inv
+  Double_t W_nbins = nbins;
+  Double_t W_xmin = 0.85;
+  Double_t W_xmax = 1.05;;
+
+  //W2
+  Double_t W2_nbins = nbins;
+  Double_t W2_xmin = 0.5;                                                 
+  Double_t W2_xmax = 0.9;; 
+
+  //theta_elec
+  Double_t the_nbins = nbins;
+  Double_t the_xmin = 10.;
+  Double_t the_xmax = 15.;
+
+  //theta_prot
+  Double_t thp_nbins = nbins;
+  Double_t thp_xmin = 34.;
+  Double_t thp_xmax = 42.;
+
+  //xBj
+  Double_t xbj_nbins = nbins;
+  Double_t xbj_xmin = 0.8;
+  Double_t xbj_xmax = 1.1;
+
+  //Final Proton Momentum
+  Double_t Pf_nbins = nbins;
+  Double_t Pf_xmin = 2.5;
+  Double_t Pf_xmax = 3.5;
+
+  //Final Proton Energy
+  Double_t Ep_nbins = nbins;
+  Double_t Ep_xmin = 2.5;
+  Double_t Ep_xmax = 3.5;
+
+  Double_t En_nbins = nbins;
+  Double_t En_xmin = 0.93 ;
+  Double_t En_xmax = 0.96;
+
+  //Final Electron Momentum
+  Double_t kf_nbins = nbins;
+  Double_t kf_xmin = 8;
+  Double_t kf_xmax = 9;
+
+  //th_q (Angle between +Z(hall) and q-vector)
+  Double_t thq_nbins = nbins;
+  Double_t thq_xmin = 32.;
+  Double_t thq_xmax = 42.;
+  
+  //Magnitude of q-ector
+  Double_t q_nbins = nbins;
+  Double_t q_xmin = 2.6;
+  Double_t q_xmax = 4.;
+  
+  //th_nq (Angle between proton and q-vector)
+  Double_t thnq_nbins = nbins;
+  Double_t thnq_xmin = 0.;
+  Double_t thnq_xmax = 180.;
+
+  //th_pq (Angle between proton and q-vector)
+  Double_t thpq_nbins = nbins;
+  Double_t thpq_xmin = -0.05;
+  Double_t thpq_xmax = 1.2;
+
+
+
+  //------Target Reconstruction Variables (Hall Coord. System)----------
+  Double_t xtar_nbins = nbins;
+  Double_t xtar_xmin = -0.5;
+  Double_t xtar_xmax = 0.5;
+
+  Double_t ytar_nbins = nbins;
+  Double_t ytar_xmin = -0.5;
+  Double_t ytar_xmax = 0.5;
+  
+  Double_t ztar_nbins = nbins;
+  Double_t ztar_xmin = -10.0;
+  Double_t ztar_xmax = 10.0;
+
+  //Hadron arm Reconstructed Quantities (ytar, xptar, yptar, delta)
+  Double_t hytar_nbins = nbins;
+  Double_t hytar_xmin = -5.;
+  Double_t hytar_xmax = 5.;
+  
+  Double_t hxptar_nbins = 70;
+  Double_t hxptar_xmin = -0.1;
+  Double_t hxptar_xmax = 0.1;
+  
+  Double_t hyptar_nbins = 70;
+  Double_t hyptar_xmin = -0.05;
+  Double_t hyptar_xmax = 0.05;
+  
+  Double_t hdelta_nbins = 70;
+  Double_t hdelta_xmin = -9.;
+  Double_t hdelta_xmax = 9.;
+
+  //-----Hadron arm Focal Plane Quantities-----
+  
+  //X-focal plane
+  Double_t hxfp_nbins = nbins;
+  Double_t hxfp_xmin = -50.;
+  Double_t hxfp_xmax = 40.;
+
+  Double_t hyfp_nbins = nbins;  
+  Double_t hyfp_xmin = -10.;
+  Double_t hyfp_xmax = 25.;
+
+  Double_t hxpfp_nbins = nbins;
+  Double_t hxpfp_xmin = -0.06;
+  Double_t hxpfp_xmax = 0.06;
+  
+  Double_t hypfp_nbins = nbins;
+  Double_t hypfp_xmin = -0.015;
+  Double_t hypfp_xmax = 0.03;
+
+  
+  //Electron Arm Reconstructed Quantities ( ytar, xptar, yptar, delta)
+  Double_t eytar_nbins = nbins;
+  Double_t eytar_xmin = -4.;
+  Double_t eytar_xmax = 4.;
+  
+  Double_t exptar_nbins = nbins;
+  Double_t exptar_xmin = -0.06;
+  Double_t exptar_xmax = 0.06;
+  
+  Double_t eyptar_nbins = nbins;
+  Double_t eyptar_xmin = -0.03;
+  Double_t eyptar_xmax = 0.02;
+  
+  Double_t edelta_nbins = nbins;
+  Double_t edelta_xmin = -5.;  
+  Double_t edelta_xmax = 5.;   
+
+  //Electron Arm Focal Plane Quantities
+  Double_t exfp_nbins = nbins;
+  Double_t exfp_xmin = -15.;
+  Double_t exfp_xmax = 10.;
+ 
+  Double_t eyfp_nbins = nbins;
+  Double_t eyfp_xmin = -10.;
+  Double_t eyfp_xmax = 10.;
+
+  Double_t expfp_nbins = nbins;
+  Double_t expfp_xmin = -0.04;
+  Double_t expfp_xmax = 0.04;
+
+  Double_t eypfp_nbins = nbins;
+  Double_t eypfp_xmin = -0.03;
+  Double_t eypfp_xmax = 0.03;
+
+  //Collimator
+  Double_t hXColl_nbins = 100;
+  Double_t hXColl_xmin = -15.;  
+  Double_t hXColl_xmax = 15.;   
+  
+  Double_t hYColl_nbins = 100;                                           
+  Double_t hYColl_xmin = -15.;                                                                                                  
+  Double_t hYColl_xmax = 15.;
+  
+  Double_t eXColl_nbins = 100;
+  Double_t eXColl_xmin = -15.;
+  Double_t eXColl_xmax = 15.;
+  
+  Double_t eYColl_nbins = 100;      
+  Double_t eYColl_xmin = -15.;                                                                      
+  Double_t eYColl_xmax = 15.;
+
+  //---------------------END SET DEFAULT HISTOGRAM BINNING-----------------------
+
+  //Detector Histograms (DATA ONLY)
+  
+  //Trigger Detector
+  TH1F *H_ctime;
+
+  //HMS Detectors
+  TH1F *H_hbeta;
+  TH1F *H_hdc_dist;
+  TH1F *H_hdc_res;
+  TH1F *H_hcer;
+  TH1F *H_hcal;
+
+  //SHMS Detectors
+  TH1F *H_pbeta;
+  TH1F *H_pdc_dist;
+  TH1F *H_pdc_res;
+  TH1F *H_pngcer;
+  TH1F *H_pcal;
+
   //Create DATA/SIMC Histograms (MUST BE THE EXACT SAME HSITOGRAMS)
-  TH1F *H_Emiss;
+
+  //Primary (electron) Kinematics
+  TH1F *H_Q2;
+  TH1F *H_omega;
+  TH1F *H_W;
+  TH1F *H_W2;
+  TH1F *H_xbj;
+  TH1F *H_kf;
+  TH1F *H_theta_q;
+  TH1F *H_q;
+  TH1F *H_theta_elec;
+  
+  
+  //Secondary (Hadron) Kinematics
+  TH1F *H_Em;
+  TH1F *H_Em_nuc;
+  TH1F *H_Pm;
+  TH1F *H_Pmx_lab;
+  TH1F *H_Pmy_lab;
+  TH1F *H_Pmz_lab;
+  TH1F *H_Pmx_q;
+  TH1F *H_Pmy_q;
+  TH1F *H_Pmz_q;
+  TH1F *H_MM;
+  TH1F *H_MM2;
+  TH1F *H_Pf;
+  TH1F *H_Ep;
+  TH1F *H_En;
+  TH1F *H_theta_prot;
+  TH1F *H_theta_pq;
+  TH1F *H_theta_nq;
+
+  //Target Reconstruction Histos
+  TH1F *H_hx_tar;
+  TH1F *H_hy_tar;
+  TH1F *H_hz_tar;
+
+  TH1F *H_ex_tar;
+  TH1F *H_ey_tar;
+  TH1F *H_ez_tar;
+
+  TH1F *H_ztar_diff;
+
+  //Hadron Arm Recon. / Focal Plane Histos
+  TH1F *H_hytar;
+  TH1F *H_hxptar;
+  TH1F *H_hyptar;
+  TH1F *H_hdelta;
+
+  TH1F *H_hxfp;
+  TH1F *H_hyfp;
+  TH1F *H_hxpfp;
+  TH1F *H_hypfp;
+  
+  //Electron Arm Recon. / Focal Plane Histos
+  TH1F *H_eytar;
+  TH1F *H_exptar;
+  TH1F *H_eyptar;
+  TH1F *H_edelta;
+
+  TH1F *H_exfp;
+  TH1F *H_eyfp;
+  TH1F *H_expfp;
+  TH1F *H_eypfp;
+
+  //HMS/SHMS Collimator
+  TH1F *H_hXColl;
+  TH1F *H_hYColl;
+  TH1F *H_eXColl;
+  TH1F *H_eYColl;
+
+  //2D Collimator Histos
+  TH2F *H_hXColl_vs_hYColl;
+  TH2F *H_eXColl_vs_eYColl;
 
   //Create Scaler Related Histogram (ONLY FOR SCALERS)
   TH1F *H_bcmCurrent;
@@ -148,16 +500,25 @@ class analyze
   Bool_t good_hadron_did;
       
   //DATA/SIMC Boolean CUTS (CUTS MUST BE EXACT SAME. Which is why only a variable is used for both)
-  Bool_t c_edelta;  
-  Bool_t c_hdelta; 
-  Bool_t c_W;
-  Bool_t c_Em;
-  
-  //DATA/SIMC Cuts to select PWIA region in D(e,e'p)
-  Bool_t c_Q2;
-  Bool_t c_th_nq;
-  Bool_t c_MM;
+  Bool_t Em_cut_flag;
+  Bool_t W_cut_flag;
+  Bool_t hdelta_cut_flag;
+  Bool_t edelta_cut_flag;
 
+  Bool_t base_cuts;
+  Bool_t pid_cuts;
+
+  Bool_t c_edelta;    Double_t edel_min;      Double_t edel_max;
+  Bool_t c_hdelta;    Double_t hdel_min;      Double_t hdel_max;
+  Bool_t c_W;         Double_t W_min;         Double_t W_max;
+  Bool_t c_Em;        Double_t Em_min;        Double_t Em_max;
+  Bool_t c_Em_nuc;    Double_t Em_nuc_min;    Double_t Em_nuc_max;
+
+  Bool_t c_Q2;        Double_t Q2_min;        Double_t Q2_max;
+  Bool_t c_th_nq;     Double_t thnq_min;      Double_t thnq_max;
+  Bool_t c_MM;        Double_t MM_min;        Double_t MM_max;
+
+ 
 
 
   //------------------------------------------------------------------------------------
@@ -183,16 +544,22 @@ class analyze
   Double_t pCAL_etotnorm; 
   Double_t pCAL_etottracknorm; 
   Double_t pBetanotrk;
+  Double_t pBeta;
   Double_t pGoodScinHit;
   Double_t pdc_ntrack;
+  Double_t pdc_dist;
+  Double_t pdc_res;
 
   //HMS Detectors
   Double_t hCER_npeSum; 
   Double_t hCAL_etotnorm; 
   Double_t hCAL_etottracknorm; 
   Double_t hBetanotrk;
+  Double_t hBeta;
   Double_t hGoodScinHit;
   Double_t hdc_ntrack;
+  Double_t hdc_dist;
+  Double_t hdc_res;
 
   //Electron Arm Focal Plane / Reconstructed Quantities (USED BY DATA AND SIMC)
   Double_t e_xfp;
@@ -204,8 +571,8 @@ class analyze
   Double_t e_yptar;
   Double_t e_xptar;
   Double_t e_delta;
-  Double_t kf;
-  Double_t ki;
+  Double_t kf;                        //final electron momentum
+  Double_t ki;                        //initial electron momentum
 
   //Hadron Arm Focal Plane / Reconstructed Quantities (USED BY DATA AND SIMC)
   Double_t h_xfp;
@@ -217,9 +584,11 @@ class analyze
   Double_t h_yptar;
   Double_t h_xptar;
   Double_t h_delta;
-  Double_t Pf;
+  Double_t Pf;                 //final proton momentum
   
   //Target Quantities (tarx, tary, tarz) in Hall Coord. System (USED BY DATA AND SIMC)
+  Double_t tar_x; //For SIMC ONLY (It is the same for HMS/SHMS)
+
   Double_t  htar_x;
   Double_t  htar_y;
   Double_t  htar_z;
@@ -227,10 +596,14 @@ class analyze
   Double_t  etar_x;
   Double_t  etar_y;
   Double_t  etar_z;
-  
+
+  //Collimators
+  Double_t hXColl, hYColl, eXColl, eYColl;
+
   //Primary Kinematics (electron kinematics) (USED BY DATA AND SIMC)
   Double_t theta_e;              //Central electron arm angle relative to +z (hall coord. system)
   Double_t W;                    //Invariant Mass W (should be proton mass in H(e,e'p))
+  Double_t W2;                    //Invariant mass squared
   Double_t Q2;                   //Four-momentum trasfer
   Double_t X;                    //B-jorken X  scaling variable
   Double_t nu;                   //Energy Transfer
@@ -251,6 +624,7 @@ class analyze
   Double_t Kp;                    //Kinetic Energy of detected particle (proton)
   Double_t Kn;                    //Kinetic Energy of recoil system (neutron)
   Double_t M_recoil;              //Missing Mass (neutron Mass)
+  Double_t MM2;                   //Missing Mass Squared
   Double_t E_recoil;              //Recoil Energy of the system (neutron total energy)
   Double_t th_pq;                  //Polar angle of detected particle with q   ----> th_pq
   Double_t th_nq;                  //Polar angle of recoil system with q (rad)  ---> th_nq (neutreon-q angle. IMPORTANT in D(e,e'p))
@@ -295,7 +669,10 @@ class analyze
   Double_t Ein_v;               //incident beam energy at vertex (simulates external rad. has rad. tail) ??? 
 
   
-  
+  //SIMC Collimator
+  Double_t htarx_corr;
+  Double_t etarx_corr;
+
 
   //-----------------------------------------------------------------
 
@@ -369,6 +746,20 @@ class analyze
   Double_t pTRIG6_scaler;   //HMS 3/4 : SHMS 3/4 Coin. Trigger
   Double_t pEDTM_scaler;     
 
+  //-----------------Variable Related to FullWeight Applied to Yield------------------
+
+  Double_t FullWeight = 1;  //default
+  
+  //For References to Proton Absorption / Target Boiling Studies, See Hall C DOC_DB (Carlos Yero)
+  Double_t pAbs_corr;            //correct for lost coincidences due to the proton in HMS NOT making it to the hodo to form trigger
+  Double_t tgtBoil_corr;        //correct for lost coincidences due to localized target boiling at high currents
+
+  //Slope of Norm. Yield vs. avg beam current (Determined from target boiling studies)
+  Double_t LH2_slope = 0.0006;     //Units Yield / mC    
+  Double_t LD2_slope = 0.0008;
+
+
+  //----------------------------------------------------------------------------------
 
   //Read/Write ROOTfiles
   TFile *inROOT;

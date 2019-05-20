@@ -7,22 +7,24 @@ using namespace std;
 int main_analysis()
 {
 
-  /*
+ 
   //Initialize Class Object
-  analyze a1(3288, "SHMS", "simc");
-  a1.SetDefinitions();
+  analyze a1(3288, "SHMS", "simc", "heep");
   a1.SetFileNames();
+  a1.SetCuts();
+  a1.SetDefinitions();
   a1.SetHistBins();
   a1.CreateHist();
   a1.ReadTree();
   a1.EventLoop();
   a1.WriteHist();
-  */
+  
 
   
   //Initialize Class Object
-  analyze a2(3371, "SHMS", "data");
+  analyze a2(3288, "SHMS", "data", "heep");
   a2.SetFileNames();
+  a2.SetCuts();
   a2.SetDefinitions();
   a2.SetHistBins();
   a2.CreateHist();
@@ -31,9 +33,10 @@ int main_analysis()
   a2.ReadTree();
   a2.EventLoop();
   a2.CalcEff();
+  a2.ApplyWeight();
   a2.WriteHist();
   a2.WriteReport();
   
-
+  
   return 0;
 }
