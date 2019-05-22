@@ -8,7 +8,7 @@ analyze::analyze(int run=-1, string e_arm="SHMS", string type="data", string rea
   : runNUM(run),       
     e_arm_name(e_arm),    //electron arm: "HMS" or "SHMS" 
     analysis(type),       //analysis type: "data" or "simc"
-    reaction(react)
+    reaction(react)       //reaction type: "heep" or "deep"
 {
   
   cout << "Calling Constructor . . . " << endl;
@@ -51,7 +51,8 @@ analyze::analyze(int run=-1, string e_arm="SHMS", string type="data", string rea
   //SHMS Detectors
   H_pbeta = NULL;
   H_pngcer = NULL;
-  H_pcal = NULL;
+  H_pcal_etotnorm = NULL;
+  H_pcal_etotTrkNorm = NULL;
 
   //Initialize DATA/SIMC Histograms
   
@@ -151,39 +152,102 @@ analyze::~analyze()
   delete [] scal_evt_num; scal_evt_num = NULL;
   
   //Delete DATA/SIMC Histograms
-  delete H_Em; H_Em = NULL;
+
+  //Trigger Detector
+  delete H_ctime; H_ctime= NULL;
+
+  //HMS Detectors
+  delete H_hbeta; H_hbeta = NULL;
+  delete H_hcer;  H_hcer  = NULL;
+  delete H_hcal;  H_hcal  = NULL;
+
+  //SHMS Detectors
+  delete H_pbeta;  H_pbeta  = NULL;
+  delete H_pngcer; H_pngcer = NULL;
+  delete H_pcal_etotnorm;   H_pcal_etotnorm   = NULL;
+  delete H_pcal_etotTrkNorm;   H_pcal_etotTrkNorm   = NULL;
+
+  //Initialize DATA/SIMC Histograms
+  
+  //Primary (electron) Kinematics
+  delete H_Q2;         H_Q2         = NULL;
+  delete H_omega;      H_omega      = NULL;
+  delete H_W;          H_W          = NULL;
+  delete H_W2;         H_W2         = NULL;
+  delete H_xbj;        H_xbj        = NULL;
+  delete H_kf;         H_kf         = NULL;
+  delete H_theta_q;    H_theta_q    = NULL;
+  delete H_q;          H_q          = NULL;
+  delete H_theta_elec; H_theta_elec = NULL;
+
+  //Secondary (Hadron) Kinematics
+  delete H_Em;         H_Em         = NULL;
+  delete H_Em_nuc;     H_Em_nuc     = NULL;
+  delete H_Pm;         H_Pm         = NULL;
+  delete H_Pmx_lab;    H_Pmx_lab    = NULL;
+  delete H_Pmy_lab;    H_Pmy_lab    = NULL;
+  delete H_Pmz_lab;    H_Pmz_lab    = NULL;
+  delete H_Pmx_q;      H_Pmx_q      = NULL;
+  delete H_Pmy_q;      H_Pmy_q      = NULL;
+  delete H_Pmz_q;      H_Pmz_q      = NULL;
+  delete H_MM;         H_MM         = NULL;
+  delete H_MM2;        H_MM2        = NULL;
+  delete H_Pf;         H_Pf         = NULL;
+  delete H_Ep;         H_Ep         = NULL;
+  delete H_En;         H_En         = NULL;
+  delete H_theta_prot; H_theta_prot = NULL;
+  delete H_theta_pq;   H_theta_pq   = NULL;
+  delete H_theta_nq;   H_theta_nq   = NULL;
+
+  //Target Reconstruction Histos
+  delete H_hx_tar;  H_hx_tar = NULL;
+  delete H_hy_tar;  H_hy_tar = NULL;
+  delete H_hz_tar;  H_hz_tar = NULL;
+
+  delete H_ex_tar;  H_ex_tar = NULL;
+  delete H_ey_tar;  H_ey_tar = NULL;
+  delete H_ez_tar;  H_ez_tar = NULL;
+
+  delete H_ztar_diff; H_ztar_diff= NULL;
+
+  //Hadron Arm Recon. / Focal Plane Histos
+  delete H_hytar;   H_hytar  = NULL;
+  delete H_hxptar;  H_hxptar = NULL;
+  delete H_hyptar;  H_hyptar = NULL;
+  delete H_hdelta;  H_hdelta = NULL;
+
+  delete H_hxfp;    H_hxfp   = NULL;
+  delete H_hyfp;    H_hyfp   = NULL;
+  delete H_hxpfp;   H_hxpfp  = NULL;
+  delete H_hypfp;   H_hypfp  = NULL;
+  
+  //Electron Arm Recon. / Focal Plane Histos
+  delete H_eytar;   H_eytar  = NULL;
+  delete H_exptar;  H_exptar = NULL;
+  delete H_eyptar;  H_eyptar = NULL;
+  delete H_edelta;  H_edelta = NULL;
+
+  delete H_exfp;    H_exfp  = NULL;
+  delete H_eyfp;    H_eyfp  = NULL;
+  delete H_expfp;   H_expfp = NULL;
+  delete H_eypfp;   H_eypfp = NULL;
+
+  //HMS/SHMS Collimator
+  delete H_hXColl;  H_hXColl = NULL;
+  delete H_hYColl;  H_hYColl = NULL;
+  delete H_eXColl;  H_eXColl = NULL;
+  delete H_eYColl;  H_eYColl = NULL;
+
+  //2D Collimator Histos
+  delete H_hXColl_vs_hYColl; H_hXColl_vs_hYColl = NULL;
+  delete H_eXColl_vs_eYColl; H_eXColl_vs_eYColl = NULL;
+
 
   //Delete Scaler Histograms
   delete H_bcmCurrent; H_bcmCurrent = NULL;
 
 }
-void analyze::SetCuts()
-{
 
-  // cout << "Calling SetCuts() . . ." << endl;
-
-  //Read  the set_heep_cuts.input file 
-  Em_min = stod(split(FindString("Em_min", "set_heep_cuts.input")[0], ':')[1]);
-  Em_max = stod(split(FindString("Em_max", "set_heep_cuts.input")[0], ':')[1]);
-  
-  hdel_min = stod(split(FindString("h_delta_min", "set_heep_cuts.input")[0], ':')[1]);
-  hdel_max = stod(split(FindString("h_delta_max", "set_heep_cuts.input")[0], ':')[1]);
- 
-  edel_min = stod(split(FindString("e_delta_min", "set_heep_cuts.input")[0], ':')[1]);
-  edel_max = stod(split(FindString("e_delta_max", "set_heep_cuts.input")[0], ':')[1]);
-  
-  W_min = stod(split(FindString("W_min", "set_heep_cuts.input")[0], ':')[1]);
-  W_max = stod(split(FindString("W_max", "set_heep_cuts.input")[0], ':')[1]);
-
-  
-  //Turn Cuts ON/OFF (1 or 0) , 
-  
-  Em_cut_flag = stoi(split(FindString("bool Em", "set_heep_cuts.input")[0], '=')[1]);
-  W_cut_flag = stoi(split(FindString("bool W", "set_heep_cuts.input")[0], '=')[1]);
-  hdelta_cut_flag = stoi(split(FindString("bool h_delta", "set_heep_cuts.input")[0], '=')[1]);
-  edelta_cut_flag = stoi(split(FindString("bool e_delta", "set_heep_cuts.input")[0], '=')[1]);
-  
-}
 
 //___________________________________________________________________________
 void analyze::SetFileNames()
@@ -191,18 +255,80 @@ void analyze::SetFileNames()
   
   cout << "Calling SetFileNames() . . . " << endl;
 
-  //Set FileName Pattern
-  data_InputFileName = Form("ROOTfiles/coin_replay_scaler_test_%d_-1.root", runNUM);
-  simc_InputFileName = Form("worksim_voli/D2_heep_%d.root", runNUM);
-
-  //Set REPORT_FILE Name Pattern
-  data_InputReport = Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_scaler_test_%d_-1.report", runNUM);
-
-  data_OutputFileName = Form("heep_data_histos_%d.root",runNUM);;
-  simc_OutputFileName = Form("heep_simc_histos_%d.root",runNUM);;
+  //------DATA------
+  //Set Input ROOTfile Pattern
+  data_InputFileName = Form("ROOTfiles/coin_replay_%s_check_%d_-1.root", reaction.c_str(), runNUM);
   
-  report_OutputFileName = "report_test.dat";
+  //Set Input REPORT_FILE Name Pattern
+  data_InputReport = Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_%s_check_%d_-1.report", reaction.c_str(), runNUM);
 
+  //Set Input CutFile Name (to read cuts to be set)
+  input_CutFileName = Form("set_%s_cuts.inp", reaction.c_str());
+
+  //Set Output ROOTfilename
+  data_OutputFileName = Form("%s_data_histos_%d.root",reaction.c_str(), runNUM);;
+  
+  //Set Output data file name
+  report_OutputFileName = Form("report_%s.dat", reaction.c_str());
+
+
+  //------SIMC------
+  //Set Input ROOTfile Pattern
+  if(reaction=="deep"){
+    pm_setting = stoi(split(FindString("pm_setting", input_CutFileName)[0], ':')[1]);
+    theory = trim(split(FindString("theory", "deep_input_file.dat")[0], ':')[1]);
+    model = trim(split(FindString("model", "deep_input_file.dat")[0], ':')[1]);
+    rad_flag = trim(split(FindString("rad_flag", "deep_input_file.dat")[0], ':')[1]);
+    data_set = stoi(split(FindString("data_set", "deep_input_file.dat")[0], ':')[1]);
+
+    simc_InputFileName = Form("worksim_voli/d2_pm%d_%s%s_%s_set%d.root", pm_setting, theory.c_str(), model.c_str(), rad_flag.c_str(), data_set );
+  
+
+  }
+  else{ simc_InputFileName = Form("worksim_voli/D2_heep_%d.root", runNUM);}
+
+  //Set Output ROOTfilename
+  simc_OutputFileName = Form("%s_simc_histos_%d.root",reaction.c_str(), runNUM);;
+
+  //Specialized Studies FileNames
+  YieldStudy_FileName = Form("yield_study_%s.dat", reaction.c_str());
+}
+
+//_____________________________________________________________________________
+void analyze::SetCuts()
+{
+
+  // cout << "Calling SetCuts() . . ." << endl;
+
+  //Read  the set_heep_cuts.input file 
+  Em_min = stod(split(FindString("Em_min", input_CutFileName)[0], ':')[1]);
+  Em_max = stod(split(FindString("Em_max", input_CutFileName)[0], ':')[1]);
+  
+  hdel_min = stod(split(FindString("h_delta_min", input_CutFileName)[0], ':')[1]);
+  hdel_max = stod(split(FindString("h_delta_max", input_CutFileName)[0], ':')[1]);
+ 
+  edel_min = stod(split(FindString("e_delta_min", input_CutFileName)[0], ':')[1]);
+  edel_max = stod(split(FindString("e_delta_max", input_CutFileName)[0], ':')[1]);
+  
+  W_min = stod(split(FindString("W_min", input_CutFileName)[0], ':')[1]);
+  W_max = stod(split(FindString("W_max", input_CutFileName)[0], ':')[1]);
+
+  shms_cal_min = stod(split(FindString("shms_cal_min", input_CutFileName)[0], ':')[1]);
+  shms_cal_max = stod(split(FindString("shms_cal_max", input_CutFileName)[0], ':')[1]);
+  
+  ctime_min = stod(split(FindString("coin_time_min", input_CutFileName)[0], ':')[1]);
+  ctime_max = stod(split(FindString("coin_time_max", input_CutFileName)[0], ':')[1]);
+
+
+  //Turn Cuts ON/OFF (1 or 0) , 
+  //BASIC
+  Em_cut_flag = stoi(split(FindString("bool Em", input_CutFileName)[0], '=')[1]);
+  W_cut_flag = stoi(split(FindString("bool W", input_CutFileName)[0], '=')[1]);
+  hdelta_cut_flag = stoi(split(FindString("bool h_delta", input_CutFileName)[0], '=')[1]);
+  edelta_cut_flag = stoi(split(FindString("bool e_delta", input_CutFileName)[0], '=')[1]);
+  //PID
+  shmsCal_cut_flag = stoi(split(FindString("bool shmsCal_EtotTrackNorm", input_CutFileName)[0], '=')[1]);
+  coin_cut_flag = stoi(split(FindString("bool coin_time", input_CutFileName)[0], '=')[1]);
 }
 
 //___________________________________________________________________________
@@ -633,7 +759,9 @@ void analyze::CreateHist()
   
   //Trigger Detector
   H_ctime = new TH1F("H_ctime", "ep Coincidence Time", coin_nbins, coin_xmin, coin_xmax);
-  
+  H_ctime->Sumw2(); //Apply sum of weight squared to this histograms
+  H_ctime->SetDefaultSumw2();  //Generalize sum weights squared to all histograms  (ROOT 6 has this by default. ROOT 5 does NOT)
+
   //HMS Detectors
   H_hbeta = new TH1F("H_hbeta", "HMS Beta", hbeta_nbins, hbeta_xmin, hbeta_xmax);
   H_hcer = new TH1F("H_hcer", "HMS Cherenkov Npe Sum", hcer_nbins, hcer_xmin, hcer_xmax);
@@ -642,8 +770,9 @@ void analyze::CreateHist()
   //SHMS Detectors
   H_pbeta = new TH1F("H_pbeta", "SHMS Beta", pbeta_nbins, pbeta_xmin, pbeta_xmax);
   H_pngcer = new TH1F("H_pngcer", "SHMS Noble Cherenkov Npe Sum", pngcer_nbins, pngcer_xmin, pngcer_xmax);
-  H_pcal = new TH1F("H_pcal", "SHMS Cal. EtotNorm", pcal_nbins, pcal_xmin, pcal_xmax);
-     
+  H_pcal_etotnorm = new TH1F("H_pcal_etotnorm", "SHMS Cal. EtotNorm", pcal_nbins, pcal_xmin, pcal_xmax);
+  H_pcal_etotTrkNorm = new TH1F("H_pcal_etotTrkNorm", "SHMS Cal. EtotTrackNorm", pcal_nbins, pcal_xmin, pcal_xmax);
+
 
 
   //Primary (electron) Kinematics
@@ -659,7 +788,7 @@ void analyze::CreateHist()
 
   //Secondary (Hadron) Kinematics
   H_Em = new TH1F("H_Emiss","Missing Energy", Em_nbins, Em_xmin, Em_xmax); 
-  H_Em->SetDefaultSumw2();  //FIXME:  Need to check if this actually works
+  //H_Em->SetDefaultSumw2();  //FIXME:  Need to check if this actually works
   
   H_Em_nuc = new TH1F("H_Em_nuc","Nuclear Missing Energy", Em_nbins, Em_xmin, Em_xmax); 
   H_Pm = new TH1F("H_Pm","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
@@ -988,7 +1117,9 @@ void analyze::ReadTree()
 
       //Read ROOTfile
       inROOT = new TFile(simc_InputFileName, "READ");
-      
+
+      cout << "simc_fname = " << simc_InputFileName << endl;
+
       //Get the tree
       tree = (TTree*)inROOT->Get("SNT");
       nentries = tree->GetEntries();
@@ -1105,7 +1236,16 @@ void analyze::EventLoop()
 	  
 	  //--------Calculated Kinematic Varibales----------------
 	  theta_p = xangle - theta_e;
+
+	  M_recoil = sqrt( pow(nu+MD-sqrt(MP*MP+Pf*Pf),2) - Pm*Pm );  //recoil mass (neutron missing mass)
 	  MM2 = M_recoil * M_recoil;
+
+	  //-----If H(e,e'p)
+	  if(reaction=="heep"){
+	    M_recoil = sqrt(Em*Em - Pm*Pm);
+	    MM2 = Em*Em - Pm*Pm;
+	  }
+
 	  W2 = W*W;
 	  Ep = TMath::Sqrt(MP*MP + Pf*Pf);
 	  th_pq =  th_q - theta_p; //redifined
@@ -1141,9 +1281,16 @@ void analyze::EventLoop()
 	   
 	   if(Em_cut_flag)    {c_Em = Em>Em_min&&Em<Em_max;}                   
 	   else{c_Em=1;}
+
+	   //PID CUTS
+	   if(shmsCal_cut_flag)    {c_shms_cal = pCAL_etottracknorm>shms_cal_min&&pCAL_etottracknorm<shms_cal_max;}                   
+	   else{c_shms_cal=1;}
 	   
+	   if(coin_cut_flag)    {c_ctime = epCoinTime>ctime_min&&epCoinTime<ctime_max;}                   
+	   else{c_ctime=1;}
+
 	   base_cuts = c_edelta&&c_hdelta&&c_W&&c_Em;
-	  
+	   pid_cuts = c_shms_cal&&c_ctime;
 
 	   //----------------------------END DEFINE CUTS-------------------------------------
 	   
@@ -1177,7 +1324,7 @@ void analyze::EventLoop()
 		   
 		   //----------------------Fill DATA Histograms-----------------------
 		   
-		   if(base_cuts)
+		   if(base_cuts&&pid_cuts)
 		     {
 		       //Trigger Detector
 		       H_ctime->Fill(epCoinTime);
@@ -1191,8 +1338,9 @@ void analyze::EventLoop()
 		       //SHMS Detectors
 		       H_pbeta->Fill(pBeta);
 		       H_pngcer->Fill(pNGCER_npeSum);
-		       H_pcal->Fill(pCAL_etotnorm);
-		       
+		       H_pcal_etotnorm->Fill(pCAL_etotnorm);
+		       H_pcal_etotTrkNorm->Fill(pCAL_etottracknorm);
+
 		       
 		       //Primary (electron) Kinematics
 		       H_Q2->Fill(Q2);
@@ -1551,7 +1699,7 @@ void analyze::CalcEff()
 void analyze::ApplyWeight()
 {
 
-  
+  cout << "---Calling ApplyWeight() . . . ---" << endl; 
 
   if(analysis=="data"){
     //Method to apply correction to the data Yield by scaling the Filled Histograms
@@ -1587,8 +1735,9 @@ void analyze::ApplyWeight()
     //SHMS Detectors
     H_pbeta->Scale(FullWeight);
     H_pngcer->Scale(FullWeight);
-    H_pcal->Scale(FullWeight);
-    
+    H_pcal_etotnorm->Scale(FullWeight);
+    H_pcal_etotTrkNorm->Scale(FullWeight);
+
     //Initialize DATA/SIMC Histograms
     
     //Primary (electron) Kinematics
@@ -1694,8 +1843,9 @@ void analyze::WriteHist()
       //SHMS Detectors
       H_pbeta->Write();
       H_pngcer->Write();
-      H_pcal->Write();
-       
+      H_pcal_etotnorm->Write();
+      H_pcal_etotTrkNorm->Write();
+
       //Primary (electron) Kinematics
       H_Q2->Write();
       H_omega->Write();
@@ -1884,6 +2034,8 @@ void analyze::WriteReport()
   
 } //End WriteReport()
 
+
+
 //---------------AUXILIARY FUNCTIONS TO CALCULATE Pmx, Pmy, Pmz in SIMC (same as HCANA) -------------------
 
 //_____________________________________________________
@@ -2018,5 +2170,29 @@ vector <string> analyze::FindString(string keyword, string fname)
 
   return line_found;
 
-}//end test.C
+}
+string& analyze::ltrim(std::string& s)
+{
+  auto it = std::find_if(s.begin(), s.end(),
+			 [](char c) {
+			   return !std::isspace<char>(c, std::locale::classic());
+			 });
+  s.erase(s.begin(), it);
+  return s;
+}
+
+string& analyze::rtrim(std::string& s)
+{
+  auto it = std::find_if(s.rbegin(), s.rend(),
+						[](char c) {
+			   return !std::isspace<char>(c, std::locale::classic());
+			 });
+  s.erase(it.base(), s.end());
+  return s;
+}
+
+string& analyze::trim(std::string& s)
+{
+  return ltrim(rtrim(s));
+}
 

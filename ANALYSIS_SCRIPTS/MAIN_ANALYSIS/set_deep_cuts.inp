@@ -1,0 +1,44 @@
+#D(e,e'p)n Input File 
+
+#Units: Enegy/Momentum/W [GeV], spec_delta [%]  
+
+#------ D(e,e'p)n Missing Momentum Settings -------
+
+;80 MeV, 580 MeV, 750 MeV
+pm_setting : 80    
+
+;laget,  misak, . . . 
+theory     : laget      
+
+;pwia, fsi,
+model      : fsi        
+
+;radiative process, "rad" or "norad"
+rad_flag   : rad   
+
+;DataSet 1, 2, 3  
+data_set   : 1               
+
+
+
+#------Set DATA/SIMC CUTS LIMITS ------
+Em_min : -0.015    
+Em_max :  0.04    
+
+h_delta_min: -8.   
+h_delta_max:  8.
+
+e_delta_min: -10.  
+e_delta_max:  22.
+
+W_min: 0.85      
+W_max: 1.05
+
+
+#------TURN CUTS ON/OFF------
+# True (ON) =  1,  False (OFF) = 0
+
+bool Em      = 0
+bool W       = 1
+bool h_delta = 1
+bool e_delta = 1

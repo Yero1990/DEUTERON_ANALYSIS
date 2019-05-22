@@ -3,9 +3,10 @@
 #code usage:  ./run_swif.sh [options]
 #where [options] ---> status,  delete
 
-workflow_name="D2_heep_scalertest"
+workflow_name="D2_heep"
 #workflow_name="SHMS_LH2_boiling_studies"
 #workflow_name="SHMS_boiling_studies"
+#workflow_name="pcal_calib"
 
 #runlist_name="current_elec.data"
 #runlist_name="current_prot.data"
@@ -36,7 +37,7 @@ spec=" --spectrometer COIN "
 #spec=" --spectrometer SHMS_ALL "
 
 events="--events -1"
-range="--run 3206"
+#range="--run 3206"
 filelist=" --run file $runlist_name "
 replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C"     
 #replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_shms_coin.C" 

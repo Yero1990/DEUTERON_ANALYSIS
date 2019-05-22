@@ -1,16 +1,20 @@
-s#****************************
+#****************************
 #H(e,e'p) Check Definitions *
 #****************************
 
-#BCM CUrrent Module
+#BCM Current Module
 block H.bcm*
 block P.bcm*
 
+#Global Types
+block g.evtyp
+block g.evnum
 
 #Only to be used for coincidence trigger
 block CTime*
 
 block T.coin.pTRIG*
+block T.coin.pEDTM*
 block T.coin.hTRIG*
 
 #Kinematics
@@ -35,7 +39,6 @@ block P.dc.*hit*
 block P.dc.*ntrack*
 block P.hod.beta*
 block P.hod.starttime
-block P.hod.*Counter*
 block P.hod.goodscinhit
 block P.hgcer.npeSum*
 block P.ngcer.npeSum* 
@@ -53,7 +56,6 @@ block H.dc.*hit*
 block H.dc.*ntrack*           
 block H.hod.beta*   
 block H.hod.*starttime*
-block H.hod.*Counter*
 block H.hod.goodscinhit	
 block H.cer.npe*                  
 block H.cal.etot*                 

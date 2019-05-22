@@ -1,13 +1,21 @@
 #****************************
-#H(e,e'p) Check Definitions *
+#D(e,e'p) Check Definitions *
 #****************************
 
 #BCM Current Module
 block H.bcm*
 block P.bcm*
 
+#Global Types
+block g.evtyp
+block g.evnum
+
 #Only to be used for coincidence trigger
 block CTime*
+
+block T.coin.pTRIG*
+block T.coin.pEDTM*
+block T.coin.hTRIG*
 
 #Kinematics
 block P.kin.*       

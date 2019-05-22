@@ -1,8 +1,7 @@
-block P.tr.*
+block P.gtr.*
 block P.cal.*
+block P.dc.ntrack
+block P.dc.*fp*
 block P.ngcer.*
 block P.hgcer.*
-
-block H.tr.*
-block H.cal.*
-block H.cer.*
+block P.hod.beta*

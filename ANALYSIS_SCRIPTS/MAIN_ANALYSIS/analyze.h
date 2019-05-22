@@ -38,6 +38,17 @@ class analyze
   vector <string> split(string str, char del=':');
   vector <string> FindString(string keyword, string fname);
 
+  string& ltrim(std::string& s);
+  string& rtrim(std::string& s);
+  string& trim(std::string& s);
+
+
+  //-------Specialized Studies Methods-----------
+
+  //H(e,e'p) Elastic Studies 
+  void ElasticStudy();
+  void CollimatorStudy();
+
 
  private:
   
@@ -46,8 +57,14 @@ class analyze
   string e_arm_name;
   string analysis;
   string reaction;
-
   string h_arm_name;
+
+  //Additional Parameters for D(e,e'p) Theory (Read from deep_input_file.dat)
+  int pm_setting;      //80, 580, 750 MeV
+  string theory;      //laget, misak, . . .
+  string model;       //pwia, fsi, . . .
+  string rad_flag;   //"rad" or "norad"
+  int data_set;      //1, 2, 3
 
   //Spectrometer prefixes to be used in SetBranchAddress()
   string eArm;
@@ -361,7 +378,9 @@ class analyze
   TH1F *H_pdc_dist;
   TH1F *H_pdc_res;
   TH1F *H_pngcer;
-  TH1F *H_pcal;
+  TH1F *H_pcal_etotnorm;
+  TH1F *H_pcal_etotTrkNorm;
+
 
   //Create DATA/SIMC Histograms (MUST BE THE EXACT SAME HSITOGRAMS)
 
@@ -482,7 +501,7 @@ class analyze
   Double_t tLT_err;
 
 
-  //Data-Specific Boolean CUTS
+  //Data-Specific Boolean CUTS (For Tracking Eff. ONLY)
   Bool_t c_noedtm;
   Bool_t c_edtm;
   Bool_t c_ptrig6;
@@ -490,7 +509,7 @@ class analyze
   Bool_t c_ngcerNpesum;
   Bool_t c_etotnorm;
   Bool_t c_etottrknorm;
-  Bool_t c_ctime;
+ 
 
   //e- tracking efficiency Boolean
   Bool_t good_elec_should;
@@ -518,7 +537,12 @@ class analyze
   Bool_t c_th_nq;     Double_t thnq_min;      Double_t thnq_max;
   Bool_t c_MM;        Double_t MM_min;        Double_t MM_max;
 
- 
+  //Detector PID CUTS ON DATA
+  Bool_t shmsCal_cut_flag;  
+  Bool_t coin_cut_flag;
+
+  Bool_t c_shms_cal;  Double_t shms_cal_min;   Double_t shms_cal_max;
+  Bool_t c_ctime;     Double_t ctime_min;      Double_t ctime_max;
 
 
   //------------------------------------------------------------------------------------
@@ -773,12 +797,14 @@ class analyze
   //Input REPORT_FILE
   string data_InputReport;
 
+  string input_CutFileName;
+
   //Output ROOTfile Name
   TString simc_OutputFileName;
   TString data_OutputFileName;
   
   TString report_OutputFileName;
-  
+  TString YieldStudy_FileName;
   
   //FileStreams to READ/WRITE to a txt file
   ofstream out_file;
@@ -819,6 +845,9 @@ class analyze
 
 
   //------------------------------------------------------------------------------------
+ 
+
+
 
 };
 
