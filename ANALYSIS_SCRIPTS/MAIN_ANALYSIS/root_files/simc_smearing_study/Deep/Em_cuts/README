@@ -1,0 +1,7 @@
+Look at Pmiss ratio by making tighter Emiss cuts.
+
+Smearing: 0.04 in delta ONLY
+
+Cuts: HMS delta (-8,8), 
+      SHMS delta (-10,22)
+      HMS Collimator Cuts

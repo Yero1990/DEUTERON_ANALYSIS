@@ -1,6 +1,5 @@
 #E12-10-003 Experiment Kinematics Data File
 #Specifically, Working on Pm = 80 MeV, and High Missing Momentum, after run 3288
-#NOTE: H(e,e'p) elastics is not updated here. See the _CORRECTED kin. file for that.
 
 #H(e,e'p) Elastic
 3243-3248
@@ -95,10 +94,10 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.338
 ptheta_lab = 12.194
-hpcentral = 2.935545    ; 2.938*0.996742
-ppcentral = 8.535956    ; 8.543210
+hpcentral = 2.935545   ;original: 2.938    
+ppcentral = 8.5342488 ;8.535956   original: 8.7
 
-#Pm = 80 MeV
+#Pm = 80 MeV (set1)
 3289
 gpbeam = 10.6005
 gtargmass_amu = 2.014101
@@ -106,8 +105,8 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -38.896
 ptheta_lab = 12.194
-hpcentral = 2.8438 * 0.999434
-ppcentral = 8.535956 ; 8.543210
+hpcentral = 2.840   ;2.8454097  original: 2.8438
+ppcentral = 8.5342488 ;8.535956   original: 8.7
 
 #Pm = 580 (Momentum seems significantly off --Run Not In Use)
 3290
@@ -127,9 +126,9 @@ gtargmass_amu = 2.014101
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -54.992
-ptheta_lab = 12.168    ;12.194
-hpcentral = 2.194 * 0.99782676
-ppcentral = 8.543210
+ptheta_lab =  12.194
+hpcentral = 2.194589  ;original: 2.194 
+ppcentral = 8.535956  ;original: 8.7
 
 #Pm = 750 MeV (set1)
 3306-3340
@@ -138,9 +137,9 @@ gtargmass_amu = 2.014101
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -58.391
-ptheta_lab = 12.168  ;12.194
-hpcentral = 2.091 * 0.99795030
-ppcentral = 8.543210
+ptheta_lab = 12.194
+hpcentral = 2.091837 ;original: 2.091
+ppcentral = 8.535956 ;original: 8.7
 
 #Pm = 580 MeV (Additional. Set 2)
 3341-3356
@@ -149,9 +148,9 @@ gtargmass_amu = 2.014101
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -55.0
-ptheta_lab = 12.168    ;12.194 
-hpcentral = 2.194 * 0.99782676 
-ppcentral = 8.543210
+ptheta_lab = 12.194 
+hpcentral = 2.194589 ;original: 2.194 
+ppcentral = 8.535956 ;original: 8.7
 
 #Pm = 750 MeV (Additional. Set 2)
 3357-3367
@@ -160,9 +159,9 @@ gtargmass_amu = 2.014101
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -58.394
-ptheta_lab = 12.168   ;12.194
-hpcentral = 2.091 * 0.99795030
-ppcentral = 8.543210
+ptheta_lab = 12.194
+hpcentral = 2.091837 ;original: 2.091
+ppcentral = 8.535956 ;original: 8.7
 
 
 3371
@@ -171,9 +170,9 @@ gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -33.545
-ptheta_lab = 13.93     ;13.899
-hpcentral = 3.48*0.996524*1.0023
-ppcentral = 8.535956  ;8.543210
+ptheta_lab = 13.93     
+hpcentral = 3.47588   ;original: 3.48
+ppcentral = 8.535956  ;original: 8.7
 
 3372
 gpbeam = 10.6005
@@ -201,9 +200,9 @@ gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -42.9
-ptheta_lab =  9.928   ;9.922
-hpcentral = 2.31*0.997783*1.00239
-ppcentral = 8.535956   ;8.543210
+ptheta_lab =  9.928  
+hpcentral = 2.310387   ;original: 2.31
+ppcentral = 8.535956   ;original: 8.7
 
 3375
 gpbeam = 10.6005
@@ -231,9 +230,9 @@ gtargmass_amu = 1.00794
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -47.605
-ptheta_lab = 8.495    ;8.551
-hpcentral = 1.8899*0.998217*1.00249
-ppcentral = 8.535956  ;8.543210
+ptheta_lab = 8.495   
+hpcentral = 1.891227  ;original: 1.8899
+ppcentral = 8.535956  ;original: 8.7
 
 3379
 gpbeam = 10.6005
@@ -253,7 +252,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -58.391
 ptheta_lab = 12.21
-hpcentral = 2.091 * 0.99795030
-ppcentral = 8.543210
+hpcentral = 2.091837 ;original: 2.091 
+ppcentral = 8.535956 ;original: 8.7
 
 

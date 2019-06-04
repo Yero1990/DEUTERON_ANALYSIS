@@ -1,0 +1,16 @@
+***************
+ Q2 Cut Study
+***************
+
+A study of the Pmiss at various Q2 ranges is done:
+The genral cuts are:
+|Em| < 40 MeV
+HMS Delta: (-8,8)
+SHMS Delta: (-10,22)
+|Ztar_Diff| < 2 cm
+Coin TIme: (11, 15)
+
+Q2 Ranges:
+Q2_set1 = (3. 3.5)
+Q2_set2 = (3.5, 4)
+Q2_set3 = (4, 5)

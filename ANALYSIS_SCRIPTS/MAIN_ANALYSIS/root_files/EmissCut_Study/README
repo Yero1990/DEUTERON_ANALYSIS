@@ -1,0 +1,16 @@
+******************
+ Emiss Cut Study
+******************
+
+A study of the Pmiss at various Emiss ranges is done:
+The genral cuts are:
+
+HMS Delta: (-8,8)
+SHMS Delta: (-10,22)
+|Ztar_Diff| < 2 cm
+Coin TIme: (11, 15)
+
+Em Ranges:
+Em_set1 = (-40. 0)
+Em_set2 = (0, 20)
+Em_set3 = (20, 40)

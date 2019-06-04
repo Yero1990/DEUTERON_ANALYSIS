@@ -52,9 +52,9 @@ void checkCalib(string spec, int run)
   hdcRes_xmin = -0.1,	     		     pdcRes_xmin = -0.1;	     
   hdcRes_xmax = 0.1,	     		     pdcRes_xmax = 0.1;	     
   			     		     			     
-  hdcDist_nbins = 70.,	     		     pdcDist_nbins = 70.;	     
-  hdcDist_xmin = -0.1,	     		     pdcDist_xmin = -0.1;	     
-  hdcDist_xmax = 0.6,	     		     pdcDist_xmax = 0.6;	     
+  hdcDist_nbins = 50.,	     		     pdcDist_nbins = 50.;	     
+  hdcDist_xmin = 0.,	     		     pdcDist_xmin = 0.;	     
+  hdcDist_xmax = 0.5,	     		     pdcDist_xmax = 0.5;	     
 			     		   			     
   hhodBeta_nbins = 100,	     		     phodBeta_nbins = 100;	     
   hhodBeta_xmin = 0.3,	     		     phodBeta_xmin = 0.3;	     
@@ -87,7 +87,7 @@ void checkCalib(string spec, int run)
   //TString filename = Form("../../../ROOTfiles/good_Heep_hmsProt/hprot_kg%d.root", run);
   //TString filename = Form("../../../ROOTfiles/coin_replay_trkStudy_%d_-1.root", run);
   
-  TString filename = "../../../ROOTfiles/coin_replay_scaler_test_3288_-1.root";
+  TString filename = "../../../ROOTfiles/coin_replay_deep_check_3289_-1.root";
   // TString filename = "../../../ROOTfiles/pm580_total.root";
 
 
@@ -373,6 +373,8 @@ void checkCalib(string spec, int run)
     } //end hodo plane loop
   
   
+  Bool_t hnhit;
+  Bool_t pnhit;
 
   //==============================
   //=====LOOP OVER ALL EVENTS=====
@@ -390,11 +392,18 @@ void checkCalib(string spec, int run)
       //Loop over all DC planes
       for (Int_t npl = 0; npl < dc_PLANES; npl++ )
 	{
+	  
+	  //Require single hit per plane
+	  hnhit = hdc_nhit[0]==1&&hdc_nhit[1]==1&&hdc_nhit[2]==1&&hdc_nhit[3]==1&&hdc_nhit[4]==1&&hdc_nhit[5]==1&& 
+	    hdc_nhit[6]==1&&hdc_nhit[7]==1&&hdc_nhit[8]==1&&hdc_nhit[9]==1&&hdc_nhit[10]==1&&hdc_nhit[11]==1;
+	  
 	  //Loop over hits
 	  for (Int_t j=0; j < hdc_ndata[npl]; j++)
 	    {
-	      
-	      if(hdc_ndata[npl]==1){
+
+	
+
+	      if(hnhit){
 	      //Fill Histograms
 	      H_hdcTime[npl]->Fill(hdc_time[npl][j]);
 	      H_hdcDist[npl]->Fill(hdc_dist[npl][j]);
@@ -440,11 +449,15 @@ void checkCalib(string spec, int run)
       //Loop over all DC planes
       for (Int_t npl = 0; npl < dc_PLANES; npl++ )
 	{
+	  //Require single hit per plane
+	  pnhit = pdc_nhit[0]==1&&pdc_nhit[1]==1&&pdc_nhit[2]==1&&pdc_nhit[3]==1&&pdc_nhit[4]==1&&pdc_nhit[5]==1&& 
+	    pdc_nhit[6]==1&&pdc_nhit[7]==1&&pdc_nhit[8]==1&&pdc_nhit[9]==1&&pdc_nhit[10]==1&&pdc_nhit[11]==1;
+	  
 	  //Loop over hits
 	  for (Int_t j=0; j < pdc_ndata[npl]; j++)
 	    {
 	      
-	      if(pdc_ndata[npl]==1){
+	      if(pnhit){
 		//Fill Histograms
 		H_pdcTime[npl]->Fill(pdc_time[npl][j]);
 		H_pdcDist[npl]->Fill(pdc_dist[npl][j]);
@@ -556,8 +569,12 @@ void checkCalib(string spec, int run)
 	  H_hdcTime[npl]->Draw();
 	  
 	  hdcDistCanv->cd(npl+1);
+	  int binmax = H_hdcDist[npl]->GetMaximumBin();
+	  double upperlim =  H_hdcDist[npl]->GetBinContent(binmax) + 1000.;
+	  H_hdcDist[npl]->GetYaxis()->SetRangeUser(0., upperlim);
 	  H_hdcDist[npl]->Draw();
 	  
+
 	  //Get Mean/Sigma for residuals and conver to microns
 	  mean[npl] =  H_hdcRes[npl]->GetMean()*1e4; 
 	  sigma[npl] =  H_hdcRes[npl]->GetStdDev()*1e4;
@@ -780,6 +797,9 @@ void checkCalib(string spec, int run)
 	  H_pdcTime[npl]->Draw();
 	  
 	  pdcDistCanv->cd(npl+1);
+	  int binmax = H_pdcDist[npl]->GetMaximumBin();
+	  double upperlim =  H_pdcDist[npl]->GetBinContent(binmax) + 1000.;
+	  H_pdcDist[npl]->GetYaxis()->SetRangeUser(0., upperlim);
 	  H_pdcDist[npl]->Draw();
 	  
 	  //Get Mean/Sigma for residuals and conver to microns

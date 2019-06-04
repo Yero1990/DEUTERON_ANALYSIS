@@ -1,0 +1,7 @@
+*************************
+ Collimator Eloss Study
+*************************
+
+SIMC Collimator particle interactions and Eloss are simulated. This
+will produce more realistic smearing around the collimator edges, simulating
+reconstructed particles with energy loss.

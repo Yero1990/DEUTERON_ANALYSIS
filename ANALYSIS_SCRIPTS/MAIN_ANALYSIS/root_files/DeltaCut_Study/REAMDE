@@ -1,0 +1,28 @@
+**********************
+SHMS Delta Cut Study
+**********************
+
+A study of the Missing Momentum Yield Ratio with various 
+SHMS Delta cuts is studied. The main idea is to find ideal cut
+that will get rid of background Pmiss > 200-500 MeV
+
+The general CUts Applied Are:
+
+|Emiss| < 40 MeV
+HMS Delta: (-8,8) %
+Coin Time: (11, 15)
+| Ztar_Diff | < 2 cm
+HMS Collimator Cut
+
+SHMS Delta Cuts STudy:
+* (-10, 22)
+
+* (-3, 3)  --> The full range of SHMS delta at 80 MeV setting
+
+* (-2.5, 2.5)
+
+* (-2, 2)
+
+* (-1.5, 1.5)
+
+* (-1, 1)

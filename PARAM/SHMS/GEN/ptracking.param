@@ -51,7 +51,7 @@ pstub_max_xpdiff=0.2
 
 ;------------USING SELECTIVE TRACKS (PRUNING) ----------------------
 ; psel_using_prune         using prune
-  psel_using_prune = 0
+  psel_using_prune = 1
 
 ; Calorimeter EtotNorm Prune Min
   pprune_etotnorm = 1.7
@@ -60,7 +60,7 @@ pstub_max_xpdiff=0.2
   pprune_xp = .08
 
 ; yptar prune min= 0.04
-  pprune_yp = .04
+  pprune_yp = .06
 
 ; ytar prune min= 4
   pprune_ytar = 4
@@ -72,7 +72,7 @@ pstub_max_xpdiff=0.2
   pprune_beta = .5
 
 ; min number of deg of freedom in track  prune min = 1.0
-  pprune_df = 1
+  pprune_df = 8
 
 ; chi of beta   min = 2.0
   pprune_chibeta = 100

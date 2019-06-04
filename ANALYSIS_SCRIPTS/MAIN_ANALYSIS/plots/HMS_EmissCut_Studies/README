@@ -1,0 +1,30 @@
+**********************
+ Missing Energy Study
+**********************
+
+Brief: This study consist of studying the W integrated yield ratio Ydata/Ysimc
+for SIMC HMS Collimator Configurations:
+
+HMS Coll. Eloss ON
+HMS Coll. Eloss OFF
+
+
+For each of these configurations, the Missing energy cut on both data and
+simc will be varied from 0.03 (30 MeV) to 0.08 (80 MeV) 
+
+**With no energy loss in the collimator, it is expected that the
+  ratio varies significantly, as the missing energy cut on will cut
+  out events in data underneath the W peak, whereas in SIMC, no events
+  will be cut in the main W peak
+
+**With energy loss in the collimator turned on, it is expected that
+  the ratio is independent of the cut, as the cut should affect both
+  data and simc equally. This is because now simc has events at large
+  missing energy that correspong to W events at ~ proton mass, indicating 
+  that the protons lost energy in the collimator, but it was still a (e,e'p)
+  so the W reconstructs to the proton mass.
+
+The basic cuts applied were:
+HMS delta:  -8, 8
+SHMS delta: -10, 22
+W:           0.85, 1.05

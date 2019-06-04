@@ -1,0 +1,16 @@
+*******************
+FOCAL PLANE STUDIES
+*******************
+
+To understand if the focal plane has a significant impact on the missing 
+momentum, cuts are made on SHMS focal plane regions where the data/simc
+agree. 
+
+The Ratio of Pmiss is studied with and without the focal plane cuts;
+
+The general cuts made were:
+Emiss < 40 MeV
+HMS Delta: (-8,8) %
+SHMS Delta: (-10, 22) %
+HMS Collimator Cut:
+*smearinfg only on delta: 0.04 (default smearing)

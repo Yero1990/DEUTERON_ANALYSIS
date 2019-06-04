@@ -1,0 +1,26 @@
+***************************
+D(e,e'p)n Smearing Studies
+***************************
+
+The smearing studies on D(e,e'p)n consists on smearing delta, x'tar, y'tar
+in order to observe the effect on Pmiss data/simc comparison, as the 
+ratio currently appears to be 20-30 % off unity at Pmiss > 100 MeV.
+It is suspected that SIMC has slightly smaller resolution.
+
+delta_smearing:
+The delta in HMS/SHMS was changed from 0.04 to 0.075.  The Pmiss did not
+change, but Emiss showed smearing, which we do not want. Leave delta smearing
+at 0.04
+
+x'tar smearing:
+delta_smearing was left at 0.04
+The X'tar was changed from 1 to 2 mr. No significant change was observed in
+Pmiss. 
+
+y'tar smearing:
+With delta at 0.04 and x'tar at 2 mr, y'tar smearing was set to
+* 1mr: 
+
+It seems the Y'tar smearing causes a shift in SIMC Pmiss. 
+
+I will only apply a large X'tar smearing to understand the effect.

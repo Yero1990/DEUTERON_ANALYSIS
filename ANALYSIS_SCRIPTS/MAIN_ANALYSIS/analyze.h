@@ -44,10 +44,11 @@ class analyze
 
 
   //-------Specialized Studies Methods-----------
-
-  //H(e,e'p) Elastic Studies 
-  void ElasticStudy();
   void CollimatorStudy();
+
+  //------------Run Analysis Mehods--------------
+  void run_simc_analysis();
+  void run_data_analysis();
 
 
  private:
@@ -227,9 +228,20 @@ class analyze
   Double_t Ep_xmin = 2.5;
   Double_t Ep_xmax = 3.5;
 
+  //Final Proton Kinetic Energy
+  Double_t Kp_nbins = nbins;
+  Double_t Kp_xmin = 1.6;
+  Double_t Kp_xmax = 2.6;
+
+  //Final Neutron Energy
   Double_t En_nbins = nbins;
-  Double_t En_xmin = 0.93 ;
+  Double_t En_xmin = 0.93;
   Double_t En_xmax = 0.96;
+
+  //Final Proton Kinetic Energy
+  Double_t Kn_nbins = nbins;
+  Double_t Kn_xmin = -0.004;
+  Double_t Kn_xmax = 0.02;
 
   //Final Electron Momentum
   Double_t kf_nbins = nbins;
@@ -411,6 +423,8 @@ class analyze
   TH1F *H_Pf;
   TH1F *H_Ep;
   TH1F *H_En;
+  TH1F *H_Kp;
+  TH1F *H_Kn;
   TH1F *H_theta_prot;
   TH1F *H_theta_pq;
   TH1F *H_theta_nq;
@@ -457,6 +471,10 @@ class analyze
   //2D Collimator Histos
   TH2F *H_hXColl_vs_hYColl;
   TH2F *H_eXColl_vs_eYColl;
+
+  //2D Kinematics Check
+  TH2F *H_Em_vs_Pm;
+  TH2F *H_Em_nuc_vs_Pm;
 
   //Create Scaler Related Histogram (ONLY FOR SCALERS)
   TH1F *H_bcmCurrent;
@@ -523,6 +541,10 @@ class analyze
   Bool_t W_cut_flag;
   Bool_t hdelta_cut_flag;
   Bool_t edelta_cut_flag;
+  Bool_t ztar_diff_cut_flag;
+  Bool_t Q2_cut_flag;
+  Bool_t thnq_cut_flag;
+  Bool_t MM_cut_flag;
 
   Bool_t base_cuts;
   Bool_t pid_cuts;
@@ -536,6 +558,8 @@ class analyze
   Bool_t c_Q2;        Double_t Q2_min;        Double_t Q2_max;
   Bool_t c_th_nq;     Double_t thnq_min;      Double_t thnq_max;
   Bool_t c_MM;        Double_t MM_min;        Double_t MM_max;
+  
+  Bool_t c_ztarDiff;  Double_t ztarDiff_min;  Double_t ztarDiff_max;
 
   //Detector PID CUTS ON DATA
   Bool_t shmsCal_cut_flag;  
@@ -621,6 +645,8 @@ class analyze
   Double_t  etar_y;
   Double_t  etar_z;
 
+  Double_t ztar_diff;
+
   //Collimators
   Double_t hXColl, hYColl, eXColl, eYColl;
 
@@ -650,6 +676,7 @@ class analyze
   Double_t M_recoil;              //Missing Mass (neutron Mass)
   Double_t MM2;                   //Missing Mass Squared
   Double_t E_recoil;              //Recoil Energy of the system (neutron total energy)
+  Double_t En;                    //Same as above
   Double_t th_pq;                  //Polar angle of detected particle with q   ----> th_pq
   Double_t th_nq;                  //Polar angle of recoil system with q (rad)  ---> th_nq (neutreon-q angle. IMPORTANT in D(e,e'p))
   Double_t ph_pq;                  //Azimuth angle of detected particle with q    ----> phi_pq angle between proton and q-vector
@@ -690,7 +717,20 @@ class analyze
   Double_t theta_rq;
   Double_t SF_weight_recon;
   Double_t h_Thf;
+  //Vertex Quantities (no Eloss) that will be used to calculated the cross section @ the average kinematics
   Double_t Ein_v;               //incident beam energy at vertex (simulates external rad. has rad. tail) ??? 
+  Double_t Q2_v;
+  Double_t nu_v;
+  Double_t q_lab_v;
+  Double_t pm_v;
+  Double_t pm_par_v;
+  Double_t pf_v;
+  Double_t Ep_v;
+  Double_t Ef_v;
+  
+  Double_t prob_abs;  // Probability of absorption of particle in the HMS Collimator
+                      //(Must be multiplies by the weight. If particle interation is
+                      //NOT simulated, it is set to 1.)
 
   
   //SIMC Collimator
@@ -791,7 +831,8 @@ class analyze
   
 
   //Input ROOTfile Name
-  TString simc_InputFileName;
+  TString simc_InputFileName_rad;  
+  TString simc_InputFileName_norad;
   TString data_InputFileName;
 
   //Input REPORT_FILE
@@ -800,7 +841,9 @@ class analyze
   string input_CutFileName;
 
   //Output ROOTfile Name
-  TString simc_OutputFileName;
+  TString simc_OutputFileName_rad;
+  TString simc_OutputFileName_norad;
+
   TString data_OutputFileName;
   
   TString report_OutputFileName;
@@ -840,12 +883,42 @@ class analyze
   TVector3 kfvec;
   TRotation rot_to_q;
   TVector3 bq;   //recoil system in lab frame (Pmx, Pmy, Pmz)
+  TVector3 xq;   //detected system in lab frame
   TVector3 p_miss_q;   //recoil system in q-frame
 
+  //Leaf Variables
+  Double_t fTheta_xq;
+  Double_t fPhi_xq;
+  Double_t fTheta_bq;
+  Double_t fPhi_bq;
 
 
   //------------------------------------------------------------------------------------
  
+
+  //-------Collimator Study-------
+  Bool_t hmsCollCut_flag;      //flag to enable/disable collimator cut
+  Bool_t shmsCollCut_flag;
+
+  Bool_t hmsColl_Cut;
+  Bool_t shmsColl_Cut;
+
+  TCutG *hms_Coll_gCut;   //HMS Collimator Graphical Cut
+  TCutG *shms_Coll_gCut;  //SHMS Collimator Graphical Cut
+
+  //HMS Octagonal Collimator Size (Each of the octagonal points is a multiple of 1 or 1/2 of these values)
+  Double_t hms_hsize = 4.575;  //cm
+  Double_t hms_vsize = 11.646;
+ 
+  //SHMS Octagonal Collimator Size (Each of the octagonal points is a multiple of 1 or 1/2 of these values)
+  Double_t shms_hsize = 17.;  //cm
+  Double_t shms_vsize = 25.;
+
+  //Scaling factor to scale collimator cuts from original size cut
+  Double_t hms_scale=1.;   //Default
+  Double_t shms_scale=1.;
+
+  //------------------------------
 
 
 

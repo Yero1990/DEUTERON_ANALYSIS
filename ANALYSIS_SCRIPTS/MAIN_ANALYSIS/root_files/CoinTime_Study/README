@@ -1,0 +1,17 @@
+***********************
+Coincidence Time Study
+***********************
+
+The SIMC/DATA comparisons, and Pm yield ratios are investigated.
+
+The general cuts applied:
+Em < 40 MeV
+HMS Delta: (-8, 8)
+SHMS Delta: (-10, 22)
+HMS Collimator Cut
+
+Study the cuts:
+* Coin Time Cut: (>11,<15) and its Anti-Cut
+* Study the ztarget_difference (h_ztar-e_ztar) 
+  	-> look at SHMS focal plane with an anti-cut on zTar_difference
+	   to see where they come from.

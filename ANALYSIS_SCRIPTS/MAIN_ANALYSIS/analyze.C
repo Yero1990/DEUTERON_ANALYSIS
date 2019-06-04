@@ -12,7 +12,11 @@ analyze::analyze(int run=-1, string e_arm="SHMS", string type="data", string rea
 {
   
   cout << "Calling Constructor . . . " << endl;
-  
+  cout << "  " << endl;
+  cout << "==================================" << endl;
+  cout << Form("Analyzing %s %s: Run %i ",reaction.c_str(), analysis.c_str(), runNUM) << endl;
+  cout << "==================================" << endl;
+
   //Set Spectrometer Prefix later use
   if(e_arm=="SHMS"){
     h_arm_name = "HMS";
@@ -37,6 +41,9 @@ analyze::analyze(int run=-1, string e_arm="SHMS", string type="data", string rea
   evt_flag_bcm = NULL;   //scaler read array of 0 or 1 (determine if scaler read passed bcm cut)
   scal_evt_num = NULL;
 
+  //Initialize Graphical Cuts (Collimator Study)
+  hms_Coll_gCut = NULL;
+  shms_Coll_gCut = NULL;
 
   //Initialize DATA (ONLY) Histograms
 
@@ -82,6 +89,8 @@ analyze::analyze(int run=-1, string e_arm="SHMS", string type="data", string rea
   H_Pf = NULL;
   H_Ep = NULL;
   H_En = NULL;
+  H_Kp = NULL;
+  H_Kn = NULL;
   H_theta_prot = NULL;
   H_theta_pq = NULL;
   H_theta_nq = NULL;
@@ -128,7 +137,9 @@ analyze::analyze(int run=-1, string e_arm="SHMS", string type="data", string rea
   //2D Collimator Histos
   H_hXColl_vs_hYColl = NULL;
   H_eXColl_vs_eYColl = NULL;
-  
+
+  H_Em_vs_Pm = NULL;
+  H_Em_nuc_vs_Pm = NULL;
 
   //Initialize Scaler Histograms
   H_bcmCurrent = NULL;
@@ -195,6 +206,8 @@ analyze::~analyze()
   delete H_Pf;         H_Pf         = NULL;
   delete H_Ep;         H_Ep         = NULL;
   delete H_En;         H_En         = NULL;
+  delete H_Kp;         H_Kp         = NULL;                                                                                          
+  delete H_Kn;         H_Kn         = NULL;  
   delete H_theta_prot; H_theta_prot = NULL;
   delete H_theta_pq;   H_theta_pq   = NULL;
   delete H_theta_nq;   H_theta_nq   = NULL;
@@ -241,11 +254,13 @@ analyze::~analyze()
   //2D Collimator Histos
   delete H_hXColl_vs_hYColl; H_hXColl_vs_hYColl = NULL;
   delete H_eXColl_vs_eYColl; H_eXColl_vs_eYColl = NULL;
-
+  delete H_Em_vs_Pm;         H_Em_vs_Pm         = NULL;
+  delete H_Em_nuc_vs_Pm;     H_Em_nuc_vs_Pm         = NULL;
 
   //Delete Scaler Histograms
   delete H_bcmCurrent; H_bcmCurrent = NULL;
 
+  cout << "End CallingDestructor() . . " << endl;
 }
 
 
@@ -254,53 +269,72 @@ void analyze::SetFileNames()
 {
   
   cout << "Calling SetFileNames() . . . " << endl;
-
-  //------DATA------
-  //Set Input ROOTfile Pattern
-  data_InputFileName = Form("ROOTfiles/coin_replay_%s_check_%d_-1.root", reaction.c_str(), runNUM);
-  
-  //Set Input REPORT_FILE Name Pattern
-  data_InputReport = Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_%s_check_%d_-1.report", reaction.c_str(), runNUM);
-
-  //Set Input CutFile Name (to read cuts to be set)
+   
+  //Set Input CutFile Name (to read cuts to be set, and simc parameters)
   input_CutFileName = Form("set_%s_cuts.inp", reaction.c_str());
-
-  //Set Output ROOTfilename
-  data_OutputFileName = Form("%s_data_histos_%d.root",reaction.c_str(), runNUM);;
   
-  //Set Output data file name
-  report_OutputFileName = Form("report_%s.dat", reaction.c_str());
-
-
-  //------SIMC------
-  //Set Input ROOTfile Pattern
   if(reaction=="deep"){
+    //Read Parameters from D(e,e'p) input file
     pm_setting = stoi(split(FindString("pm_setting", input_CutFileName)[0], ':')[1]);
-    theory = trim(split(FindString("theory", "deep_input_file.dat")[0], ':')[1]);
-    model = trim(split(FindString("model", "deep_input_file.dat")[0], ':')[1]);
-    rad_flag = trim(split(FindString("rad_flag", "deep_input_file.dat")[0], ':')[1]);
-    data_set = stoi(split(FindString("data_set", "deep_input_file.dat")[0], ':')[1]);
-
-    simc_InputFileName = Form("worksim_voli/d2_pm%d_%s%s_%s_set%d.root", pm_setting, theory.c_str(), model.c_str(), rad_flag.c_str(), data_set );
-  
-
+    theory = trim(split(FindString("theory", input_CutFileName)[0], ':')[1]);
+    model = trim(split(FindString("model", input_CutFileName)[0], ':')[1]);
+    //rad_flag = trim(split(FindString("rad_flag", input_CutFileName)[0], ':')[1]);
+    data_set = stoi(split(FindString("data_set", input_CutFileName)[0], ':')[1]);
   }
-  else{ simc_InputFileName = Form("worksim_voli/D2_heep_%d.root", runNUM);}
+  
+  //Set Input REPORT_FILE Name Pattern (This will be used by both DATA/SIMC)
+  data_InputReport = Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_%s_check_%d_-1.report", reaction.c_str(), runNUM); 
 
-  //Set Output ROOTfilename
-  simc_OutputFileName = Form("%s_simc_histos_%d.root",reaction.c_str(), runNUM);;
+  //------ONLY TO BE USED BY DATA-------
+  if(analysis=="data")
+    {
+      //Set Input ROOTfile Pattern
+      data_InputFileName = Form("ROOTfiles/coin_replay_%s_check_%d_-1_prunetracking_AND_DCAlign.root", reaction.c_str(), runNUM);
+            
+      //Set Output ROOTfilename and Report data filename
+      if(reaction=="heep"){
+	report_OutputFileName = Form("report_%s.dat", reaction.c_str());
+	data_OutputFileName = Form("%s_data_histos_%d.root",reaction.c_str(), runNUM);
+      }
 
-  //Specialized Studies FileNames
-  YieldStudy_FileName = Form("yield_study_%s.dat", reaction.c_str());
+      else if(reaction=="deep"){
+	report_OutputFileName = Form("report_%s_pm%d_set%d.dat", reaction.c_str(), pm_setting, data_set);
+	data_OutputFileName = Form("%s_data_histos_pm%d_set%d_%d.root",reaction.c_str(), pm_setting, data_set, runNUM);
+      }
+    }
+  
+  //------ONLY TO BE USED BY SIMC------
+  if(analysis=="simc")
+    {
+      //Set Input/Output ROOTfile Pattern
+      if(reaction=="deep"){
+	//Radiative
+	simc_InputFileName_rad = Form("worksim_voli/d2_pm%d_%s%s_rad_set%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+	simc_OutputFileName_rad = Form("%s_simc_histos_pm%d_%s%s_rad_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
+	//Non-Radiative
+	simc_InputFileName_norad = Form("worksim_voli/d2_pm%d_%s%s_norad_set%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+	simc_OutputFileName_norad = Form("%s_simc_histos_pm%d_%s%s_norad_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
+
+      }
+
+      else if(reaction=="heep"){ 
+	simc_InputFileName_rad = Form("worksim_voli/D2_heep_%d.root", runNUM);
+	simc_OutputFileName_rad = Form("%s_simc_histos_%d.root",reaction.c_str(), runNUM);
+      }
+      
+    }
+
+
+  cout << "Ending SetFileNames() . . . " << endl;
 }
 
 //_____________________________________________________________________________
 void analyze::SetCuts()
 {
 
-  // cout << "Calling SetCuts() . . ." << endl;
-
-  //Read  the set_heep_cuts.input file 
+  cout << "Calling SetCuts() . . ." << endl;
+  
+  //Read Cut Limits from set_heep(deep)_cuts.input file 
   Em_min = stod(split(FindString("Em_min", input_CutFileName)[0], ':')[1]);
   Em_max = stod(split(FindString("Em_max", input_CutFileName)[0], ':')[1]);
   
@@ -313,6 +347,20 @@ void analyze::SetCuts()
   W_min = stod(split(FindString("W_min", input_CutFileName)[0], ':')[1]);
   W_max = stod(split(FindString("W_max", input_CutFileName)[0], ':')[1]);
 
+  ztarDiff_min = stod(split(FindString("ztarDiff_min", input_CutFileName)[0], ':')[1]); 
+  ztarDiff_max = stod(split(FindString("ztarDiff_max", input_CutFileName)[0], ':')[1]);
+ 
+  Q2_min = stod(split(FindString("Q2_min", input_CutFileName)[0], ':')[1]); 
+  Q2_max = stod(split(FindString("Q2_max", input_CutFileName)[0], ':')[1]);
+  
+  thnq_min = stod(split(FindString("thnq_min", input_CutFileName)[0], ':')[1]); 
+  thnq_max = stod(split(FindString("thnq_max", input_CutFileName)[0], ':')[1]);
+
+  
+
+  MM_min = stod(split(FindString("MM_min", input_CutFileName)[0], ':')[1]); 
+  MM_max = stod(split(FindString("MM_max", input_CutFileName)[0], ':')[1]);
+
   shms_cal_min = stod(split(FindString("shms_cal_min", input_CutFileName)[0], ':')[1]);
   shms_cal_max = stod(split(FindString("shms_cal_max", input_CutFileName)[0], ':')[1]);
   
@@ -320,15 +368,29 @@ void analyze::SetCuts()
   ctime_max = stod(split(FindString("coin_time_max", input_CutFileName)[0], ':')[1]);
 
 
-  //Turn Cuts ON/OFF (1 or 0) , 
+  //Read Cut Flags from set_heep(deep)_cuts.input file 
   //BASIC
   Em_cut_flag = stoi(split(FindString("bool Em", input_CutFileName)[0], '=')[1]);
   W_cut_flag = stoi(split(FindString("bool W", input_CutFileName)[0], '=')[1]);
   hdelta_cut_flag = stoi(split(FindString("bool h_delta", input_CutFileName)[0], '=')[1]);
   edelta_cut_flag = stoi(split(FindString("bool e_delta", input_CutFileName)[0], '=')[1]);
+  ztar_diff_cut_flag = stoi(split(FindString("bool ztar_diff", input_CutFileName)[0], '=')[1]);
+  Q2_cut_flag = stoi(split(FindString("bool Q2", input_CutFileName)[0], '=')[1]);
+  thnq_cut_flag = stoi(split(FindString("bool th_nq", input_CutFileName)[0], '=')[1]);
+  MM_cut_flag = stoi(split(FindString("bool MM", input_CutFileName)[0], '=')[1]);
+
   //PID
   shmsCal_cut_flag = stoi(split(FindString("bool shmsCal_EtotTrackNorm", input_CutFileName)[0], '=')[1]);
   coin_cut_flag = stoi(split(FindString("bool coin_time", input_CutFileName)[0], '=')[1]);
+  //Collimator
+  hmsCollCut_flag = stoi(split(FindString("bool hmsCollCut", input_CutFileName)[0], '=')[1]);
+  shmsCollCut_flag = stoi(split(FindString("bool shmsCollCut", input_CutFileName)[0], '=')[1]);
+  //Read Collimator Cut Scale Factor
+  hms_scale =  stod(split(FindString("hms_scale", input_CutFileName)[0], '=')[1]);
+  shms_scale =  stod(split(FindString("shms_scale", input_CutFileName)[0], '=')[1]);
+
+  cout << "Ending SetCuts() . . ." << endl;
+
 }
 
 //___________________________________________________________________________
@@ -351,46 +413,54 @@ void analyze::SetDefinitions()
   me = 0.00051099;   //electron mass
 
   //Target Mass (FIXME!)
-  tgt_mass = MP;   //For now is the proton mass. Later on, add a flag to switch between "heep" and "deep"
+  tgt_mass = MP; 
+  if(reaction=="deep"){tgt_mass = MD;} 
 
-      //Read Spectrometer Kinematics from REPORT_FILE
-      string temp;
-      
-      //Read Angles (in deg)
-      temp = FindString("hHMS Angle", data_InputReport)[0];    //Find line containing string
-      h_th = stod(split(temp, ':')[1]);                              //split string, take the number part, and conver to double
-      
-      temp = FindString("pSHMS Angle", data_InputReport)[0];
-      e_th = stod(split(temp, ':')[1]);
-      
-      //Read Central Momenta (in GeV)
-      temp = FindString("hHMS P Central", data_InputReport)[0]; 
-      h_Pcen = stod(split(temp, ':')[1]);
-      
-      temp = FindString("pSHMS P Central", data_InputReport)[0]; 
-      e_Pcen = stod(split(temp, ':')[1]);
-      
-      //Read Beam Positions (in cm, Hall Coord. System)
-      temp = FindString("pSHMS X BPM", data_InputReport)[0];
-      xBPM = stod(split(split(temp, ':')[1], 'c')[0]);
-      
-      temp = FindString("pSHMS Y BPM", data_InputReport)[0];
-      yBPM = stod(split(split(temp, ':')[1], 'c')[0]);
-      
-      
-      //Read MisPointings (in cm)
-      temp = FindString("hHMS X Mispointing", data_InputReport)[0];
-      h_xMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
-      
-      temp = FindString("hHMS Y Mispointing", data_InputReport)[0];
-      h_yMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
-      
-      temp = FindString("pSHMS X Mispointing", data_InputReport)[0];
-      e_xMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
-      
-      temp = FindString("pSHMS Y Mispointing", data_InputReport)[0];
-      e_yMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
-    
+  cout << "tgt_mass = " << tgt_mass << endl;
+  
+
+  //cout << "data rep = " <<  data_InputReport << endl;
+  //Read Spectrometer Kinematics from REPORT_FILE
+  string temp;
+  
+  //Read Angles (in deg)
+  temp = FindString("hHMS Angle", data_InputReport)[0];    //Find line containing string
+  h_th = stod(split(temp, ':')[1]);                              //split string, take the number part, and conver to double
+
+
+  temp = FindString("pSHMS Angle", data_InputReport)[0];
+  e_th = stod(split(temp, ':')[1]);
+  
+  //Read Central Momenta (in GeV)
+  temp = FindString("hHMS P Central", data_InputReport)[0]; 
+  h_Pcen = stod(split(temp, ':')[1]);
+  
+  temp = FindString("pSHMS P Central", data_InputReport)[0]; 
+  e_Pcen = stod(split(temp, ':')[1]);
+  
+  //Read Beam Positions (in cm, Hall Coord. System)
+  temp = FindString("pSHMS X BPM", data_InputReport)[0];
+  xBPM = stod(split(split(temp, ':')[1], 'c')[0]);
+  
+  temp = FindString("pSHMS Y BPM", data_InputReport)[0];
+  yBPM = stod(split(split(temp, ':')[1], 'c')[0]);
+  
+  
+  //Read MisPointings (in cm)
+  temp = FindString("hHMS X Mispointing", data_InputReport)[0];
+  h_xMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
+  
+  temp = FindString("hHMS Y Mispointing", data_InputReport)[0];
+  h_yMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
+  
+  temp = FindString("pSHMS X Mispointing", data_InputReport)[0];
+  e_xMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
+  
+  temp = FindString("pSHMS Y Mispointing", data_InputReport)[0];
+  e_yMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
+  
+  
+  cout << "Ending SetDefinitions() . . . " << endl;
   
 }
 
@@ -398,12 +468,12 @@ void analyze::SetDefinitions()
 //___________________________________________________________________________
 void analyze::SetHistBins()
 {
-  cout << "Calling SetHistBins . . . " << endl;
+  cout << "Calling SetHistBins() . . . " << endl;
       
   //HMS DETECTORS                  //SHMS Detectors      //Trigger Detector
   hbeta_nbins = 100;	        pbeta_nbins = 100;       coin_nbins = 100;    
-  hbeta_xmin = 0.5;		pbeta_xmin = 0.5;        coin_xmin = 10.;
-  hbeta_xmax = 1.5;		pbeta_xmax = 1.5;        coin_xmax = 20.;
+  hbeta_xmin = 0.5;		pbeta_xmin = 0.5;        coin_xmin = 0.;
+  hbeta_xmax = 1.5;		pbeta_xmax = 1.5;        coin_xmax = 30.;
   
   hcer_nbins = 100;		pngcer_nbins = 100;  
   hcer_xmin = 0.001;	        pngcer_xmin = 0.001; 
@@ -426,22 +496,22 @@ void analyze::SetHistBins()
       Em_xmin = -0.05;			  Q2_xmin = 2.5;	   	   Pf_xmin = 2.5;				    
       Em_xmax = 0.1;			  Q2_xmax = 5;		   	   Pf_xmax = 3.5;				    
       					 			   	 						    
-      //Missing Momentum 		  //omega (E-E')	   	   //Final Proton Energy   //Final Neutron Energy   
-      Pm_nbins = nbins;			  om_nbins = nbins;	   	   Ep_nbins = nbins;	   En_nbins = nbins;			    
-      Pm_xmin = -0.02;			  om_xmin = 1.8;	   	   Ep_xmin = 2.5;	   En_xmin = 0.935;			     
-      Pm_xmax = 0.08;			  om_xmax = 2.6;	   	   Ep_xmax = 3.5;	   En_xmax = 0.945;			     
+      //Missing Momentum 		  //omega (E-E')	   	   //Final Proton Energy              
+      Pm_nbins = nbins;			  om_nbins = nbins;	   	   Ep_nbins = nbins;	            			    
+      Pm_xmin = -0.02;			  om_xmin = 1.8;	   	   Ep_xmin = 2.5;	            			     
+      Pm_xmax = 0.08;			  om_xmax = 2.6;	   	   Ep_xmax = 3.5;	           			     
       								   	 						    
       Pmx_nbins = nbins;		  //W_inv		   	   //Final Electron Momentum			    
-      Pmx_xmin = -0.15;			  W_nbins = nbins;	   	   kf_nbins = nbins;				    
-      Pmx_xmax = 0.15;			  W_xmin = 0.85;	   	   kf_xmin = 8;					    
+      Pmx_xmin = -0.05;			  W_nbins = nbins;	   	   kf_nbins = nbins;				    
+      Pmx_xmax = 0.05;			  W_xmin = 0.85;	   	   kf_xmin = 8;					    
       					  W_xmax = 1.05;;	   	   kf_xmax = 9;					    
       Pmy_nbins = nbins;					   	 						    
-      Pmy_xmin = -0.15;			  //W2			   	   //th_q (Angle between +Z(hall) and q-vector)	    
-      Pmy_xmax = 0.15;			  W2_nbins = nbins;	   	   thq_nbins = nbins;				    
+      Pmy_xmin = -0.05;			  //W2			   	   //th_q (Angle between +Z(hall) and q-vector)	    
+      Pmy_xmax = 0.05;			  W2_nbins = nbins;	   	   thq_nbins = nbins;				    
       					  W2_xmin = 0.0005;           	   thq_xmin = 32.;				    
       Pmz_nbins = nbins;		  W2_xmax = 0.0005;; 	   	   thq_xmax = 42.;				    
-      Pmz_xmin = -0.15;						   	   						    
-      Pmz_xmax = 0.15;			  //theta_elec		   	   //Magnitude of q-ector			    
+      Pmz_xmin = -0.02;						   	   						    
+      Pmz_xmax = 0.08;			  //theta_elec		   	   //Magnitude of q-ector			    
       					  the_nbins = nbins;	   	   q_nbins = nbins;				    
       /*Missing Mass*/ 			  the_xmin = 10.;	   	   q_xmin = 2.6;					    
       MM_nbins = nbins;			  the_xmax = 15.;	   	   q_xmax = 4.;					    
@@ -453,10 +523,10 @@ void analyze::SetHistBins()
       MM2_xmin = -0.01;			  			   
       MM2_xmax = 0.01;			  
 			   
-      // X-bJORKEN                         //W2			   
-      xbj_nbins = nbins;		   W2_nbins = nbins;	   
-      xbj_xmin = 0.8;			   W2_xmin = 0.4;	   
-      xbj_xmax = 1.1;			   W2_xmax = 2.0;           
+      // X-bJORKEN                         		   
+      xbj_nbins = nbins;		  	   
+      xbj_xmin = 0.8;			  	   
+      xbj_xmax = 1.1;			        
 
 
       //-----------------------------------Focal Plane /  Target Reconstruction------------------------------------
@@ -536,10 +606,10 @@ void analyze::SetHistBins()
       MM2_xmin = -0.01;			  			   
       MM2_xmax = 0.01;			  
       
-      // X-bJORKEN                         //W2			   
-      xbj_nbins = nbins;		   W2_nbins = nbins;	   
-      xbj_xmin = 0.8;			   W2_xmin = 0.4;	   
-      xbj_xmax = 1.1;			   W2_xmax = 2.0;           
+      // X-bJORKEN                        			   
+      xbj_nbins = nbins;		  	   
+      xbj_xmin = 0.8;			  	   
+      xbj_xmax = 1.1;			            
 
 
       //-----------------------------------Focal Plane /  Target Reconstruction------------------------------------
@@ -619,10 +689,10 @@ void analyze::SetHistBins()
       MM2_xmin = -0.01;			  			   
       MM2_xmax = 0.01;			  
       
-      // X-bJORKEN                         //W2			   
-      xbj_nbins = nbins;		   W2_nbins = nbins;	   
-      xbj_xmin = 0.8;			   W2_xmin = 0.4;	   
-      xbj_xmax = 1.1;			   W2_xmax = 2.0;           
+      // X-bJORKEN                         		   
+      xbj_nbins = nbins;		  	   
+      xbj_xmin = 0.8;			  	   
+      xbj_xmax = 1.1;			   
 
 
       //-----------------------------------Focal Plane /  Target Reconstruction------------------------------------
@@ -702,10 +772,10 @@ void analyze::SetHistBins()
       MM2_xmin = -0.01;			  			   
       MM2_xmax = 0.01;			  
       
-      // X-bJORKEN                         //W2			   
-      xbj_nbins = nbins;		   W2_nbins = nbins;	   
-      xbj_xmin = 0.8;			   W2_xmin = 0.4;	   
-      xbj_xmax = 1.1;			   W2_xmax = 2.0;           
+      // X-bJORKEN                        		   
+      xbj_nbins = nbins;		 	   
+      xbj_xmin = 0.8;			  	   
+      xbj_xmax = 1.1;			    
 
 
       //-----------------------------------Focal Plane /  Target Reconstruction------------------------------------
@@ -747,15 +817,107 @@ void analyze::SetHistBins()
   
   
     } //End 3377
+  
+  if(runNUM==3289)
+    {
 
+      nbins = 100;
+ 
+      //-----------------------KINEMATICS---------------------
+      
+      //Missing Energy                    //Q2			          //Final Proton Momentum			     
+      Em_nbins = nbins;			  Q2_nbins = nbins;	   	   Pf_nbins = nbins;				    
+      Em_xmin = -0.05;			  Q2_xmin = 2.5; 	   	   Pf_xmin = 2.5;				    
+      Em_xmax = 0.1;			  Q2_xmax = 5.;       	   	   Pf_xmax = 3.2;				    
+      					 			   	 						    
+      //Missing Momentum 		  //omega (E-E')	   	   //Final Proton Energy				    
+      Pm_nbins = nbins;			  om_nbins = nbins;	   	   Ep_nbins = nbins;				    
+      Pm_xmin = -0.1;			  om_xmin = 1.5;	   	   Ep_xmin = 2.7;				    
+      Pm_xmax = 0.5;			  om_xmax = 2.7;	   	   Ep_xmax = 3.3;				    
+      								   	 						    
+      Pmx_nbins = nbins;		          //W_inv		   	   //Final Electron Momentum			    
+      Pmx_xmin = -0.3;			  W_nbins = nbins;	   	   kf_nbins = nbins;				    
+      Pmx_xmax = 0.3;			  W_xmin = 0.85;	   	   kf_xmin = 8.2;					    
+      					  W_xmax = 1.05;	   	   kf_xmax = 8.8;					    
+      Pmy_nbins = nbins;					   	 						    
+      Pmy_xmin = -0.3;			  //W2			   	   //th_q (Angle between +Z(hall) and q-vector)	    
+      Pmy_xmax = 0.3;			  W2_nbins = nbins;	   	   thq_nbins = nbins;				    
+      					  W2_xmin = -2;           	   thq_xmin = 32.;				    
+      Pmz_nbins = nbins;		          W2_xmax = 2.; 	   	   thq_xmax = 42.;				    
+      Pmz_xmin = -0.2;						   	   						    
+      Pmz_xmax = 0.2;			  //theta_elec		   	   //Magnitude of q-ector			    
+                                          the_nbins = nbins;	   	   q_nbins = nbins;				    
+      /*Missing Mass*/ 			  the_xmin = 10;	   	   q_xmin = 2.4;					    
+      MM_nbins = nbins;			  the_xmax = 14;	   	   q_xmax = 3.4;					    
+      MM_xmin = 0.9;						   	 						    
+      MM_xmax = 1.;			  //theta_prot		   	   //th_pq (Angle between proton and q-vector)	    
+                                          thp_nbins = nbins;	   	   thpq_nbins = nbins;				    
+      /*Missing Mass Squared*/		  thp_xmin = 34.;	   	   thpq_xmin = -0.001;				    
+      MM2_nbins = nbins;		  thp_xmax = 42.;	   	   thpq_xmax = 5.;                                  
+      MM2_xmin = -0.01;			  			   
+      MM2_xmax = 0.01;			  
+      
+      // X-bJORKEN                         //th_nq                         //Proton Kin. Energy 
+      xbj_nbins = nbins;		   thnq_nbins = nbins;              Kp_nbins = nbins; 
+      xbj_xmin = 0.8;			   thnq_xmin = 0;                   Kp_xmin = 1.6;   
+      xbj_xmax = 1.2;			   thnq_xmax = 180;                 Kp_xmax = 2.6;  
+     
+      //Neutron Kin. Energy                 //Neutron Final Energy, En
+      Kn_nbins = nbins;                      En_nbins = nbins;
+      Kn_xmin = -0.001;                      En_xmin = 0.938;                                                              
+      Kn_xmax = 0.015;                        En_xmax = 0.96;
+
+
+      //-----------------------------------Focal Plane /  Target Reconstruction------------------------------------
+      
+      //Target Recon. Var.(Lab)        //Hadron arm Recon. Quantities (ytar, xptar, yptar, delta)	      //Hadron arm Focal Plane Quantities    		           
+      xtar_nbins = nbins;	       hytar_nbins = nbins;						      hxfp_nbins = nbins;			       		  
+      xtar_xmin = -0.5;		       hytar_xmin = -7.;						      hxfp_xmin = -50.;				       			  
+      xtar_xmax = 0.5;		       hytar_xmax = 7.;							      hxfp_xmax = 40.;				       		  
+      				       									      						       		  
+      ytar_nbins = nbins;	       hxptar_nbins = nbins;						      hyfp_nbins = nbins;  			       		 
+      ytar_xmin = -0.5;		       hxptar_xmin = -0.1;						      hyfp_xmin = -15.;				       		  
+      ytar_xmax = 0.5;		       hxptar_xmax = 0.1;						      hyfp_xmax = 25.;				       		  
+      				       									      						       		  
+      ztar_nbins = nbins;	       hyptar_nbins = nbins;						      hxpfp_nbins = nbins;			       		  
+      ztar_xmin = -10.0;	       hyptar_xmin = -0.1;						      hxpfp_xmin = -0.08;			       		  
+      ztar_xmax = 10.0;		       hyptar_xmax = 0.1;						      hxpfp_xmax = 0.06;			       		  
+      				       									      						       		  
+				       hdelta_nbins = nbins;						      hypfp_nbins = nbins;			       		  
+				       hdelta_xmin = -15.;						      hypfp_xmin = -0.025;			       		  
+				       hdelta_xmax = 15.;                                                     hypfp_xmax = 0.03;                                                  
+
+
+  //Collimator                         //Electron Arm Recon Quantities ( ytar, xptar, yptar, delta)	      //Electron Arm Focal Plane Quantities	 
+  hXColl_nbins = 100;		       eytar_nbins = nbins;						      exfp_nbins = nbins;			 	   
+  hXColl_xmin = -15.;  		       eytar_xmin = -2.;						      exfp_xmin = -15.;			 	   
+  hXColl_xmax = 15.;   		       eytar_xmax = 2.;							      exfp_xmax = 10.;			 
+  				         								      					 	   
+  hYColl_nbins = 100;                  exptar_nbins = nbins;						      eyfp_nbins = nbins;			 	                            
+  hYColl_xmin = -15.;                  exptar_xmin = -0.06;						      eyfp_xmin = -10.;
+  hYColl_xmax = 15.;		       exptar_xmax = 0.06;						      eyfp_xmax = 10.;			 	   
+  				         								     					 	   
+  eXColl_nbins = 100;		       eyptar_nbins = nbins;						      expfp_nbins = nbins;			 	   
+  eXColl_xmin = -15.;		       eyptar_xmin = -0.03;						      expfp_xmin = -0.04;			 	   
+  eXColl_xmax = 15.;		       eyptar_xmax = 0.03;						      expfp_xmax = 0.04;			 	   
+  				         								     					 	   
+  eYColl_nbins = 100;      	       edelta_nbins = nbins;						      eypfp_nbins = nbins;			 	   
+  eYColl_xmin = -15.;                  edelta_xmin = -3.;  						      eypfp_xmin = -0.03; 
+  eYColl_xmax = 15.;		       edelta_xmax = 3.;                                                     eypfp_xmax = 0.03;                        
+  
+  
+    } //End 3289
+
+  cout << "Ending SetHistBins() . . . " << endl;
+  
 } //End SetHistBins()
 
 //_______________________________________________________________________________
 void analyze::CreateHist()
 {
-    
-
   //Method to Create Histograms
+  
+  cout << "Calling CreateHist() . . . " << endl;
   
   //Trigger Detector
   H_ctime = new TH1F("H_ctime", "ep Coincidence Time", coin_nbins, coin_xmin, coin_xmax);
@@ -803,6 +965,8 @@ void analyze::CreateHist()
   H_Pf = new TH1F("H_Pf", "Final Proton Momentum", Pf_nbins, Pf_xmin, Pf_xmax);
   H_Ep = new TH1F("H_Ep", "Final Proton Energy", Ep_nbins, Ep_xmin, Ep_xmax);
   H_En = new TH1F("H_En", "Neutron Final Energy", En_nbins, En_xmin, En_xmax);
+  H_Kp = new TH1F("H_Kp", "Final Proton Kin. Energy", Kp_nbins, Kp_xmin, Kp_xmax);     
+  H_Kn = new TH1F("H_Kn", "Neutron Final Kin. Energy", Kn_nbins, Kn_xmin, Kn_xmax);  
   H_theta_prot = new TH1F("H_theta_prot", "Proton Scattering Angle", thp_nbins, thp_xmin, thp_xmax);
   H_theta_pq = new TH1F("H_theta_pq", "(Proton, q-vector) Angle, #theta_{pq}", thpq_nbins, thpq_xmin, thpq_xmax);
   H_theta_nq = new TH1F("H_theta_nq", "(q-vector,Neutron) Angle, #theta_{nq}", thnq_nbins, thnq_xmin, thnq_xmax);
@@ -853,12 +1017,16 @@ void analyze::CreateHist()
   H_hXColl_vs_hYColl = new TH2F("H_hXColl_vs_hYColl", Form("%s  Collimator", h_arm_name.c_str()), hYColl_nbins, hYColl_xmin, hYColl_xmax,  hXColl_nbins, hXColl_xmin, hXColl_xmax);
   H_eXColl_vs_eYColl = new TH2F("H_eXColl_vs_eYColl", Form("%s Collimator", e_arm_name.c_str()), eYColl_nbins, eYColl_xmin, eYColl_xmax, eXColl_nbins, eXColl_xmin, eXColl_xmax); 
 
+  H_Em_vs_Pm = new TH2F("H_Em_vs_Pm", "E_{miss} vs. P_{miss}", Pm_nbins, -0.01, 0.2, Em_nbins, Em_xmin, Em_xmax);
+  H_Em_nuc_vs_Pm = new TH2F("H_Em_nuc_vs_Pm", "E_{miss.nuc} vs. P_{miss}", Pm_nbins, -0.01, 0.2, Em_nbins, Em_xmin, Em_xmax);
 
 
   //Scaler Histograms
-
   H_bcmCurrent = new TH1F("H_bcmCurrent", "BCM Current", 100, 0, 100);
-  
+    
+
+  cout << "Ending CreateHist() . . . " << endl;
+
 
 }
 
@@ -890,12 +1058,17 @@ void analyze::ReadScalerTree(string bcm_type="BCM4A")
       scaler_tree->SetBranchAddress("P.pTRIG4.scaler",&pTRIG4_scaler);
       scaler_tree->SetBranchAddress("P.pTRIG6.scaler",&pTRIG6_scaler);
       scaler_tree->SetBranchAddress("P.EDTM.scaler",&pEDTM_scaler);
+
+      cout << "Ending ReadScalerTree() . . . " << endl;
+
 }
 
 //____________________________________________________________________________
 void analyze::ScalerEventLoop(Double_t current_thrs_bcm=5.)
 {
-  
+
+  cout << "Calling ScalerEventLoop() . . . " << endl;
+
   //1ST PASS Scaler reads loop. to get maximum current
   for (int i = 0; i < scal_entries; i++) 
     {
@@ -981,13 +1154,15 @@ void analyze::ScalerEventLoop(Double_t current_thrs_bcm=5.)
   pTRIG6scalerRate_bcm_cut = total_ptrig6_scaler_bcm_cut / total_time_bcm_cut;
   pEDTMscalerRate_bcm_cut =  total_pedtm_scaler_bcm_cut / total_time_bcm_cut;
   
+  cout << "Ending ScalerEventLoop() . . . " << endl;
+
 
 }
 
 //____________________________________________________________________________
 void analyze::ReadTree()
 {
-  cout << "Calling Read Tree . . . " << endl;
+  cout << "Calling ReadTree() . . . " << endl;
 
   
   if(analysis=="data")
@@ -1116,9 +1291,9 @@ void analyze::ReadTree()
       cout << "Analyzing SIMC . . . " << endl;
 
       //Read ROOTfile
-      inROOT = new TFile(simc_InputFileName, "READ");
+      inROOT = new TFile(simc_InputFileName_rad, "READ");
 
-      cout << "simc_fname = " << simc_InputFileName << endl;
+      cout << "simc_fname = " << simc_InputFileName_rad << endl;
 
       //Get the tree
       tree = (TTree*)inROOT->Get("SNT");
@@ -1212,20 +1387,34 @@ void analyze::ReadTree()
       tree->SetBranchAddress("SF_weight_recon", &SF_weight_recon);
       tree->SetBranchAddress("h_Thf", &h_Thf);
       tree->SetBranchAddress("Ein_v", &Ein_v);
-      
+      tree->SetBranchAddress("Q2_v", &Q2_v);
+      tree->SetBranchAddress("nu_v", &nu_v);
+      tree->SetBranchAddress("q_lab_v", &q_lab_v);
+      tree->SetBranchAddress("pm_v", &pm_v);
+      tree->SetBranchAddress("pm_par_v", &pm_par_v);
+      tree->SetBranchAddress("pf_v", &pf_v);
+      tree->SetBranchAddress("Ep_v", &Ep_v);
+      tree->SetBranchAddress("Ef_v", &Ef_v);
+      tree->SetBranchAddress("probabs", &prob_abs);
+
 
     }
   
+  cout << "Ending ReadTree() . . . " << endl;
 
 
-}
+} //End ReadTree()
 
 //________________________________________________________________________________
 void analyze::EventLoop()
 {
 
+  cout << "Calling EventLoop() . . . " << endl;
 
-  /*Loop over Events*/
+  //Call Methods to Set Collimator Graphical Cuts (In case it is used)
+  CollimatorStudy();
+  
+    /*Loop over Events*/
   
   if(analysis=="data")
     {
@@ -1236,8 +1425,20 @@ void analyze::EventLoop()
 	  
 	  //--------Calculated Kinematic Varibales----------------
 	  theta_p = xangle - theta_e;
+	  
+	  
+	  //M_recoil = sqrt( pow(nu+MD-sqrt(MP*MP+Pf*Pf),2) - Pm*Pm );  //recoil mass (neutron missing mass)
+	  //MM2 = M_recoil * M_recoil;
+	  
+	  //redefine
+	  //Ep = sqrt(MP*MP + Pf*Pf);
+	  //En = sqrt(MN*MN + Pm*Pm);
+	  
+	  En = Kn + MN;
+	  Ep = Kp + MP;
 
-	  M_recoil = sqrt( pow(nu+MD-sqrt(MP*MP+Pf*Pf),2) - Pm*Pm );  //recoil mass (neutron missing mass)
+	  //Em_nuc = nu - Kp - Kn;
+	  M_recoil = sqrt(pow((nu + MD - Ep), 2) - Pm*Pm);
 	  MM2 = M_recoil * M_recoil;
 
 	  //-----If H(e,e'p)
@@ -1245,12 +1446,14 @@ void analyze::EventLoop()
 	    M_recoil = sqrt(Em*Em - Pm*Pm);
 	    MM2 = Em*Em - Pm*Pm;
 	  }
-
+	  
 	  W2 = W*W;
-	  Ep = TMath::Sqrt(MP*MP + Pf*Pf);
-	  th_pq =  th_q - theta_p; //redifined
-	  //---------------------Define Cuts---------------------------
+	 
+	  ztar_diff = htar_z - etar_z;
 
+	  // th_pq =  th_q - theta_p; //redifined
+	  //---------------------Define Cuts---------------------------
+	  
 	  c_noedtm = pEDTM_tdcTimeRaw==0;
 	  c_edtm = pEDTM_tdcTimeRaw>1500&&pEDTM_tdcTimeRaw<2000.;
 	  c_ptrig6 = pTRIG6_tdcTimeRaw>0;
@@ -1259,413 +1462,501 @@ void analyze::EventLoop()
 	  c_etotnorm = pCAL_etotnorm>0.6;
 	  c_etottrknorm = pCAL_etottracknorm>0.6;
 	   
-	   //CUTS: e- tracking efficiency 
-	   good_elec_should = pGoodScinHit==1.&&pBetanotrk>0.5&&pBetanotrk<1.5&&pCAL_etotnorm>0.6&&pNGCER_npeSum>0.5;
-	   good_elec_did = good_elec_should&&pdc_ntrack>0.;
-	   
-	   //CUTS: h tracking efficiency
-	   good_hadron_should = hGoodScinHit==1.&&hBetanotrk>0.5&&hBetanotrk<1.5&&hCAL_etotnorm<0.6&&hCAL_etotnorm>0.&&hCER_npeSum<0.5;
-	   good_hadron_did = good_hadron_should&&hdc_ntrack>0.;
-      
-	   
+	  //CUTS: e- tracking efficiency 
+	  good_elec_should = pGoodScinHit==1.&&pBetanotrk>0.5&&pBetanotrk<1.5&&pCAL_etotnorm>0.6&&pNGCER_npeSum>0.5;
+	  good_elec_did = good_elec_should&&pdc_ntrack>0.;
+	  
+	  //CUTS: h tracking efficiency
+	  good_hadron_should = hGoodScinHit==1.&&hBetanotrk>0.5&&hBetanotrk<1.5&&hCAL_etotnorm<0.6&&hCAL_etotnorm>0.&&hCER_npeSum<0.5;
+	  good_hadron_did = good_hadron_should&&hdc_ntrack>0.;
+	  
+	  
 
-	   //Define DATA/SIMC CUTS (BETTER BE THE SAME CUTS!)
-	   if(edelta_cut_flag){c_edelta = e_delta>edel_min&&e_delta<edel_max;} 
+	  //Define DATA/SIMC CUTS (BETTER BE THE SAME CUTS!)
+	  if(edelta_cut_flag){c_edelta = e_delta>edel_min&&e_delta<edel_max;} 
 	   else{c_edelta=1;} //OFF means NO LIMITS on CUT (ALWAYS TRUE)
-	   
-	   if(hdelta_cut_flag){c_hdelta = h_delta>hdel_min&&h_delta<hdel_max;} 
-	   else{c_hdelta=1;}
-	   
-	   if(W_cut_flag)     {c_W = W>=W_min&&W<=W_max;}                      
-	   else{c_W=1;}
-	   
-	   if(Em_cut_flag)    {c_Em = Em>Em_min&&Em<Em_max;}                   
-	   else{c_Em=1;}
+	  
+	  if(hdelta_cut_flag){c_hdelta = h_delta>hdel_min&&h_delta<hdel_max;} 
+	  else{c_hdelta=1;}
+	  
+	  if(W_cut_flag)     {c_W = W>=W_min&&W<=W_max;}                      
+	  else{c_W=1;}
+	  
+	  if(Em_cut_flag)    {
+	    
+	    c_Em = Em>Em_min&&Em<Em_max;
+	    if(reaction=="deep"){
+	      c_Em = Em_nuc>Em_min&&Em_nuc<Em_max; 
+	    }
+	  }                   
+	  else{c_Em=1;}
+	  
+	  if(ztar_diff_cut_flag){ c_ztarDiff = ztar_diff>ztarDiff_min&&ztar_diff<ztarDiff_max;}
+	  else{c_ztarDiff=1;}
 
-	   //PID CUTS
-	   if(shmsCal_cut_flag)    {c_shms_cal = pCAL_etottracknorm>shms_cal_min&&pCAL_etottracknorm<shms_cal_max;}                   
-	   else{c_shms_cal=1;}
-	   
-	   if(coin_cut_flag)    {c_ctime = epCoinTime>ctime_min&&epCoinTime<ctime_max;}                   
-	   else{c_ctime=1;}
+	  if(Q2_cut_flag) {c_Q2 = Q2>Q2_min&&Q2<Q2_max;}
+	  else{c_Q2 = 1;}
 
-	   base_cuts = c_edelta&&c_hdelta&&c_W&&c_Em;
-	   pid_cuts = c_shms_cal&&c_ctime;
+	  if(MM_cut_flag) {c_MM = M_recoil>MM_min&&M_recoil<MM_max;}
+	  else{c_MM = 1;}
 
-	   //----------------------------END DEFINE CUTS-------------------------------------
-	   
-	   //Count Accepted EDTM events (no current cut)
-	   if(c_edtm){ total_pedtm_accp++;}
-	   //Count Accepted pTRIG6 events (no current cut)
-	   if(c_ptrig6){total_ptrig6_accp++;}
-	   
-	   //----------------------Check If BCM Current is within limits------------------------
-	   if(evt_flag_bcm[scal_read]==1)
-	     {
-	       
-	       //Count Accepted EDTM events
-	       if(c_edtm){ total_pedtm_accp_bcm_cut++;}
-	       
-	       //Count Accepted pTRIG6 events (without EDTM)
-	       if(c_ptrig6&&c_noedtm){ total_ptrig6_accp_bcm_cut++;}
-	       
-	       
-	       //REQUIRE "NO EDTM" CUT TO FILL DATA HISTOGRAMS
-	       if(c_noedtm) 
-		 {
-		 
-		   //Calculate Electron Tracking Efficiency
-		   if(good_elec_did){ e_did++;}
-		   if(good_elec_should){ e_should++; }
-		   
-		   //Calculate Hadron Tracking Efficiency
-		   if(good_hadron_did){ h_did++;}
-		   if(good_hadron_should){ h_should++; }
-		   
-		   //----------------------Fill DATA Histograms-----------------------
-		   
-		   if(base_cuts&&pid_cuts)
-		     {
-		       //Trigger Detector
-		       H_ctime->Fill(epCoinTime);
-		       
-		       //HMS Detectors
-		       H_hbeta->Fill(hBeta);
-		       H_hcer->Fill(hCER_npeSum);
-		       H_hcal->Fill(hCAL_etotnorm);
-		       
-		       
-		       //SHMS Detectors
-		       H_pbeta->Fill(pBeta);
-		       H_pngcer->Fill(pNGCER_npeSum);
-		       H_pcal_etotnorm->Fill(pCAL_etotnorm);
-		       H_pcal_etotTrkNorm->Fill(pCAL_etottracknorm);
-
-		       
-		       //Primary (electron) Kinematics
-		       H_Q2->Fill(Q2);
-		       H_omega->Fill(nu);
-		       H_W->Fill(W);
-		       H_W2->Fill(W2);
-		       H_xbj->Fill(X);
-		       H_kf->Fill(kf);
-		       H_theta_q->Fill(th_q/dtr);
-		       H_q->Fill(q);
-		       H_theta_elec->Fill(theta_e/dtr);
-		       
-		       //Secondary (Hadron) Kinematics
-		       H_Em->Fill(Em);
-		       H_Em_nuc->Fill(Em_nuc);
-		       H_Pm->Fill(Pm);
-		       H_Pmx_lab->Fill(Pmx_lab);
-		       H_Pmy_lab->Fill(Pmy_lab);
-		       H_Pmz_lab->Fill(Pmz_lab);
-		       H_Pmx_q->Fill(Pmx_q);
-		       H_Pmy_q->Fill(Pmy_q);
-		       H_Pmz_q->Fill(Pmz_q);
-		       H_MM->Fill(M_recoil);
-		       H_MM2->Fill(MM2); 
-		       H_Pf->Fill(Pf);
-		       H_Ep->Fill(Ep);
-		       H_En->Fill(E_recoil);
-		       H_theta_prot->Fill(theta_p/dtr);
-		       H_theta_pq->Fill(th_pq/dtr);
-		       H_theta_nq->Fill(th_nq/dtr);
-		       
-		       //Target Reconstruction (Hall Coord. System)
-		       H_hx_tar->Fill(htar_x);
-		       H_hy_tar->Fill(htar_y);
-		       H_hz_tar->Fill(htar_z);
-		       H_ex_tar->Fill(etar_x);
-		       H_ey_tar->Fill(etar_y);
-		       H_ez_tar->Fill(etar_z);
-		       H_ztar_diff->Fill(htar_z - etar_z);
-		       
-		       //Hadron arm Reconstructed Quantities ( xtar, ytar, xptar, yptar, delta) 
-		       H_hytar->Fill(h_ytar);
-		       H_hxptar->Fill(h_xptar);
-		       H_hyptar->Fill(h_yptar);
-		       H_hdelta->Fill(h_delta);
-		       
-		       //Hadron arm Focal Plane Quantities
-		       H_hxfp->Fill(h_xfp);
-		       H_hyfp->Fill(h_yfp);
-		       H_hxpfp->Fill(h_xpfp);
-		       H_hypfp->Fill(h_ypfp);
-		       
-		       //Electron Arm Reconstructed Quantities ( xtar, ytar, xptar, yptar, delta)
-		       H_eytar->Fill(e_ytar);
-		       H_exptar->Fill(e_xptar);
-		       H_eyptar->Fill(e_yptar);
-		       H_edelta->Fill(e_delta);
-		       
-		       //Electron Arm Focal Plane Quantities
-		       H_exfp->Fill(e_xfp);
-		       H_eyfp->Fill(e_yfp);
-		       H_expfp->Fill(e_xpfp);
-		       H_eypfp->Fill(e_ypfp);
-		       
-		       //HMS / SHMS Collimator
-		       H_hXColl->Fill(hXColl);
-		       H_hYColl->Fill(hYColl);
-		       H_eXColl->Fill(eXColl);
-		       H_eYColl->Fill(eYColl);
-		       
-		       //2D Collimator Histos
-		       H_hXColl_vs_hYColl->Fill(hYColl, hXColl);
-		       H_eXColl_vs_eYColl->Fill(eYColl, eXColl);
-		     
-		     } //END CUTS
-
-		       //-------------------End Fill DATA Histograms----------------------
-		       
+	  if(thnq_cut_flag) {c_th_nq = th_nq>(thnq_min*dtr)&&th_nq<(thnq_max*dtr);}
+	  else{c_th_nq = 1;}
+	  
+	  
+	  //PID CUTS
+	  if(shmsCal_cut_flag)    {c_shms_cal = pCAL_etottracknorm>shms_cal_min&&pCAL_etottracknorm<shms_cal_max;}                   
+	  else{c_shms_cal=1;}
+	  
+	  if(coin_cut_flag)    {c_ctime = epCoinTime>ctime_min&&epCoinTime<ctime_max;}                   
+	  else{c_ctime=1;}
+	  
+	  //Collimator CUTS
+	  if(hmsCollCut_flag)  { hmsColl_Cut =  hms_Coll_gCut->IsInside(hYColl, hXColl);}
+	  else{hmsColl_Cut=1;}
+	  
+	  if(shmsCollCut_flag) { shmsColl_Cut =  shms_Coll_gCut->IsInside(eYColl, eXColl);}
+	  else{shmsColl_Cut=1;}
+	  
+	  
+	  base_cuts = c_edelta&&c_hdelta&&c_W&&c_Em&&c_ztarDiff&&c_Q2&&c_MM&&c_th_nq;
+	  pid_cuts = c_shms_cal&&c_ctime;
+	  
+	  //----------------------------END DEFINE CUTS-------------------------------------
+	  
+	  //Count Accepted EDTM events (no current cut)
+	  if(c_edtm){ total_pedtm_accp++;}
+	  //Count Accepted pTRIG6 events (no current cut)
+	  if(c_ptrig6){total_ptrig6_accp++;}
+	  
+	  //----------------------Check If BCM Current is within limits------------------------
+	  if(evt_flag_bcm[scal_read]==1)
+	    {
+	      
+	      //Count Accepted EDTM events
+	      if(c_edtm){ total_pedtm_accp_bcm_cut++;}
+	      
+	      //Count Accepted pTRIG6 events (without EDTM)
+	      if(c_ptrig6&&c_noedtm){ total_ptrig6_accp_bcm_cut++;}
+	      
+	      
+	      //REQUIRE "NO EDTM" CUT TO FILL DATA HISTOGRAMS
+	      if(c_noedtm) 
+		{
 		  
-		   
-		 } //END "NO EDTM" CUT	      
-	     }
-	    //----------------------------END BCM CURRENT CUT------------------------------------
-	   
-	   
-	   //Increment Scaler Read if event == scaler_evt_perlimit for that scaler read
-	   if(gevnum==scal_evt_num[scal_read]){ scal_read++;}
-	   
-	   
-	   cout << "EventLoop: " << std::setprecision(2) << double(ientry) / nentries * 100. << "  % " << std::flush << "\r";
-	   
+		  //Calculate Electron Tracking Efficiency
+		  if(good_elec_did){ e_did++;}
+		  if(good_elec_should){ e_should++; }
+		  
+		  //Calculate Hadron Tracking Efficiency
+		  if(good_hadron_did){ h_did++;}
+		  if(good_hadron_should){ h_should++; }
+		  
+		  //----------------------Fill DATA Histograms-----------------------
+		  
+		  if(base_cuts&&pid_cuts&&hmsColl_Cut&&shmsColl_Cut)
+		    {
+		      //&&abs(Pmx_lab)<0.05&&abs(Pmy_lab)<0.05&&Pmz_lab>-0.02
+		      //Trigger Detector
+		      H_ctime->Fill(epCoinTime);
+		      
+		      //HMS Detectors
+		      H_hbeta->Fill(hBeta);
+		      H_hcer->Fill(hCER_npeSum);
+		      H_hcal->Fill(hCAL_etotnorm);
+		      
+		      
+		      //SHMS Detectors
+		      H_pbeta->Fill(pBeta);
+		      H_pngcer->Fill(pNGCER_npeSum);
+		      H_pcal_etotnorm->Fill(pCAL_etotnorm);
+		      H_pcal_etotTrkNorm->Fill(pCAL_etottracknorm);
+		      
+		      
+		      //Primary (electron) Kinematics
+		      H_Q2->Fill(Q2);
+		      H_omega->Fill(nu);
+		      H_W->Fill(W);
+		      H_W2->Fill(W2);
+		      H_xbj->Fill(X);
+		      H_kf->Fill(kf);
+		      H_theta_q->Fill(th_q/dtr);
+		      H_q->Fill(q);
+		      H_theta_elec->Fill(theta_e/dtr);
+		      
+		      //Secondary (Hadron) Kinematics
+		      H_Em->Fill(Em);
+		      H_Em_nuc->Fill(Em_nuc);
+		      H_Pm->Fill(Pm);
+		      H_Pmx_lab->Fill(Pmx_lab);
+		      H_Pmy_lab->Fill(Pmy_lab);
+		      H_Pmz_lab->Fill(Pmz_lab);
+		      H_Pmx_q->Fill(Pmx_q);
+		      H_Pmy_q->Fill(Pmy_q);
+		      H_Pmz_q->Fill(Pmz_q);
+		      H_MM->Fill(M_recoil);
+		      H_MM2->Fill(MM2); 
+		      H_Pf->Fill(Pf);
+		      H_Ep->Fill(Ep);
+		      H_En->Fill(En);
+		      H_Kp->Fill(Kp); 
+                      H_Kn->Fill(Kn);  
+		      H_theta_prot->Fill(theta_p/dtr);
+		      H_theta_pq->Fill(th_pq/dtr);
+		      H_theta_nq->Fill(th_nq/dtr);
+		      
+		      //Target Reconstruction (Hall Coord. System)
+		      H_hx_tar->Fill(htar_x);
+		      H_hy_tar->Fill(htar_y);
+		      H_hz_tar->Fill(htar_z);
+		      H_ex_tar->Fill(etar_x);
+		      H_ey_tar->Fill(etar_y);
+		      H_ez_tar->Fill(etar_z);
+		      H_ztar_diff->Fill(ztar_diff);
+		      
+		      //Hadron arm Reconstructed Quantities ( xtar, ytar, xptar, yptar, delta) 
+		      H_hytar->Fill(h_ytar);
+		      H_hxptar->Fill(h_xptar);
+		      H_hyptar->Fill(h_yptar);
+		      H_hdelta->Fill(h_delta);
+		      
+		      //Hadron arm Focal Plane Quantities
+		      H_hxfp->Fill(h_xfp);
+		      H_hyfp->Fill(h_yfp);
+		      H_hxpfp->Fill(h_xpfp);
+		      H_hypfp->Fill(h_ypfp);
+		      
+		      //Electron Arm Reconstructed Quantities ( xtar, ytar, xptar, yptar, delta)
+		      H_eytar->Fill(e_ytar);
+		      H_exptar->Fill(e_xptar);
+		      H_eyptar->Fill(e_yptar);
+		      H_edelta->Fill(e_delta);
+		      
+		      //Electron Arm Focal Plane Quantities
+		      H_exfp->Fill(e_xfp);
+		      H_eyfp->Fill(e_yfp);
+		      H_expfp->Fill(e_xpfp);
+		      H_eypfp->Fill(e_ypfp);
+		      
+		      //HMS / SHMS Collimator
+		      H_hXColl->Fill(hXColl);
+		      H_hYColl->Fill(hYColl);
+		      H_eXColl->Fill(eXColl);
+		      H_eYColl->Fill(eYColl);
+		      
+		      //2D Collimator Histos
+		      H_hXColl_vs_hYColl->Fill(hYColl, hXColl);
+		      H_eXColl_vs_eYColl->Fill(eYColl, eXColl);
+
+		      H_Em_vs_Pm->Fill(Pm, Em);
+		      H_Em_nuc_vs_Pm->Fill(Pm, Em_nuc);
+
+
+		    } //END CUTS
+		  
+		  //-------------------End Fill DATA Histograms----------------------
+		  
+		  
+		  
+		} //END "NO EDTM" CUT	      
+	    }
+	  //----------------------------END BCM CURRENT CUT------------------------------------
+	  
+	  
+	  //Increment Scaler Read if event == scaler_evt_perlimit for that scaler read
+	  if(gevnum==scal_evt_num[scal_read]){ scal_read++;}
+	  
+	  
+	  cout << "EventLoop: " << std::setprecision(2) << double(ientry) / nentries * 100. << "  % " << std::flush << "\r";
+	  
 	} // END EVENT LOOP
       
     }
-      
-      else if(analysis=="simc")
-	{
-	  for(int ientry=0; ientry<nentries; ientry++)
-	    {
-	      
-	      tree->GetEntry(ientry);
-	      
-	      //SIMC FullWeight
-	      FullWeight = Normfac * Weight / nentries;
-
-	      //--------Calculated Kinematic Varibales----------------
-	      
-	      //Convert MeV to GeV
-	      Ein = Ein / 1000.;     //incident beam energy
-	      kf = kf / 1000.;       //final electron momentum
-	      Pf = Pf / 1000.;       //final proton momentum
-	      
-	      ki = sqrt(Ein*Ein - me*me);        //initial electron momentum
-	      E_recoil = sqrt(MN*MN + Pm*Pm);    //recoil energy (neutron energy)
-	      
-	      Ep = sqrt(MP*MP + Pf*Pf);
-
-	      M_recoil = sqrt( pow(nu+MD-sqrt(MP*MP+Pf*Pf),2) - Pm*Pm );  //recoil mass (neutron missing mass)
-	      MM2 = M_recoil * M_recoil;
-
-	      //-----If H(e,e'p)
-	      if(reaction=="heep"){
-		M_recoil = sqrt(Em*Em - Pm*Pm);
-		MM2 = Em*Em - Pm*Pm;
-	      }
-	      //----------
-
-	      W2 = W*W;
-
-	     
-	      X = Q2 / (2.*MP*nu);                           
-	      th_q = acos( (ki - kf*cos(theta_e))/q );       
-	      th_pq =  th_q - theta_p;
-	      th_nq = acos((q - Pf*cos(th_pq))/Pm);
-	      	      
-	      Kp = Ep - MP;
-	      Kn = E_recoil - MN;
-	     
-	      //---------------------------------------------------
-	      
-	      //---------Calculate Pmx, Pmy, Pmz in the Lab, and in the q-system----------------
-	      
-	      //Calculate electron final momentum 3-vector
-	      SetCentralAngles(e_th, e_ph);
-	      TransportToLab(kf, e_xptar, e_yptar, kf_vec);
-	      
-	      //cout << "e_th = " << e_th << " e_ph = " << e_ph << endl;
-	      //cout << "kf = " << e_th << " e_xptar = " << e_xptar << endl;
-
-	      //Calculate 4-Vectors
-	      fP0.SetXYZM(0.0, 0.0, ki, me);  //set initial e- 4-momentum
-	      fP1.SetXYZM(kf_vec.X(), kf_vec.Y(), kf_vec.Z(), me);  //set final e- 4-momentum
-	      fA.SetXYZM(0.0, 0.0, 0.0, tgt_mass );  //Set initial target at rest
-	      fQ = fP0 - fP1;
-	      fA1 = fA + fQ;   //final target (sum of final hadron four momenta)
-
-	      //cout << "ki = " << ki << endl;
-	      //cout << "tgt_mass = " << tgt_mass << endl;
-	      
-
-	      //Get Detected Particle 4-momentum
-	      SetCentralAngles(h_th, h_ph);
-	      TransportToLab(Pf, h_xptar, h_yptar, Pf_vec);
-	      fX.SetVectM(Pf_vec, MP);    //SET FOUR VECTOR OF detected particle
-	      fB = fA1 - fX;   //4-MOMENTUM OF UNDETECTED PARTICLE 
-
-	      //cout << "h_th = " << h_th << " h_ph = " << h_ph << endl;
-	      //cout << "Pf = " << Pf << " h_xptar = " << h_xptar << endl;
-	      //cout << "MP = " << MP << endl;
-
-	      Pmx_lab = fB.X();
-	      Pmy_lab = fB.Y(); 
-	      Pmz_lab = fB.Z(); 
-	      
-	      //Pm_v2 = sqrt(Pmx_v2*Pmx_v2 + Pmy_v2*Pmy_v2 + Pmz_v2*Pmz_v2);
-	      
-	      //--------Rotate the recoil system from +z to +q-------
-	      qvec = fQ.Vect();
-	      kfvec = fP1.Vect();
-	      
-	      rot_to_q.SetZAxis( qvec, kfvec).Invert();
-	      
-	      bq = fB.Vect();
-	      
-	      bq *= rot_to_q;
-	      p_miss_q = -bq;
-	      
-	      //Missing Momentum Components in the q-frame
-	      Pmz_q = p_miss_q.Z();   //parallel component to +z
-	      Pmx_q = p_miss_q.X();   //in-plane perpendicular component to +z
-	      Pmy_q = p_miss_q.Y();   //out-of-plane component (Oop)
-	      
-	      
-	      //--------------------------------------------------------------------------------
-
-	      //----------------------SIMC Collimator-------------------------
-
-	      htarx_corr = tar_x - h_xptar*htar_z*cos(h_th*dtr);
-	      etarx_corr = tar_x - e_xptar*etar_z*cos(e_th*dtr);  
-	      
-
-	      //Define Collimator (same as in HCANA)
-	      hXColl = htarx_corr + h_xptar*168.;   //in cm
-	      hYColl = h_ytar + h_yptar*168.;
-	      eXColl = etarx_corr + e_xptar*253.;
-	      eYColl = e_ytar + e_yptar*253.-(0.019+40.*.01*0.052)*e_delta+(0.00019+40*.01*.00052)*e_delta*e_delta; //correct for HB horizontal bend
-    
-
-	      //--------------------------------------------------------------
-
-	      //Define DATA/SIMC CUTS (BETTER BE THE SAME CUTS!)
-	      if(edelta_cut_flag){c_edelta = e_delta>edel_min&&e_delta<edel_max;} 
-	      else{c_edelta=1;} //OFF means NO LIMITS on CUT (ALWAYS TRUE)
-	      
-	      if(hdelta_cut_flag){c_hdelta = h_delta>hdel_min&&h_delta<hdel_max;} 
-	      else{c_hdelta=1;}
-	      
-	      if(W_cut_flag)     {c_W = W>=W_min&&W<=W_max;}                      
-	      else{c_W=1;}
-	      
-	      if(Em_cut_flag)    {c_Em = Em>Em_min&&Em<Em_max;}                   
-	      else{c_Em=1;}
-	   
-	      base_cuts = c_edelta&&c_hdelta&&c_W&&c_Em;
-	  
-
-	   //----------------------------END DEFINE CUTS-------------------------------------
-	   
-						
-
-	      //-------------------------------Fill SIMC Histograms--------------------------
-
-	      if(base_cuts){
-		
-		//Primary (electron) Kinematics
-		H_Q2->Fill(Q2, FullWeight);
-		H_omega->Fill(nu, FullWeight);
-		H_W->Fill(W, FullWeight);
-		H_W2->Fill(W2, FullWeight);
-		H_xbj->Fill(X, FullWeight);
-		H_kf->Fill(kf, FullWeight);
-		H_theta_q->Fill(th_q/dtr, FullWeight);
-		H_q->Fill(q, FullWeight);
-		H_theta_elec->Fill(theta_e/dtr, FullWeight);
-		
-		//Secondary (Hadron) Kinematics
-		H_Em->Fill(Em, FullWeight);
-		H_Pm->Fill(Pm, FullWeight);
-		H_Pmx_lab->Fill(Pmx_lab, FullWeight);
-		H_Pmy_lab->Fill(Pmy_lab, FullWeight);
-		H_Pmz_lab->Fill(Pmz_lab, FullWeight);
-		H_Pmx_q->Fill(Pmx_q, FullWeight);
-		H_Pmy_q->Fill(Pmy_q, FullWeight);
-		H_Pmz_q->Fill(Pmz_q, FullWeight);
-		H_MM->Fill(M_recoil, FullWeight);
-		H_MM2->Fill(MM2, FullWeight); 
-		H_Pf->Fill(Pf, FullWeight);
-		H_Ep->Fill(Ep, FullWeight);
-		H_En->Fill(E_recoil, FullWeight);
-		H_theta_prot->Fill(theta_p/dtr, FullWeight);
-		H_theta_pq->Fill(th_pq/dtr, FullWeight);
-		H_theta_nq->Fill(th_nq/dtr, FullWeight);
-		
-		//Target Reconstruction (Hall Coord. System)
-		H_hx_tar->Fill(tar_x, FullWeight);
-		H_hy_tar->Fill(htar_y, FullWeight);
-		H_hz_tar->Fill(htar_z, FullWeight);
-		H_ex_tar->Fill(tar_x, FullWeight);
-		H_ey_tar->Fill(etar_y, FullWeight);
-		H_ez_tar->Fill(etar_z, FullWeight);
-		H_ztar_diff->Fill(htar_z - etar_z, FullWeight);
-		
-		//Hadron arm Reconstructed Quantities ( xtar, ytar, xptar, yptar, delta) 
-		H_hytar->Fill(h_ytar, FullWeight);
-		H_hxptar->Fill(h_xptar, FullWeight);
-		H_hyptar->Fill(h_yptar, FullWeight);
-		H_hdelta->Fill(h_delta, FullWeight);
-		
-		//Hadron arm Focal Plane Quantities
-		H_hxfp->Fill(h_xfp, FullWeight);
-		H_hyfp->Fill(h_yfp, FullWeight);
-		H_hxpfp->Fill(h_xpfp, FullWeight);
-		H_hypfp->Fill(h_ypfp, FullWeight);
-		
-		//Electron Arm Reconstructed Quantities ( xtar, ytar, xptar, yptar, delta)
-		H_eytar->Fill(e_ytar, FullWeight);
-		H_exptar->Fill(e_xptar, FullWeight);
-		H_eyptar->Fill(e_yptar, FullWeight);
-		H_edelta->Fill(e_delta, FullWeight);
-		
-		//Electron Arm Focal Plane Quantities
-		H_exfp->Fill(e_xfp, FullWeight);
-		H_eyfp->Fill(e_yfp, FullWeight);
-		H_expfp->Fill(e_xpfp, FullWeight);
-		H_eypfp->Fill(e_ypfp, FullWeight);
-		
-		//HMS / SHMS Collimator
-		H_hXColl->Fill(hXColl, FullWeight);
-		H_hYColl->Fill(hYColl, FullWeight);
-		H_eXColl->Fill(eXColl, FullWeight);
-		H_eYColl->Fill(eYColl, FullWeight);
-		
-		//2D Collimator Histos
-		H_hXColl_vs_hYColl->Fill(hYColl, hXColl, FullWeight);
-		H_eXColl_vs_eYColl->Fill(eYColl, eXColl, FullWeight);
-		
-		
-		
-		
-		cout << "EventLoop: " << std::setprecision(2) << double(ientry) / nentries * 100. << "  % " << std::flush << "\r";
-		
-	      } //END CUTS
-	      
-		//-----------------------------END Fill SIMC Histograms------------------------
-	    
-	    } //End Event Loop
-	  
-	} //End "SIMC"
-}
   
+  else if(analysis=="simc")
+    {
+      for(int ientry=0; ientry<nentries; ientry++)
+	{
+	  
+	  tree->GetEntry(ientry);
+	  
+	  //SIMC FullWeight
+	  FullWeight = Normfac * Weight * prob_abs / nentries;
+	  
+	  //--------Calculated Kinematic Varibales----------------
+	  
+	  //Convert MeV to GeV
+	  Ein = Ein / 1000.;     //incident beam energy
+	  kf = kf / 1000.;       //final electron momentum
+	  Pf = Pf / 1000.;       //final proton momentum
+	  
+	  ki = sqrt(Ein*Ein - me*me);        //initial electron momentum
+	  //E_recoil = sqrt(MN*MN + Pm*Pm);    //recoil energy (neutron energy)
+	  
+	  //redefine
+	  Ep = sqrt(MP*MP + Pf*Pf);
+	  En = sqrt(MN*MN + Pm*Pm);
+
+	  Kp = Ep - MP;                                                                    
+          Kn = En - MN;
+
+	  //Em = nu - Kp - Kn;
+
+	  M_recoil = sqrt( pow(nu+MD-Ep,2) - Pm*Pm );  //recoil mass (neutron missing mass)
+	  MM2 = M_recoil * M_recoil;
+	  
+	  //-----If H(e,e'p)
+	  if(reaction=="heep"){
+	    M_recoil = sqrt(Em*Em - Pm*Pm);
+	    MM2 = Em*Em - Pm*Pm;
+	  }
+	  //----------
+	  
+	  W2 = W*W;
+
+	  //Use hcana formula to re-define HMS/SHMS Ztarget
+	  htar_z = ((h_ytar + h_yMisPoint)-xBPM*(cos(h_th*dtr)-h_yptar*sin(h_th*dtr)))/(-sin(h_th*dtr)-h_yptar*cos(h_th*dtr));
+	  etar_z = ((e_ytar - e_yMisPoint)-xBPM*(cos(e_th*dtr)-e_yptar*sin(e_th*dtr)))/(-sin(e_th*dtr)-e_yptar*cos(e_th*dtr));
+
+	  ztar_diff = htar_z - etar_z;
+
+	  
+
+	  X = Q2 / (2.*MP*nu);                           
+	  th_q = acos( (ki - kf*cos(theta_e))/q );       
+	  //  th_pq =  th_q - theta_p;
+	  //th_nq = acos((q - Pf*cos(th_pq))/Pm);
+	  
+       
+       
+	  
+	  //---------------------------------------------------
+	  
+	  //---------Calculate Pmx, Pmy, Pmz in the Lab, and in the q-system----------------
+	  
+	  //Calculate electron final momentum 3-vector
+	  SetCentralAngles(e_th, e_ph);
+	  TransportToLab(kf, e_xptar, e_yptar, kf_vec);
+	  
+	  //cout << "e_th = " << e_th << " e_ph = " << e_ph << endl;
+	  //cout << "kf = " << e_th << " e_xptar = " << e_xptar << endl;
+	  
+	  //Calculate 4-Vectors
+	  fP0.SetXYZM(0.0, 0.0, ki, me);  //set initial e- 4-momentum
+	  fP1.SetXYZM(kf_vec.X(), kf_vec.Y(), kf_vec.Z(), me);  //set final e- 4-momentum
+	  fA.SetXYZM(0.0, 0.0, 0.0, tgt_mass );  //Set initial target at rest
+	  fQ = fP0 - fP1;
+	  fA1 = fA + fQ;   //final target (sum of final hadron four momenta)
+	  
+	  //cout << "ki = " << ki << endl;
+	  //cout << "tgt_mass = " << tgt_mass << endl;
+	  
+	  
+	  //Get Detected Particle 4-momentum
+	  SetCentralAngles(h_th, h_ph);
+	  TransportToLab(Pf, h_xptar, h_yptar, Pf_vec);
+	  fX.SetVectM(Pf_vec, MP);    //SET FOUR VECTOR OF detected particle
+	  fB = fA1 - fX;   //4-MOMENTUM OF UNDETECTED PARTICLE 
+	  
+	  //cout << "h_th = " << h_th << " h_ph = " << h_ph << endl;
+	  //cout << "Pf = " << Pf << " h_xptar = " << h_xptar << endl;
+	  //cout << "MP = " << MP << endl;
+	  
+	  Pmx_lab = fB.X();
+	  Pmy_lab = fB.Y(); 
+	  Pmz_lab = fB.Z(); 
+	  
+	  //Pm = sqrt(Pmx_lab*Pmx_lab + Pmy_lab*Pmy_lab + Pmz_lab*Pmz_lab);
+	  
+	  //--------Rotate the recoil system from +z to +q-------
+	  qvec = fQ.Vect();
+	  kfvec = fP1.Vect();
+	  
+	  rot_to_q.SetZAxis( qvec, kfvec).Invert();
+	  
+	  xq = fX.Vect();
+	  bq = fB.Vect();
+	  
+	  xq *= rot_to_q;
+	  bq *= rot_to_q;
+
+	  //Calculate Angles of q relative to x(detected proton) and b(recoil neutron)
+	  th_pq = xq.Theta();   //"theta_pq"                                       
+	  ph_pq   = xq.Phi();     //"out-of-plane angle", "phi_pq"                                                                    
+	  th_nq = bq.Theta();   // theta_nq                                                                                                     
+	  ph_nq   = bq.Phi();     //phi_nq
+
+	  
+
+	  p_miss_q = -bq;
+	  
+	  //Missing Momentum Components in the q-frame
+	  Pmz_q = p_miss_q.Z();   //parallel component to +z
+	  Pmx_q = p_miss_q.X();   //in-plane perpendicular component to +z
+	  Pmy_q = p_miss_q.Y();   //out-of-plane component (Oop)
+	  
+	  
+	  //--------------------------------------------------------------------------------
+	  
+	  //----------------------SIMC Collimator-------------------------
+	  
+	  htarx_corr = tar_x - h_xptar*htar_z*cos(h_th*dtr);
+	  etarx_corr = tar_x - e_xptar*etar_z*cos(e_th*dtr);  
+	  
+	  
+	  //Define Collimator (same as in HCANA)
+	  hXColl = htarx_corr + h_xptar*168.;   //in cm
+	  hYColl = h_ytar + h_yptar*168.;
+	  eXColl = etarx_corr + e_xptar*253.;
+	  eYColl = e_ytar + e_yptar*253.-(0.019+40.*.01*0.052)*e_delta+(0.00019+40*.01*.00052)*e_delta*e_delta; //correct for HB horizontal bend
+	  
+	  
+	  //--------------------------------------------------------------
+	  
+	  //Define DATA/SIMC CUTS (BETTER BE THE SAME CUTS!)
+	  if(edelta_cut_flag){c_edelta = e_delta>edel_min&&e_delta<edel_max;} 
+	  else{c_edelta=1;} //OFF means NO LIMITS on CUT (ALWAYS TRUE)
+	      
+	  if(hdelta_cut_flag){c_hdelta = h_delta>hdel_min&&h_delta<hdel_max;} 
+	  else{c_hdelta=1;}
+	  
+	  if(W_cut_flag)     {c_W = W>=W_min&&W<=W_max;}                      
+	  else{c_W=1;}
+	  
+	  if(Em_cut_flag)    {c_Em = Em>Em_min&&Em<Em_max;}                   
+	  else{c_Em=1;}
+
+	  if(ztar_diff_cut_flag){ c_ztarDiff = ztar_diff>ztarDiff_min&&ztar_diff<ztarDiff_max;}
+	  else{c_ztarDiff=1;}
+
+	  if(Q2_cut_flag) {c_Q2 = Q2>Q2_min&&Q2<Q2_max;}
+	  else{c_Q2 = 1;}
+	  
+	  if(MM_cut_flag) {c_MM = M_recoil>MM_min&&M_recoil<MM_max;}
+	  else{c_MM = 1;}
+	
+	  if(thnq_cut_flag) { c_th_nq = th_nq>(thnq_min*dtr)&&th_nq<(thnq_max*dtr);}
+	  else{c_th_nq = 1;}
+	  
+	
+	  //Collimator CUTS
+	  if(hmsCollCut_flag)  { hmsColl_Cut =  hms_Coll_gCut->IsInside(hYColl, hXColl);}
+	  else{hmsColl_Cut=1;}
+	  
+	  if(shmsCollCut_flag) { shmsColl_Cut =  shms_Coll_gCut->IsInside(eYColl, eXColl);}
+	  else{shmsColl_Cut=1;}
+	  
+	  
+	  base_cuts = c_edelta&&c_hdelta&&c_W&&c_Em&&c_ztarDiff&&c_Q2&&c_MM&&c_th_nq;
+	  
+	  
+	  //----------------------------END DEFINE CUTS-------------------------------------
+	  
+	  
+	  
+	  //-------------------------------Fill SIMC Histograms--------------------------
+	  
+	  if(base_cuts&&hmsColl_Cut&&shmsColl_Cut){
+	    //&&abs(Pmx_lab)<0.05&&abs(Pmy_lab)<0.05&&Pmz_lab>-0.02
+	    //Primary (electron) Kinematics
+	    H_Q2->Fill(Q2, FullWeight);
+	    H_omega->Fill(nu, FullWeight);
+	    H_W->Fill(W, FullWeight);
+	    H_W2->Fill(W2, FullWeight);
+	    H_xbj->Fill(X, FullWeight);
+	    H_kf->Fill(kf, FullWeight);
+	    H_theta_q->Fill(th_q/dtr, FullWeight);
+	    H_q->Fill(q, FullWeight);
+	    H_theta_elec->Fill(theta_e/dtr, FullWeight);
+	    
+	    //Secondary (Hadron) Kinematics
+	    H_Em->Fill(Em, FullWeight);
+	    H_Pm->Fill(Pm, FullWeight);
+	    H_Pmx_lab->Fill(Pmx_lab, FullWeight);
+	    H_Pmy_lab->Fill(Pmy_lab, FullWeight);
+	    H_Pmz_lab->Fill(Pmz_lab, FullWeight);
+	    H_Pmx_q->Fill(Pmx_q, FullWeight);
+	    H_Pmy_q->Fill(Pmy_q, FullWeight);
+	    H_Pmz_q->Fill(Pmz_q, FullWeight);
+	    H_MM->Fill(M_recoil, FullWeight);
+	    H_MM2->Fill(MM2, FullWeight); 
+	    H_Pf->Fill(Pf, FullWeight);
+	    H_Ep->Fill(Ep, FullWeight);
+	    H_En->Fill(En, FullWeight);
+	    H_Kp->Fill(Kp, FullWeight); 
+	    H_Kn->Fill(Kn, FullWeight);  
+	    H_theta_prot->Fill(theta_p/dtr, FullWeight);
+	    H_theta_pq->Fill(th_pq/dtr, FullWeight);
+	    H_theta_nq->Fill(th_nq/dtr, FullWeight);
+	    
+	    //Target Reconstruction (Hall Coord. System)
+	    H_hx_tar->Fill(tar_x, FullWeight);
+	    H_hy_tar->Fill(htar_y, FullWeight);
+	    H_hz_tar->Fill(htar_z, FullWeight);
+	    H_ex_tar->Fill(tar_x, FullWeight);
+	    H_ey_tar->Fill(etar_y, FullWeight);
+	    H_ez_tar->Fill(etar_z, FullWeight);
+	    H_ztar_diff->Fill(ztar_diff, FullWeight);
+	    
+	    //Hadron arm Reconstructed Quantities ( xtar, ytar, xptar, yptar, delta) 
+	    H_hytar->Fill(h_ytar, FullWeight);
+	    H_hxptar->Fill(h_xptar, FullWeight);
+	    H_hyptar->Fill(h_yptar, FullWeight);
+	    H_hdelta->Fill(h_delta, FullWeight);
+		
+	    //Hadron arm Focal Plane Quantities
+	    H_hxfp->Fill(h_xfp, FullWeight);
+	    H_hyfp->Fill(h_yfp, FullWeight);
+	    H_hxpfp->Fill(h_xpfp, FullWeight);
+	    H_hypfp->Fill(h_ypfp, FullWeight);
+	    
+	    //Electron Arm Reconstructed Quantities ( xtar, ytar, xptar, yptar, delta)
+	    H_eytar->Fill(e_ytar, FullWeight);
+	    H_exptar->Fill(e_xptar, FullWeight);
+	    H_eyptar->Fill(e_yptar, FullWeight);
+	    H_edelta->Fill(e_delta, FullWeight);
+	    
+	    //Electron Arm Focal Plane Quantities
+	    H_exfp->Fill(e_xfp, FullWeight);
+	    H_eyfp->Fill(e_yfp, FullWeight);
+	    H_expfp->Fill(e_xpfp, FullWeight);
+	    H_eypfp->Fill(e_ypfp, FullWeight);
+	    
+	    //HMS / SHMS Collimator
+	    H_hXColl->Fill(hXColl, FullWeight);
+	    H_hYColl->Fill(hYColl, FullWeight);
+	    H_eXColl->Fill(eXColl, FullWeight);
+	    H_eYColl->Fill(eYColl, FullWeight);
+	    
+	    //2D Collimator Histos
+	    H_hXColl_vs_hYColl->Fill(hYColl, hXColl, FullWeight);
+	    H_eXColl_vs_eYColl->Fill(eYColl, eXColl, FullWeight);
+	    
+	    H_Em_vs_Pm->Fill(Pm, Em, FullWeight);
+
+	    
+	    
+	    cout << "EventLoop: " << std::setprecision(2) << double(ientry) / nentries * 100. << "  % " << std::flush << "\r";
+	    
+	  } //END CUTS
+	  
+	  //-----------------------------END Fill SIMC Histograms------------------------
+	  
+	} //End Event Loop
+      
+    } //End "SIMC"
+
+    cout << "Ending EventLoop() . . . " << endl;
+
+} //Ending EventLoop()
+
 //____________________________________________________________________________
 void analyze::CalcEff()
 {
-  /*Method to calculate tracking efficiencies, live time, and total charge*/
 
+  cout << "Calling CalcEff() . . . " << endl;
+  
+  /*Method to calculate tracking efficiencies, live time, and total charge*/
 
   //Calculate Average BCM Current                                                                                                       
   avg_current_bcm_cut = total_charge_bcm_cut / total_time_bcm_cut; //uA                                                                 
@@ -1693,22 +1984,32 @@ void analyze::CalcEff()
   hTrkEff = h_did / h_should;                                                                                                                  
   hTrkEff_err = sqrt(h_should-h_did) / h_should;      
 
+  cout << "Ending CalcEff() . . . " << endl;
+
+
 } //End CalcEff();
 
 //____________________________________________________________________________
 void analyze::ApplyWeight()
 {
-
-  cout << "---Calling ApplyWeight() . . . ---" << endl; 
-
+  //Method to apply correction to the data Yield by scaling the Filled Histograms
+  //Corrections applied: total_charge, total live time, tracking efficiencies, proton absorption, target boiling corrections 
+    
+  cout << "Calling ApplyWeight() . . . " << endl; 
+  
   if(analysis=="data"){
-    //Method to apply correction to the data Yield by scaling the Filled Histograms
-    //Corrections applied: total_charge, total live time, tracking efficiencies, proton absorption, target boiling corrections 
- 
+
     //Target Boiling Slopes
     LH2_slope = 0.0006;
     LD2_slope = 0.0008;
-    tgtBoil_corr = (1.-LH2_slope * avg_current_bcm_cut);
+    
+    if(reaction=="heep"){
+      tgtBoil_corr = (1.-LH2_slope * avg_current_bcm_cut);
+    }
+    
+    if(reaction=="deep"){
+      tgtBoil_corr = (1.-LD2_slope * avg_current_bcm_cut);
+    }
     
     //Proton Absorption
     pAbs_corr = 0.9534;
@@ -1766,6 +2067,8 @@ void analyze::ApplyWeight()
     H_Pf->Scale(FullWeight);
     H_Ep->Scale(FullWeight);
     H_En->Scale(FullWeight);
+    H_Kp->Scale(FullWeight);                                                                                                          
+    H_Kn->Scale(FullWeight); 
     H_theta_prot->Scale(FullWeight);
     H_theta_pq->Scale(FullWeight);
     H_theta_nq->Scale(FullWeight);
@@ -1813,11 +2116,15 @@ void analyze::ApplyWeight()
     H_hXColl_vs_hYColl->Scale(FullWeight);
     H_eXColl_vs_eYColl->Scale(FullWeight);
     
-    
+    H_Em_vs_Pm->Scale(FullWeight);
+
     //Initialize Scaler Histograms
     H_bcmCurrent->Scale(FullWeight);
     
   } //end DATA
+
+  cout << "Ending ApplyWeight() . . . " << endl; 
+
 
 }//End Apply Weight
 
@@ -1826,6 +2133,8 @@ void analyze::WriteHist()
 {
 
   /* Write Histograms to a ROOTfile */
+
+  cout << "Calling WriteHist() . . . " << endl;
 
   if(analysis=="data")
     {
@@ -1872,6 +2181,8 @@ void analyze::WriteHist()
       H_Pf->Write();
       H_Ep->Write();
       H_En->Write();
+      H_Kp->Write(); 
+      H_Kn->Write(); 
       H_theta_prot->Write();
       H_theta_pq->Write();
       H_theta_nq->Write();
@@ -1919,13 +2230,17 @@ void analyze::WriteHist()
       H_hXColl_vs_hYColl->Write();
       H_eXColl_vs_eYColl->Write();
       
+      H_Em_vs_Pm->Write();
+      H_Em_nuc_vs_Pm->Write();
+
+
       H_bcmCurrent->Write();
     
     }
   else if(analysis=="simc")
     {
       //Create output ROOTfile
-      outROOT = new TFile(simc_OutputFileName, "RECREATE");
+      outROOT = new TFile(simc_OutputFileName_rad, "RECREATE");
       
       //Primary (electron) Kinematics
       H_Q2->Write();
@@ -1952,6 +2267,8 @@ void analyze::WriteHist()
       H_Pf->Write();
       H_Ep->Write();
       H_En->Write();
+      H_Kp->Write();          
+      H_Kn->Write();  
       H_theta_prot->Write();
       H_theta_pq->Write();
       H_theta_nq->Write();
@@ -1998,16 +2315,21 @@ void analyze::WriteHist()
       //2D Collimator Histos
       H_hXColl_vs_hYColl->Write();
       H_eXColl_vs_eYColl->Write();
-      
+         
+      H_Em_vs_Pm->Write();
+
 
     }
   
+  cout << "Ending WriteHist() . . . " << endl;
 
 } //End WriteHist()
 
 //____________________________________________________________
 void analyze::WriteReport()
 {
+
+  cout << "Calling WriteReport() . . ." << endl;
 
   if(analysis=="data"){
     /*Method to write charge, efficiencies, live time and other relevant quantities to a data file*/
@@ -2021,7 +2343,7 @@ void analyze::WriteReport()
       
       out_file.open(report_OutputFileName);
       //out_file << std::left << std::setw(25) << "Column 1" << std::setw(25) << "Column 2" << endl;
-      out_file << "#Run[i,0]/" << std::setw(25) << "charge[f,1]/" << std::setw(25) << "cpuLT[f,2]/"  << std::setw(25) <<  "tLT[f,3]/"  << std::setw(25) <<  "hTrkEff[f,4]/" << std::setw(25) <<  "eTrkEff[f,5]/" << std::setw(25) <<   "avg_current[f,6]/"  << std::setw(25) << "pS1X_rate[f,7]/"  << std::setw(25) << "ptrig1_rate[f,8]/" << std::setw(25) << "ptrig2_rate[f,9]/" << std::setw(25) << "ptrig3_rate[f,10]/" << std::setw(25) << "ptrig4_rate[f,11]/" << std::setw(25) << "ptrig6_rate[f,12]/" << std::setw(25) << "HMS_Angle[f,13]/"  << std::setw(25) << "HMS_Pcen[f,14]/"  << std::setw(25) << "SHMS_Angle[f,15]/"   << std::setw(25) << "SHMS_Pcen[f,16]/"  << std::setw(25) << "HMS_Xmp[f,17]/" << std::setw(25) << "HMS_Ymp[f,18]/" << std::setw(25) << "SHMS_Xmp[f,19]/" << std::setw(25) << "SHMS_Ymp[f,20]/" << std::setw(25) << "xBPM[f,21]/" << std::setw(25) << "yBPM[f,22]/" << endl;
+      out_file << "#!Run[i,0]/" << std::setw(25) << "charge[f,1]/" << std::setw(25) << "cpuLT[f,2]/"  << std::setw(25) <<  "tLT[f,3]/"  << std::setw(25) <<  "hTrkEff[f,4]/" << std::setw(25) <<  "eTrkEff[f,5]/" << std::setw(25) <<   "avg_current[f,6]/"  << std::setw(25) << "pS1X_rate[f,7]/"  << std::setw(25) << "ptrig1_rate[f,8]/" << std::setw(25) << "ptrig2_rate[f,9]/" << std::setw(25) << "ptrig3_rate[f,10]/" << std::setw(25) << "ptrig4_rate[f,11]/" << std::setw(25) << "ptrig6_rate[f,12]/" << std::setw(25) << "HMS_Angle[f,13]/"  << std::setw(25) << "HMS_Pcen[f,14]/"  << std::setw(25) << "SHMS_Angle[f,15]/"   << std::setw(25) << "SHMS_Pcen[f,16]/"  << std::setw(25) << "HMS_Xmp[f,17]/" << std::setw(25) << "HMS_Ymp[f,18]/" << std::setw(25) << "SHMS_Xmp[f,19]/" << std::setw(25) << "SHMS_Ymp[f,20]/" << std::setw(25) << "xBPM[f,21]/" << std::setw(25) << "yBPM[f,22]/" << endl;
       out_file.close();
       
     }
@@ -2032,8 +2354,60 @@ void analyze::WriteReport()
     out_file.close();
   }  
   
+  cout << "Ending WriteReport() . . ." << endl;
+
 } //End WriteReport()
 
+//_________________________________________________________
+void analyze::CollimatorStudy()
+{
+  
+  cout << "Calling CollimatorStudy() . . . " << endl;
+  //Method to study various collimator cuts on the H(e,e'p) Yield across Ytar, Y'tar, X'tar and delta
+  
+  //Scaling the HMS/SHMS Collimator Cuts
+  hms_hsize = hms_scale*hms_hsize;  //The scale factor is read from set_heep_cuts.inp
+  hms_vsize = hms_scale*hms_vsize;
+  
+  shms_hsize = shms_scale*shms_hsize;
+  shms_vsize = shms_scale*shms_vsize;
+
+  
+
+  //Define HMS Collimator Shape
+  hms_Coll_gCut = new TCutG("hmsCollCut", 8 );
+  hms_Coll_gCut->SetVarX("X");
+  hms_Coll_gCut->SetVarY("Y");
+ 
+  hms_Coll_gCut->SetPoint(0,  hms_hsize,     hms_vsize/2.);
+  hms_Coll_gCut->SetPoint(1,  hms_hsize/2.,  hms_vsize   );
+  hms_Coll_gCut->SetPoint(2, -hms_hsize/2.,  hms_vsize   );
+  hms_Coll_gCut->SetPoint(3, -hms_hsize,     hms_vsize/2.);
+  hms_Coll_gCut->SetPoint(4, -hms_hsize,    -hms_vsize/2.);
+  hms_Coll_gCut->SetPoint(5, -hms_hsize/2., -hms_vsize   );
+  hms_Coll_gCut->SetPoint(6,  hms_hsize/2., -hms_vsize   );
+  hms_Coll_gCut->SetPoint(7,  hms_hsize,    -hms_vsize/2.);
+  hms_Coll_gCut->SetPoint(8,  hms_hsize,     hms_vsize/2.);
+
+  //Define SHMS Collimator Shape
+  shms_Coll_gCut = new TCutG("shmsCollCut", 8 );
+  shms_Coll_gCut->SetVarX("X");
+  shms_Coll_gCut->SetVarY("Y");
+ 
+  shms_Coll_gCut->SetPoint(0,  shms_hsize,     shms_vsize/2.);
+  shms_Coll_gCut->SetPoint(1,  shms_hsize/2.,  shms_vsize   );
+  shms_Coll_gCut->SetPoint(2, -shms_hsize/2.,  shms_vsize   );
+  shms_Coll_gCut->SetPoint(3, -shms_hsize,     shms_vsize/2.);
+  shms_Coll_gCut->SetPoint(4, -shms_hsize,    -shms_vsize/2.);
+  shms_Coll_gCut->SetPoint(5, -shms_hsize/2., -shms_vsize   );
+  shms_Coll_gCut->SetPoint(6,  shms_hsize/2., -shms_vsize   );
+  shms_Coll_gCut->SetPoint(7,  shms_hsize,    -shms_vsize/2.);
+  shms_Coll_gCut->SetPoint(8,  shms_hsize,     shms_vsize/2.);
+
+  cout << "Ending CollimatorStudy() . . . " << endl;
+
+
+}
 
 
 //---------------AUXILIARY FUNCTIONS TO CALCULATE Pmx, Pmy, Pmz in SIMC (same as HCANA) -------------------
@@ -2196,3 +2570,37 @@ string& analyze::trim(std::string& s)
   return ltrim(rtrim(s));
 }
 
+//-----------RUN ANALYSIS METHODS------------
+
+//___________________________________________
+void analyze::run_simc_analysis()
+{
+  SetFileNames();
+  SetCuts();
+  SetDefinitions();
+  SetHistBins();
+  CreateHist();
+  ReadTree();
+  EventLoop();
+  WriteHist();
+}
+
+//________________________________________
+void analyze::run_data_analysis()
+{
+
+  SetFileNames();
+  SetCuts();
+  SetDefinitions();
+  SetHistBins();
+  CreateHist();
+  ReadScalerTree("BCM4A");   //argument: "BCM1", "BCM2", "BCM4A", "BCM4B", "BCM4C"
+  ScalerEventLoop(5);       //argument represents current threshold(uA): usage in code-> Abs(bcm_current - set_current) < threshold
+  ReadTree();
+  EventLoop();
+  CalcEff();
+  ApplyWeight();
+  WriteHist();
+  WriteReport();
+
+}

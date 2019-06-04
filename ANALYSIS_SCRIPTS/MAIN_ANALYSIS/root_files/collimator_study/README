@@ -1,0 +1,34 @@
+*********************
+HMS Collimator Study
+*********************
+
+The ratio of DATA / SIMC Yield (Integral of Inv. Mass, W) is
+plotted as a function of SHMS 3/4 rates for different HMS
+Collimator cuts settings in order to study the stability of the
+yield ratio.  
+
+The collimator has horizontal/vertical dimension fixed. A cut on
+these dimentions is considered a scale 1. These dimensions are then
+modified by multipliying horizontal/vertical dimensions by the same 
+scale factor.
+
+
+The Cuts applied are:
+__________________________
+HMS Delta  : -8, 8
+SHMS Delta : -10, 22
+W          : 0.85, 1.05
+__________________________
+
+The collimator cut values studied are:
+
+HMS scale factor:
+---------------
+no collimator cut
+1   (collimator cut of exact dimensios of collimator)
+0.95
+0.9
+0.85
+0.8
+0.75
+0.7

@@ -1,0 +1,23 @@
+******************
+Pmiss Cuts Study
+*****************
+
+Examine the Missing Momentum Ratio Pm_data / Pm_simc and SIMC/DATA comparison, with and without missing momentum components cuts.
+
+The general cuts placed are:
+Em < 40 MeV
+HMS Delta: (-8,8) %
+SHMS Delta: (-10,22) %
+HMS Collimator Cut: Scale 1
+
+Smearing: 
+HMS Delta = 0.04
+SHMS Delta = 0.04
+
+-----------------------------------
+From the meeting with Werner, there might be
+background from data, so I must have a coincidence time cut.
+
+Additionally, It looks like the largest effect in the Pm yield ratio
+is after making the Ztar_difference cut. Which looks like is mostly coming
+from tails in data (hence there might be large noise and coin cut is required)

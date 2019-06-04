@@ -46,7 +46,7 @@ block P.cal.etot*
 block P.cal.etrack*
 block P.cal.*track*
 block P.hod.*Track*
-
+block P.dc.chi*
 
 block H.dc.*wirenum*                  
 block H.dc.*time*
@@ -62,11 +62,11 @@ block H.cal.etot*
 block H.cal.etrack*            
 block H.cal.*track* 
 block H.hod.*Track*    
-
+block H.dc.chi*
 
 #Sieve Analysis
-#block P.extcor.*
-#block H.extcor.*
+block P.extcor.*
+block H.extcor.*
 
 #Rastered Beam
 block P.rb.*
