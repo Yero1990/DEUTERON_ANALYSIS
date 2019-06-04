@@ -20,13 +20,14 @@ class analyze
   void CreateHist();
   void ReadScalerTree(string bcm_type="BCM4A");  
   void ScalerEventLoop(Double_t current_thrs_bcm=5.); //bcm current cut threshold in uA units
-  void ReadTree();
+  void ReadTree(string rad_flag="");
   void EventLoop();
   void CalcEff();
   void ApplyWeight();
-  void WriteHist();
+  void WriteHist(string rad_flag="");
   void WriteReport();
-
+  void CalcRadCorr();
+  void ApplyRadCorr();
 
   //Auxiliary Function Prototypes (obtained from hcana) to calculate Pmx, Pmy, Pmz in the Lab/q-frame correctly
   void GeoToSph( Double_t  th_geo, Double_t  ph_geo, Double_t& th_sph, Double_t& ph_sph);
@@ -47,7 +48,7 @@ class analyze
   void CollimatorStudy();
 
   //------------Run Analysis Mehods--------------
-  void run_simc_analysis();
+  void run_simc_analysis(Bool_t do_rad_flag=0);
   void run_data_analysis();
 
 
@@ -64,7 +65,7 @@ class analyze
   int pm_setting;      //80, 580, 750 MeV
   string theory;      //laget, misak, . . .
   string model;       //pwia, fsi, . . .
-  string rad_flag;   //"rad" or "norad"
+  Bool_t rad_corr_flag;   //do rad corr (1),  do NOT do rad corr (0)
   int data_set;      //1, 2, 3
 
   //Spectrometer prefixes to be used in SetBranchAddress()
@@ -843,9 +844,11 @@ class analyze
   //Output ROOTfile Name
   TString simc_OutputFileName_rad;
   TString simc_OutputFileName_norad;
+  TString simc_OutputFileName_radCorr;
 
   TString data_OutputFileName;
-  
+  TString data_OutputFileName_radCorr;
+
   TString report_OutputFileName;
   TString YieldStudy_FileName;
   

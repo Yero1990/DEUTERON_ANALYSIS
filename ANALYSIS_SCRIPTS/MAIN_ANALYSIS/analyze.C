@@ -272,13 +272,12 @@ void analyze::SetFileNames()
    
   //Set Input CutFile Name (to read cuts to be set, and simc parameters)
   input_CutFileName = Form("set_%s_cuts.inp", reaction.c_str());
-  
+
   if(reaction=="deep"){
     //Read Parameters from D(e,e'p) input file
     pm_setting = stoi(split(FindString("pm_setting", input_CutFileName)[0], ':')[1]);
     theory = trim(split(FindString("theory", input_CutFileName)[0], ':')[1]);
     model = trim(split(FindString("model", input_CutFileName)[0], ':')[1]);
-    //rad_flag = trim(split(FindString("rad_flag", input_CutFileName)[0], ':')[1]);
     data_set = stoi(split(FindString("data_set", input_CutFileName)[0], ':')[1]);
   }
   
@@ -286,10 +285,10 @@ void analyze::SetFileNames()
   data_InputReport = Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_%s_check_%d_-1.report", reaction.c_str(), runNUM); 
 
   //------ONLY TO BE USED BY DATA-------
-  if(analysis=="data")
-    {
+  //if(analysis=="data")
+  // {
       //Set Input ROOTfile Pattern
-      data_InputFileName = Form("ROOTfiles/coin_replay_%s_check_%d_-1_prunetracking_AND_DCAlign.root", reaction.c_str(), runNUM);
+      data_InputFileName = Form("ROOTfiles/coin_replay_%s_check_%d_-1.root", reaction.c_str(), runNUM);
             
       //Set Output ROOTfilename and Report data filename
       if(reaction=="heep"){
@@ -300,8 +299,10 @@ void analyze::SetFileNames()
       else if(reaction=="deep"){
 	report_OutputFileName = Form("report_%s_pm%d_set%d.dat", reaction.c_str(), pm_setting, data_set);
 	data_OutputFileName = Form("%s_data_histos_pm%d_set%d_%d.root",reaction.c_str(), pm_setting, data_set, runNUM);
+	data_OutputFileName_radCorr = Form("%s_data_histos_pm%d_set%d_%d_radcorr.root",reaction.c_str(), pm_setting, data_set, runNUM);
+
       }
-    }
+      //}
   
   //------ONLY TO BE USED BY SIMC------
   if(analysis=="simc")
@@ -314,7 +315,7 @@ void analyze::SetFileNames()
 	//Non-Radiative
 	simc_InputFileName_norad = Form("worksim_voli/d2_pm%d_%s%s_norad_set%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
 	simc_OutputFileName_norad = Form("%s_simc_histos_pm%d_%s%s_norad_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
-
+	simc_OutputFileName_radCorr = Form("%s_simc_histos_pm%d_%s%s_RadCorrRatio_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
       }
 
       else if(reaction=="heep"){ 
@@ -828,7 +829,7 @@ void analyze::SetHistBins()
       //Missing Energy                    //Q2			          //Final Proton Momentum			     
       Em_nbins = nbins;			  Q2_nbins = nbins;	   	   Pf_nbins = nbins;				    
       Em_xmin = -0.05;			  Q2_xmin = 2.5; 	   	   Pf_xmin = 2.5;				    
-      Em_xmax = 0.1;			  Q2_xmax = 5.;       	   	   Pf_xmax = 3.2;				    
+      Em_xmax = 0.5;			  Q2_xmax = 5.;       	   	   Pf_xmax = 3.2;				    
       					 			   	 						    
       //Missing Momentum 		  //omega (E-E')	   	   //Final Proton Energy				    
       Pm_nbins = nbins;			  om_nbins = nbins;	   	   Ep_nbins = nbins;				    
@@ -1160,7 +1161,7 @@ void analyze::ScalerEventLoop(Double_t current_thrs_bcm=5.)
 }
 
 //____________________________________________________________________________
-void analyze::ReadTree()
+void analyze::ReadTree(string rad_flag="")
 {
   cout << "Calling ReadTree() . . . " << endl;
 
@@ -1291,10 +1292,17 @@ void analyze::ReadTree()
       cout << "Analyzing SIMC . . . " << endl;
 
       //Read ROOTfile
-      inROOT = new TFile(simc_InputFileName_rad, "READ");
-
-      cout << "simc_fname = " << simc_InputFileName_rad << endl;
-
+  
+      if(rad_flag=="do_rad_corr")
+	{
+	  cout << "Doing Radiative Corrections . . . " << endl;
+	  
+	  inROOT = new TFile(simc_InputFileName_norad, "READ");
+	}
+      else{
+	inROOT = new TFile(simc_InputFileName_rad, "READ");
+      }
+      
       //Get the tree
       tree = (TTree*)inROOT->Get("SNT");
       nentries = tree->GetEntries();
@@ -1675,6 +1683,7 @@ void analyze::EventLoop()
   
   else if(analysis=="simc")
     {
+
       for(int ientry=0; ientry<nentries; ientry++)
 	{
 	  
@@ -2129,7 +2138,7 @@ void analyze::ApplyWeight()
 }//End Apply Weight
 
 //____________________________________________________________________________
-void analyze::WriteHist()
+void analyze::WriteHist(string rad_flag="")
 {
 
   /* Write Histograms to a ROOTfile */
@@ -2240,7 +2249,13 @@ void analyze::WriteHist()
   else if(analysis=="simc")
     {
       //Create output ROOTfile
-      outROOT = new TFile(simc_OutputFileName_rad, "RECREATE");
+     
+      if(rad_flag=="do_rad_corr"){
+	outROOT = new TFile(simc_OutputFileName_norad, "RECREATE");
+      }
+      else{
+	outROOT = new TFile(simc_OutputFileName_rad, "RECREATE");
+      }
       
       //Primary (electron) Kinematics
       H_Q2->Write();
@@ -2320,7 +2335,7 @@ void analyze::WriteHist()
 
 
     }
-  
+  outROOT->Close();
   cout << "Ending WriteHist() . . . " << endl;
 
 } //End WriteHist()
@@ -2406,6 +2421,84 @@ void analyze::CollimatorStudy()
 
   cout << "Ending CollimatorStudy() . . . " << endl;
 
+
+}
+
+//_______________________________________________________________________________
+void analyze::CalcRadCorr()
+{
+  /*Brief: Method to calculate Radiative Correction Factor on a bin-by-bin basis
+    By taking the ratio of Y_norad / Y_rad in SIMC. This assumes that rad_flag has been
+    turnen ON in the set_deep_cuts.inp (or set_heep_cuts.inp), and that the ROOTfiles containing 
+    the histogram objects for rad and no-rad SIMC exists.
+  */
+  cout << "Calling CalcRadCorr() . . . " << endl;
+
+  TFile *rad_file = new TFile(simc_OutputFileName_rad, "READ");
+  TFile *norad_file = new TFile(simc_OutputFileName_norad, "READ");
+
+  //inROOT = new TFile(simc_OutputFileName_rad, "READ");
+  
+  TH1F *simc_Em_rad = 0;
+  TH1F *simc_Em_norad = 0;
+  
+  rad_file->cd();	
+  rad_file->GetObject("H_Emiss", simc_Em_rad);
+  
+  norad_file->cd();	
+  norad_file->GetObject("H_Emiss", simc_Em_norad);
+  
+  simc_Em_norad->Divide(simc_Em_rad);
+
+  //Write Ynorad/Yrad Ratios to ROOTfile
+  TFile *rad_ratio_file = new TFile(simc_OutputFileName_radCorr, "RECREATE");
+
+  rad_ratio_file->cd();
+  
+  simc_Em_norad->Write();
+  
+  rad_ratio_file->Close();
+
+}
+
+//_______________________________________________________________________________
+void analyze::ApplyRadCorr()
+{
+  /* Brief: Method to Apply radiative corrections to data. Assumes the Ynorad / Yrad SIMC ratios
+     have been saved to a ROOTfile. Read in this ROOTfile histograms (which are really the ratios or rad. correction)
+     and Read in the data ROOTfile histograms. Both histograms are multiplied bin-by-bin to correct for radiative effect
+     for each bin.
+
+   */
+  cout << "Calling ApplyRadCorr() . . . " << endl;
+  
+  //Read Data and RadCorr ROOTfiles
+  
+  TFile *data_file = new TFile(data_OutputFileName, "READ");
+  TFile *radCorr_file = new TFile(simc_OutputFileName_radCorr, "READ");
+
+
+  //Read In Data Histos and Radiative Correction Ratio
+  TH1F *data_Em = 0;
+  TH1F *rad_corr_Em = 0;
+
+  data_file->cd();	
+  data_file->GetObject("H_Em_nuc", data_Em);
+  
+  radCorr_file->cd();	
+  radCorr_file->GetObject("H_Emiss", rad_corr_Em);
+  
+  //Apply Rad Corrections
+  data_Em->Multiply(rad_corr_Em);
+   
+  //Write Ynorad/Yrad Ratios to ROOTfile
+  TFile *data_radcorr = new TFile(data_OutputFileName_radCorr, "RECREATE");
+
+  data_radcorr->cd();
+  
+  data_Em->Write();
+  
+  data_radcorr->Close();
 
 }
 
@@ -2573,16 +2666,31 @@ string& analyze::trim(std::string& s)
 //-----------RUN ANALYSIS METHODS------------
 
 //___________________________________________
-void analyze::run_simc_analysis()
+void analyze::run_simc_analysis(Bool_t do_rad_flag=0)
 {
-  SetFileNames();
-  SetCuts();
-  SetDefinitions();
-  SetHistBins();
-  CreateHist();
-  ReadTree();
-  EventLoop();
-  WriteHist();
+ 
+      SetFileNames();
+      SetCuts();
+      SetDefinitions();
+      SetHistBins();
+      CreateHist();
+      ReadTree();
+      EventLoop();
+      WriteHist();
+    
+  if(do_rad_flag)
+    {
+      cout << "-----------------------------" << endl;
+      cout << " Doing Radiative Corrections " << endl;
+      cout << "-----------------------------" << endl;
+      ReadTree("do_rad_corr");
+      EventLoop();
+      WriteHist("do_rad_corr");
+      CalcRadCorr();
+      ApplyRadCorr();
+    }
+  
+
 }
 
 //________________________________________

@@ -3,12 +3,12 @@
 #code usage:  ./run_swif.sh [options]
 #where [options] ---> status,  delete
 
-workflow_name="d2_80MeV"
+workflow_name="d2_80MeV_RadCorr"
 #workflow_name="SHMS_LH2_boiling_studies"
 #workflow_name="SHMS_boiling_studies"
 #workflow_name="pcal_calib"
 
-#runlist_name="current_elec.data"
+#runlist_name="runlists/h2.dat"
 #runlist_name="current_prot.data"
 
 #runlist_name="h2_Pabs_shms.dat"
@@ -43,7 +43,7 @@ replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSI
 #replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_coin_hElec_pProt.C "
 #replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/HMS/replay_hms.C " 
 #replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/SHMS/replay_shms.C " 
-disk_usage=" --disk 5000000000 "   #in bytes (or 1 Gb default)
+disk_usage=" --disk 7000000000 "   #in bytes (or 1 Gb default)
 ram="--ram 1000000000 "
 cpu_cores="--cpu 1"   #number of cpu cores requested 
 project=" --project c-comm2017 "
