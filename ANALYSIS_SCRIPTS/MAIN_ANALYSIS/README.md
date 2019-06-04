@@ -45,3 +45,6 @@ D(e,e'p)n:
 
    ** Last work was presented at MIT, showing preliminary cross section results.
       Work still needs to be done.
+
+   ** Recent DATA/SIMC Missing Momentum Yield for the 80 MeV setting shows an agreement of up to 10% for the
+      40-100 MeV range, and from 20-30 on the extremes (statistical)
