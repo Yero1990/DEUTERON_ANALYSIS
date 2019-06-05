@@ -270,60 +270,62 @@ void analyze::SetFileNames()
   
   cout << "Calling SetFileNames() . . . " << endl;
    
-  //Set Input CutFile Name (to read cuts to be set, and simc parameters)
+  //Set Input CutFile Name (to read cuts and other parameters)
   input_CutFileName = Form("set_%s_cuts.inp", reaction.c_str());
 
+  //If reaction is D(e,e'p)n
   if(reaction=="deep"){
+
     //Read Parameters from D(e,e'p) input file
     pm_setting = stoi(split(FindString("pm_setting", input_CutFileName)[0], ':')[1]);
     theory = trim(split(FindString("theory", input_CutFileName)[0], ':')[1]);
     model = trim(split(FindString("model", input_CutFileName)[0], ':')[1]);
     data_set = stoi(split(FindString("data_set", input_CutFileName)[0], ':')[1]);
+  
+    //Set Input Names
+    data_InputFileName = Form("ROOTfiles/coin_replay_%s_check_%d_-1.root", reaction.c_str(), runNUM);
+    data_InputReport = Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_%s_check_%d_-1.report", reaction.c_str(), runNUM); 
+
+    simc_InputFileName_rad = Form("worksim_voli/d2_pm%d_%s%s_rad_set%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+    simc_InputFileName_norad = Form("worksim_voli/d2_pm%d_%s%s_norad_set%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+    
+    //Set Output Names
+    data_OutputFileName = Form("%s_data_histos_pm%d_set%d_%d.root",reaction.c_str(), pm_setting, data_set, runNUM);
+    data_OutputFileName_radCorr = Form("%s_data_histos_pm%d_set%d_%d_radcorr.root",reaction.c_str(), pm_setting, data_set, runNUM);
+    report_OutputFileName = Form("report_%s_pm%d_set%d.dat", reaction.c_str(), pm_setting, data_set);
+
+    simc_OutputFileName_rad = Form("%s_simc_histos_pm%d_%s%s_rad_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
+    simc_OutputFileName_norad = Form("%s_simc_histos_pm%d_%s%s_norad_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
+    simc_OutputFileName_radCorr = Form("%s_simc_histos_pm%d_%s%s_RadCorrRatio_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
+   
+
   }
   
-  //Set Input REPORT_FILE Name Pattern (This will be used by both DATA/SIMC)
-  data_InputReport = Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_%s_check_%d_-1.report", reaction.c_str(), runNUM); 
 
-  //------ONLY TO BE USED BY DATA-------
-  //if(analysis=="data")
-  // {
-      //Set Input ROOTfile Pattern
-      data_InputFileName = Form("ROOTfiles/coin_replay_%s_check_%d_-1.root", reaction.c_str(), runNUM);
-            
-      //Set Output ROOTfilename and Report data filename
-      if(reaction=="heep"){
-	report_OutputFileName = Form("report_%s.dat", reaction.c_str());
-	data_OutputFileName = Form("%s_data_histos_%d.root",reaction.c_str(), runNUM);
-      }
+  //If reaction is H(e,e'p)
+  if(reaction=="heep"){
 
-      else if(reaction=="deep"){
-	report_OutputFileName = Form("report_%s_pm%d_set%d.dat", reaction.c_str(), pm_setting, data_set);
-	data_OutputFileName = Form("%s_data_histos_pm%d_set%d_%d.root",reaction.c_str(), pm_setting, data_set, runNUM);
-	data_OutputFileName_radCorr = Form("%s_data_histos_pm%d_set%d_%d_radcorr.root",reaction.c_str(), pm_setting, data_set, runNUM);
+    
+    //Set Input Names
+    data_InputFileName = Form("ROOTfiles/coin_replay_%s_check_%d_-1.root", reaction.c_str(), runNUM);
+    data_InputReport = Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_%s_check_%d_-1.report", reaction.c_str(), runNUM); 
 
-      }
-      //}
-  
-  //------ONLY TO BE USED BY SIMC------
-  if(analysis=="simc")
-    {
-      //Set Input/Output ROOTfile Pattern
-      if(reaction=="deep"){
-	//Radiative
-	simc_InputFileName_rad = Form("worksim_voli/d2_pm%d_%s%s_rad_set%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
-	simc_OutputFileName_rad = Form("%s_simc_histos_pm%d_%s%s_rad_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
-	//Non-Radiative
-	simc_InputFileName_norad = Form("worksim_voli/d2_pm%d_%s%s_norad_set%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
-	simc_OutputFileName_norad = Form("%s_simc_histos_pm%d_%s%s_norad_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
-	simc_OutputFileName_radCorr = Form("%s_simc_histos_pm%d_%s%s_RadCorrRatio_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
-      }
+    simc_InputFileName_rad = Form("worksim_voli/D2_heep_%d_rad.root", runNUM);
+    simc_InputFileName_norad = Form("worksim_voli/D2_heep_%d_norad.root", runNUM);
+    
 
-      else if(reaction=="heep"){ 
-	simc_InputFileName_rad = Form("worksim_voli/D2_heep_%d.root", runNUM);
-	simc_OutputFileName_rad = Form("%s_simc_histos_%d.root",reaction.c_str(), runNUM);
-      }
-      
-    }
+    //Set Output Names
+    data_OutputFileName = Form("%s_data_histos_%d.root",reaction.c_str(), runNUM);
+    data_OutputFileName_radCorr = Form("%s_data_histos_%d_radcorr.root",reaction.c_str(), runNUM); 
+    report_OutputFileName = Form("report_%s.dat", reaction.c_str());
+
+    simc_OutputFileName_rad = Form("%s_simc_histos_%d_rad.root",reaction.c_str(), runNUM);
+    simc_OutputFileName_norad = Form("%s_simc_histos_%d_norad.root",reaction.c_str(), runNUM);
+    simc_OutputFileName_radCorr = Form("%s_simc_histos_%d_RadCorrRatio.root",reaction.c_str(), runNUM);
+
+
+  }
+
 
 
   cout << "Ending SetFileNames() . . . " << endl;
@@ -335,6 +337,32 @@ void analyze::SetCuts()
 
   cout << "Calling SetCuts() . . ." << endl;
   
+  //Read Cut Flags from set_heep(deep)_cuts.input file 
+  
+  //==BASIC==
+  Em_cut_flag = stoi(split(FindString("bool Em", input_CutFileName)[0], '=')[1]);
+  W_cut_flag = stoi(split(FindString("bool W", input_CutFileName)[0], '=')[1]);
+  hdelta_cut_flag = stoi(split(FindString("bool h_delta", input_CutFileName)[0], '=')[1]);
+  edelta_cut_flag = stoi(split(FindString("bool e_delta", input_CutFileName)[0], '=')[1]);
+  ztar_diff_cut_flag = stoi(split(FindString("bool ztar_diff", input_CutFileName)[0], '=')[1]);
+  Q2_cut_flag = stoi(split(FindString("bool Q2", input_CutFileName)[0], '=')[1]);
+  thnq_cut_flag = stoi(split(FindString("bool th_nq", input_CutFileName)[0], '=')[1]);
+  MM_cut_flag = stoi(split(FindString("bool MM", input_CutFileName)[0], '=')[1]);
+
+  //==PID==
+  shmsCal_cut_flag = stoi(split(FindString("bool shmsCal_EtotTrackNorm", input_CutFileName)[0], '=')[1]);
+  coin_cut_flag = stoi(split(FindString("bool coin_time", input_CutFileName)[0], '=')[1]);
+  
+  //==Collimator==
+  hmsCollCut_flag = stoi(split(FindString("bool hmsCollCut", input_CutFileName)[0], '=')[1]);
+  shmsCollCut_flag = stoi(split(FindString("bool shmsCollCut", input_CutFileName)[0], '=')[1]);
+  
+  //==Read Collimator Cut Scale Factor==
+  hms_scale =  stod(split(FindString("hms_scale", input_CutFileName)[0], '=')[1]);
+  shms_scale =  stod(split(FindString("shms_scale", input_CutFileName)[0], '=')[1]);
+
+
+
   //Read Cut Limits from set_heep(deep)_cuts.input file 
   Em_min = stod(split(FindString("Em_min", input_CutFileName)[0], ':')[1]);
   Em_max = stod(split(FindString("Em_max", input_CutFileName)[0], ':')[1]);
@@ -357,8 +385,6 @@ void analyze::SetCuts()
   thnq_min = stod(split(FindString("thnq_min", input_CutFileName)[0], ':')[1]); 
   thnq_max = stod(split(FindString("thnq_max", input_CutFileName)[0], ':')[1]);
 
-  
-
   MM_min = stod(split(FindString("MM_min", input_CutFileName)[0], ':')[1]); 
   MM_max = stod(split(FindString("MM_max", input_CutFileName)[0], ':')[1]);
 
@@ -369,26 +395,6 @@ void analyze::SetCuts()
   ctime_max = stod(split(FindString("coin_time_max", input_CutFileName)[0], ':')[1]);
 
 
-  //Read Cut Flags from set_heep(deep)_cuts.input file 
-  //BASIC
-  Em_cut_flag = stoi(split(FindString("bool Em", input_CutFileName)[0], '=')[1]);
-  W_cut_flag = stoi(split(FindString("bool W", input_CutFileName)[0], '=')[1]);
-  hdelta_cut_flag = stoi(split(FindString("bool h_delta", input_CutFileName)[0], '=')[1]);
-  edelta_cut_flag = stoi(split(FindString("bool e_delta", input_CutFileName)[0], '=')[1]);
-  ztar_diff_cut_flag = stoi(split(FindString("bool ztar_diff", input_CutFileName)[0], '=')[1]);
-  Q2_cut_flag = stoi(split(FindString("bool Q2", input_CutFileName)[0], '=')[1]);
-  thnq_cut_flag = stoi(split(FindString("bool th_nq", input_CutFileName)[0], '=')[1]);
-  MM_cut_flag = stoi(split(FindString("bool MM", input_CutFileName)[0], '=')[1]);
-
-  //PID
-  shmsCal_cut_flag = stoi(split(FindString("bool shmsCal_EtotTrackNorm", input_CutFileName)[0], '=')[1]);
-  coin_cut_flag = stoi(split(FindString("bool coin_time", input_CutFileName)[0], '=')[1]);
-  //Collimator
-  hmsCollCut_flag = stoi(split(FindString("bool hmsCollCut", input_CutFileName)[0], '=')[1]);
-  shmsCollCut_flag = stoi(split(FindString("bool shmsCollCut", input_CutFileName)[0], '=')[1]);
-  //Read Collimator Cut Scale Factor
-  hms_scale =  stod(split(FindString("hms_scale", input_CutFileName)[0], '=')[1]);
-  shms_scale =  stod(split(FindString("shms_scale", input_CutFileName)[0], '=')[1]);
 
   cout << "Ending SetCuts() . . ." << endl;
 
@@ -413,14 +419,10 @@ void analyze::SetDefinitions()
   MD = 1.87561;      //deuteron mass
   me = 0.00051099;   //electron mass
 
-  //Target Mass (FIXME!)
-  tgt_mass = MP; 
-  if(reaction=="deep"){tgt_mass = MD;} 
-
-  cout << "tgt_mass = " << tgt_mass << endl;
-  
-
-  //cout << "data rep = " <<  data_InputReport << endl;
+  //Target Mass 
+  if(reaction=="heep"){tgt_mass = MP;} 
+  else if(reaction=="deep"){tgt_mass = MD;} 
+   
   //Read Spectrometer Kinematics from REPORT_FILE
   string temp;
   
@@ -471,7 +473,7 @@ void analyze::SetHistBins()
 {
   cout << "Calling SetHistBins() . . . " << endl;
       
-  //HMS DETECTORS                  //SHMS Detectors      //Trigger Detector
+  //HMS DETECTORS               //SHMS Detectors         //Trigger Detector
   hbeta_nbins = 100;	        pbeta_nbins = 100;       coin_nbins = 100;    
   hbeta_xmin = 0.5;		pbeta_xmin = 0.5;        coin_xmin = 0.;
   hbeta_xmax = 1.5;		pbeta_xmax = 1.5;        coin_xmax = 30.;
@@ -829,7 +831,7 @@ void analyze::SetHistBins()
       //Missing Energy                    //Q2			          //Final Proton Momentum			     
       Em_nbins = nbins;			  Q2_nbins = nbins;	   	   Pf_nbins = nbins;				    
       Em_xmin = -0.05;			  Q2_xmin = 2.5; 	   	   Pf_xmin = 2.5;				    
-      Em_xmax = 0.5;			  Q2_xmax = 5.;       	   	   Pf_xmax = 3.2;				    
+      Em_xmax = 0.1;			  Q2_xmax = 5.;       	   	   Pf_xmax = 3.2;				    
       					 			   	 						    
       //Missing Momentum 		  //omega (E-E')	   	   //Final Proton Energy				    
       Pm_nbins = nbins;			  om_nbins = nbins;	   	   Ep_nbins = nbins;				    
@@ -1293,12 +1295,14 @@ void analyze::ReadTree(string rad_flag="")
 
       //Read ROOTfile
   
+      //If Doing Radiative Corrections, Read NON-RAD ROOTfile
       if(rad_flag=="do_rad_corr")
 	{
 	  cout << "Doing Radiative Corrections . . . " << endl;
 	  
 	  inROOT = new TFile(simc_InputFileName_norad, "READ");
 	}
+      //Read Radiative ROOTfile by default
       else{
 	inROOT = new TFile(simc_InputFileName_rad, "READ");
       }
@@ -1355,11 +1359,11 @@ void analyze::ReadTree(string rad_flag="")
       tree->SetBranchAddress("Em", &Em);
       tree->SetBranchAddress("Pm", &Pm);
       //Pmx_lab,Pmy_lab,Pmz_lab, Pmx_q, Pmy_q, Pmz_q 
-      //are calculated externally (using auxiliary methods from hcana)
+      //are calculated externally in the EventLoop (using auxiliary methods from hcana)
       //Kp, Kn are calculated in the event loop
       //M_recoil, E_recoil (missing neutron mass and neutron recoil energy) are calculated in the event loop
-      tree->SetBranchAddress("theta_pq", &th_pq);
-      tree->SetBranchAddress("phi_pq", &ph_pq);
+      // tree->SetBranchAddress("theta_pq", &th_pq); th_nq is calculated in the event loop (externally using hcana methods)
+      // tree->SetBranchAddress("phi_pq", &ph_pq);   ph_nq is calculated in the event loop (externally using hcana methods)
       // th_nq is calculated in the event loop
       // ph_nq is calculated in the event loop
       tree->SetBranchAddress("theta_p", &theta_p);
@@ -1433,19 +1437,10 @@ void analyze::EventLoop()
 	  
 	  //--------Calculated Kinematic Varibales----------------
 	  theta_p = xangle - theta_e;
-	  
-	  
-	  //M_recoil = sqrt( pow(nu+MD-sqrt(MP*MP+Pf*Pf),2) - Pm*Pm );  //recoil mass (neutron missing mass)
-	  //MM2 = M_recoil * M_recoil;
-	  
-	  //redefine
-	  //Ep = sqrt(MP*MP + Pf*Pf);
-	  //En = sqrt(MN*MN + Pm*Pm);
-	  
+
 	  En = Kn + MN;
 	  Ep = Kp + MP;
 
-	  //Em_nuc = nu - Kp - Kn;
 	  M_recoil = sqrt(pow((nu + MD - Ep), 2) - Pm*Pm);
 	  MM2 = M_recoil * M_recoil;
 
@@ -1459,7 +1454,6 @@ void analyze::EventLoop()
 	 
 	  ztar_diff = htar_z - etar_z;
 
-	  // th_pq =  th_q - theta_p; //redifined
 	  //---------------------Define Cuts---------------------------
 	  
 	  c_noedtm = pEDTM_tdcTimeRaw==0;
@@ -1480,9 +1474,9 @@ void analyze::EventLoop()
 	  
 	  
 
-	  //Define DATA/SIMC CUTS (BETTER BE THE SAME CUTS!)
+	  //Define DATA/SIMC CUTS (BETTER BE THE SAME CUTS as in SIMC!)
 	  if(edelta_cut_flag){c_edelta = e_delta>edel_min&&e_delta<edel_max;} 
-	   else{c_edelta=1;} //OFF means NO LIMITS on CUT (ALWAYS TRUE)
+	  else{c_edelta=1;} //OFF means NO LIMITS on CUT (ALWAYS TRUE)
 	  
 	  if(hdelta_cut_flag){c_hdelta = h_delta>hdel_min&&h_delta<hdel_max;} 
 	  else{c_hdelta=1;}
@@ -1490,12 +1484,10 @@ void analyze::EventLoop()
 	  if(W_cut_flag)     {c_W = W>=W_min&&W<=W_max;}                      
 	  else{c_W=1;}
 	  
-	  if(Em_cut_flag)    {
-	    
-	    c_Em = Em>Em_min&&Em<Em_max;
-	    if(reaction=="deep"){
-	      c_Em = Em_nuc>Em_min&&Em_nuc<Em_max; 
-	    }
+	  if(Em_cut_flag) {
+	   
+	    if(reaction=="heep") { c_Em = Em>Em_min&&Em<Em_max; }
+	    if(reaction=="deep") { c_Em = Em_nuc>Em_min&&Em_nuc<Em_max; }
 	  }                   
 	  else{c_Em=1;}
 	  
@@ -1512,7 +1504,7 @@ void analyze::EventLoop()
 	  else{c_th_nq = 1;}
 	  
 	  
-	  //PID CUTS
+	  //PID CUTS (SPECIFIC TO DATA)
 	  if(shmsCal_cut_flag)    {c_shms_cal = pCAL_etottracknorm>shms_cal_min&&pCAL_etottracknorm<shms_cal_max;}                   
 	  else{c_shms_cal=1;}
 	  
@@ -1564,7 +1556,6 @@ void analyze::EventLoop()
 		  
 		  if(base_cuts&&pid_cuts&&hmsColl_Cut&&shmsColl_Cut)
 		    {
-		      //&&abs(Pmx_lab)<0.05&&abs(Pmy_lab)<0.05&&Pmz_lab>-0.02
 		      //Trigger Detector
 		      H_ctime->Fill(epCoinTime);
 		      
@@ -1700,7 +1691,6 @@ void analyze::EventLoop()
 	  Pf = Pf / 1000.;       //final proton momentum
 	  
 	  ki = sqrt(Ein*Ein - me*me);        //initial electron momentum
-	  //E_recoil = sqrt(MN*MN + Pm*Pm);    //recoil energy (neutron energy)
 	  
 	  //redefine
 	  Ep = sqrt(MP*MP + Pf*Pf);
@@ -1733,12 +1723,8 @@ void analyze::EventLoop()
 
 	  X = Q2 / (2.*MP*nu);                           
 	  th_q = acos( (ki - kf*cos(theta_e))/q );       
-	  //  th_pq =  th_q - theta_p;
-	  //th_nq = acos((q - Pf*cos(th_pq))/Pm);
-	  
-       
-       
-	  
+
+      	  
 	  //---------------------------------------------------
 	  
 	  //---------Calculate Pmx, Pmy, Pmz in the Lab, and in the q-system----------------
@@ -1746,31 +1732,20 @@ void analyze::EventLoop()
 	  //Calculate electron final momentum 3-vector
 	  SetCentralAngles(e_th, e_ph);
 	  TransportToLab(kf, e_xptar, e_yptar, kf_vec);
-	  
-	  //cout << "e_th = " << e_th << " e_ph = " << e_ph << endl;
-	  //cout << "kf = " << e_th << " e_xptar = " << e_xptar << endl;
-	  
+ 
 	  //Calculate 4-Vectors
 	  fP0.SetXYZM(0.0, 0.0, ki, me);  //set initial e- 4-momentum
 	  fP1.SetXYZM(kf_vec.X(), kf_vec.Y(), kf_vec.Z(), me);  //set final e- 4-momentum
 	  fA.SetXYZM(0.0, 0.0, 0.0, tgt_mass );  //Set initial target at rest
 	  fQ = fP0 - fP1;
 	  fA1 = fA + fQ;   //final target (sum of final hadron four momenta)
-	  
-	  //cout << "ki = " << ki << endl;
-	  //cout << "tgt_mass = " << tgt_mass << endl;
-	  
-	  
+
 	  //Get Detected Particle 4-momentum
 	  SetCentralAngles(h_th, h_ph);
 	  TransportToLab(Pf, h_xptar, h_yptar, Pf_vec);
-	  fX.SetVectM(Pf_vec, MP);    //SET FOUR VECTOR OF detected particle
-	  fB = fA1 - fX;   //4-MOMENTUM OF UNDETECTED PARTICLE 
-	  
-	  //cout << "h_th = " << h_th << " h_ph = " << h_ph << endl;
-	  //cout << "Pf = " << Pf << " h_xptar = " << h_xptar << endl;
-	  //cout << "MP = " << MP << endl;
-	  
+	  fX.SetVectM(Pf_vec, MP);       //SET FOUR VECTOR OF detected particle
+	  fB = fA1 - fX;                 //4-MOMENTUM OF UNDETECTED PARTICLE 
+
 	  Pmx_lab = fB.X();
 	  Pmy_lab = fB.Y(); 
 	  Pmz_lab = fB.Z(); 
@@ -1866,7 +1841,7 @@ void analyze::EventLoop()
 	  //-------------------------------Fill SIMC Histograms--------------------------
 	  
 	  if(base_cuts&&hmsColl_Cut&&shmsColl_Cut){
-	    //&&abs(Pmx_lab)<0.05&&abs(Pmy_lab)<0.05&&Pmz_lab>-0.02
+
 	    //Primary (electron) Kinematics
 	    H_Q2->Fill(Q2, FullWeight);
 	    H_omega->Fill(nu, FullWeight);
@@ -2025,14 +2000,14 @@ void analyze::ApplyWeight()
     
     FullWeight = 1. / (total_charge_bcm_cut * eTrkEff * hTrkEff * tLT * pAbs_corr * tgtBoil_corr );
     
-    cout << "total charge = " << total_charge_bcm_cut << " mC " << endl;
-    cout << "e- trk eff = " << eTrkEff << endl;
-    cout << "h trk eff = " << hTrkEff << endl;
-    cout << "tLT  = " << tLT << endl;
-    cout << "pAbs  = " << pAbs_corr << endl;
-    cout << "tgtBoil = " << tgtBoil_corr << endl;
+    cout << "total charge = " << setprecision(5) << total_charge_bcm_cut << " mC " << endl;
+    cout << "e- trk eff = "   << setprecision(5) << eTrkEff << endl;
+    cout << "h trk eff = "    << setprecision(5) << hTrkEff << endl;
+    cout << "tLT  = "         << setprecision(5) << tLT << endl;
+    cout << "pAbs  = "        << setprecision(5) << pAbs_corr << endl;
+    cout << "tgtBoil = "      << setprecision(5) << tgtBoil_corr << endl;
     
-    //Scale The DATA Hsitograms by Full Weight
+    //Scale The DATA Histograms by Full Weight
     
     //Trigger Detector
     H_ctime->Scale(FullWeight);
@@ -2246,13 +2221,16 @@ void analyze::WriteHist(string rad_flag="")
       H_bcmCurrent->Write();
     
     }
+  
   else if(analysis=="simc")
     {
       //Create output ROOTfile
      
+      //If Doing Radiative Corrections, Write NON-RAD SIMC ROOTfile Histograms
       if(rad_flag=="do_rad_corr"){
 	outROOT = new TFile(simc_OutputFileName_norad, "RECREATE");
       }
+      //By Default, Write Radiated SIMC ROOTfile Histograms
       else{
 	outROOT = new TFile(simc_OutputFileName_rad, "RECREATE");
       }
@@ -2333,8 +2311,8 @@ void analyze::WriteHist(string rad_flag="")
          
       H_Em_vs_Pm->Write();
 
-
     }
+  
   outROOT->Close();
   cout << "Ending WriteHist() . . . " << endl;
 
@@ -2343,11 +2321,12 @@ void analyze::WriteHist(string rad_flag="")
 //____________________________________________________________
 void analyze::WriteReport()
 {
-
+  
+  /*Method to write charge, efficiencies, live time and other relevant quantities to a data file*/
+  
   cout << "Calling WriteReport() . . ." << endl;
 
   if(analysis=="data"){
-    /*Method to write charge, efficiencies, live time and other relevant quantities to a data file*/
     
     //Check if file already exists
     in_file.open(report_OutputFileName);
@@ -2357,7 +2336,6 @@ void analyze::WriteReport()
       cout << "Report File does NOT exist, will create one . . . " << endl;
       
       out_file.open(report_OutputFileName);
-      //out_file << std::left << std::setw(25) << "Column 1" << std::setw(25) << "Column 2" << endl;
       out_file << "#!Run[i,0]/" << std::setw(25) << "charge[f,1]/" << std::setw(25) << "cpuLT[f,2]/"  << std::setw(25) <<  "tLT[f,3]/"  << std::setw(25) <<  "hTrkEff[f,4]/" << std::setw(25) <<  "eTrkEff[f,5]/" << std::setw(25) <<   "avg_current[f,6]/"  << std::setw(25) << "pS1X_rate[f,7]/"  << std::setw(25) << "ptrig1_rate[f,8]/" << std::setw(25) << "ptrig2_rate[f,9]/" << std::setw(25) << "ptrig3_rate[f,10]/" << std::setw(25) << "ptrig4_rate[f,11]/" << std::setw(25) << "ptrig6_rate[f,12]/" << std::setw(25) << "HMS_Angle[f,13]/"  << std::setw(25) << "HMS_Pcen[f,14]/"  << std::setw(25) << "SHMS_Angle[f,15]/"   << std::setw(25) << "SHMS_Pcen[f,16]/"  << std::setw(25) << "HMS_Xmp[f,17]/" << std::setw(25) << "HMS_Ymp[f,18]/" << std::setw(25) << "SHMS_Xmp[f,19]/" << std::setw(25) << "SHMS_Ymp[f,20]/" << std::setw(25) << "xBPM[f,21]/" << std::setw(25) << "yBPM[f,22]/" << endl;
       out_file.close();
       
@@ -2376,18 +2354,17 @@ void analyze::WriteReport()
 //_________________________________________________________
 void analyze::CollimatorStudy()
 {
-  
+
+  //Method to study various collimator cuts on the H(e,e'p) and D(e,e'p)n  Yield across Ytar, Y'tar, X'tar and delta
+
   cout << "Calling CollimatorStudy() . . . " << endl;
-  //Method to study various collimator cuts on the H(e,e'p) Yield across Ytar, Y'tar, X'tar and delta
   
   //Scaling the HMS/SHMS Collimator Cuts
   hms_hsize = hms_scale*hms_hsize;  //The scale factor is read from set_heep_cuts.inp
   hms_vsize = hms_scale*hms_vsize;
   
   shms_hsize = shms_scale*shms_hsize;
-  shms_vsize = shms_scale*shms_vsize;
-
-  
+  shms_vsize = shms_scale*shms_vsize;  
 
   //Define HMS Collimator Shape
   hms_Coll_gCut = new TCutG("hmsCollCut", 8 );
@@ -2665,20 +2642,21 @@ string& analyze::trim(std::string& s)
 
 //-----------RUN ANALYSIS METHODS------------
 
-//___________________________________________
-void analyze::run_simc_analysis(Bool_t do_rad_flag=0)
+//________________________________________________________
+void analyze::run_simc_analysis(Bool_t rad_corr_flag=0)
 {
- 
-      SetFileNames();
-      SetCuts();
-      SetDefinitions();
-      SetHistBins();
-      CreateHist();
-      ReadTree();
-      EventLoop();
-      WriteHist();
-    
-  if(do_rad_flag)
+  
+  //Run SIMC analysis. By default, it reads the radiative ROOTfile
+  SetFileNames();
+  SetCuts();
+  SetDefinitions();
+  SetHistBins();
+  CreateHist();
+  ReadTree();
+  EventLoop();
+  WriteHist();
+  
+  if(rad_corr_flag)
     {
       cout << "-----------------------------" << endl;
       cout << " Doing Radiative Corrections " << endl;

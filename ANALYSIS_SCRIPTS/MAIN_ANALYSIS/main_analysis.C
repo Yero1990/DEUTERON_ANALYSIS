@@ -27,6 +27,7 @@ int main_analysis()
   cin >> input;
   cout << "" << endl;
   
+  //Do H(e,e'p)
   if (input==1){
     
 
@@ -40,9 +41,13 @@ int main_analysis()
 
   }
   
+  //Do D(e,e'p)n
   else if (input==2){
 
+    //Set Input Parameter File Name
     inputCutFileName="set_deep_cuts.inp";
+    
+    //Read Necessary Input Parameters to Run Analysis
     pm_set = stoi(split(FindString("pm_setting", inputCutFileName)[0], ':')[1]);
     dataSet = stoi(split(FindString("data_set", inputCutFileName)[0], ':')[1]);
     runlist_name = Form("runlists/d2_pm%i_set%i.dat", pm_set, dataSet);
@@ -50,68 +55,92 @@ int main_analysis()
     run_data_flag = stoi(split(FindString("RUN_DATA", inputCutFileName)[0], ':')[1]);
     rad_corr_flag = stoi(trim(split(FindString("rad_corr_flag", inputCutFileName)[0], ':')[1])); 
     react_type = "deep";
-    ifs.open(runlist_name);
-    getline(ifs, line);
-    run = stoi(line);  //get the 1st run from the runlist (all simc needs is to know the kinematic setting which can get from any run in thr runlist.)
+    
+
+    
     ifs.close();
   }
 
    
+  //==================================== D  A  T  A ============================================
   if(run_data_flag){
 
+    //Open Data Run List
     ifs.open(runlist_name);
     
     //Read Run List
     while(getline(ifs, line))
       {
-	run = stoi(line);
-	cout << "run = " << run << endl;
-	cout << "reaction = " << react_type << endl;
-	//cout << "pm_set =  " << pm_set << endl;
-	//Initialize Class Object(DATA)
-	analyze a2(run, "SHMS", "data", react_type);
-	a2.run_data_analysis();
+	//convert string to integer
+	run = stoi(line);                               
+
+	//create instance of the 'analyze' class, called a1
+	analyze a1(run, "SHMS", "data", react_type);
+
+	//call method to run data analysis. This method call all necessary methods to analyze data.(See analyze.C)
+	a1.run_data_analysis();
 	
       }
+    
+    //Close Run List file
     ifs.close();
+  
   }
 
+  //============================================================================================
 
-  //=========================S I M C=========================
 
-    if(run_simc_flag)
-      {
+
+  //======================================== S I M C ===========================================
+
+  if(run_simc_flag)
+    {
 	
-	if (react_type=="heep"){
-	  
+      if (react_type=="heep"){
+	
+	//Open H(e,e'p) Elasic Run List
 	ifs.open(runlist_name);
 	
 	//Read Run List
 	while(getline(ifs, line))
-	  {
+	  {	
+	    //convert string to integer
 	    run = stoi(line);
-	    //Initialize Class Object (SIMC)
+	    
+	    //create instance of the 'analyze' class, called a1
 	    analyze a1(run, "SHMS", "simc", react_type);
-	    a1.run_simc_analysis(rad_corr_flag);
+	    
+	    //call method to run simc analysis. This method call all necessary methods to analyze simc.(See analyze.C)
+	    //rad_corr_flag| 0: do NOT do radiative corrections,  1: do radiatie corrections (controlled from input file) 
+	    a1.run_simc_analysis(rad_corr_flag);   
 
 	  }
 	
 	ifs.close();
-	cout << "closing file " << endl;
-      }
-
-      else if(react_type=="deep"){
-
-	//Initialize Class Object (SIMC)
-	analyze a1(run, "SHMS", "simc", react_type);
-	a1.run_simc_analysis(rad_corr_flag);
-
+	
+      } //end H(e,e'p)
       
+      else if(react_type=="deep"){
+	
+	//get the 1st run from the runlist (all simc needs is to know the kinematic setting 
+	//which can get from any run in the runlist.)
+	ifs.open(runlist_name);
+	getline(ifs, line);
+	run = stoi(line); 
+
+	//create instance of the 'analyze' class, called a1
+	analyze a1(run, "SHMS", "simc", react_type);
+	
+	//call method to run simc analysis. This method call all necessary methods to analyze simc.(See analyze.C)
+	//rad_corr_flag| 0: do NOT do radiative corrections,  1: do radiatie corrections (controlled from input file) 
+	a1.run_simc_analysis(rad_corr_flag);
+	
+	
       }
       
     }
   
-  //==========================================================
+  //============================================================================================
   
 
   

@@ -48,7 +48,7 @@ class analyze
   void CollimatorStudy();
 
   //------------Run Analysis Mehods--------------
-  void run_simc_analysis(Bool_t do_rad_flag=0);
+  void run_simc_analysis(Bool_t rad_corr_flag=0);
   void run_data_analysis();
 
 
@@ -65,7 +65,6 @@ class analyze
   int pm_setting;      //80, 580, 750 MeV
   string theory;      //laget, misak, . . .
   string model;       //pwia, fsi, . . .
-  Bool_t rad_corr_flag;   //do rad corr (1),  do NOT do rad corr (0)
   int data_set;      //1, 2, 3
 
   //Spectrometer prefixes to be used in SetBranchAddress()
