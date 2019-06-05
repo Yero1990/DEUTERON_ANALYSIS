@@ -13,9 +13,6 @@ analyze::analyze(int run=-1, string e_arm="SHMS", string type="data", string rea
   
   cout << "Calling Constructor . . . " << endl;
   cout << "  " << endl;
-  cout << "==================================" << endl;
-  cout << Form("Analyzing %s %s: Run %i ",reaction.c_str(), analysis.c_str(), runNUM) << endl;
-  cout << "==================================" << endl;
 
   //Set Spectrometer Prefix later use
   if(e_arm=="SHMS"){
@@ -924,7 +921,7 @@ void analyze::CreateHist()
   
   //Trigger Detector
   H_ctime = new TH1F("H_ctime", "ep Coincidence Time", coin_nbins, coin_xmin, coin_xmax);
-  H_ctime->Sumw2(); //Apply sum of weight squared to this histograms
+  H_ctime->Sumw2(); //Apply sum of weight squared to this histogram ABOVE.
   H_ctime->SetDefaultSumw2();  //Generalize sum weights squared to all histograms  (ROOT 6 has this by default. ROOT 5 does NOT)
 
   //HMS Detectors
@@ -2411,29 +2408,41 @@ void analyze::CalcRadCorr()
   */
   cout << "Calling CalcRadCorr() . . . " << endl;
 
+  //Read SIMC Radiative and Non-Radiative ROOTfiles
   TFile *rad_file = new TFile(simc_OutputFileName_rad, "READ");
   TFile *norad_file = new TFile(simc_OutputFileName_norad, "READ");
 
-  //inROOT = new TFile(simc_OutputFileName_rad, "READ");
-  
-  TH1F *simc_Em_rad = 0;
-  TH1F *simc_Em_norad = 0;
-  
+  //Get Necessary Histograms
   rad_file->cd();	
-  rad_file->GetObject("H_Emiss", simc_Em_rad);
-  
+  rad_file->GetObject("H_Q2", simc_Q2_rad);
+  rad_file->GetObject("H_Pm", simc_Pm_rad);
+  rad_file->GetObject("H_theta_nq", simc_th_nq_rad);
+
   norad_file->cd();	
-  norad_file->GetObject("H_Emiss", simc_Em_norad);
+  norad_file->GetObject("H_Q2", simc_Q2_norad);
+  norad_file->GetObject("H_Pm", simc_Pm_norad);
+  norad_file->GetObject("H_theta_nq", simc_th_nq_norad);
   
-  simc_Em_norad->Divide(simc_Em_rad);
+  //Calculate Non-Radiative to Radiative SIMC Ratio 
+  simc_Q2_norad->Divide(simc_Q2_rad);
+  simc_Pm_norad->Divide(simc_Pm_rad);
+  simc_th_nq_norad->Divide(simc_th_nq_rad);
 
-  //Write Ynorad/Yrad Ratios to ROOTfile
+  //Rename Histograms  / Set Title
+  simc_Q2_norad->SetNameTitle("H_Q2_ratio", "SIMC Q2_{norad} / Q2_{rad} Ratio");
+  simc_Pm_norad->SetNameTitle("H_Pm_ratio", "SIMC Pm_{norad} / Pm_{rad} Ratio");
+  simc_th_nq_norad->SetNameTitle("H_th_nq_ratio", "SIMC th_nq_{norad} / th_nq_{rad} Ratio");
+
+
+  //Write Radiative Correction Ratios to ROOTfile
   TFile *rad_ratio_file = new TFile(simc_OutputFileName_radCorr, "RECREATE");
-
   rad_ratio_file->cd();
-  
-  simc_Em_norad->Write();
-  
+
+  //Write To File
+  simc_Q2_norad->Write();
+  simc_Pm_norad->Write();
+  simc_th_nq_norad->Write();
+
   rad_ratio_file->Close();
 
 }
@@ -2449,32 +2458,35 @@ void analyze::ApplyRadCorr()
    */
   cout << "Calling ApplyRadCorr() . . . " << endl;
   
-  //Read Data and RadCorr ROOTfiles
-  
+  //Read Data Un-RadCorr and SIMC RadCorr ROOTfiles
   TFile *data_file = new TFile(data_OutputFileName, "READ");
   TFile *radCorr_file = new TFile(simc_OutputFileName_radCorr, "READ");
 
 
-  //Read In Data Histos and Radiative Correction Ratio
-  TH1F *data_Em = 0;
-  TH1F *rad_corr_Em = 0;
-
   data_file->cd();	
-  data_file->GetObject("H_Em_nuc", data_Em);
-  
+  data_file->GetObject("H_Q2", data_Q2);
+  data_file->GetObject("H_Pm", data_Pm);
+  data_file->GetObject("H_th_nq", data_th_nq);
+
   radCorr_file->cd();	
-  radCorr_file->GetObject("H_Emiss", rad_corr_Em);
-  
-  //Apply Rad Corrections
-  data_Em->Multiply(rad_corr_Em);
-   
-  //Write Ynorad/Yrad Ratios to ROOTfile
+  radCorr_file->GetObject("H_Q2_ratio", ratio_Q2);
+  radCorr_file->GetObject("H_Pm_ratio", ratio_Pm);
+  radCorr_file->GetObject("H_th_nq_ratio", ratio_th_nq);
+
+  //Apply Radiative Corrections to Data
+  data_Q2->Multiply(ratio_Q2);
+  data_Pm->Multiply(ratio_Pm);
+  data_th_nq->Multiply(ratio_th_nq);
+
+  //Write Radiative Corrected Data to ROOTfile
   TFile *data_radcorr = new TFile(data_OutputFileName_radCorr, "RECREATE");
 
   data_radcorr->cd();
-  
-  data_Em->Write();
-  
+
+  data_Q2->Write();
+  data_Pm->Write();
+  data_th_nq->Write();
+
   data_radcorr->Close();
 
 }
@@ -2645,7 +2657,7 @@ string& analyze::trim(std::string& s)
 //________________________________________________________
 void analyze::run_simc_analysis(Bool_t rad_corr_flag=0)
 {
-  
+
   //Run SIMC analysis. By default, it reads the radiative ROOTfile
   SetFileNames();
   SetCuts();
@@ -2656,11 +2668,16 @@ void analyze::run_simc_analysis(Bool_t rad_corr_flag=0)
   EventLoop();
   WriteHist();
   
+  //Calculate and Apply Radiative Corrections
   if(rad_corr_flag)
     {
-      cout << "-----------------------------" << endl;
+      cout << "_____________________________" << endl;
+      cout << "_____________________________" << endl;
+      cout << "                             " << endl;
       cout << " Doing Radiative Corrections " << endl;
-      cout << "-----------------------------" << endl;
+      cout << "_____________________________" << endl;
+      cout << "_____________________________" << endl;
+
       ReadTree("do_rad_corr");
       EventLoop();
       WriteHist("do_rad_corr");
@@ -2674,6 +2691,7 @@ void analyze::run_simc_analysis(Bool_t rad_corr_flag=0)
 //________________________________________
 void analyze::run_data_analysis()
 {
+
 
   SetFileNames();
   SetCuts();
