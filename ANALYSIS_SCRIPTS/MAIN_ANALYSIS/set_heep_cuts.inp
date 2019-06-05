@@ -6,6 +6,9 @@
 RUN_SIMC: 1
 RUN_DATA: 0
 
+;Do Radiative Corrections
+rad_corr_flag: 0
+
 
 #------Set DATA/SIMC CUTS LIMITS ------
 Em_min : -0.04    
@@ -48,9 +51,9 @@ bool W       = 1
 bool h_delta = 1
 bool e_delta = 1
 bool ztar_diff = 1
-bool Q2 = 1
+bool Q2 = 0
 bool th_nq = 0
-bool MM = 1
+bool MM = 0
 
 #------TURN PID CUTS ON/OFF-----
 bool shmsCal_EtotTrackNorm  = 0

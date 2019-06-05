@@ -7,6 +7,8 @@
 RUN_SIMC: 1
 RUN_DATA: 1
 
+;Do Radiative Corrections
+rad_corr_flag: 0
 
 #------ D(e,e'p)n Missing Momentum Settings -------
 #Units: Enegy/Momentum/W [GeV], spec_delta [%]  
@@ -14,22 +16,43 @@ RUN_DATA: 1
 ;80 MeV, 580 MeV, 750 MeV
 pm_setting : 80    
 
-;laget,  misak, . . . 
+;Theoretical Calculation: laget,  misak, . . . 
 theory     : laget      
 
-;pwia, fsi,
+;Theoretical Model: pwia, fsi,
 model      : fsi        
-
-;radiative process, "rad" or "norad"
-;rad_flag   : rad   
 
 ;DataSet 1, 2, 3  
 data_set   : 1               
 
+#------TURN CUTS ON/OFF------
+# True (ON) =  1,  False (OFF) = 0
+
+;Basic Kinematics Cuts
+bool Em      = 1
+bool W       = 0
+bool h_delta = 1
+bool e_delta = 1
+bool ztar_diff = 1
+bool Q2 = 0
+bool th_nq = 0
+bool MM = 0
+
+;PID Cuts
+bool shmsCal_EtotTrackNorm  = 0
+bool coin_time              = 1
+
+;Collimator Cuts
+bool hmsCollCut   =  1
+bool shmsCollCut  =  0
+
+;Collimator Cuts Scale 
+hms_scale         =  1
+shms_scale        =  1
 
 
 #------Set DATA/SIMC CUTS LIMITS ------
-Em_min : 0.02   
+Em_min : -0.02   
 Em_max : 0.04
 
 h_delta_min: -8.   
@@ -62,28 +85,3 @@ shms_cal_max: 5.
 coin_time_min: 11.
 coin_time_max: 15.
 
-#------TURN CUTS ON/OFF------
-# True (ON) =  1,  False (OFF) = 0
-
-bool Em      = 1
-bool W       = 0
-bool h_delta = 1
-bool e_delta = 1
-bool ztar_diff = 1
-bool Q2 = 0
-bool th_nq = 0
-bool MM = 0
-
-#------TURN PID CUTS ON/OFF-----
-bool shmsCal_EtotTrackNorm  = 0
-bool coin_time              = 1
-
-
-#------TURN Collimator CUTS ON/OFF-------
-
-bool hmsCollCut   =  1
-bool shmsCollCut  =  0
-
-#-----Scale Collimator Cuts------
-hms_scale         =  1
-shms_scale        =  1

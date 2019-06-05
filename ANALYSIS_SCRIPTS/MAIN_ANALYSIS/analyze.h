@@ -20,13 +20,14 @@ class analyze
   void CreateHist();
   void ReadScalerTree(string bcm_type="BCM4A");  
   void ScalerEventLoop(Double_t current_thrs_bcm=5.); //bcm current cut threshold in uA units
-  void ReadTree();
+  void ReadTree(string rad_flag="");
   void EventLoop();
   void CalcEff();
   void ApplyWeight();
-  void WriteHist();
+  void WriteHist(string rad_flag="");
   void WriteReport();
-
+  void CalcRadCorr();
+  void ApplyRadCorr();
 
   //Auxiliary Function Prototypes (obtained from hcana) to calculate Pmx, Pmy, Pmz in the Lab/q-frame correctly
   void GeoToSph( Double_t  th_geo, Double_t  ph_geo, Double_t& th_sph, Double_t& ph_sph);
@@ -47,7 +48,7 @@ class analyze
   void CollimatorStudy();
 
   //------------Run Analysis Mehods--------------
-  void run_simc_analysis();
+  void run_simc_analysis(Bool_t rad_corr_flag=0);
   void run_data_analysis();
 
 
@@ -61,10 +62,10 @@ class analyze
   string h_arm_name;
 
   //Additional Parameters for D(e,e'p) Theory (Read from deep_input_file.dat)
-  int pm_setting;      //80, 580, 750 MeV
+        //80, 580, 750 MeV
+  int pm_setting;
   string theory;      //laget, misak, . . .
   string model;       //pwia, fsi, . . .
-  string rad_flag;   //"rad" or "norad"
   int data_set;      //1, 2, 3
 
   //Spectrometer prefixes to be used in SetBranchAddress()
@@ -479,6 +480,48 @@ class analyze
   //Create Scaler Related Histogram (ONLY FOR SCALERS)
   TH1F *H_bcmCurrent;
 
+  
+  //--------------------------Radiation Correction Histograms------------------------
+
+  //Used in CalcRadCorr() Method. DO NOT NEED TO BE INITIALIZED in analyze.C. These just hold existing histos
+  	
+  //NOTE: Only do Radiative correction for those kinematics that will be used to look at the cross section. For example,
+  //Looking at cross section as a function of Missing momentum in different Q2 bins, and th_nq bins. 
+  //dataYield_Pm / phase_space_Pm --> cross section as a function of Pmiss bins. Then one can bin further, and 
+  //look at (dataYield_Pm / phase_space_Pm) for a specific Q2 or th_nq range.
+
+  //----------SIMC RADIATIVE-----------
+  TH1F *simc_Q2_rad = 0;			   	      		     
+  TH1F *simc_Pm_rad = 0;					     				     
+  TH1F *simc_th_nq_rad = 0;					     
+
+  //--------SIMC NON-RADIATIVE---------
+  TH1F *simc_Q2_norad = 0;			   	      		     
+  TH1F *simc_Pm_norad = 0;					     				     
+  TH1F *simc_th_nq_norad = 0;									                                           
+
+  //Used in ApplyRadCorr() Method. DO NOT NEED TO BE INITIALIZED in analyze.C. These just hold existing histos
+  
+  //-------DATA (BEFORE APPLYING RADIATIVE CORRECTIONS)------
+  TH1F *data_Q2 = 0;			   	      		     
+  TH1F *data_Pm = 0;					     				     
+  TH1F *data_th_nq = 0;
+
+  //-------RADIATIVE CORRECTION RATIO simc_Ynorad / simc_Yrad--------
+  TH1F *ratio_Q2 = 0;
+  TH1F *ratio_Pm = 0;
+  TH1F *ratio_th_nq = 0;
+
+
+  //-------DATA (AFTER APPLYING RADIATIVE CORRECTIONS)------
+  TH1F *data_Q2_corr = 0;			   	      		     
+  TH1F *data_Pm_corr = 0;					     				     
+  TH1F *data_theta_nq_corr = 0;
+
+  //---------------------------------------------------------------------------------
+
+
+
   //------------------------------Data Related Variables--------------------------------
   TTree *tree;
   Long64_t nentries;
@@ -843,9 +886,11 @@ class analyze
   //Output ROOTfile Name
   TString simc_OutputFileName_rad;
   TString simc_OutputFileName_norad;
+  TString simc_OutputFileName_radCorr;
 
   TString data_OutputFileName;
-  
+  TString data_OutputFileName_radCorr;
+
   TString report_OutputFileName;
   TString YieldStudy_FileName;
   
