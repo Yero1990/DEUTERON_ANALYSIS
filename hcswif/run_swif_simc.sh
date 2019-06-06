@@ -4,7 +4,7 @@
 #where [options] ---> status,  delete
 
 #workflow_name="heep_coin_elec"
-workflow_name="D2_80MeV_RadCorr"
+workflow_name="D2_580_750_MeV"
 
 #runlist_name="current_elec.data"
 #runlist_name="current_prot.data"

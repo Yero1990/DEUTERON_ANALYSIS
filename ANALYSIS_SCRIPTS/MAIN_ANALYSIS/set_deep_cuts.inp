@@ -1,11 +1,19 @@
 #D(e,e'p)n Input File 
 
+#-------Single Run Analysis---------
+;Use this option if you only want to look at a single file in data/simc
+single_run_flag: 0
+
+;Specify filenames
+data_fname: ROOTfiles/pm580_set1.root
+data_report_fname: REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_deep_check_3291_-1.report
+simc_fname: worksim_voli/d2_pm580_lagetfsi_rad_set1.root
 
 #--------Analyze DATA or SIMC-------
 # True (ON) =  1,  False (OFF) = 0
 
 RUN_SIMC: 1
-RUN_DATA: 1
+RUN_DATA: 0
 
 ;Do Radiative Corrections
 rad_corr_flag: 0
@@ -14,7 +22,7 @@ rad_corr_flag: 0
 #Units: Enegy/Momentum/W [GeV], spec_delta [%]  
 
 ;80 MeV, 580 MeV, 750 MeV
-pm_setting : 80    
+pm_setting : 580    
 
 ;Theoretical Calculation: laget,  misak, . . . 
 theory     : laget      
@@ -39,7 +47,7 @@ bool th_nq = 0
 bool MM = 0
 
 ;PID Cuts
-bool shmsCal_EtotTrackNorm  = 0
+bool shmsCal_EtotTrackNorm  = 1
 bool coin_time              = 1
 
 ;Collimator Cuts
@@ -76,12 +84,10 @@ thnq_max: 160.
 MM_min: 0.9
 MM_max: 0.985
 
-
-
 ;SHMS Cal EtotTrackNorm Cut
 shms_cal_min: 0.7
 shms_cal_max: 5.
 
-coin_time_min: 11.
-coin_time_max: 15.
+coin_time_min: 10.5
+coin_time_max: 14.5
 

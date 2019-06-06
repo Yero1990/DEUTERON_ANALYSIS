@@ -9,7 +9,7 @@ class analyze
  public:
 
   //Consructor / Destructor
-  analyze(int run=-1, string e_arm="SHMS", string type="data", string react="heep");
+  analyze(int run=-1000, string e_arm="SHMS", string type="data", string react="heep");
   ~analyze();
   
   //Define Functions Prototypes
@@ -46,6 +46,10 @@ class analyze
 
   //-------Specialized Studies Methods-----------
   void CollimatorStudy();
+
+  
+  //---------Combined Histograms (for many runs at same kinematics, i.e. Pm=580, 750 MeV)--------
+  void CombineHistos();
 
   //------------Run Analysis Mehods--------------
   void run_simc_analysis(Bool_t rad_corr_flag=0);
@@ -101,6 +105,10 @@ class analyze
 
   //-----------Set Default histogram Binning--------------
   Double_t nbins = 100;
+
+  Double_t charge_nbins;
+  Double_t charge_xmin;
+  Double_t charge_xmax;
 
   //Trigger Detector
   Double_t coin_nbins;
@@ -375,7 +383,10 @@ class analyze
   //---------------------END SET DEFAULT HISTOGRAM BINNING-----------------------
 
   //Detector Histograms (DATA ONLY)
-  
+
+  //Total Charge (in mC)
+  TH1F *H_charge;
+
   //Trigger Detector
   TH1F *H_ctime;
 
@@ -519,6 +530,157 @@ class analyze
   TH1F *data_theta_nq_corr = 0;
 
   //---------------------------------------------------------------------------------
+
+
+  //---------CombineHistos() Method Histograms---------------
+  
+  //-------Running Sum Histograms--------                            //----------ith run Histograms-------					  
+  TH1F *H_charge_total = 0;					     TH1F *H_charge_i = 0;						  
+  TH1F *H_ctime_total = 0;					     TH1F *H_ctime_i = 0;						  
+  TH1F *H_hbeta_total = 0;					     TH1F *H_hbeta_i = 0;						  
+  TH1F *H_hdc_dist_total = 0;					     TH1F *H_hdc_dist_i = 0;					  
+  TH1F *H_hdc_res_total = 0;					     TH1F *H_hdc_res_i = 0;					  
+  TH1F *H_hcer_total = 0;					     TH1F *H_hcer_i = 0;						  
+  TH1F *H_hcal_total = 0;					     TH1F *H_hcal_i = 0;						  
+  TH1F *H_pbeta_total = 0;					     TH1F *H_pbeta_i = 0;						  
+  TH1F *H_pdc_dist_total = 0;					     TH1F *H_pdc_dist_i = 0;					  
+  TH1F *H_pdc_res_total = 0;					     TH1F *H_pdc_res_i = 0;					  
+  TH1F *H_pngcer_total = 0;					     TH1F *H_pngcer_i = 0;						  
+  TH1F *H_pcal_etotnorm_total = 0;				     TH1F *H_pcal_etotnorm_i = 0;					  
+  TH1F *H_pcal_etotTrkNorm_total = 0;				     TH1F *H_pcal_etotTrkNorm_i = 0;				  
+  TH1F *H_Q2_total = 0;						     TH1F *H_Q2_i = 0;						  
+  TH1F *H_omega_total = 0;					     TH1F *H_omega_i = 0;						  
+  TH1F *H_W_total = 0;						     TH1F *H_W_i = 0;						  
+  TH1F *H_W2_total = 0;						     TH1F *H_W2_i = 0;						  
+  TH1F *H_xbj_total = 0;					     TH1F *H_xbj_i = 0;						  
+  TH1F *H_kf_total = 0;						     TH1F *H_kf_i = 0;						  
+  TH1F *H_theta_q_total = 0;					     TH1F *H_theta_q_i = 0;					  
+  TH1F *H_q_total = 0;						     TH1F *H_q_i = 0;						  
+  TH1F *H_theta_elec_total = 0;					     TH1F *H_theta_elec_i = 0;					  
+  TH1F *H_Em_total = 0;						     TH1F *H_Em_i = 0;						  
+  TH1F *H_Em_nuc_total = 0;					     TH1F *H_Em_nuc_i = 0;						  
+  TH1F *H_Pm_total = 0;						     TH1F *H_Pm_i = 0;						  
+  TH1F *H_Pmx_lab_total = 0;					     TH1F *H_Pmx_lab_i = 0;					  
+  TH1F *H_Pmy_lab_total = 0;					     TH1F *H_Pmy_lab_i = 0;					  
+  TH1F *H_Pmz_lab_total = 0;					     TH1F *H_Pmz_lab_i = 0;					  
+  TH1F *H_Pmx_q_total = 0;					     TH1F *H_Pmx_q_i = 0;						  
+  TH1F *H_Pmy_q_total = 0;					     TH1F *H_Pmy_q_i = 0;						  
+  TH1F *H_Pmz_q_total = 0;					     TH1F *H_Pmz_q_i = 0;						  
+  TH1F *H_MM_total = 0;						     TH1F *H_MM_i = 0;						  
+  TH1F *H_MM2_total = 0;					     TH1F *H_MM2_i = 0;						  
+  TH1F *H_Pf_total = 0;						     TH1F *H_Pf_i = 0;						  
+  TH1F *H_Ep_total = 0;						     TH1F *H_Ep_i = 0;						  
+  TH1F *H_En_total = 0;						     TH1F *H_En_i = 0;						  
+  TH1F *H_Kp_total = 0;						     TH1F *H_Kp_i = 0;						  
+  TH1F *H_Kn_total = 0;						     TH1F *H_Kn_i = 0;						  
+  TH1F *H_theta_prot_total = 0;					     TH1F *H_theta_prot_i = 0;					  
+  TH1F *H_theta_pq_total = 0;					     TH1F *H_theta_pq_i = 0;					  
+  TH1F *H_theta_nq_total = 0;					     TH1F *H_theta_nq_i = 0;					  
+  TH1F *H_hx_tar_total = 0;					     TH1F *H_hx_tar_i = 0;						  
+  TH1F *H_hy_tar_total = 0;					     TH1F *H_hy_tar_i = 0;						  
+  TH1F *H_hz_tar_total = 0;					     TH1F *H_hz_tar_i = 0;						  
+  TH1F *H_ex_tar_total = 0;					     TH1F *H_ex_tar_i = 0;						  
+  TH1F *H_ey_tar_total = 0;					     TH1F *H_ey_tar_i = 0;						  
+  TH1F *H_ez_tar_total = 0;					     TH1F *H_ez_tar_i = 0;						  
+  TH1F *H_ztar_diff_total = 0;					     TH1F *H_ztar_diff_i = 0;					  
+  TH1F *H_hytar_total = 0;					     TH1F *H_hytar_i = 0;						  
+  TH1F *H_hxptar_total = 0;					     TH1F *H_hxptar_i = 0;						  
+  TH1F *H_hyptar_total = 0;					     TH1F *H_hyptar_i = 0;						  
+  TH1F *H_hdelta_total = 0;					     TH1F *H_hdelta_i = 0;						  
+  TH1F *H_hxfp_total = 0;					     TH1F *H_hxfp_i = 0;						  
+  TH1F *H_hyfp_total = 0;					     TH1F *H_hyfp_i = 0;						  
+  TH1F *H_hxpfp_total = 0;					     TH1F *H_hxpfp_i = 0;						  
+  TH1F *H_hypfp_total = 0;					     TH1F *H_hypfp_i = 0;						  
+  TH1F *H_eytar_total = 0;					     TH1F *H_eytar_i = 0;						  
+  TH1F *H_exptar_total = 0;					     TH1F *H_exptar_i = 0;						  
+  TH1F *H_eyptar_total = 0;					     TH1F *H_eyptar_i = 0;						  
+  TH1F *H_edelta_total = 0;					     TH1F *H_edelta_i = 0;						  
+  TH1F *H_exfp_total = 0;					     TH1F *H_exfp_i = 0;						  
+  TH1F *H_eyfp_total = 0;					     TH1F *H_eyfp_i = 0;						  
+  TH1F *H_expfp_total = 0;					     TH1F *H_expfp_i = 0;						  
+  TH1F *H_eypfp_total = 0;					     TH1F *H_eypfp_i = 0;						  
+  TH1F *H_hXColl_total = 0;					     TH1F *H_hXColl_i = 0;						  
+  TH1F *H_hYColl_total = 0;					     TH1F *H_hYColl_i = 0;						  
+  TH1F *H_eXColl_total = 0;					     TH1F *H_eXColl_i = 0;						  
+  TH1F *H_eYColl_total = 0;					     TH1F *H_eYColl_i = 0;						  
+  TH2F *H_hXColl_vs_hYColl_total = 0;				     TH2F *H_hXColl_vs_hYColl_i = 0;				  
+  TH2F *H_eXColl_vs_eYColl_total = 0;				     TH2F *H_eXColl_vs_eYColl_i = 0;				  
+  TH2F *H_Em_vs_Pm_total = 0;					     TH2F *H_Em_vs_Pm_i = 0;					  
+  TH2F *H_Em_nuc_vs_Pm_total = 0;				     TH2F *H_Em_nuc_vs_Pm_i = 0;					  
+  TH1F *H_bcmCurrent_total = 0;					     TH1F *H_bcmCurrent_i = 0;                                       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -890,6 +1052,8 @@ class analyze
 
   TString data_OutputFileName;
   TString data_OutputFileName_radCorr;
+  //For Combinig Histograms (many runs)
+  TString data_OutputFileName_combined;
 
   TString report_OutputFileName;
   TString YieldStudy_FileName;
