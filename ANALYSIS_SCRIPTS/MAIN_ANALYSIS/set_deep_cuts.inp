@@ -1,4 +1,4 @@
-#D(e,e'p)n Input File 
+B1;5202;0c#D(e,e'p)n Input File 
 
 #-------Single Run Analysis---------
 ;Use this option if you only want to look at a single file in data/simc
@@ -12,8 +12,8 @@ simc_fname: worksim_voli/d2_pm580_lagetfsi_rad_set1.root
 #--------Analyze DATA or SIMC-------
 # True (ON) =  1,  False (OFF) = 0
 
-RUN_SIMC: 1
-RUN_DATA: 0
+RUN_SIMC: 0
+RUN_DATA: 1
 
 ;Do Radiative Corrections
 rad_corr_flag: 0

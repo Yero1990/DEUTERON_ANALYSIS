@@ -924,15 +924,15 @@ void analyze::SetHistBins()
     } //End 3289
 
 
-  if(pm_setting==580)
+  if(pm_setting==580||pm_setting==750)
     {
 
-      nbins = 60;
+      nbins = 40;
  
       //-----------------------KINEMATICS---------------------
       
       //Missing Energy                    //Q2			          //Final Proton Momentum			     
-      Em_nbins = nbins;			  Q2_nbins = nbins;	   	   Pf_nbins = nbins;				    
+      Em_nbins = 40;			  Q2_nbins = nbins;	   	   Pf_nbins = nbins;				    
       Em_xmin = -0.1;			  Q2_xmin = 2.5; 	   	   Pf_xmin = 1.5;				    
       Em_xmax = 0.1;			  Q2_xmax = 5.5;       	   	   Pf_xmax = 2.5;				    
       					 			   	 						    
@@ -950,8 +950,8 @@ void analyze::SetHistBins()
       Pmy_xmax = 0.5;			  W2_nbins = nbins;	   	   thq_nbins = nbins;				    
       					  W2_xmin = -2;           	   thq_xmin = 30.;				    
       Pmz_nbins = nbins;		  W2_xmax = 2.; 	   	   thq_xmax = 55.;				    
-      Pmz_xmin = -0.5;						   	   						    
-      Pmz_xmax = 0.5;			  //theta_elec		   	   //Magnitude of q-ector			    
+      Pmz_xmin = 0.;						   	   						    
+      Pmz_xmax = 1.;			  //theta_elec		   	   //Magnitude of q-ector			    
                                           the_nbins = nbins;	   	   q_nbins = nbins;				    
       /*Missing Mass*/ 			  the_xmin = 10;	   	   q_xmin = 2.;					    
       MM_nbins = nbins;			  the_xmax = 14;	   	   q_xmax = 3.5;					    
@@ -1059,7 +1059,7 @@ void analyze::CreateHist()
 
   //Secondary (Hadron) Kinematics
   H_Em = new TH1F("H_Emiss","Missing Energy", Em_nbins, Em_xmin, Em_xmax); 
-  //H_Em->SetDefaultSumw2();  //FIXME:  Need to check if this actually works
+  H_Em->SetDefaultSumw2();  //FIXME:  Need to check if this actually works
   
   H_Em_nuc = new TH1F("H_Em_nuc","Nuclear Missing Energy", Em_nbins, Em_xmin, Em_xmax); 
   H_Pm = new TH1F("H_Pm","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
@@ -1173,7 +1173,7 @@ void analyze::ReadScalerTree(string bcm_type="BCM4A")
 }
 
 //____________________________________________________________________________
-void analyze::ScalerEventLoop(Double_t current_thrs_bcm=5.)
+void analyze::ScalerEventLoop(Double_t current_thrs_bcm=10.)
 {
 
   cout << "Calling ScalerEventLoop() . . . " << endl;
@@ -1264,7 +1264,15 @@ void analyze::ScalerEventLoop(Double_t current_thrs_bcm=5.)
   pTRIG4scalerRate_bcm_cut = total_ptrig4_scaler_bcm_cut / total_time_bcm_cut;
   pTRIG6scalerRate_bcm_cut = total_ptrig6_scaler_bcm_cut / total_time_bcm_cut;
   pEDTMscalerRate_bcm_cut =  total_pedtm_scaler_bcm_cut / total_time_bcm_cut;
-  
+
+  //Subtract EDTM rate from trigger rates
+  pS1XscalerRate_bcm_cut = pS1XscalerRate_bcm_cut  - pEDTMscalerRate_bcm_cut;
+  pTRIG1scalerRate_bcm_cut = pTRIG1scalerRate_bcm_cut - pEDTMscalerRate_bcm_cut; 
+  pTRIG2scalerRate_bcm_cut = pTRIG2scalerRate_bcm_cut - pEDTMscalerRate_bcm_cut; 
+  pTRIG3scalerRate_bcm_cut = pTRIG3scalerRate_bcm_cut - pEDTMscalerRate_bcm_cut; 
+  pTRIG4scalerRate_bcm_cut = pTRIG4scalerRate_bcm_cut - pEDTMscalerRate_bcm_cut; 
+  pTRIG6scalerRate_bcm_cut = pTRIG6scalerRate_bcm_cut - pEDTMscalerRate_bcm_cut; 
+
   cout << "Ending ScalerEventLoop() . . . " << endl;
 
 
@@ -2063,7 +2071,11 @@ void analyze::CalcEff()
   pTRIG1scalerRate_bcm_cut = pTRIG1scalerRate_bcm_cut / 1000.;
   pTRIG2scalerRate_bcm_cut = pTRIG2scalerRate_bcm_cut / 1000.;
   pTRIG3scalerRate_bcm_cut = pTRIG3scalerRate_bcm_cut / 1000.;
+  pTRIG4scalerRate_bcm_cut = pTRIG4scalerRate_bcm_cut / 1000.;
+  pTRIG6scalerRate_bcm_cut = pTRIG6scalerRate_bcm_cut / 1000.;
 
+
+  coin_scaler = total_ptrig6_scaler_bcm_cut - total_pedtm_scaler_bcm_cut;
 
   //Calculate  Live Time                                                                                                                        
   cpuLT =  total_ptrig6_accp_bcm_cut / (total_ptrig6_scaler_bcm_cut-total_pedtm_scaler_bcm_cut);                                      
@@ -2077,6 +2089,7 @@ void analyze::CalcEff()
   //Hadron TRacking Efficiency                                                                                                                 
   hTrkEff = h_did / h_should;                                                                                                                  
   hTrkEff_err = sqrt(h_should-h_did) / h_should;      
+
 
   cout << "Ending CalcEff() . . . " << endl;
 
@@ -2444,8 +2457,11 @@ void analyze::WriteReport()
   /*Method to write charge, efficiencies, live time and other relevant quantities to a data file*/
   
   cout << "Calling WriteReport() . . ." << endl;
+ 
 
   if(analysis=="data"){
+
+    //---------------------------------------------------------
     
     //Check if file already exists
     in_file.open(report_OutputFileName);
@@ -2455,23 +2471,26 @@ void analyze::WriteReport()
       cout << "Report File does NOT exist, will create one . . . " << endl;
       
       out_file.open(report_OutputFileName);
-      out_file << "#e_did: " << e_did << endl;
-      out_file << "#e_should: " << e_should << endl;
-      out_file << " " << endl;
-
-      out_file << "#!Run[i,0]/" << std::setw(25) << "charge[f,1]/" << std::setw(25) << "cpuLT[f,2]/"  << std::setw(25) <<  "tLT[f,3]/"  << std::setw(25) <<  "hTrkEff[f,4]/" << std::setw(25) <<  "eTrkEff[f,5]/" << std::setw(25) <<   "avg_current[f,6]/"  << std::setw(25) << "pS1X_rate[f,7]/"  << std::setw(25) << "ptrig1_rate[f,8]/" << std::setw(25) << "ptrig2_rate[f,9]/" << std::setw(25) << "ptrig3_rate[f,10]/" << std::setw(25) << "ptrig4_rate[f,11]/" << std::setw(25) << "ptrig6_rate[f,12]/" << std::setw(25) << "HMS_Angle[f,13]/"  << std::setw(25) << "HMS_Pcen[f,14]/"  << std::setw(25) << "SHMS_Angle[f,15]/"   << std::setw(25) << "SHMS_Pcen[f,16]/"  << std::setw(25) << "HMS_Xmp[f,17]/" << std::setw(25) << "HMS_Ymp[f,18]/" << std::setw(25) << "SHMS_Xmp[f,19]/" << std::setw(25) << "SHMS_Ymp[f,20]/" << std::setw(25) << "xBPM[f,21]/" << std::setw(25) << "yBPM[f,22]/" << endl;
+      out_file << "#!Run[i,0]/" << std::setw(25) << "charge[f,1]/" << std::setw(25) << "cpuLT[f,2]/"  << std::setw(25) << "cpuLT_err[f,3]/"  << std::setw(25) << "tLT[f,3]/"  << std::setw(25) <<  "hTrkEff[f,4]/" << std::setw(25) <<  "hTrkEff_err[f,5]/" << std::setw(25) << "eTrkEff[f,5]/" << std::setw(25) << "eTrkEff_err[f,5]/"  << std::setw(25) <<  "tgtBoil_factor[f,6]/" <<  std::setw(25)  << "avg_current[f,6]/"  << std::setw(25) << "pS1X_rate[f,7]/"  << std::setw(25) << "ptrig1_rate[f,8]/" << std::setw(25) << "ptrig2_rate[f,9]/" << std::setw(25) << "ptrig3_rate[f,10]/" << std::setw(25) << "ptrig4_rate[f,11]/" << std::setw(25) << "ptrig6_rate[f,12]/" << std::setw(25) << "coin_scaler[f,13]/"  << std::setw(25) <<  "HMS_Angle[f,13]/"  << std::setw(25) << "HMS_Pcen[f,14]/"  << std::setw(25) << "SHMS_Angle[f,15]/"   << std::setw(25) << "SHMS_Pcen[f,16]/"  << std::setw(25) << "HMS_Xmp[f,17]/" << std::setw(25) << "HMS_Ymp[f,18]/" << std::setw(25) << "SHMS_Xmp[f,19]/" << std::setw(25) << "SHMS_Ymp[f,20]/" << std::setw(25) << "xBPM[f,21]/" << std::setw(25) << "yBPM[f,22]/" << endl;
       out_file.close();
-      
+      in_file.close();
+
     }
     
+   
     //Open Report FIle in append mode
     out_file.open(report_OutputFileName, ios::out | ios::app);
-    out_file << runNUM << std::setw(25) << total_charge_bcm_cut << std::setw(25) << cpuLT << std::setw(25) << tLT << std::setw(25) << hTrkEff  << std::setw(25) << eTrkEff  << std::setw(25) << avg_current_bcm_cut << std::setw(25) << pS1XscalerRate_bcm_cut << std::setw(25) << pTRIG1scalerRate_bcm_cut << std::setw(25) << pTRIG2scalerRate_bcm_cut << std::setw(25) << pTRIG3scalerRate_bcm_cut << std::setw(25) << pTRIG4scalerRate_bcm_cut << std::setw(25) << pTRIG6scalerRate_bcm_cut << std::setw(25) << h_th  << std::setw(25) << h_Pcen << std::setw(25) << e_th << std::setw(25) << e_Pcen << std::setw(25) <<  h_xMisPoint << std::setw(25) <<  h_yMisPoint << std::setw(25) << e_xMisPoint << std::setw(25) << e_yMisPoint << std::setw(25) << xBPM << std::setw(25) << yBPM << endl;
+    out_file << runNUM << std::setw(25) << total_charge_bcm_cut << std::setw(25) << cpuLT << std::setw(25) << cpuLT_err << std::setw(25) << tLT << std::setw(25) << hTrkEff  << std::setw(25) << hTrkEff_err << std::setw(25) << eTrkEff  << std::setw(25) << eTrkEff_err << std::setw(25) << tgtBoil_corr << std::setw(25) << avg_current_bcm_cut << std::setw(25) << pS1XscalerRate_bcm_cut << std::setw(25) << pTRIG1scalerRate_bcm_cut << std::setw(25) << pTRIG2scalerRate_bcm_cut << std::setw(25) << pTRIG3scalerRate_bcm_cut << std::setw(25) << pTRIG4scalerRate_bcm_cut << std::setw(25) << pTRIG6scalerRate_bcm_cut << std::setw(25) << coin_scaler << std::setw(25) << h_th  << std::setw(25) << h_Pcen << std::setw(25) << e_th << std::setw(25) << e_Pcen << std::setw(25) <<  h_xMisPoint << std::setw(25) <<  h_yMisPoint << std::setw(25) << e_xMisPoint << std::setw(25) << e_yMisPoint << std::setw(25) << xBPM << std::setw(25) << yBPM << endl;
     out_file.close();
-  }  
+
+    
+   
+    
+    
+  }
   
   cout << "Ending WriteReport() . . ." << endl;
-
+  
 } //End WriteReport()
 
 //_________________________________________________________
@@ -2509,12 +2528,12 @@ void analyze::CombineHistos()
     data_file->GetObject("H_theta_q",H_theta_q_i);
     data_file->GetObject("H_q",H_q_i);
     data_file->GetObject("H_theta_elec",H_theta_elec_i);
-    data_file->GetObject("H_Em",H_Em_i);
+    data_file->GetObject("H_Emiss",H_Em_i);
     data_file->GetObject("H_Em_nuc",H_Em_nuc_i);
     data_file->GetObject("H_Pm",H_Pm_i);
-    data_file->GetObject("H_Pmx_lab",H_Pmx_lab_i);
-    data_file->GetObject("H_Pmy_lab",H_Pmy_lab_i);
-    data_file->GetObject("H_Pmz_lab",H_Pmz_lab_i);
+    data_file->GetObject("H_Pmx_Lab",H_Pmx_lab_i);
+    data_file->GetObject("H_Pmy_Lab",H_Pmy_lab_i);
+    data_file->GetObject("H_Pmz_Lab",H_Pmz_lab_i);
     data_file->GetObject("H_Pmx_q",H_Pmx_q_i);
     data_file->GetObject("H_Pmy_q",H_Pmy_q_i);
     data_file->GetObject("H_Pmz_q",H_Pmz_q_i);
@@ -2564,8 +2583,6 @@ void analyze::CombineHistos()
     
     Bool_t file_not_exist = gSystem->AccessPathName(data_OutputFileName_combined);
 
-    cout << "file NOT  exists ? " << file_not_exist<< endl;
-
     //If Combined ROOTfile does NOT exist, Create One
     if(file_not_exist){
       outROOT = new TFile(data_OutputFileName_combined, "NEW");
@@ -2591,8 +2608,8 @@ void analyze::CombineHistos()
       H_theta_q_i->Write();			  
       H_q_i->Write();				  
       H_theta_elec_i->Write();      		  
-      H_Em_i->Write();				  
-      H_Em_nuc_i->Write();			  
+      H_Em_i->Write();			  
+      H_Em_nuc_i->Write();
       H_Pm_i->Write();				  
       H_Pmx_lab_i->Write();			  
       H_Pmy_lab_i->Write();			  
@@ -2641,8 +2658,7 @@ void analyze::CombineHistos()
       H_eXColl_vs_eYColl_i->Write();		  
       H_Em_vs_Pm_i->Write();			  
       H_Em_nuc_vs_Pm_i->Write();		  
-      H_bcmCurrent_i->Write();                    
-
+      H_bcmCurrent_i->Write();                  
       outROOT->Close();
     
     }
@@ -2674,12 +2690,12 @@ void analyze::CombineHistos()
       outROOT->GetObject("H_theta_q",H_theta_q_total);
       outROOT->GetObject("H_q",H_q_total);
       outROOT->GetObject("H_theta_elec",H_theta_elec_total);
-      outROOT->GetObject("H_Em",H_Em_total);
+      outROOT->GetObject("H_Emiss",H_Em_total);
       outROOT->GetObject("H_Em_nuc",H_Em_nuc_total);
       outROOT->GetObject("H_Pm",H_Pm_total);
-      outROOT->GetObject("H_Pmx_lab",H_Pmx_lab_total);
-      outROOT->GetObject("H_Pmy_lab",H_Pmy_lab_total);
-      outROOT->GetObject("H_Pmz_lab",H_Pmz_lab_total);
+      outROOT->GetObject("H_Pmx_Lab",H_Pmx_lab_total);
+      outROOT->GetObject("H_Pmy_Lab",H_Pmy_lab_total);
+      outROOT->GetObject("H_Pmz_Lab",H_Pmz_lab_total);
       outROOT->GetObject("H_Pmx_q",H_Pmx_q_total);
       outROOT->GetObject("H_Pmy_q",H_Pmy_q_total);
       outROOT->GetObject("H_Pmz_q",H_Pmz_q_total);
@@ -2725,8 +2741,8 @@ void analyze::CombineHistos()
       outROOT->GetObject("H_Em_vs_Pm",H_Em_vs_Pm_total);
       outROOT->GetObject("H_Em_nuc_vs_Pm",H_Em_nuc_vs_Pm_total);
       outROOT->GetObject("H_bcmCurrent",H_bcmCurrent_total);
+      H_edelta_total->Sumw2();
       
-
       //Add Current Histogram to Running Sum      
       H_charge_total->Add(                             H_charge_i);			          
       H_ctime_total->Add(			       H_ctime_i);			  
@@ -2746,9 +2762,9 @@ void analyze::CombineHistos()
       H_theta_q_total->Add(			       H_theta_q_i);			  
       H_q_total->Add(				       H_q_i);				  
       H_theta_elec_total->Add(      		       H_theta_elec_i);      		  
-      H_Em_total->Add(				       H_Em_i);				  
-      H_Em_nuc_total->Add(			       H_Em_nuc_i);			  
-      H_Pm_total->Add(				       H_Pm_i);				  
+      H_Em_total->Add(	                               H_Em_i);				  
+      H_Em_nuc_total->Add(	                       H_Em_nuc_i);			  
+      H_Pm_total->Add(				       H_Pm_i);	
       H_Pmx_lab_total->Add(			       H_Pmx_lab_i);			  
       H_Pmy_lab_total->Add(			       H_Pmy_lab_i);			  
       H_Pmz_lab_total->Add(			       H_Pmz_lab_i);			  
@@ -2797,7 +2813,7 @@ void analyze::CombineHistos()
       H_Em_vs_Pm_total->Add(			       H_Em_vs_Pm_i);			  
       H_Em_nuc_vs_Pm_total->Add(		       H_Em_nuc_vs_Pm_i);		  
       H_bcmCurrent_total->Add(			       H_bcmCurrent_i);                    
-
+    
       
       outROOT->ReOpen("UPDATE");
    
@@ -2870,7 +2886,7 @@ void analyze::CombineHistos()
       H_Em_vs_Pm_total->Write("", TObject::kOverwrite);		
       H_Em_nuc_vs_Pm_total->Write("", TObject::kOverwrite);	
       H_bcmCurrent_total->Write("", TObject::kOverwrite);		
-      
+     
 
       outROOT->Close();
       
@@ -2878,7 +2894,243 @@ void analyze::CombineHistos()
     
     
   }
-    
+      
+}
+
+//_________________________________________________________
+void analyze::ChargeNorm()
+{
+  cout << "Calling ChargeNorm() . . . " << endl;
+  
+  //Method to scale histograms by the total charge. ONly to be
+  //called after the very last run is added to the combined ROOTfile
+
+  //Open combined ROOTfile
+  outROOT = new TFile(data_OutputFileName_combined, "READ");
+
+  //Get Total Accumulated Charge
+  outROOT->GetObject("H_charge", H_charge_total);
+  
+  Double_t charge_norm = 1. / H_charge_total->Integral(0, 10);
+  
+  cout << "***TOTAL CHARGE: " <<  H_charge_total->Integral(0, 10) << endl;
+  cout << "charge norm: " << charge_norm << endl;
+
+  
+  //Get Total Histos
+   outROOT->GetObject("H_ctime",H_ctime_total);
+   outROOT->GetObject("H_hbeta",H_hbeta_total);
+   outROOT->GetObject("H_hcer",H_hcer_total);
+   outROOT->GetObject("H_hcal",H_hcal_total);
+   outROOT->GetObject("H_pbeta",H_pbeta_total);
+   outROOT->GetObject("H_pngcer",H_pngcer_total);
+   outROOT->GetObject("H_pcal_etotnorm",H_pcal_etotnorm_total);
+   outROOT->GetObject("H_pcal_etotTrkNorm", H_pcal_etotTrkNorm_total);
+   outROOT->GetObject("H_Q2",H_Q2_total);
+   outROOT->GetObject("H_omega",H_omega_total);
+   outROOT->GetObject("H_W",H_W_total);
+   outROOT->GetObject("H_W2",H_W2_total);
+   outROOT->GetObject("H_xbj",H_xbj_total);
+   outROOT->GetObject("H_kf",H_kf_total);
+   outROOT->GetObject("H_theta_q",H_theta_q_total);
+   outROOT->GetObject("H_q",H_q_total);
+   outROOT->GetObject("H_theta_elec",H_theta_elec_total);
+   outROOT->GetObject("H_Emiss",H_Em_total);
+   outROOT->GetObject("H_Em_nuc",H_Em_nuc_total);
+   outROOT->GetObject("H_Pm",H_Pm_total);
+   outROOT->GetObject("H_Pmx_Lab",H_Pmx_lab_total);
+   outROOT->GetObject("H_Pmy_Lab",H_Pmy_lab_total);
+   outROOT->GetObject("H_Pmz_Lab",H_Pmz_lab_total);
+   outROOT->GetObject("H_Pmx_q",H_Pmx_q_total);
+   outROOT->GetObject("H_Pmy_q",H_Pmy_q_total);
+   outROOT->GetObject("H_Pmz_q",H_Pmz_q_total);
+   outROOT->GetObject("H_MM",H_MM_total);
+   outROOT->GetObject("H_MM2",H_MM2_total);
+   outROOT->GetObject("H_Pf",H_Pf_total);
+   outROOT->GetObject("H_Ep",H_Ep_total);
+   outROOT->GetObject("H_En",H_En_total);
+   outROOT->GetObject("H_Kp",H_Kp_total); 
+   outROOT->GetObject("H_Kn",H_Kn_total); 
+   outROOT->GetObject("H_theta_prot",H_theta_prot_total);
+   outROOT->GetObject("H_theta_pq",H_theta_pq_total);
+   outROOT->GetObject("H_theta_nq",H_theta_nq_total);
+   outROOT->GetObject("H_hx_tar",H_hx_tar_total);
+   outROOT->GetObject("H_hy_tar",H_hy_tar_total);
+   outROOT->GetObject("H_hz_tar",H_hz_tar_total);
+   outROOT->GetObject("H_ex_tar",H_ex_tar_total);
+   outROOT->GetObject("H_ey_tar",H_ey_tar_total);
+   outROOT->GetObject("H_ez_tar",H_ez_tar_total);
+   outROOT->GetObject("H_ztar_diff",H_ztar_diff_total);
+   outROOT->GetObject("H_hytar",H_hytar_total);
+   outROOT->GetObject("H_hxptar",H_hxptar_total);
+   outROOT->GetObject("H_hyptar",H_hyptar_total);
+   outROOT->GetObject("H_hdelta",H_hdelta_total);
+   outROOT->GetObject("H_hxfp",H_hxfp_total);
+   outROOT->GetObject("H_hyfp",H_hyfp_total);
+   outROOT->GetObject("H_hxpfp",H_hxpfp_total);
+   outROOT->GetObject("H_hypfp",H_hypfp_total);
+   outROOT->GetObject("H_eytar",H_eytar_total);
+   outROOT->GetObject("H_exptar",H_exptar_total);
+   outROOT->GetObject("H_eyptar",H_eyptar_total);
+   outROOT->GetObject("H_edelta",H_edelta_total);
+   outROOT->GetObject("H_exfp",H_exfp_total);
+   outROOT->GetObject("H_eyfp",H_eyfp_total);
+   outROOT->GetObject("H_expfp",H_expfp_total);
+   outROOT->GetObject("H_eypfp",H_eypfp_total);
+   outROOT->GetObject("H_hXColl",H_hXColl_total);
+   outROOT->GetObject("H_hYColl",H_hYColl_total);
+   outROOT->GetObject("H_eXColl",H_eXColl_total);
+   outROOT->GetObject("H_eYColl",H_eYColl_total);
+   outROOT->GetObject("H_hXColl_vs_hYColl",H_hXColl_vs_hYColl_total);
+   outROOT->GetObject("H_eXColl_vs_eYColl",H_eXColl_vs_eYColl_total);
+   outROOT->GetObject("H_Em_vs_Pm",H_Em_vs_Pm_total);
+   outROOT->GetObject("H_Em_nuc_vs_Pm",H_Em_nuc_vs_Pm_total);
+   outROOT->GetObject("H_bcmCurrent",H_bcmCurrent_total);
+   
+   
+   //Scale By total charge
+ 
+   H_ctime_total->Scale(charge_norm);
+   H_hbeta_total->Scale(charge_norm);
+   H_hcer_total->Scale(charge_norm);
+   H_hcal_total->Scale(charge_norm);
+   H_pbeta_total->Scale(charge_norm);
+   H_pngcer_total->Scale(charge_norm);
+   H_pcal_etotnorm_total->Scale(charge_norm);
+   H_pcal_etotTrkNorm_total->Scale(charge_norm);
+   H_Q2_total->Scale(charge_norm);
+   H_omega_total->Scale(charge_norm);
+   H_W_total->Scale(charge_norm);
+   H_W2_total->Scale(charge_norm);
+   H_xbj_total->Scale(charge_norm);
+   H_kf_total->Scale(charge_norm);
+   H_theta_q_total->Scale(charge_norm);
+   H_q_total->Scale(charge_norm);
+   H_theta_elec_total->Scale(charge_norm);
+   H_Em_total->Scale(charge_norm);
+   H_Em_nuc_total->Scale(charge_norm);
+   H_Pm_total->Scale(charge_norm);
+   H_Pmx_lab_total->Scale(charge_norm);
+   H_Pmy_lab_total->Scale(charge_norm);
+   H_Pmz_lab_total->Scale(charge_norm);
+   H_Pmx_q_total->Scale(charge_norm);
+   H_Pmy_q_total->Scale(charge_norm);
+   H_Pmz_q_total->Scale(charge_norm);
+   H_MM_total->Scale(charge_norm);
+   H_MM2_total->Scale(charge_norm);
+   H_Pf_total->Scale(charge_norm);
+   H_Ep_total->Scale(charge_norm);
+   H_En_total->Scale(charge_norm);
+   H_Kp_total->Scale(charge_norm);                          
+   H_Kn_total->Scale(charge_norm); 
+   H_theta_prot_total->Scale(charge_norm);
+   H_theta_pq_total->Scale(charge_norm);
+   H_theta_nq_total->Scale(charge_norm);
+   H_hx_tar_total->Scale(charge_norm);
+   H_hy_tar_total->Scale(charge_norm);
+   H_hz_tar_total->Scale(charge_norm);
+   H_ex_tar_total->Scale(charge_norm);
+   H_ey_tar_total->Scale(charge_norm);
+   H_ez_tar_total->Scale(charge_norm);
+   H_ztar_diff_total->Scale(charge_norm);
+   H_hytar_total->Scale(charge_norm);
+   H_hxptar_total->Scale(charge_norm);
+   H_hyptar_total->Scale(charge_norm);
+   H_hdelta_total->Scale(charge_norm);
+   H_hxfp_total->Scale(charge_norm);
+   H_hyfp_total->Scale(charge_norm);
+   H_hxpfp_total->Scale(charge_norm);
+   H_hypfp_total->Scale(charge_norm);
+   H_eytar_total->Scale(charge_norm);
+   H_exptar_total->Scale(charge_norm);
+   H_eyptar_total->Scale(charge_norm);
+   H_edelta_total->Scale(charge_norm);
+   H_exfp_total->Scale(charge_norm);
+   H_eyfp_total->Scale(charge_norm);
+   H_expfp_total->Scale(charge_norm);
+   H_eypfp_total->Scale(charge_norm);
+   H_hXColl_total->Scale(charge_norm);
+   H_hYColl_total->Scale(charge_norm);
+   H_eXColl_total->Scale(charge_norm);
+   H_eYColl_total->Scale(charge_norm);
+   H_hXColl_vs_hYColl_total->Scale(charge_norm);
+   H_eXColl_vs_eYColl_total->Scale(charge_norm);
+   H_Em_vs_Pm_total->Scale(charge_norm);
+   H_bcmCurrent_total->Scale(charge_norm);
+   
+   outROOT->ReOpen("UPDATE");
+   
+   H_charge_total->Write("", TObject::kOverwrite);              
+   H_ctime_total->Write("", TObject::kOverwrite);		
+   H_hbeta_total->Write("", TObject::kOverwrite);		
+   H_hcer_total->Write("", TObject::kOverwrite);		
+   H_hcal_total->Write("", TObject::kOverwrite);		
+   H_pbeta_total->Write("", TObject::kOverwrite);		
+   H_pngcer_total->Write("", TObject::kOverwrite);		
+   H_pcal_etotnorm_total->Write("", TObject::kOverwrite);	
+   H_pcal_etotTrkNorm_total->Write("", TObject::kOverwrite);	
+   H_Q2_total->Write("", TObject::kOverwrite);			
+   H_omega_total->Write("", TObject::kOverwrite);		
+   H_W_total->Write("", TObject::kOverwrite);			
+   H_W2_total->Write("", TObject::kOverwrite);			
+   H_xbj_total->Write("", TObject::kOverwrite);			
+   H_kf_total->Write("", TObject::kOverwrite);			
+   H_theta_q_total->Write("", TObject::kOverwrite);		
+   H_q_total->Write("", TObject::kOverwrite);			
+   H_theta_elec_total->Write("", TObject::kOverwrite);      	
+   H_Em_total->Write("", TObject::kOverwrite);			
+   H_Em_nuc_total->Write("", TObject::kOverwrite);		
+   H_Pm_total->Write("", TObject::kOverwrite);			
+   H_Pmx_lab_total->Write("", TObject::kOverwrite);		
+   H_Pmy_lab_total->Write("", TObject::kOverwrite);		
+   H_Pmz_lab_total->Write("", TObject::kOverwrite);		
+   H_Pmx_q_total->Write("", TObject::kOverwrite);		
+   H_Pmy_q_total->Write("", TObject::kOverwrite);		
+   H_Pmz_q_total->Write("", TObject::kOverwrite);		
+   H_MM_total->Write("", TObject::kOverwrite);			
+   H_MM2_total->Write("", TObject::kOverwrite);			
+   H_Pf_total->Write("", TObject::kOverwrite);			
+   H_Ep_total->Write("", TObject::kOverwrite);			
+   H_En_total->Write("", TObject::kOverwrite);			
+   H_Kp_total->Write("", TObject::kOverwrite); 			
+   H_Kn_total->Write("", TObject::kOverwrite); 			
+   H_theta_prot_total->Write("", TObject::kOverwrite);		
+   H_theta_pq_total->Write("", TObject::kOverwrite);		
+   H_theta_nq_total->Write("", TObject::kOverwrite);		
+   H_hx_tar_total->Write("", TObject::kOverwrite);		
+   H_hy_tar_total->Write("", TObject::kOverwrite);		
+   H_hz_tar_total->Write("", TObject::kOverwrite);   		
+   H_ex_tar_total->Write("", TObject::kOverwrite);		
+   H_ey_tar_total->Write("", TObject::kOverwrite);		
+   H_ez_tar_total->Write("", TObject::kOverwrite);    		
+   H_ztar_diff_total->Write("", TObject::kOverwrite);		
+   H_hytar_total->Write("", TObject::kOverwrite);		
+   H_hxptar_total->Write("", TObject::kOverwrite);		
+   H_hyptar_total->Write("", TObject::kOverwrite);		
+   H_hdelta_total->Write("", TObject::kOverwrite);    		
+   H_hxfp_total->Write("", TObject::kOverwrite);		
+   H_hyfp_total->Write("", TObject::kOverwrite);		
+   H_hxpfp_total->Write("", TObject::kOverwrite);		
+   H_hypfp_total->Write("", TObject::kOverwrite);		
+   H_eytar_total->Write("", TObject::kOverwrite);		
+   H_exptar_total->Write("", TObject::kOverwrite);		
+   H_eyptar_total->Write("", TObject::kOverwrite);		
+   H_edelta_total->Write("", TObject::kOverwrite); 		
+   H_exfp_total->Write("", TObject::kOverwrite);		
+   H_eyfp_total->Write("", TObject::kOverwrite);		
+   H_expfp_total->Write("", TObject::kOverwrite);		
+   H_eypfp_total->Write("", TObject::kOverwrite); 		
+   H_hXColl_total->Write("", TObject::kOverwrite);		
+   H_hYColl_total->Write("", TObject::kOverwrite);		
+   H_eXColl_total->Write("", TObject::kOverwrite);		
+   H_eYColl_total->Write("", TObject::kOverwrite);		
+   H_hXColl_vs_hYColl_total->Write("", TObject::kOverwrite);	
+   H_eXColl_vs_eYColl_total->Write("", TObject::kOverwrite);	
+   H_Em_vs_Pm_total->Write("", TObject::kOverwrite);		
+   H_Em_nuc_vs_Pm_total->Write("", TObject::kOverwrite);	
+   H_bcmCurrent_total->Write("", TObject::kOverwrite);
+
+  outROOT->Close();
   
 }
 
@@ -3222,8 +3474,8 @@ void analyze::run_simc_analysis(Bool_t rad_corr_flag=0)
 
 }
 
-//________________________________________
-void analyze::run_data_analysis()
+//__________________________________________________________
+void analyze::run_data_analysis(Bool_t Qnorm_flag=0)
 {
 
 
@@ -3233,7 +3485,7 @@ void analyze::run_data_analysis()
   SetHistBins();
   CreateHist();
   ReadScalerTree("BCM4A");   //argument: "BCM1", "BCM2", "BCM4A", "BCM4B", "BCM4C"
-  ScalerEventLoop(5);       //argument represents current threshold(uA): usage in code-> Abs(bcm_current - set_current) < threshold
+  ScalerEventLoop(10);       //argument represents current threshold(uA): usage in code-> Abs(bcm_current - set_current) < threshold
   ReadTree();
   EventLoop();
   CalcEff();
@@ -3241,6 +3493,9 @@ void analyze::run_data_analysis()
   WriteHist();
   WriteReport();
   CombineHistos();
-
-
+  if(Qnorm_flag)
+    {
+      cout << "*****QNORM_FLAG IS TRUE*****" << endl;
+      ChargeNorm();
+    }
 }

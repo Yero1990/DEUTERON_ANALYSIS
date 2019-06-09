@@ -4,6 +4,7 @@
 #include <iostream>
 #include <ctime>
 
+
 using namespace std;
 
 int main_analysis()
@@ -20,10 +21,12 @@ int main_analysis()
   Bool_t run_data_flag;
   Bool_t rad_corr_flag;
   Bool_t single_run_flag;
+  Bool_t Qnorm_flag;  //flag to normalize by total charge once all ROOTfiles have been combined.
   string react_type;
   ifstream ifs;
   int run;
   string line;
+  int cnt = 0; //line counter
 
   cout << "Please Select Which Input Cut File to Use . . ." << endl;
   cout << "1 = set_heep_cuts.inp,   2 = set_deep_cuts.inp "<< endl;
@@ -87,13 +90,19 @@ int main_analysis()
       {
 	//Open Data Run List
 	ifs.open(runlist_name);
-	
+	cnt=0;
+	Qnorm_flag = 0;
 	//Read Run List
 	while(getline(ifs, line))
       {
 	//convert string to integer
 	run = stoi(line);                               
 	
+	cnt++;  //line counter
+	if(get_total_lines(runlist_name)==cnt){
+	  Qnorm_flag=1;
+	  cout << "Reached Final Run: " << run << endl;
+	}
 	
 	if(react_type=="heep"){
 	  cout << "==================================" << endl;
@@ -111,7 +120,7 @@ int main_analysis()
 	analyze a1(run, "SHMS", "data", react_type);
 	
 	//call method to run data analysis. This method call all necessary methods to analyze data.(See analyze.C)
-	a1.run_data_analysis();
+	a1.run_data_analysis(Qnorm_flag);
 	
       }
 	

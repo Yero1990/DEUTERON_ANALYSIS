@@ -2,6 +2,8 @@
 #define ANALYZE_H
 
 #include <string>
+#include "TH1F.h"
+#include "TVector3.h"
 
 class analyze
 {
@@ -51,9 +53,15 @@ class analyze
   //---------Combined Histograms (for many runs at same kinematics, i.e. Pm=580, 750 MeV)--------
   void CombineHistos();
 
+  //Normalize combined histos by total charge (only done after the very last run)
+  void ChargeNorm(); 
+  
+  //Calculate Average Kinematics (Used for bin-centering corrections)
+  void CalcAvgKin();
+
   //------------Run Analysis Mehods--------------
   void run_simc_analysis(Bool_t rad_corr_flag=0);
-  void run_data_analysis();
+  void run_data_analysis(Bool_t Qnorm_flag=0);
 
 
  private:
@@ -611,7 +619,8 @@ class analyze
 
 
 
-
+  //---------CalcAvgKin() Method Histograms---------------
+  
 
 
 
@@ -997,6 +1006,7 @@ class analyze
   Double_t pTRIG6scalerRate_bcm_cut;
   Double_t pEDTMscalerRate_bcm_cut;
 
+  int coin_scaler;
   //Store Average BCM Current
   Double_t  avg_current_bcm_cut;
 
@@ -1055,7 +1065,7 @@ class analyze
   //For Combinig Histograms (many runs)
   TString data_OutputFileName_combined;
 
-  TString report_OutputFileName;
+  string report_OutputFileName;
   TString YieldStudy_FileName;
   
   //FileStreams to READ/WRITE to a txt file
