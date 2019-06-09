@@ -22,7 +22,6 @@ workflow_name="d2_750MeV_set1_Check"
 #runlist_name="Carbon_boiling_hms_Apr_02_2018.dat"
 
 #-----------POST 3288--------- 
-#runlist_name="runlists/h2_80.dat"
 #runlist_name="runlists/d2580_set1.dat"
 runlist_name="runlists/d2750_set1.dat"
 #runlist_name="runlists/h2.dat"
