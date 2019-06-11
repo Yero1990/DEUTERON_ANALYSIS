@@ -619,77 +619,32 @@ class analyze
 
 
 
-  //---------CalcAvgKin() Method Histograms---------------
+  //-------------CalcAvgKin() Method Histograms---------------
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  //Vertex Quantities (no Eloss) that will be used to calculate the theoretical cross section @ the average kinematics
+  //The average kinematics then are used as input in a theory, to get the true cross section. Finally, a ratio
+  //can be taken: f_bc = sigma_true (avg.kin) / sigma_avg(cent. kin), as the bin-centering correction to the data
+  //These corrections are applied after radiative corrections, therefore, the average kinematics must be calculated
+  //with radiative effects turned OFF.
+
+  Double_t Ein_v;               //incident beam energy at vertex (simulates external rad. has rad. tail) ??? 
+  Double_t Q2_v;                //Q2 (vertex)  
+  Double_t nu_v;                //energy transfer = Ein_v - Ef_v
+  Double_t q_lab_v;             //magintude of 3-vector q
+  Double_t pm_v;                //missing momentum at the vertex
+  Double_t pm_par_v;            //parallel compoent of missing momentum at vertex
+  Double_t pf_v;                //final proton momentum at the vertex
+  Double_t Ep_v;                //final proton energy at the vertex
+  Double_t Ef_v;                //final electron energy at the vertex
+
+  //Vertex X'tar / Y'tar: 
+  //Recently added (These are needed to use with hcana methods TransportToLab(Pf, xptar, yptar, p_vec),
+  //which required these quantities as input. Then, the angles at the vertex can be determined)
+
+  Double_t e_xptar_v;           
+  Double_t e_yptar_v;
+  Double_t h_xptar_v;
+  Double_t h_yptar_v;
 
 
 
@@ -931,17 +886,7 @@ class analyze
   Double_t theta_rq;
   Double_t SF_weight_recon;
   Double_t h_Thf;
-  //Vertex Quantities (no Eloss) that will be used to calculated the cross section @ the average kinematics
-  Double_t Ein_v;               //incident beam energy at vertex (simulates external rad. has rad. tail) ??? 
-  Double_t Q2_v;
-  Double_t nu_v;
-  Double_t q_lab_v;
-  Double_t pm_v;
-  Double_t pm_par_v;
-  Double_t pf_v;
-  Double_t Ep_v;
-  Double_t Ef_v;
-  
+
   Double_t prob_abs;  // Probability of absorption of particle in the HMS Collimator
                       //(Must be multiplies by the weight. If particle interation is
                       //NOT simulated, it is set to 1.)

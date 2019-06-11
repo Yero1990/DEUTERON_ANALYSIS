@@ -2,7 +2,7 @@
 ; number of bins in time to distance lookup table
 hdriftbins = 190
 ; number of 1st bin in table in ns
-hdrift1stbin=1.000000
+hdrift1stbin=0.000000
 ; bin size in ns
 hdriftbinsz=1
 hwc1u1fract=0.00043,0.00101,0.00198,0.00331,0.00499,0.00721,0.01013,0.01380,0.01764,0.02245,0.02762,0.03313,0.03918,0.04572,0.05277,0.05999,0.06777,0.07565,0.08409

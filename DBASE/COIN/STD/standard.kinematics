@@ -138,7 +138,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -58.391
 ptheta_lab = 12.194
-hpcentral = 2.092    ;2.091837 original: 2.091
+hpcentral = 2.0915    ;2.091837 original: 2.091
 ppcentral = 8.5342488 ;original: 8.7
 
 #Pm = 580 MeV (Additional. Set 2)
@@ -149,7 +149,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -55.0
 ptheta_lab = 12.194 
-hpcentral = 2.194589 ;original: 2.194 
+hpcentral = 2.1925 ;original: 2.194 
 ppcentral = 8.5342488 ;original: 8.7
 
 #Pm = 750 MeV (Additional. Set 2)

@@ -289,13 +289,13 @@ void compare_deep(int set, int pm, string model, string rad)
   data_file->GetObject("H_ctime", data_CoinTime); 
 
   //Set DATA Histo Aesthetics                                                                                                                         
-  data_ztar_diff->SetLineColor(kBlue+2);  
+  data_ztar_diff->SetLineColor(kBlack);  
   data_ztar_diff->SetLineWidth(2); 
 
-  data_pid_eCal->SetLineColor(kBlue+2); 
+  data_pid_eCal->SetLineColor(kBlack); 
   data_pid_eCal->SetLineWidth(2); 
 
-  data_CoinTime->SetLineColor(kBlue+2); 
+  data_CoinTime->SetLineColor(kBlack); 
   data_CoinTime->SetLineWidth(2); 
 
 
@@ -372,19 +372,19 @@ void compare_deep(int set, int pm, string model, string rad)
 
 
     //Set data Histo Aesthetics
-  data_xtarH->SetLineColor(kBlue+2);
+  data_xtarH->SetLineColor(kBlack);
   data_xtarH->SetLineWidth(2);
-  data_ytarH->SetLineColor(kBlue+2);
+  data_ytarH->SetLineColor(kBlack);
   data_ytarH->SetLineWidth(2);
-  data_ztarH->SetLineColor(kBlue+2);
+  data_ztarH->SetLineColor(kBlack);
   data_ztarH->SetLineWidth(2);
 
 
-  data_xtarP->SetLineColor(kBlue+2);
+  data_xtarP->SetLineColor(kBlack);
   data_xtarP->SetLineWidth(2);
-  data_ytarP->SetLineColor(kBlue+2);
+  data_ytarP->SetLineColor(kBlack);
   data_ytarP->SetLineWidth(2);
-  data_ztarP->SetLineColor(kBlue+2);
+  data_ztarP->SetLineColor(kBlack);
   data_ztarP->SetLineWidth(2);
 
   //-----------------------------------------------------------------
@@ -506,22 +506,22 @@ void compare_deep(int set, int pm, string model, string rad)
   data_file->GetObject("H_hdelta", data_hdelta);
 
   //Set data Histo Aesthetics
-  data_eytar->SetLineColor(kBlue+2);
+  data_eytar->SetLineColor(kBlack);
   data_eytar->SetLineWidth(2);
-  data_exptar->SetLineColor(kBlue+2);
+  data_exptar->SetLineColor(kBlack);
   data_exptar->SetLineWidth(2);
-  data_eyptar->SetLineColor(kBlue+2);
+  data_eyptar->SetLineColor(kBlack);
   data_eyptar->SetLineWidth(2);
-  data_edelta->SetLineColor(kBlue+2);
+  data_edelta->SetLineColor(kBlack);
   data_edelta->SetLineWidth(2);
 
-  data_hytar->SetLineColor(kBlue+2);
+  data_hytar->SetLineColor(kBlack);
   data_hytar->SetLineWidth(2);
-  data_hxptar->SetLineColor(kBlue+2);
+  data_hxptar->SetLineColor(kBlack);
   data_hxptar->SetLineWidth(2);
-  data_hyptar->SetLineColor(kBlue+2);
+  data_hyptar->SetLineColor(kBlack);
   data_hyptar->SetLineWidth(2);
-  data_hdelta->SetLineColor(kBlue+2);
+  data_hdelta->SetLineColor(kBlack);
   data_hdelta->SetLineWidth(2);
 
   //-----------------------------------------------------------------
@@ -640,22 +640,22 @@ void compare_deep(int set, int pm, string model, string rad)
   data_file->GetObject("H_hxpfp", data_hxpfp);
   data_file->GetObject("H_hypfp", data_hypfp);
   //Set data Histo Aesthetics
-  data_exfp->SetLineColor(kBlue+2);
+  data_exfp->SetLineColor(kBlack);
   data_exfp->SetLineWidth(2);
-  data_eyfp->SetLineColor(kBlue+2);
+  data_eyfp->SetLineColor(kBlack);
   data_eyfp->SetLineWidth(2);
-  data_expfp->SetLineColor(kBlue+2);
+  data_expfp->SetLineColor(kBlack);
   data_expfp->SetLineWidth(2);
-  data_eypfp->SetLineColor(kBlue+2);
+  data_eypfp->SetLineColor(kBlack);
   data_eypfp->SetLineWidth(2);
 
-  data_hxfp->SetLineColor(kBlue+2);
+  data_hxfp->SetLineColor(kBlack);
   data_hxfp->SetLineWidth(2);
-  data_hyfp->SetLineColor(kBlue+2);
+  data_hyfp->SetLineColor(kBlack);
   data_hyfp->SetLineWidth(2);
-  data_hxpfp->SetLineColor(kBlue+2);
+  data_hxpfp->SetLineColor(kBlack);
   data_hxpfp->SetLineWidth(2);
-  data_hypfp->SetLineColor(kBlue+2);
+  data_hypfp->SetLineColor(kBlack);
   data_hypfp->SetLineWidth(2);
 
   //--------------------------------------------------------------
@@ -934,52 +934,52 @@ void compare_deep(int set, int pm, string model, string rad)
   data_file->GetObject("H_Pmz_Lab", data_Pmz);
 
   //Set data Histo Aesthetics
-  data_Q2->SetLineColor(kBlue+2);
+  data_Q2->SetLineColor(kBlack);
   data_Q2->SetLineWidth(2);
-  data_omega->SetLineColor(kBlue+2);
+  data_omega->SetLineColor(kBlack);
   data_omega->SetLineWidth(2);
-  data_W2->SetLineColor(kBlue+2);
+  data_W2->SetLineColor(kBlack);
   data_W2->SetLineWidth(2);
-  data_thq->SetLineColor(kBlue+2);
+  data_thq->SetLineColor(kBlack);
   data_thq->SetLineWidth(2);
 
-  data_xbj->SetLineColor(kBlue+2);
+  data_xbj->SetLineColor(kBlack);
   data_xbj->SetLineWidth(2);
-  data_th_elec->SetLineColor(kBlue+2);
+  data_th_elec->SetLineColor(kBlack);
   data_th_elec->SetLineWidth(2);
-  data_kf->SetLineColor(kBlue+2);
+  data_kf->SetLineColor(kBlack);
   data_kf->SetLineWidth(2);
-  data_emiss->SetLineColor(kBlue+2);
+  data_emiss->SetLineColor(kBlack);
   data_emiss->SetLineWidth(2);
 
-  data_Pm->SetLineColor(kBlue+2);
+  data_Pm->SetLineColor(kBlack);
   data_Pm->SetLineWidth(2);
-  data_Pf->SetLineColor(kBlue+2);
+  data_Pf->SetLineColor(kBlack);
   data_Pf->SetLineWidth(2);
-  data_th_prot->SetLineColor(kBlue+2);
+  data_th_prot->SetLineColor(kBlack);
   data_th_prot->SetLineWidth(2);
-  data_q->SetLineColor(kBlue+2);
+  data_q->SetLineColor(kBlack);
   data_q->SetLineWidth(2);
-  data_thpq->SetLineColor(kBlue+2);
+  data_thpq->SetLineColor(kBlack);
   data_thpq->SetLineWidth(2);
-  data_thnq->SetLineColor(kBlue+2);
+  data_thnq->SetLineColor(kBlack);
   data_thnq->SetLineWidth(2);
 
-  data_MM->SetLineColor(kBlue+2);
+  data_MM->SetLineColor(kBlack);
   data_MM->SetLineWidth(2);
-  data_En->SetLineColor(kBlue+2);
+  data_En->SetLineColor(kBlack);
   data_En->SetLineWidth(2);
-  data_Ep->SetLineColor(kBlue+2);
+  data_Ep->SetLineColor(kBlack);
   data_Ep->SetLineWidth(2);
-  data_Kn->SetLineColor(kBlue+2);
+  data_Kn->SetLineColor(kBlack);
   data_Kn->SetLineWidth(2);
-  data_Kp->SetLineColor(kBlue+2);
+  data_Kp->SetLineColor(kBlack);
   data_Kp->SetLineWidth(2);
-  data_Pmx->SetLineColor(kBlue+2);
+  data_Pmx->SetLineColor(kBlack);
   data_Pmx->SetLineWidth(2);
-  data_Pmy->SetLineColor(kBlue+2);
+  data_Pmy->SetLineColor(kBlack);
   data_Pmy->SetLineWidth(2);
-  data_Pmz->SetLineColor(kBlue+2);
+  data_Pmz->SetLineColor(kBlack);
   data_Pmz->SetLineWidth(2);
 
   //Ratios

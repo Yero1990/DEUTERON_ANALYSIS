@@ -1,4 +1,4 @@
-B1;5202;0c#D(e,e'p)n Input File 
+#D(e,e'p)n Input File 
 
 #-------Single Run Analysis---------
 ;Use this option if you only want to look at a single file in data/simc
@@ -22,13 +22,13 @@ rad_corr_flag: 0
 #Units: Enegy/Momentum/W [GeV], spec_delta [%]  
 
 ;80 MeV, 580 MeV, 750 MeV
-pm_setting : 580    
+pm_setting : 80
 
 ;Theoretical Calculation: laget,  misak, . . . 
 theory     : laget      
 
 ;Theoretical Model: pwia, fsi,
-model      : fsi        
+model      : fsi
 
 ;DataSet 1, 2, 3  
 data_set   : 1               
@@ -41,7 +41,7 @@ bool Em      = 1
 bool W       = 0
 bool h_delta = 1
 bool e_delta = 1
-bool ztar_diff = 1
+bool ztar_diff = 0
 bool Q2 = 0
 bool th_nq = 0
 bool MM = 0
@@ -78,8 +78,8 @@ ztarDiff_max: 2.
 Q2_min: 4.
 Q2_max: 5.
 
-thnq_min: 10.
-thnq_max: 160.
+thnq_min: 0.
+thnq_max: 45.
 
 MM_min: 0.9
 MM_max: 0.985

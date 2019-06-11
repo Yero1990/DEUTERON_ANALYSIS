@@ -1835,11 +1835,8 @@ void analyze::EventLoop()
 
 	  ztar_diff = htar_z - etar_z;
 
-	  
-
 	  X = Q2 / (2.*MP*nu);                           
 	  th_q = acos( (ki - kf*cos(theta_e))/q );       
-
       	  
 	  //---------------------------------------------------
 	  
@@ -1866,7 +1863,7 @@ void analyze::EventLoop()
 	  Pmy_lab = fB.Y(); 
 	  Pmz_lab = fB.Z(); 
 	  
-	  //Pm = sqrt(Pmx_lab*Pmx_lab + Pmy_lab*Pmy_lab + Pmz_lab*Pmz_lab);
+	  Pm = sqrt(Pmx_lab*Pmx_lab + Pmy_lab*Pmy_lab + Pmz_lab*Pmz_lab);
 	  
 	  //--------Rotate the recoil system from +z to +q-------
 	  qvec = fQ.Vect();
@@ -1898,6 +1895,8 @@ void analyze::EventLoop()
 	  
 	  //--------------------------------------------------------------------------------
 	  
+	 
+
 	  //----------------------SIMC Collimator-------------------------
 	  
 	  htarx_corr = tar_x - h_xptar*htar_z*cos(h_th*dtr);
@@ -2503,7 +2502,7 @@ void analyze::CombineHistos()
   */
 
 
-  if(pm_setting==580||pm_setting==750){
+  // if(pm_setting==580||pm_setting==750){
     
     //Open ROOTfile for the ith run
     TFile *data_file = new TFile(data_OutputFileName, "READ");
@@ -2893,7 +2892,7 @@ void analyze::CombineHistos()
     }
     
     
-  }
+    //}
       
 }
 
