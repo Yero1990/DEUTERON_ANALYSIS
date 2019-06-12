@@ -3,7 +3,7 @@
 #code usage:  ./run_swif.sh [options]
 #where [options] ---> status,  delete
 
-workflow_name="d2_pm80_MeV_originalInterpol"
+workflow_name="d2_highPmiss_FULL"
 #workflow_name="SHMS_LH2_boiling_studies"
 #workflow_name="SHMS_boiling_studies"
 #workflow_name="pcal_calib"
@@ -23,7 +23,12 @@ workflow_name="d2_pm80_MeV_originalInterpol"
 
 #-----------POST 3288--------- 
 #runlist_name="runlists/d2580_set1.dat"
+#runlist_name="runlists/d2580_set2.dat"
 #runlist_name="runlists/d2750_set1.dat"
+#runlist_name="runlists/d2750_set2.dat"
+#runlist_name="runlists/d2750_set3.dat"
+runlist_name="runlists/d2_full.dat"
+
 #runlist_name="runlists/h2.dat"
 
 
@@ -48,7 +53,7 @@ project=" --project c-comm2017 "
 workflow=" --name $workflow_name"
 
 #Create A workflow
-create_workflow="python3 hcswif.py $mode $range $replay_script $disk_usage $cpu_cores $spec $events $project $workflow"
+create_workflow="python3 hcswif.py $mode $filelist $replay_script $disk_usage $cpu_cores $spec $events $project $workflow"
 
 #Add job to existing workflow
 #add_job="swif add-job  -workflow $workflow_name -project c-comm2017 -track analysis -name LD2_boiling -script /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/HMS/replay_hms.C -disk 3000000000"

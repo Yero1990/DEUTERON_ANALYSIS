@@ -16,6 +16,8 @@ block CTime*
 block T.coin.pTRIG*
 block T.coin.pEDTM*
 block T.coin.hTRIG*
+block T.coin.pT*
+block T.coin.pFADC*
 
 #Kinematics
 block P.kin.*       

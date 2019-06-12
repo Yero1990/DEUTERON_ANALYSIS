@@ -631,11 +631,15 @@ class analyze
   Double_t Q2_v;                //Q2 (vertex)  
   Double_t nu_v;                //energy transfer = Ein_v - Ef_v
   Double_t q_lab_v;             //magintude of 3-vector q
-  Double_t pm_v;                //missing momentum at the vertex
-  Double_t pm_par_v;            //parallel compoent of missing momentum at vertex
-  Double_t pf_v;                //final proton momentum at the vertex
+  Double_t Pm_v;                //missing momentum at the vertex
+  Double_t Pm_par_v;            //parallel compoent of missing momentum at vertex
+  Double_t Pf_v;                //final proton momentum at the vertex
   Double_t Ep_v;                //final proton energy at the vertex
   Double_t Ef_v;                //final electron energy at the vertex
+
+  Double_t ki_v;
+  Double_t kf_v;
+  Double_t X_v;
 
   //Vertex X'tar / Y'tar: 
   //Recently added (These are needed to use with hcana methods TransportToLab(Pf, xptar, yptar, p_vec),
@@ -646,6 +650,66 @@ class analyze
   Double_t h_xptar_v;
   Double_t h_yptar_v;
 
+
+  //Declare Neccessary Variables To be used to transport to Lab (at the vertex). **The '_v' suffix refers to vertex
+  TLorentzVector fP0_v;           // Beam 4-momentum
+  TLorentzVector fP1_v;           // Scattered electron 4-momentum
+  TLorentzVector fA_v;            // Target 4-momentum
+  TLorentzVector fA1_v;           // Final system 4-momentum
+  TLorentzVector fQ_v;            // Momentum transfer 4-vector
+  TLorentzVector fX_v;            // Detected secondary particle 4-momentum (GeV)
+  TLorentzVector fB_v;            // Recoil system 4-momentum (GeV)
+
+  TVector3 Pf_vec_v;              //final proton momentum vector at the vertex
+  TVector3 kf_vec_v;              //final electron momentum vector at the vertex
+
+  //Declare necessary variables for rotaion from +z to +q
+  TVector3 qvec_v;
+  TVector3 kfvec_v;
+  TRotation rot_to_q_v;
+  TVector3 bq_v;   //recoil system in lab frame (Pmx, Pmy, Pmz)
+  TVector3 xq_v;   //detected system in lab frame
+  TVector3 p_miss_q_v;   //recoil system in q-frame
+
+  //Additional Vertex Variables
+  //Missing Momentum components in Hall Coord. System (+X beam-left, +Y up, +Z downstream)
+  Double_t Pmx_lab_v;
+  Double_t Pmy_lab_v;
+  Double_t Pmz_lab_v;
+  //Missing Momentum components in the q-frame
+  Double_t Pmx_q_v;
+  Double_t Pmy_q_v;
+  Double_t Pmz_q_v;
+
+  //Vertex q-vector angle relative to beam (+z)
+  Double_t th_q_v;
+  Double_t ph_q_v;
+
+  //Vertex Proton / Neutron angles relative to q
+  Double_t th_pq_v;     //theta_pq_v
+  Double_t ph_pq_v;     //phi_pq_v
+  Double_t th_nq_v;     //theta_nq_v
+  Double_t ph_nq_v;      //phi_nq_v
+
+  //Proton / Electron Scattering Angles (vertex)
+  Double_t th_e_v;     //need to find if Tvector.Theta() polar angle is in-plane or out-of-plane
+  Double_t ph_e_v;
+  Double_t th_p_v;
+  Double_t ph_p_v;
+
+  //Declare Vertex Histograms
+  TH1F *H_kf_v;
+  TH1F *H_theta_elec_v;
+  TH1F *H_Pf_v;
+  TH1F *H_theta_prot_v;
+  TH1F *H_q_v;
+  TH1F *H_theta_q_v;
+  TH1F *H_Q2_v;
+  TH1F *H_omega_v;
+  TH1F *H_xbj_v;
+  TH1F *H_Pm_v;
+  TH1F *H_theta_pq_v;
+  TH1F *H_theta_nq_v;
 
 
   //------------------------------Data Related Variables--------------------------------
@@ -737,6 +801,7 @@ class analyze
   Bool_t c_shms_cal;  Double_t shms_cal_min;   Double_t shms_cal_max;
   Bool_t c_ctime;     Double_t ctime_min;      Double_t ctime_max;
 
+  int radiate_flag; //Analyze radiative or non-radiative SIMC?
 
   //------------------------------------------------------------------------------------
 

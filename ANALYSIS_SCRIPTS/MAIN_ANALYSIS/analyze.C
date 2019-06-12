@@ -61,7 +61,21 @@ analyze::analyze(int run=-1000, string e_arm="SHMS", string type="data", string 
   H_pcal_etotnorm = NULL;
   H_pcal_etotTrkNorm = NULL;
 
-  //Initialize DATA/SIMC Histograms
+  //==Initialize SIMC Vertex Histograms (Average Kin. Calculation)
+  H_kf_v         = NULL;
+  H_theta_elec_v = NULL;
+  H_Pf_v         = NULL;
+  H_theta_prot_v = NULL;
+  H_q_v          = NULL;
+  H_theta_q_v    = NULL;
+  H_Q2_v         = NULL;
+  H_omega_v      = NULL;
+  H_xbj_v        = NULL;
+  H_Pm_v         = NULL;
+  H_theta_pq_v   = NULL;
+  H_theta_nq_v   = NULL;
+
+  //==Initialize DATA/SIMC Histograms==
   
   //Primary (electron) Kinematics
   H_Q2 = NULL;
@@ -180,7 +194,21 @@ analyze::~analyze()
   delete H_pcal_etotnorm;   H_pcal_etotnorm   = NULL;
   delete H_pcal_etotTrkNorm;   H_pcal_etotTrkNorm   = NULL;
 
-  //Initialize DATA/SIMC Histograms
+  //==Initialize SIMC Vertex Histograms (Average Kin. Calculation)
+  delete H_kf_v;          H_kf_v         = NULL;
+  delete H_theta_elec_v;  H_theta_elec_v = NULL;
+  delete H_Pf_v;          H_Pf_v         = NULL;
+  delete H_theta_prot_v;  H_theta_prot_v = NULL;
+  delete H_q_v;           H_q_v          = NULL;
+  delete H_theta_q_v;     H_theta_q_v    = NULL;
+  delete H_Q2_v;          H_Q2_v         = NULL;
+  delete H_omega_v;       H_omega_v      = NULL;
+  delete H_xbj_v;         H_xbj_v        = NULL;
+  delete H_Pm_v;          H_Pm_v         = NULL;
+  delete H_theta_pq_v;    H_theta_pq_v   = NULL;
+  delete H_theta_nq_v;    H_theta_nq_v   = NULL;
+
+  //==Initialize DATA/SIMC Histograms==
   
   //Primary (electron) Kinematics
   delete H_Q2;         H_Q2         = NULL;
@@ -350,7 +378,9 @@ void analyze::SetCuts()
   cout << "Calling SetCuts() . . ." << endl;
   
   //Read Cut Flags from set_heep(deep)_cuts.input file 
-  
+  //==Analyze Radiative or Non-Radiative ? 
+  radiate_flag = stoi(split(FindString("radiate", input_CutFileName)[0], ':')[1]);
+  cout << "Radiate Flag: " << radiate_flag << endl;
   //==BASIC==
   Em_cut_flag = stoi(split(FindString("bool Em", input_CutFileName)[0], '=')[1]);
   W_cut_flag = stoi(split(FindString("bool W", input_CutFileName)[0], '=')[1]);
@@ -1044,7 +1074,19 @@ void analyze::CreateHist()
   H_pcal_etotnorm = new TH1F("H_pcal_etotnorm", "SHMS Cal. EtotNorm", pcal_nbins, pcal_xmin, pcal_xmax);
   H_pcal_etotTrkNorm = new TH1F("H_pcal_etotTrkNorm", "SHMS Cal. EtotTrackNorm", pcal_nbins, pcal_xmin, pcal_xmax);
 
-
+  //SIMC Vertex Histograms (Average Kin. Calculation)
+  H_kf_v         = new TH1F("H_kf_v", "Final e^{-} Momentum", kf_nbins, kf_xmin, kf_xmax);
+  H_theta_elec_v = new TH1F("H_theta_elec_v", "Electron Scattering Angle", the_nbins, the_xmin, the_xmax); 
+  H_Pf_v         = new TH1F("H_Pf_v", "Final Proton Momentum", Pf_nbins, Pf_xmin, Pf_xmax);
+  H_theta_prot_v = new TH1F("H_theta_prot_v", "Proton Scattering Angle", thp_nbins, thp_xmin, thp_xmax);
+  H_q_v          = new TH1F("H_q_v", "q-vector, |q|", q_nbins, q_xmin, q_xmax);
+  H_theta_q_v    = new TH1F("H_theta_q_v", "q-vector Angle, #theta_{q}", thq_nbins, thq_xmin, thq_xmax); 
+  H_Q2_v         = new TH1F("H_Q2_v","Q2", Q2_nbins, Q2_xmin, Q2_xmax); 
+  H_omega_v      = new TH1F("H_omega_v","Energy Transfer, #omega", om_nbins, om_xmin, om_xmax); 
+  H_xbj_v        = new TH1F("H_xbj_v", "x-Bjorken", xbj_nbins, xbj_xmin, xbj_xmax);  
+  H_Pm_v         = new TH1F("H_Pm_v","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  H_theta_pq_v   = new TH1F("H_theta_pq_v", "(Proton, q-vector) Angle, #theta_{pq}", thpq_nbins, thpq_xmin, thpq_xmax);
+  H_theta_nq_v   = new TH1F("H_theta_nq_v", "(q-vector,Neutron) Angle, #theta_{nq}", thnq_nbins, thnq_xmin, thnq_xmax);
 
   //Primary (electron) Kinematics
   H_Q2 = new TH1F("H_Q2","Q2", Q2_nbins, Q2_xmin, Q2_xmax); 
@@ -1415,12 +1457,19 @@ void analyze::ReadTree(string rad_flag="")
       if(rad_flag=="do_rad_corr")
 	{
 	  cout << "Doing Radiative Corrections . . . " << endl;
-	  
+       
+	 
 	  inROOT = new TFile(simc_InputFileName_norad, "READ");
 	}
-      //Read Radiative ROOTfile by default
-      else{
+      //Read Radiative if doing radiation (1) or radiative_corrections (-1)
+      else if(radiate_flag==1 || radiate_flag==-1){
+	cout << "Analyzing SIMC with Radiation ON " << endl;
 	inROOT = new TFile(simc_InputFileName_rad, "READ");
+      }
+      //Read Non-Radiative 
+      else if(radiate_flag==0){
+	cout << "Analyzing SIMC with Radiation OFF " << endl;
+	inROOT = new TFile(simc_InputFileName_norad, "READ");
       }
       
       //Get the tree
@@ -1518,11 +1567,15 @@ void analyze::ReadTree(string rad_flag="")
       tree->SetBranchAddress("Q2_v", &Q2_v);
       tree->SetBranchAddress("nu_v", &nu_v);
       tree->SetBranchAddress("q_lab_v", &q_lab_v);
-      tree->SetBranchAddress("pm_v", &pm_v);
-      tree->SetBranchAddress("pm_par_v", &pm_par_v);
-      tree->SetBranchAddress("pf_v", &pf_v);
+      tree->SetBranchAddress("pm_v", &Pm_v);
+      tree->SetBranchAddress("pm_par_v", &Pm_par_v);
+      tree->SetBranchAddress("pf_v", &Pf_v);
       tree->SetBranchAddress("Ep_v", &Ep_v);
       tree->SetBranchAddress("Ef_v", &Ef_v);
+      tree->SetBranchAddress("e_xptar_v", &e_xptar_v);
+      tree->SetBranchAddress("e_yptar_v", &e_yptar_v);
+      tree->SetBranchAddress("h_xptar_v", &h_xptar_v);
+      tree->SetBranchAddress("h_yptar_v", &h_yptar_v);
       tree->SetBranchAddress("probabs", &prob_abs);
 
 
@@ -1895,7 +1948,84 @@ void analyze::EventLoop()
 	  
 	  //--------------------------------------------------------------------------------
 	  
-	 
+
+
+	  //---------Calculate Necessary Vertex Quantities for Average Kinematics----------------
+
+	  //Convert from MeV to GeV
+	  Ein_v = Ein_v / 1000.;
+	  Ef_v = Ef_v / 1000.;
+	  Pf_v = Pf_v / 1000.;
+	  Q2_v = Q2_v / 1.e6;
+	  nu_v = nu_v / 1000.;
+	  Pm_v = Pm_v / 1000.;
+	  q_lab_v = q_lab_v / 1000.;
+
+	  ki_v = sqrt(Ein_v*Ein_v - me*me);   //initial electron momentum at vertex
+	  kf_v = sqrt(Ef_v*Ef_v - me*me);    //final electron momentum at vertex
+
+	  X_v = Q2_v / (2.*MP*nu_v);         //X-Bjorken at the vertex
+
+	  //Calculate electron final momentum 3-vector
+	  SetCentralAngles(e_th, e_ph);
+	  TransportToLab(kf_v, e_xptar_v, e_yptar_v, kf_vec_v);
+ 
+	  //Calculate 4-Vectors
+	  fP0_v.SetXYZM(0.0, 0.0, ki_v, me);  //set initial e- 4-momentum at the vertex
+	  fP1_v.SetXYZM(kf_vec_v.X(), kf_vec_v.Y(), kf_vec_v.Z(), me);  //set final e- 4-momentum at the vertex
+	  fA_v.SetXYZM(0.0, 0.0, 0.0, tgt_mass );  //Set initial target at rest
+	  fQ_v = fP0_v - fP1_v;
+	  fA1_v = fA_v + fQ_v;   //final target (sum of final hadron four momenta)
+
+	  //Get Detected Particle 4-momentum
+	  SetCentralAngles(h_th, h_ph);
+	  TransportToLab(Pf_v, h_xptar_v, h_yptar_v, Pf_vec_v);
+	  fX_v.SetVectM(Pf_vec_v, MP);       //SET FOUR VECTOR OF detected particle
+	  fB_v = fA1_v - fX_v;                 //4-MOMENTUM OF UNDETECTED PARTICLE 
+
+	  Pmx_lab_v = fB_v.X();
+	  Pmy_lab_v = fB_v.Y(); 
+	  Pmz_lab_v = fB_v.Z(); 
+
+	  //Electron / Proton angles
+	  th_e_v = kf_vec_v.Theta();
+	  ph_e_v = kf_vec_v.Phi();
+	  th_p_v = Pf_vec_v.Theta();
+	  ph_p_v = Pf_vec_v.Phi();
+
+	  //Can be checked later against the SIMC pm_v. (It should be identical)
+	  //pm_v = sqrt(Pmx_lab*Pmx_lab + Pmy_lab*Pmy_lab + Pmz_lab*Pmz_lab);
+	  
+	  //--------Rotate the recoil system from +z to +q-------
+	  qvec_v = fQ_v.Vect();
+	  kfvec_v = fP1_v.Vect();
+
+	  th_q_v = qvec_v.Theta();
+	  ph_q_v = qvec_v.Phi();
+
+	  rot_to_q_v.SetZAxis( qvec_v, kfvec_v).Invert();
+	  
+	  xq_v = fX_v.Vect();
+	  bq_v = fB_v.Vect();
+	  
+	  xq_v *= rot_to_q_v;
+	  bq_v *= rot_to_q_v;
+
+	  //Calculate Angles of q relative to x(detected proton) and b(recoil neutron)
+	  th_pq_v = xq_v.Theta();   //"theta_pq"                                       
+	  ph_pq_v = xq_v.Phi();     //"out-of-plane angle", "phi_pq"                                                                    
+	  th_nq_v = bq_v.Theta();   // theta_nq                                                                                                     
+	  ph_nq_v = bq_v.Phi();     //"out-of-plane angle", phi_nq
+	  
+	  p_miss_q_v = -bq_v;
+	  
+	  //Missing Momentum Components in the q-frame
+	  Pmz_q_v = p_miss_q_v.Z();   //parallel component to +z (+z is along q)
+	  Pmx_q_v = p_miss_q_v.X();   //in-plane perpendicular component to +z
+	  Pmy_q_v = p_miss_q_v.Y();   //out-of-plane component (Oop)
+	  
+	  
+	  //--------------------------------------------------------------------------------
 
 	  //----------------------SIMC Collimator-------------------------
 	  
@@ -1956,6 +2086,20 @@ void analyze::EventLoop()
 	  //-------------------------------Fill SIMC Histograms--------------------------
 	  
 	  if(base_cuts&&hmsColl_Cut&&shmsColl_Cut){
+
+	    //Fill SIMC Vertec Histograms (Average Kin. Calculation)
+	    H_kf_v->Fill(kf_v, FullWeight);
+	    H_theta_elec_v->Fill(th_e_v/dtr, FullWeight);
+	    H_Pf_v->Fill(Pf_v, FullWeight);
+	    H_theta_prot_v->Fill(th_p_v/dtr, FullWeight);
+	    H_q_v->Fill(q_lab_v, FullWeight);
+	    H_theta_q_v->Fill(th_q_v/dtr, FullWeight);
+	    H_Q2_v->Fill(Q2_v, FullWeight);
+	    H_omega_v->Fill(nu_v, FullWeight);
+	    H_xbj_v->Fill(X_v, FullWeight);
+	    H_Pm_v->Fill(Pm_v, FullWeight);
+	    H_theta_pq_v->Fill(th_pq_v/dtr, FullWeight);
+	    H_theta_nq_v->Fill(th_nq_v/dtr, FullWeight);
 
 	    //Primary (electron) Kinematics
 	    H_Q2->Fill(Q2, FullWeight);
@@ -2361,10 +2505,28 @@ void analyze::WriteHist(string rad_flag="")
       if(rad_flag=="do_rad_corr"){
 	outROOT = new TFile(simc_OutputFileName_norad, "RECREATE");
       }
-      //By Default, Write Radiated SIMC ROOTfile Histograms
-      else{
+      //Write Radiative if doing radiation (1) or radiative_corrections for which radiate_flag=-1 (must be off)
+      else if(radiate_flag==1 || radiate_flag==-1){
 	outROOT = new TFile(simc_OutputFileName_rad, "RECREATE");
       }
+      //Write Non-Radiative 
+      else if(radiate_flag==0){
+	outROOT = new TFile(simc_OutputFileName_norad, "RECREATE");
+      }
+        
+      //==Write SIMC Vertex Histograms (Average Kin. Calculation)
+      H_kf_v->Write();
+      H_theta_elec_v->Write();
+      H_Pf_v->Write();
+      H_theta_prot_v->Write();
+      H_q_v->Write();
+      H_theta_q_v->Write();
+      H_Q2_v->Write();
+      H_omega_v->Write();
+      H_xbj_v->Write();
+      H_Pm_v->Write();
+      H_theta_pq_v->Write();
+      H_theta_nq_v->Write();
       
       //Primary (electron) Kinematics
       H_Q2->Write();

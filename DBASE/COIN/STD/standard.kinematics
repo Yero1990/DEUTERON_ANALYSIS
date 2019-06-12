@@ -160,7 +160,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -58.394
 ptheta_lab = 12.194
-hpcentral = 2.091837 ;original: 2.091
+hpcentral = 2.0915    ;original: 2.091
 ppcentral = 8.5342488 ;original: 8.7
 
 
@@ -252,7 +252,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -58.391
 ptheta_lab = 12.21
-hpcentral = 2.091837 ;original: 2.091 
+hpcentral = 2.0915    ;original: 2.091 
 ppcentral = 8.5342488 ;original: 8.7
 
 
