@@ -47,8 +47,8 @@ bool W       = 0
 bool h_delta = 1
 bool e_delta = 1
 bool ztar_diff = 1
-bool Q2 = 0
-bool th_nq = 0
+bool Q2 = 1
+bool th_nq = 1
 bool MM = 0
 
 ;PID Cuts
@@ -83,7 +83,7 @@ ztarDiff_max: 2.
 Q2_min: 4.
 Q2_max: 5.
 
-thnq_min: 0.
+thnq_min: 35.
 thnq_max: 45.
 
 MM_min: 0.9

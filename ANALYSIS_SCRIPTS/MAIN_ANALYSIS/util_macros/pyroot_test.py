@@ -14,7 +14,8 @@ import ROOT
 from ROOT import *
 from ROOT import *
 
-
+print('OK')
+'''
 f1 = TFile.Open('../root_files/collimator_study/scale_1/heep_data_histos_3288.root', 'read');
 f2 = TFile.Open('../root_files/collimator_study/scale_1/heep_simc_histos_3288.root', 'read');
 
@@ -56,3 +57,4 @@ c1.SaveAs('H_W.pdf')
 
 
 wait = input('PRESS ENTER TO EXIT BROWSER . . . ')
+'''

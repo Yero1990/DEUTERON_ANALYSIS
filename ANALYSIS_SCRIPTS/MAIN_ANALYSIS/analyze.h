@@ -166,6 +166,11 @@ class analyze
   Double_t pcal_xmax = 1.5;
 
   //---------KINEMATICS-----
+  //Incident Energy
+  Double_t Ein_nbins = 100;
+  Double_t Ein_xmin = 10.;
+  Double_t Ein_xmax = 11.;
+
   
   //Missing Energy
   Double_t Em_nbins = 100;
@@ -456,9 +461,11 @@ class analyze
   TH1F *H_theta_prot;
   TH1F *H_theta_pq;
   TH1F *H_theta_nq;
-  TH1F *H_phi_pq;
-  TH1F *H_phi_nq;
-
+  TH1F *H_cphi_pq;
+  TH1F *H_cphi_nq;
+  TH1F *H_sphi_pq;
+  TH1F *H_sphi_nq;
+  
   //Target Reconstruction Histos
   TH1F *H_hx_tar;
   TH1F *H_hy_tar;
@@ -594,8 +601,10 @@ class analyze
   TH1F *H_theta_prot_total = 0;					     TH1F *H_theta_prot_i = 0;					  
   TH1F *H_theta_pq_total = 0;					     TH1F *H_theta_pq_i = 0;					  
   TH1F *H_theta_nq_total = 0;					     TH1F *H_theta_nq_i = 0;					  
-  TH1F *H_phi_pq_total = 0;					     TH1F *H_phi_pq_i = 0;					  
-  TH1F *H_phi_nq_total = 0;					     TH1F *H_phi_nq_i = 0;	
+  TH1F *H_cphi_pq_total = 0;					     TH1F *H_cphi_pq_i = 0;					  
+  TH1F *H_cphi_nq_total = 0;					     TH1F *H_cphi_nq_i = 0;	
+  TH1F *H_sphi_pq_total = 0;					     TH1F *H_sphi_pq_i = 0;					  
+  TH1F *H_sphi_nq_total = 0;					     TH1F *H_sphi_nq_i = 0;
   TH1F *H_hx_tar_total = 0;					     TH1F *H_hx_tar_i = 0;						  
   TH1F *H_hy_tar_total = 0;					     TH1F *H_hy_tar_i = 0;						  
   TH1F *H_hz_tar_total = 0;					     TH1F *H_hz_tar_i = 0;						  
@@ -708,6 +717,7 @@ class analyze
   Double_t th_p_v;
 
   //Declare Vertex Histograms
+  TH1F *H_Ein_v;
   TH1F *H_kf_v;
   TH1F *H_theta_elec_v;
   TH1F *H_Pf_v;
@@ -717,11 +727,52 @@ class analyze
   TH1F *H_Q2_v;
   TH1F *H_omega_v;
   TH1F *H_xbj_v;
-  TH1F *H_Pm_v;
+  TH1F *H_Pm_v;          //for denominator in 1D Avg Kin. (Missing Momentum Yield) 
   TH1F *H_theta_pq_v;
-  TH1F *H_phi_pq_v;
   TH1F *H_theta_nq_v;
-  TH1F *H_phi_nq_v;
+  TH1F *H_cphi_pq_v;
+  TH1F *H_cphi_nq_v;
+  TH1F *H_sphi_pq_v;
+  TH1F *H_sphi_nq_v;
+
+  //Declare Average Kinematic Histograms
+  TH1F *H_Ein_avg;
+  TH1F *H_kf_avg;
+  TH1F *H_theta_elec_avg;
+  TH1F *H_Pf_avg;
+  TH1F *H_theta_prot_avg;
+  TH1F *H_q_avg;
+  TH1F *H_theta_q_avg;
+  TH1F *H_Q2_avg;
+  TH1F *H_omega_avg;
+  TH1F *H_xbj_avg;
+  TH1F *H_Pm_avg;
+  TH1F *H_theta_pq_avg;
+  TH1F *H_theta_nq_avg;
+  TH1F *H_cphi_pq_avg;
+  TH1F *H_cphi_nq_avg;
+  TH1F *H_sphi_pq_avg;
+  TH1F *H_sphi_nq_avg;
+
+  //Declare 2D Average Kinematic Histograms (Pmiss_v vs. theta_nq_v averaged over different kinematics)
+  TH2F *H_Pm_vs_thnq_v;              //2d for average histogram denominator (Yield)
+  TH2F *H_Ein_2Davg;
+  TH2F *H_kf_2Davg;
+  TH2F *H_theta_elec_2Davg;
+  TH2F *H_Pf_2Davg;
+  TH2F *H_theta_prot_2Davg;
+  TH2F *H_q_2Davg;
+  TH2F *H_theta_q_2Davg;
+  TH2F *H_Q2_2Davg;
+  TH2F *H_omega_2Davg;
+  TH2F *H_xbj_2Davg;
+  TH2F *H_Pm_2Davg;
+  TH2F *H_theta_pq_2Davg;
+  TH2F *H_theta_nq_2Davg;
+  TH2F *H_cphi_pq_2Davg;
+  TH2F *H_cphi_nq_2Davg;
+  TH2F *H_sphi_pq_2Davg;
+  TH2F *H_sphi_nq_2Davg;
 
 
   //------------------------------Data Related Variables--------------------------------
@@ -792,6 +843,7 @@ class analyze
   Bool_t MM_cut_flag;
 
   Bool_t base_cuts;
+  Bool_t base_cuts_2d;  //only for 2D Avg Kin Histos (excludes th_nq cuts, as we are plotting Pm vs th_nq)
   Bool_t pid_cuts;
 
   Bool_t c_edelta;    Double_t edel_min;      Double_t edel_max;
