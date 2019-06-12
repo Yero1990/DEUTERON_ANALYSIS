@@ -285,7 +285,15 @@ class analyze
   Double_t thpq_xmin = -0.05;
   Double_t thpq_xmax = 1.2;
 
+  //ph_nq (Angle between proton and q-vector)
+  Double_t phnq_nbins = nbins;
+  Double_t phnq_xmin = -1.;
+  Double_t phnq_xmax = 1.;
 
+  //ph_pq (Angle between proton and q-vector)
+  Double_t phpq_nbins = nbins;
+  Double_t phpq_xmin = -1.;
+  Double_t phpq_xmax = 1.;
 
   //------Target Reconstruction Variables (Hall Coord. System)----------
   Double_t xtar_nbins = nbins;
@@ -448,6 +456,8 @@ class analyze
   TH1F *H_theta_prot;
   TH1F *H_theta_pq;
   TH1F *H_theta_nq;
+  TH1F *H_phi_pq;
+  TH1F *H_phi_nq;
 
   //Target Reconstruction Histos
   TH1F *H_hx_tar;
@@ -584,6 +594,8 @@ class analyze
   TH1F *H_theta_prot_total = 0;					     TH1F *H_theta_prot_i = 0;					  
   TH1F *H_theta_pq_total = 0;					     TH1F *H_theta_pq_i = 0;					  
   TH1F *H_theta_nq_total = 0;					     TH1F *H_theta_nq_i = 0;					  
+  TH1F *H_phi_pq_total = 0;					     TH1F *H_phi_pq_i = 0;					  
+  TH1F *H_phi_nq_total = 0;					     TH1F *H_phi_nq_i = 0;	
   TH1F *H_hx_tar_total = 0;					     TH1F *H_hx_tar_i = 0;						  
   TH1F *H_hy_tar_total = 0;					     TH1F *H_hy_tar_i = 0;						  
   TH1F *H_hz_tar_total = 0;					     TH1F *H_hz_tar_i = 0;						  
@@ -691,11 +703,9 @@ class analyze
   Double_t th_nq_v;     //theta_nq_v
   Double_t ph_nq_v;      //phi_nq_v
 
-  //Proton / Electron Scattering Angles (vertex)
-  Double_t th_e_v;     //need to find if Tvector.Theta() polar angle is in-plane or out-of-plane
-  Double_t ph_e_v;
+  //Proton / Electron In-Plane Scattering Angles (vertex)
+  Double_t th_e_v;     
   Double_t th_p_v;
-  Double_t ph_p_v;
 
   //Declare Vertex Histograms
   TH1F *H_kf_v;
@@ -709,7 +719,9 @@ class analyze
   TH1F *H_xbj_v;
   TH1F *H_Pm_v;
   TH1F *H_theta_pq_v;
+  TH1F *H_phi_pq_v;
   TH1F *H_theta_nq_v;
+  TH1F *H_phi_nq_v;
 
 
   //------------------------------Data Related Variables--------------------------------

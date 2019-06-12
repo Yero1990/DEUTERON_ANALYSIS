@@ -74,6 +74,8 @@ analyze::analyze(int run=-1000, string e_arm="SHMS", string type="data", string 
   H_Pm_v         = NULL;
   H_theta_pq_v   = NULL;
   H_theta_nq_v   = NULL;
+  H_phi_pq_v   = NULL;
+  H_phi_nq_v   = NULL;
 
   //==Initialize DATA/SIMC Histograms==
   
@@ -108,6 +110,8 @@ analyze::analyze(int run=-1000, string e_arm="SHMS", string type="data", string 
   H_theta_prot = NULL;
   H_theta_pq = NULL;
   H_theta_nq = NULL;
+  H_phi_pq = NULL;
+  H_phi_nq = NULL;
 
   //Target Reconstruction Histos
   H_hx_tar = NULL;
@@ -207,6 +211,8 @@ analyze::~analyze()
   delete H_Pm_v;          H_Pm_v         = NULL;
   delete H_theta_pq_v;    H_theta_pq_v   = NULL;
   delete H_theta_nq_v;    H_theta_nq_v   = NULL;
+  delete H_phi_pq_v;      H_phi_pq_v   = NULL;
+  delete H_phi_nq_v;      H_phi_nq_v   = NULL;
 
   //==Initialize DATA/SIMC Histograms==
   
@@ -241,6 +247,8 @@ analyze::~analyze()
   delete H_theta_prot; H_theta_prot = NULL;
   delete H_theta_pq;   H_theta_pq   = NULL;
   delete H_theta_nq;   H_theta_nq   = NULL;
+  delete H_phi_pq;     H_phi_pq     = NULL;
+  delete H_phi_nq;     H_phi_nq     = NULL;
 
   //Target Reconstruction Histos
   delete H_hx_tar;  H_hx_tar = NULL;
@@ -567,10 +575,10 @@ void analyze::SetHistBins()
       MM2_nbins = nbins;		  thp_xmax = 42.;	   	   thpq_xmax = 1.2;                                  
       MM2_xmin = -0.01;			  			   
       MM2_xmax = 0.01;			  
-			   
-      // X-bJORKEN                         		   
-      xbj_nbins = nbins;		  	   
-      xbj_xmin = 0.8;			  	   
+                                         //phi_pq (Out-Of-Plane Angle between proton and q-vector)  //phi_nq 		  
+      /* X-bJORKEN*/                      phpq_nbins = nbins;					      phnq_nbins = nbins; 
+      xbj_nbins = nbins;		  phpq_xmin = -200.;					      phnq_xmin = -200.;	  
+      xbj_xmin = 0.8;			  phpq_xmax =  200.;                                          phnq_xmax =  200.;                                                                                                                                                                     
       xbj_xmax = 1.1;			        
 
 
@@ -651,10 +659,10 @@ void analyze::SetHistBins()
       MM2_xmin = -0.01;			  			   
       MM2_xmax = 0.01;			  
       
-      // X-bJORKEN                        			   
-      xbj_nbins = nbins;		  	   
-      xbj_xmin = 0.8;			  	   
-      xbj_xmax = 1.1;			            
+      /* X-bJORKEN*/                       //phi_nq 		                                    //phi_pq (Out-Of-Plane Angle between proton and q-vector)                          			   
+      xbj_nbins = nbins;		     phnq_nbins = nbins; 	   			    phpq_nbins = nbins;					      
+      xbj_xmin = 0.8;			     phnq_xmin = -200.;	  	   			    phpq_xmin = -200.;					      
+      xbj_xmax = 1.1;			     phnq_xmax =  200.;              			    phpq_xmax =  200.;                                           
 
 
       //-----------------------------------Focal Plane /  Target Reconstruction------------------------------------
@@ -734,10 +742,10 @@ void analyze::SetHistBins()
       MM2_xmin = -0.01;			  			   
       MM2_xmax = 0.01;			  
       
-      // X-bJORKEN                         		   
-      xbj_nbins = nbins;		  	   
-      xbj_xmin = 0.8;			  	   
-      xbj_xmax = 1.1;			   
+      /*X-bJORKEN*/                        //phi_nq 		                                    //phi_pq (Out-Of-Plane Angle between proton and q-vector)                           		   
+      xbj_nbins = nbins;		     phnq_nbins = nbins; 	   			    phpq_nbins = nbins;					      
+      xbj_xmin = 0.8;			     phnq_xmin = -200.;	  	   			    phpq_xmin = -200.;					      
+      xbj_xmax = 1.1;			     phnq_xmax =  200.;     				    phpq_xmax =  200.;                                           
 
 
       //-----------------------------------Focal Plane /  Target Reconstruction------------------------------------
@@ -817,10 +825,10 @@ void analyze::SetHistBins()
       MM2_xmin = -0.01;			  			   
       MM2_xmax = 0.01;			  
       
-      // X-bJORKEN                        		   
-      xbj_nbins = nbins;		 	   
-      xbj_xmin = 0.8;			  	   
-      xbj_xmax = 1.1;			    
+      /* X-bJORKEN*/                       //phi_nq 		                                    //phi_pq (Out-Of-Plane Angle between proton and q-vector)                          		   
+      xbj_nbins = nbins;		     phnq_nbins = nbins; 	   			    phpq_nbins = nbins;					      
+      xbj_xmin = 0.8;			     phnq_xmin = -200.;	  	   			    phpq_xmin = -200.;					      
+      xbj_xmax = 1.1;			     phnq_xmax =  200.;      				    phpq_xmax =  200.;                                           
 
 
       //-----------------------------------Focal Plane /  Target Reconstruction------------------------------------
@@ -902,15 +910,15 @@ void analyze::SetHistBins()
       MM2_xmin = -0.01;			  			   
       MM2_xmax = 0.01;			  
       
-      // X-bJORKEN                         //th_nq                         //Proton Kin. Energy 
-      xbj_nbins = nbins;		   thnq_nbins = nbins;              Kp_nbins = nbins; 
-      xbj_xmin = 0.8;			   thnq_xmin = 0;                   Kp_xmin = 1.6;   
-      xbj_xmax = 1.2;			   thnq_xmax = 180;                 Kp_xmax = 2.6;  
+      // X-bJORKEN                         //th_nq                         //Proton Kin. Energy         //phi_nq 		  
+      xbj_nbins = nbins;		   thnq_nbins = nbins;              Kp_nbins = nbins; 	          phnq_nbins = nbins; 
+      xbj_xmin = 0.8;			   thnq_xmin = 0;                   Kp_xmin = 1.6;   	          phnq_xmin = -200.;	  
+      xbj_xmax = 1.2;			   thnq_xmax = 180;                 Kp_xmax = 2.6;  	          phnq_xmax =  200.;    
      
-      //Neutron Kin. Energy                 //Neutron Final Energy, En
-      Kn_nbins = nbins;                      En_nbins = nbins;
-      Kn_xmin = -0.001;                      En_xmin = 0.938;                                                              
-      Kn_xmax = 0.015;                        En_xmax = 0.96;
+      //Neutron Kin. Energy                 //Neutron Final Energy, En       //phi_pq (Out-Of-Plane Angle between proton and q-vector)  
+      Kn_nbins = nbins;                      En_nbins = nbins;		     phpq_nbins = nbins;					      
+      Kn_xmin = -0.001;                      En_xmin = 0.938;                phpq_xmin = -200.;					                                                     
+      Kn_xmax = 0.015;                        En_xmax = 0.96;		     phpq_xmax =  200.;                                           
 
 
       //-----------------------------------Focal Plane /  Target Reconstruction------------------------------------
@@ -993,15 +1001,15 @@ void analyze::SetHistBins()
       MM2_xmin = -0.01;			  			   
       MM2_xmax = 0.01;			  
       
-      // X-bJORKEN                         //th_nq                         //Proton Kin. Energy 
-      xbj_nbins = nbins;		   thnq_nbins = nbins;              Kp_nbins = nbins; 
-      xbj_xmin = 0.5;			   thnq_xmin = 0;                   Kp_xmin = 1.;   
-      xbj_xmax = 2.0;			   thnq_xmax = 80;                  Kp_xmax = 1.8;  
+      // X-bJORKEN                         //th_nq                         //Proton Kin. Energy          //phi_nq 		  
+      xbj_nbins = nbins;		   thnq_nbins = nbins;              Kp_nbins = nbins; 		   phnq_nbins = nbins; 
+      xbj_xmin = 0.5;			   thnq_xmin = 0;                   Kp_xmin = 1.;   		   phnq_xmin = -200.;	  
+      xbj_xmax = 2.0;			   thnq_xmax = 80;                  Kp_xmax = 1.8;  		   phnq_xmax =  200.;    
      
-      //Neutron Kin. Energy                 //Neutron Final Energy, En
-      Kn_nbins = nbins;                      En_nbins = nbins;
-      Kn_xmin = 0.;                          En_xmin = 0.;                                                              
-      Kn_xmax = 0.8;                         En_xmax = 2.;
+      //Neutron Kin. Energy                 //Neutron Final Energy, En        //phi_pq (Out-Of-Plane Angle between proton and q-vector)  
+      Kn_nbins = nbins;                      En_nbins = nbins;		      phpq_nbins = nbins;					      
+      Kn_xmin = 0.;                          En_xmin = 0.;                    phpq_xmin = -200.;					                                                 
+      Kn_xmax = 0.8;                         En_xmax = 2.;		      phpq_xmax =  200.;                                           
 
 
       //-----------------------------------Focal Plane /  Target Reconstruction------------------------------------
@@ -1075,18 +1083,20 @@ void analyze::CreateHist()
   H_pcal_etotTrkNorm = new TH1F("H_pcal_etotTrkNorm", "SHMS Cal. EtotTrackNorm", pcal_nbins, pcal_xmin, pcal_xmax);
 
   //SIMC Vertex Histograms (Average Kin. Calculation)
-  H_kf_v         = new TH1F("H_kf_v", "Final e^{-} Momentum", kf_nbins, kf_xmin, kf_xmax);
-  H_theta_elec_v = new TH1F("H_theta_elec_v", "Electron Scattering Angle", the_nbins, the_xmin, the_xmax); 
-  H_Pf_v         = new TH1F("H_Pf_v", "Final Proton Momentum", Pf_nbins, Pf_xmin, Pf_xmax);
-  H_theta_prot_v = new TH1F("H_theta_prot_v", "Proton Scattering Angle", thp_nbins, thp_xmin, thp_xmax);
-  H_q_v          = new TH1F("H_q_v", "q-vector, |q|", q_nbins, q_xmin, q_xmax);
-  H_theta_q_v    = new TH1F("H_theta_q_v", "q-vector Angle, #theta_{q}", thq_nbins, thq_xmin, thq_xmax); 
-  H_Q2_v         = new TH1F("H_Q2_v","Q2", Q2_nbins, Q2_xmin, Q2_xmax); 
-  H_omega_v      = new TH1F("H_omega_v","Energy Transfer, #omega", om_nbins, om_xmin, om_xmax); 
-  H_xbj_v        = new TH1F("H_xbj_v", "x-Bjorken", xbj_nbins, xbj_xmin, xbj_xmax);  
-  H_Pm_v         = new TH1F("H_Pm_v","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
-  H_theta_pq_v   = new TH1F("H_theta_pq_v", "(Proton, q-vector) Angle, #theta_{pq}", thpq_nbins, thpq_xmin, thpq_xmax);
-  H_theta_nq_v   = new TH1F("H_theta_nq_v", "(q-vector,Neutron) Angle, #theta_{nq}", thnq_nbins, thnq_xmin, thnq_xmax);
+  H_kf_v         = new TH1F("H_kf_v", "Final e^{-} Momentum (vertex)", kf_nbins, kf_xmin, kf_xmax);
+  H_theta_elec_v = new TH1F("H_theta_elec_v", "Electron Scattering Angle (vertex)", the_nbins, the_xmin, the_xmax); 
+  H_Pf_v         = new TH1F("H_Pf_v", "Final Proton Momentum (vertex)", Pf_nbins, Pf_xmin, Pf_xmax);
+  H_theta_prot_v = new TH1F("H_theta_prot_v", "Proton Scattering Angle (vertex)", thp_nbins, thp_xmin, thp_xmax);
+  H_q_v          = new TH1F("H_q_v", "q-vector, |q| (vertex)", q_nbins, q_xmin, q_xmax);
+  H_theta_q_v    = new TH1F("H_theta_q_v", "#theta_{q} (vertex)", thq_nbins, thq_xmin, thq_xmax); 
+  H_Q2_v         = new TH1F("H_Q2_v","Q2 (vertex)", Q2_nbins, Q2_xmin, Q2_xmax); 
+  H_omega_v      = new TH1F("H_omega_v","Energy Transfer, #omega (vertex)", om_nbins, om_xmin, om_xmax); 
+  H_xbj_v        = new TH1F("H_xbj_v", "x-Bjorken (vertex)", xbj_nbins, xbj_xmin, xbj_xmax);  
+  H_Pm_v         = new TH1F("H_Pm_v","Missing Momentum (vertex)", Pm_nbins, Pm_xmin, Pm_xmax); 
+  H_theta_pq_v   = new TH1F("H_theta_pq_v", "#theta_{pq} (vertex)", thpq_nbins, thpq_xmin, thpq_xmax);
+  H_theta_nq_v   = new TH1F("H_theta_nq_v", "#theta_{nq} (vertex)", thnq_nbins, thnq_xmin, thnq_xmax);
+  H_phi_pq_v     = new TH1F("H_phi_pq_v", "#phi_{pq} (vertex)", phpq_nbins, phpq_xmin, phpq_xmax);
+  H_phi_nq_v     = new TH1F("H_phi_nq_v", "#phi_{nq} (vertex)", phnq_nbins, phnq_xmin, phnq_xmax);
 
   //Primary (electron) Kinematics
   H_Q2 = new TH1F("H_Q2","Q2", Q2_nbins, Q2_xmin, Q2_xmax); 
@@ -1121,6 +1131,8 @@ void analyze::CreateHist()
   H_theta_prot = new TH1F("H_theta_prot", "Proton Scattering Angle", thp_nbins, thp_xmin, thp_xmax);
   H_theta_pq = new TH1F("H_theta_pq", "(Proton, q-vector) Angle, #theta_{pq}", thpq_nbins, thpq_xmin, thpq_xmax);
   H_theta_nq = new TH1F("H_theta_nq", "(q-vector,Neutron) Angle, #theta_{nq}", thnq_nbins, thnq_xmin, thnq_xmax);
+  H_phi_pq = new TH1F("H_phi_pq", "(Proton, q-vector) Angle, #phi_{pq}", phpq_nbins, phpq_xmin, phpq_xmax);
+  H_phi_nq = new TH1F("H_phi_nq", "(q-vector,Neutron) Angle, #phi_{nq}", phnq_nbins, phnq_xmin, phnq_xmax);
 
   //Target Reconstruction (Hall Coord. System) 
   H_hx_tar = new TH1F("H_hx_tar", Form("%s x-Target (Lab)", h_arm_name.c_str()), xtar_nbins, xtar_xmin, xtar_xmax);
@@ -1772,6 +1784,8 @@ void analyze::EventLoop()
 		      H_theta_prot->Fill(theta_p/dtr);
 		      H_theta_pq->Fill(th_pq/dtr);
 		      H_theta_nq->Fill(th_nq/dtr);
+		      H_phi_pq->Fill(ph_pq/dtr);
+		      H_phi_nq->Fill(ph_nq/dtr);
 		      
 		      //Target Reconstruction (Hall Coord. System)
 		      H_hx_tar->Fill(htar_x);
@@ -1936,7 +1950,7 @@ void analyze::EventLoop()
 	  th_nq = bq.Theta();   // theta_nq                                                                                                     
 	  ph_nq   = bq.Phi();     //phi_nq
 
-	  
+
 
 	  p_miss_q = -bq;
 	  
@@ -1987,11 +2001,9 @@ void analyze::EventLoop()
 	  Pmy_lab_v = fB_v.Y(); 
 	  Pmz_lab_v = fB_v.Z(); 
 
-	  //Electron / Proton angles
+	  //Electron / Proton In-Plane angles @ the vertex
 	  th_e_v = kf_vec_v.Theta();
-	  ph_e_v = kf_vec_v.Phi();
 	  th_p_v = Pf_vec_v.Theta();
-	  ph_p_v = Pf_vec_v.Phi();
 
 	  //Can be checked later against the SIMC pm_v. (It should be identical)
 	  //pm_v = sqrt(Pmx_lab*Pmx_lab + Pmy_lab*Pmy_lab + Pmz_lab*Pmz_lab);
@@ -2100,7 +2112,9 @@ void analyze::EventLoop()
 	    H_Pm_v->Fill(Pm_v, FullWeight);
 	    H_theta_pq_v->Fill(th_pq_v/dtr, FullWeight);
 	    H_theta_nq_v->Fill(th_nq_v/dtr, FullWeight);
-
+	    H_phi_pq_v->Fill(ph_pq_v/dtr, FullWeight);
+	    H_phi_nq_v->Fill(ph_nq_v/dtr, FullWeight);
+	    
 	    //Primary (electron) Kinematics
 	    H_Q2->Fill(Q2, FullWeight);
 	    H_omega->Fill(nu, FullWeight);
@@ -2131,6 +2145,8 @@ void analyze::EventLoop()
 	    H_theta_prot->Fill(theta_p/dtr, FullWeight);
 	    H_theta_pq->Fill(th_pq/dtr, FullWeight);
 	    H_theta_nq->Fill(th_nq/dtr, FullWeight);
+	    H_phi_pq->Fill(ph_pq/dtr, FullWeight);
+	    H_phi_nq->Fill(ph_nq/dtr, FullWeight);
 	    
 	    //Target Reconstruction (Hall Coord. System)
 	    H_hx_tar->Fill(tar_x, FullWeight);
@@ -2328,7 +2344,9 @@ void analyze::ApplyWeight()
     H_theta_prot->Scale(FullWeight);
     H_theta_pq->Scale(FullWeight);
     H_theta_nq->Scale(FullWeight);
-    
+    H_phi_pq->Scale(FullWeight);
+    H_phi_nq->Scale(FullWeight);
+
     //Target Reconstruction Histos
     H_hx_tar->Scale(FullWeight);
     H_hy_tar->Scale(FullWeight);
@@ -2445,6 +2463,8 @@ void analyze::WriteHist(string rad_flag="")
       H_theta_prot->Write();
       H_theta_pq->Write();
       H_theta_nq->Write();
+      H_phi_pq->Write();
+      H_phi_nq->Write();
       
       //Target Reconstruction Histos
       H_hx_tar->Write();
@@ -2527,7 +2547,9 @@ void analyze::WriteHist(string rad_flag="")
       H_Pm_v->Write();
       H_theta_pq_v->Write();
       H_theta_nq_v->Write();
-      
+      H_phi_pq_v->Write();
+      H_phi_nq_v->Write();
+
       //Primary (electron) Kinematics
       H_Q2->Write();
       H_omega->Write();
@@ -2558,7 +2580,9 @@ void analyze::WriteHist(string rad_flag="")
       H_theta_prot->Write();
       H_theta_pq->Write();
       H_theta_nq->Write();
-      
+      H_phi_pq->Write();
+      H_phi_nq->Write();
+
       //Target Reconstruction Histos
       H_hx_tar->Write();
       H_hy_tar->Write();
@@ -2708,6 +2732,8 @@ void analyze::CombineHistos()
     data_file->GetObject("H_theta_prot",H_theta_prot_i);
     data_file->GetObject("H_theta_pq",H_theta_pq_i);
     data_file->GetObject("H_theta_nq",H_theta_nq_i);
+    data_file->GetObject("H_phi_pq",H_phi_pq_i);
+    data_file->GetObject("H_phi_nq",H_phi_nq_i);
     data_file->GetObject("H_hx_tar",H_hx_tar_i);
     data_file->GetObject("H_hy_tar",H_hy_tar_i);
     data_file->GetObject("H_hz_tar",H_hz_tar_i);
@@ -2787,7 +2813,9 @@ void analyze::CombineHistos()
       H_Kn_i->Write(); 				  
       H_theta_prot_i->Write();			  
       H_theta_pq_i->Write();			  
-      H_theta_nq_i->Write();			  
+      H_theta_nq_i->Write();	
+      H_phi_pq_i->Write();			  
+      H_phi_nq_i->Write();  
       H_hx_tar_i->Write();			  
       H_hy_tar_i->Write();			  
       H_hz_tar_i->Write();   			  
@@ -2870,6 +2898,8 @@ void analyze::CombineHistos()
       outROOT->GetObject("H_theta_prot",H_theta_prot_total);
       outROOT->GetObject("H_theta_pq",H_theta_pq_total);
       outROOT->GetObject("H_theta_nq",H_theta_nq_total);
+      outROOT->GetObject("H_phi_pq",H_phi_pq_total);
+      outROOT->GetObject("H_phi_nq",H_phi_nq_total);
       outROOT->GetObject("H_hx_tar",H_hx_tar_total);
       outROOT->GetObject("H_hy_tar",H_hy_tar_total);
       outROOT->GetObject("H_hz_tar",H_hz_tar_total);
@@ -2941,7 +2971,9 @@ void analyze::CombineHistos()
       H_Kn_total->Add( 				       H_Kn_i); 				  
       H_theta_prot_total->Add(			       H_theta_prot_i);			  
       H_theta_pq_total->Add(			       H_theta_pq_i);			  
-      H_theta_nq_total->Add(			       H_theta_nq_i);			  
+      H_theta_nq_total->Add(			       H_theta_nq_i);	
+      H_phi_pq_total->Add(			       H_phi_pq_i);			  
+      H_phi_nq_total->Add(			       H_phi_nq_i);		  
       H_hx_tar_total->Add(			       H_hx_tar_i);			  
       H_hy_tar_total->Add(			       H_hy_tar_i);			  
       H_hz_tar_total->Add(   			       H_hz_tar_i);   			  
@@ -3014,7 +3046,9 @@ void analyze::CombineHistos()
       H_Kn_total->Write("", TObject::kOverwrite); 			
       H_theta_prot_total->Write("", TObject::kOverwrite);		
       H_theta_pq_total->Write("", TObject::kOverwrite);		
-      H_theta_nq_total->Write("", TObject::kOverwrite);		
+      H_theta_nq_total->Write("", TObject::kOverwrite);	
+      H_phi_pq_total->Write("", TObject::kOverwrite);		
+      H_phi_nq_total->Write("", TObject::kOverwrite);	
       H_hx_tar_total->Write("", TObject::kOverwrite);		
       H_hy_tar_total->Write("", TObject::kOverwrite);		
       H_hz_tar_total->Write("", TObject::kOverwrite);   		
@@ -3115,6 +3149,8 @@ void analyze::ChargeNorm()
    outROOT->GetObject("H_theta_prot",H_theta_prot_total);
    outROOT->GetObject("H_theta_pq",H_theta_pq_total);
    outROOT->GetObject("H_theta_nq",H_theta_nq_total);
+   outROOT->GetObject("H_phi_pq",H_phi_pq_total);
+   outROOT->GetObject("H_phi_nq",H_phi_nq_total);
    outROOT->GetObject("H_hx_tar",H_hx_tar_total);
    outROOT->GetObject("H_hy_tar",H_hy_tar_total);
    outROOT->GetObject("H_hz_tar",H_hz_tar_total);
@@ -3187,6 +3223,8 @@ void analyze::ChargeNorm()
    H_theta_prot_total->Scale(charge_norm);
    H_theta_pq_total->Scale(charge_norm);
    H_theta_nq_total->Scale(charge_norm);
+   H_phi_pq_total->Scale(charge_norm);
+   H_phi_nq_total->Scale(charge_norm);
    H_hx_tar_total->Scale(charge_norm);
    H_hy_tar_total->Scale(charge_norm);
    H_hz_tar_total->Scale(charge_norm);
@@ -3257,7 +3295,9 @@ void analyze::ChargeNorm()
    H_Kn_total->Write("", TObject::kOverwrite); 			
    H_theta_prot_total->Write("", TObject::kOverwrite);		
    H_theta_pq_total->Write("", TObject::kOverwrite);		
-   H_theta_nq_total->Write("", TObject::kOverwrite);		
+   H_theta_nq_total->Write("", TObject::kOverwrite);	
+   H_phi_pq_total->Write("", TObject::kOverwrite);		
+   H_phi_nq_total->Write("", TObject::kOverwrite);	
    H_hx_tar_total->Write("", TObject::kOverwrite);		
    H_hy_tar_total->Write("", TObject::kOverwrite);		
    H_hz_tar_total->Write("", TObject::kOverwrite);   		
