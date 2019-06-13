@@ -4,8 +4,9 @@ import matplotlib.pyplot as plt
 import sys
 import time
 
+
 #Set proper paths to import ROOT
-sys.path.append('../../../pyroot/')
+sys.path.append('../../../../pyroot/')
 sys.path.append('/apps/root/PRO/lib/')
 sys.path.append('/apps/root/PRO/')
 
@@ -14,9 +15,11 @@ import ROOT as R
 from ROOT import *
 from ROOT import *
 
+#import ROOT as R
+
 print('OK')
 
-rf = R.TFile('../worksim_voli/d2_pm580_lagetfsi_rad_set1.root')
+#rf = ROOT.TFile('../worksim_voli/d2_pm580_lagetfsi_rad_set1.root')
 
 #print(rf.H_kf_avg)
 

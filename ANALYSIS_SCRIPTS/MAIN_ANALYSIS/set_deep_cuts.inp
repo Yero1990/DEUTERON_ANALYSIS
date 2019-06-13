@@ -20,7 +20,7 @@ RUN_DATA: 0
 radiate: 0
 
 ;Do Radiative Corrections (Will analyze both rad/no-rad simc. Also, assumes data file exists)
-;IMPORTANT: If doing radiative corrections, set radiate: -1 above 
+;IMPORTANT: If doing radiative corrections, set radiate: -1 (above) 
 rad_corr_flag: 0
 
 #------ D(e,e'p)n Missing Momentum Settings -------

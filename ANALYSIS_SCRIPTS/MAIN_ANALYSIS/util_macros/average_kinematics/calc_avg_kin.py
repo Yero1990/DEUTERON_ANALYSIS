@@ -22,9 +22,18 @@ import sys
 import getopt
 
 from LT import datafile
+import bin_info2 as BI
+
+#Set proper paths to import ROOT
+sys.path.append('../../../../pyroot/')
+sys.path.append('/apps/root/PRO/lib/')
+sys.path.append('/apps/root/PRO/')
 
 # do the root operations directly here
 import ROOT as R
+from ROOT import *
+from ROOT import *
+
 import numpy as np
 
 # from math import *
@@ -32,15 +41,17 @@ import numpy as np
 # import bin_info as BI
 # use a corrected version (this ignores the overflow bins)
 # import bin_info1 as BI
-import bin_info2 as BI
 
 # some constants
 dtr = np.pi/180.
 
+#MeV
 MP = 938.272
 MN = 939.566
 #MD = 1875.6127
 MD = 1875.61
+me = 0.51099; 
+
 
 '''
 # directory for results of simc av kin analysis
@@ -128,7 +139,7 @@ header = \
 #\\ xb = th_nq
 #\\ yb = pm
 # current header line:
-#! i_bin[f,0]/ th_nq_bin[f,1]/ pm_bin[f,2]/ Ei[f,3]/ kf[f,4]/ th_e[f,5]/ Pf[f,6]/ th_p[f,7]/ q[f,8]/ th_q[f,9]/ Q2[f,10]/ nu[f,11]/ xbj[f,12]/ Pm[f,13]/ th_pq[f,14]/ th_nq[f,15]/ cphi_pq[f,16]/ sphi_pq[i,17]/ beta_cm[i,18]/ gamma_cm[i,19]/
+#! i_bin[d,0]/ i_xbin[d,1]/ i_ybin[d,2]/ th_nq_bin[f,3]/ pm_bin[f,4]/ Ei[f,5]/ kf[f,6]/ nu[f,7]/ nu_calc[f,8]/ Q2[f,9]/ Q2_calc[f,10]/ q_lab[f,11]/ q_lab_calc[f,12]/ Ep_calc[f,13]/ Pf[f,14]/ Pm[f,15]/ Pm_calc[f,16]/ En_calc[f,17]/ beta_cm[f,18]/ gamma_cm[f,19]/ PfPar_q[f,20]/ PfPerp_q[f,21]/ th_pq[f,22]/ th_pq_calc[f,23]/ PfPar_cm[f,24]/ th_pq_calc_cm[f,25]/ th_nq[f,26]/ th_nq_calc[f,27]/  cphi_pq[f,28]/  sphi_pq[f,29]/  alpha_calc[f,30]/           
 """
 #------------------------------------------------------------
 
@@ -146,7 +157,7 @@ output_file = 'pm580_fsi_norad_avgkin.dat'
 o = open(output_file,'w')
 
 #Open root file to read avg kin histos
-root_file = 'deep_simc_histos_pm580_lagetfsi_norad_set1.root'
+root_file = '../../deep_simc_histos_pm580_lagetfsi_norad_set1.root'
 # open file
 rf = R.TFile(root_file)
 #if rf.IsOpen() == 0:
@@ -192,6 +203,8 @@ for i,acont in enumerate(all.cont):
 
    # get bin values
    i_bin = all.i[i]
+   i_xbin = all.ix[i]
+   i_ybin = all.iy[i]
    thnq_b = all.xb[i]
    pm_b = all.yb[i]
    if (acont == 0.):
@@ -199,7 +212,7 @@ for i,acont in enumerate(all.cont):
       continue
 
    else:
-      print()
+      
       # convert rad to deg and GeV to MeV 
       Ei        = bin_info_Ei.cont[i]*1000.      
       kf        = bin_info_kf.cont[i]*1000.
@@ -217,56 +230,139 @@ for i,acont in enumerate(all.cont):
       cphi_pq   = bin_info_cphi_pq.cont[i]
       sphi_pq   = bin_info_sphi_pq.cont[i]
       
-         
+
+      # calculate electron kinematics from measured, averaged quantities
+      Ef = np.sqrt(kf*kf + me*me)  
+      nu_calc = Ei - Ef
+          
+      Q2_calc = 4.*Ei*Ef*np.sin(the*dtr/2.)**2
+      q_calc = np.sqrt(Q2_calc + nu_calc*nu_calc)    # |q| in the lab frame
+      if q_calc==0.:
+         # unphysical, skip
+         continue
+         # calculate hadron kinematics
+      Ep = np.sqrt( MP**2 + Pf**2)
+      # calculated missing momentum
+      Pm_calc2 = (nu_calc+MD-Ep)**2 - MN**2
+      if (Pm_calc2 < 0.):
+         print 'calculated pm**2 < 0. ', Pm_calc2, ' use Pm_avg : ', Pm
+         Pm_calc = Pm   #set it to the average Pm from 2D histo
+      else:
+         Pm_calc = np.sqrt ( Pm_calc2 )
+      En_calc = np.sqrt(MN**2 + Pm_calc**2);
+          
       # center of mass motion
-      beta_cm = q/(MD+nu)
+      beta_cm = q_calc/(MD+nu_calc)
       gamma_cm = 1./np.sqrt(1. - beta_cm**2)
+
+      # Momentum Components for Proton (in q-frame)
+      Pf_par = ( Pf**2 + q_calc**2 - Pm_calc**2)/ (2.*q_calc)
+      Pf_perp2 = Pf**2 - Pf_par**2
+      if (Pf_perp2 < 0.):
+         print 'calculated Pf_perp**2<0. : ', Pf_perp2,' --->   estimate it using theta_pq :', th_pq
+         print 'Pf_par = ', Pf_par, ', Pf_perp(pf) = ', Pf*np.sin(dtr*th_pq), ', Pf_perp(pm) = ', Pm*np.sin(dtr*th_nq)   
+         Pf_perp = Pf*np.sin(dtr*th_pq)
+         th_pq_calc = th_pq
+      else:
+         Pf_perp = np.sqrt(Pf_perp2)
+         cthpq = Pf_par/Pf     #Cos(theta_pq)
+         th_pq_calc = np.arccos(cthpq)/dtr             
+      Pf_par_cm = gamma_cm*Pf_par - gamma_cm*beta_cm*Ep   #parallel component of proton in cm
+
+      # proton angle in the cm
+      thp_calc_cm = 0.
+       
+      if Pf_par_cm == 0. :
+         thp_calc_cm = np.pi
+      if Pf_par_cm > 0. :
+         thp_calc_cm = np.arctan(Pf_perp/Pf_par_cm)
+      if Pf_par_cm < 0. :
+         thp_calc_cm = np.pi+np.arctan(Pf_perp/Pf_par_cm)
+       
+      theta_pq_cm = thp_calc_cm/dtr
+          
+      # calculate angles using calculated Pmiss
+      denom = q_calc**2 + Pm_calc**2 - Pf**2
+      num = (2.*q_calc*Pm_calc)
+          
+      cth_nq = -2.;   #Cos(theta_nq)
+      if num > 0. : 
+         cth_nq = denom/num
+         theta_nq_calc = 0.
+      if abs(cth_nq) <=1.:
+         theta_nq_calc = np.arccos(cth_nq)/dtr;
+      # calculate alpha
+      pz_n = Pm_calc*np.cos(theta_nq_calc*dtr)
+      p_n_minus = En_calc - pz_n
+      alpha_calc = p_n_minus/MN
 
       
       # write output file
   
 
-      l = "%d %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n"%( \
+      l = "%d %d %d %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n"%( \
                                                                                                                                   # 0
                                                                                                                                   i_bin, \
                                                                                                                                   # 1
-                                                                                                                                  thnq_b, \
+                                                                                                                                  i_xbin, \
                                                                                                                                   # 2
-                                                                                                                                  pm_b, \
+                                                                                                                                  i_ybin, \
                                                                                                                                   # 3
-                                                                                                                                  Ei, \
+                                                                                                                                  thnq_b, \
                                                                                                                                   # 4
-                                                                                                                                  kf, \
+                                                                                                                                  pm_b, \
                                                                                                                                   # 5
-                                                                                                                                  the, \
+                                                                                                                                  Ei, \
                                                                                                                                   # 6
-                                                                                                                                  Pf, \
+                                                                                                                                  kf, \
                                                                                                                                   # 7
-                                                                                                                                  thp, \
-                                                                                                                                  # 8
-                                                                                                                                  q, \
-                                                                                                                                  # 9
-                                                                                                                                  thq, \
-                                                                                                                                  # 10
-                                                                                                                                  Q2, \
-                                                                                                                                  # 11
                                                                                                                                   nu, \
+                                                                                                                                  # 8
+                                                                                                                                  nu_calc, \
+                                                                                                                                  # 9
+                                                                                                                                  Q2, \
+                                                                                                                                  # 10
+                                                                                                                                  Q2_calc, \
+                                                                                                                                  # 11
+                                                                                                                                  q, \
                                                                                                                                   # 12
-                                                                                                                                  xbj, \
+                                                                                                                                  q_calc, \
                                                                                                                                   # 13
-                                                                                                                                  Pm, \
+                                                                                                                                  Ep, \
                                                                                                                                   # 14
-                                                                                                                                  thpq, \
+                                                                                                                                  Pf, \
                                                                                                                                   # 15
-                                                                                                                                  thnq, \
+                                                                                                                                  Pm, \
                                                                                                                                   # 16
-                                                                                                                                  cphi_pq, \
+                                                                                                                                  Pm_calc, \
                                                                                                                                   # 17
-                                                                                                                                  sphi_pq, \
+                                                                                                                                  En_calc, \
                                                                                                                                   # 18
                                                                                                                                   beta_cm, \
                                                                                                                                   # 19
-                                                                                                                                  gamma_cm)
+                                                                                                                                  gamma_cm, \
+                                                                                                                                  # 20
+                                                                                                                                  Pf_par, \
+                                                                                                                                  # 21
+                                                                                                                                  Pf_perp, \
+                                                                                                                                  # 22
+                                                                                                                                  thpq, \
+                                                                                                                                  # 23
+                                                                                                                                  th_pq_calc, \
+                                                                                                                                  # 24
+                                                                                                                                  Pf_par_cm, \
+                                                                                                                                  # 25
+                                                                                                                                  theta_pq_cm, \
+                                                                                                                                  # 26
+                                                                                                                                  thnq, \
+                                                                                                                                  # 27
+                                                                                                                                  theta_nq_calc, \
+                                                                                                                                  # 28
+                                                                                                                                  cphi_pq, \
+                                                                                                                                  # 29
+                                                                                                                                  sphi_pq, \
+                                                                                                                                  # 30
+                                                                                                                                  alpha_calc)
                                                                           
       o.write(l)
 o.close()

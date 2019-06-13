@@ -161,7 +161,7 @@ genvol = domega_e
 	  genvol = genvol * domega_p * (gen%e%E%max-gen%e%E%min)  !general volume if (De,e'p)n
 	endif
 
-!The 'general volume' genvol = e-_SolidAngle * p_SolidAngle * (~ e- delta acceptace) since delta = (P-P0)/P0
+!The 'general volume' genvol = e-_SolidAngle * p_SolidAngle * (dE') 
 	
 	normfac = normfac * genvol
 

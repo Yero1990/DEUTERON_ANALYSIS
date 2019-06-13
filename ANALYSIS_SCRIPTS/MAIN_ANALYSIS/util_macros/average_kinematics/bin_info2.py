@@ -6,7 +6,12 @@
 # you need to use the module bin_info2_datafile
 #
 # not NOT mix version one and two !
+#Set proper paths to import ROOT
+import sys
 
+sys.path.append('../../../../pyroot/')
+sys.path.append('/apps/root/PRO/lib/')
+sys.path.append('/apps/root/PRO/')
 import ROOT as R
 import numpy as np
 
