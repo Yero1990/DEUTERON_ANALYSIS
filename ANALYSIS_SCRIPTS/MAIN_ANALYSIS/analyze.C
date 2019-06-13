@@ -2389,6 +2389,7 @@ void analyze::EventLoop()
 	} //End SIMC Event Loop
      
       //Finish Calculating the Average Kinematics (Divide by the sum of the weight)
+      H_Ein_avg        ->Divide(H_Pm_v);
       H_kf_avg         ->Divide(H_Pm_v);
       H_theta_elec_avg ->Divide(H_Pm_v);
       H_Pf_avg         ->Divide(H_Pm_v);
@@ -2401,10 +2402,10 @@ void analyze::EventLoop()
       H_Pm_avg         ->Divide(H_Pm_v);
       H_theta_pq_avg   ->Divide(H_Pm_v);
       H_theta_nq_avg   ->Divide(H_Pm_v);
-      H_cphi_pq_avg     ->Divide(H_Pm_v);
-      H_cphi_nq_avg     ->Divide(H_Pm_v);
-      H_sphi_pq_avg     ->Divide(H_Pm_v);
-      H_sphi_nq_avg     ->Divide(H_Pm_v);
+      H_cphi_pq_avg    ->Divide(H_Pm_v);
+      H_cphi_nq_avg    ->Divide(H_Pm_v);
+      H_sphi_pq_avg    ->Divide(H_Pm_v);
+      H_sphi_nq_avg    ->Divide(H_Pm_v);
       
       //Finish Calculating the 2D Average Kinematics (Divide by the sum of the weight)
       H_Ein_2Davg        ->Divide(H_Pm_vs_thnq_v);
