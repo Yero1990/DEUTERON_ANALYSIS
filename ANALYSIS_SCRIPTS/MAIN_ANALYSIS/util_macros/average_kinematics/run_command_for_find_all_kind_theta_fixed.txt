@@ -1,0 +1,6 @@
+# command to run find_all_kin_theta_fixed for q2
+%run py_calc/find_all_kin_theta_fixed.py -d ./differ_thnq_pm/ -i diff_ q2_kinematics_list.data
+# new calc
+%run py_calc/find_all_kin_theta_fixed.py -d ./differ_oo_thnq_pm/ -i diff_ -D ./av_kin_oo_theta/ q2_kinematics_list.data
+# new SIMC calc
+%run py_calc/find_all_kin_theta_fixed.py -d ./differ_oo_thnq_pm_WB_new/ -i diff_ -D ./av_kin_oo_theta_WB_new/ q2_kinematics_list.data

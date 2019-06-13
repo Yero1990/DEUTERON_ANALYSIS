@@ -1,0 +1,11 @@
+# command to run run_differ_general for q1
+
+# for thnq_pm
+%run py_calc/run_differ_general.py  -d ./kin_av_oo_thnq_pm/ -f kin_av_thnq_pm_  -D ./differ_oo_thnq_pm/ -F diff_   q2_kinematics_list.data
+# new SIMC calc
+%run py_calc/run_differ_general.py  -d ./kin_av_oo_thnq_pm_WB_new/ -f kin_av_thnq_pm_  -D ./differ_oo_thnq_pm_WB_new/ -F diff_   q2_kinematics_list.data
+
+# for thnq (1d histos)
+%run py_calc/run_differ_general.py  -d ./kin_av_oo_thnq/ -f kin_av_thnq_  -D ./differ_oo_thnq/ -F diff_   q2_kinematics_list.data
+# new SIMC calc
+%run py_calc/run_differ_general.py  -d ./kin_av_oo_thnq_WB_new/ -f kin_av_thnq_  -D ./differ_oo_thnq_WB_new/ -F diff_   q2_kinematics_list.data

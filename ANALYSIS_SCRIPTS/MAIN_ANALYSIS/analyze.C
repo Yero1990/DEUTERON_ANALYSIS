@@ -2802,6 +2802,7 @@ void analyze::WriteHist(string rad_flag="")
       H_sphi_nq_avg->Write();
 
       //Write Average 2D Kinematics to file
+      H_Pm_vs_thnq_v     ->Write();
       H_Ein_2Davg        ->Write();
       H_kf_2Davg         ->Write();
       H_theta_elec_2Davg ->Write();

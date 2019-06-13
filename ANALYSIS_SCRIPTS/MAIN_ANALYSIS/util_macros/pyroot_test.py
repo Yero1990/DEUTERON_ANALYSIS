@@ -10,11 +10,16 @@ sys.path.append('/apps/root/PRO/lib/')
 sys.path.append('/apps/root/PRO/')
 
 #FIXME: For some reason, the 1st import does NOT work. It has to be done a 2nd time.
-import ROOT
+import ROOT as R
 from ROOT import *
 from ROOT import *
 
 print('OK')
+
+rf = R.TFile('../worksim_voli/d2_pm580_lagetfsi_rad_set1.root')
+
+#print(rf.H_kf_avg)
+
 '''
 f1 = TFile.Open('../root_files/collimator_study/scale_1/heep_data_histos_3288.root', 'read');
 f2 = TFile.Open('../root_files/collimator_study/scale_1/heep_simc_histos_3288.root', 'read');
