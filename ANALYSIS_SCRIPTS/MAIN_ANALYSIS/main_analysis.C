@@ -66,7 +66,6 @@ int main_analysis()
     single_run_flag = stoi(split(FindString("single_run_flag", inputCutFileName)[0], ':')[1]);
     react_type = "deep";
     
-
     
     ifs.close();
   }

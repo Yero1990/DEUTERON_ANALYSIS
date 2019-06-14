@@ -19,6 +19,7 @@
 #
 
 import sys
+from sys import argv
 import getopt
 
 from LT import datafile
@@ -139,7 +140,7 @@ header = \
 #\\ xb = th_nq
 #\\ yb = pm
 # current header line:
-#! i_bin[i,0]/ i_xbin[i,1]/ i_ybin[i,2]/ th_nq_bin[f,3]/ pm_bin[f,4]/ Ei[f,5]/ kf[f,6]/ th_e[f,7]/ nu[f,8]/ nu_calc[f,9]/ Q2[f,10]/ Q2_calc[f,11]/ q_lab[f,12]/ q_lab_calc[f,13]/ Ep_calc[f,14]/ Pf[f,15]/ Pm[f,16]/ Pm_calc[f,17]/ En_calc[f,18]/ beta_cm[f,19]/ gamma_cm[f,20]/ PfPar_q[f,21]/ PfPerp_q[f,22]/ th_pq[f,23]/ th_pq_calc[f,24]/ PfPar_cm[f,25]/ th_pq_calc_cm[f,26]/ th_nq[f,27]/ th_nq_calc[f,28]/  cphi_pq[f,29]/  sphi_pq[f,30]/  alpha_calc[f,31]/           
+#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ Ei[f,5]/ kf[f,6]/ th_e[f,7]/ omega_mc[f,8]/ omega[f,9]/ Q2[f,10]/ Q2_calc[f,11]/ q_mc[f,12]/ q_lab[f,13]/ Ep_calc[f,14]/ pf[f,15]/ pm_mc[f,16]/ pm[f,17]/ En_calc[f,18]/ beta_cm[f,19]/ gamma_cm[f,20]/ PfPar_q[f,21]/ PfPerp_q[f,22]/ theta_pq[f,23]/ theta_pq_calc[f,24]/ PfPar_cm[f,25]/ th_pq_cm[f,26]/ th_nq_mc[f,27]/ th_nq_calc[f,28]/  cos_phi[f,29]/  sin_phi[f,30]/  alpha_c[f,31]/ nx[i,32]/ ny[i,33]/ cont[f,34]/        
 """
 #------------------------------------------------------------
 
@@ -153,11 +154,22 @@ header = \
 #    kin = kin_n.split('_').pop()
 
 #create output file to write avg kin
-output_file = 'pm750_pwia_norad_avgkin_set2.txt'
+pm_set = int(sys.argv[1])
+model = sys.argv[2]
+data_set = int(sys.argv[3])
+
+print argv
+#usage: /apps/python/2.7.12/bin/python calc_avg_kin_v2.py 580 fsi 1
+if pm_set == 80:
+   output_file = 'pm%i_%s_norad_avgkin.txt'%(pm_set, model)
+else:
+   output_file = 'pm%i_%s_norad_avgkin_set%i.txt'%(pm_set, model, data_set)
+
+
 o = open(output_file,'w')
 
 #Open root file to read avg kin histos
-root_file = '../../deep_simc_histos_pm750_lagetpwia_norad_set2.root'
+root_file = '../../deep_simc_histos_pm%i_laget%s_norad_set%i.root'%(pm_set, model, data_set)
 # open file
 rf = R.TFile(root_file)
 #if rf.IsOpen() == 0:
@@ -259,10 +271,10 @@ for i,acont in enumerate(all.cont):
       Pf_par = ( Pf**2 + q_calc**2 - Pm_calc**2)/ (2.*q_calc)
       Pf_perp2 = Pf**2 - Pf_par**2
       if (Pf_perp2 < 0.):
-         print 'calculated Pf_perp**2<0. : ', Pf_perp2,' --->   estimate it using theta_pq :', th_pq
-         print 'Pf_par = ', Pf_par, ', Pf_perp(pf) = ', Pf*np.sin(dtr*th_pq), ', Pf_perp(pm) = ', Pm*np.sin(dtr*th_nq)   
-         Pf_perp = Pf*np.sin(dtr*th_pq)
-         th_pq_calc = th_pq
+         print 'calculated Pf_perp**2<0. : ', Pf_perp2,' --->   estimate it using theta_pq :', thpq
+         print 'Pf_par = ', Pf_par, ', Pf_perp(pf) = ', Pf*np.sin(dtr*thpq), ', Pf_perp(pm) = ', Pm*np.sin(dtr*thnq)   
+         Pf_perp = Pf*np.sin(dtr*thpq)
+         th_pq_calc = thpq
       else:
          Pf_perp = np.sqrt(Pf_perp2)
          cthpq = Pf_par/Pf     #Cos(theta_pq)
@@ -300,7 +312,7 @@ for i,acont in enumerate(all.cont):
       # write output file
   
 
-      l = "%i %i %i %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n"%( \
+      l = "%i %i %i %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %i %i %f\n"%( \
                                                                                                                                   # 0
                                                                                                                                   i_bin, \
                                                                                                                                   # 1
@@ -364,7 +376,13 @@ for i,acont in enumerate(all.cont):
                                                                                                                                   # 30
                                                                                                                                   sphi_pq, \
                                                                                                                                   # 31
-                                                                                                                                  alpha_calc)
+                                                                                                                                  alpha_calc, \
+                                                                                                                                  # 32
+                                                                                                                                  all.nx, \
+                                                                                                                                  # 33
+                                                                                                                                  all.ny, \
+                                                                                                                                  # 34
+                                                                                                                                  all.cont[i])
                                                                           
       o.write(l)
 o.close()

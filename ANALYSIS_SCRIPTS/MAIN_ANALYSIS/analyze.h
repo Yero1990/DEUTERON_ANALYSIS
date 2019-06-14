@@ -56,8 +56,11 @@ class analyze
   //Normalize combined histos by total charge (only done after the very last run)
   void ChargeNorm(); 
   
-  //Calculate Average Kinematics (Used for bin-centering corrections)
-  void CalcAvgKin();
+
+  //----------Get Cross Sections (Divide Radiative Corrected Yield by Phase Space-----------
+  void GetXsec();
+
+
 
   //------------Run Analysis Mehods--------------
   void run_simc_analysis(Bool_t rad_corr_flag=0);
@@ -445,6 +448,7 @@ class analyze
   TH1F *H_Em;
   TH1F *H_Em_nuc;
   TH1F *H_Pm;
+  TH1F *H_Pm_ps;   //only used by simc (phase space)
   TH1F *H_Pmx_lab;
   TH1F *H_Pmy_lab;
   TH1F *H_Pmz_lab;
@@ -513,6 +517,10 @@ class analyze
   TH2F *H_Em_vs_Pm;
   TH2F *H_Em_nuc_vs_Pm;
 
+  //2D Pmiss vs. Theta_nq (Used for 2D cross sections, binned in theta_nq)
+  TH2F *H_Pm_vs_thnq;
+  TH2F *H_Pm_vs_thnq_ps;  //Phase Space 2D (use for cross section calculation)
+
   //Create Scaler Related Histogram (ONLY FOR SCALERS)
   TH1F *H_bcmCurrent;
 
@@ -530,11 +538,13 @@ class analyze
   TH1F *simc_Q2_rad = 0;			   	      		     
   TH1F *simc_Pm_rad = 0;					     				     
   TH1F *simc_th_nq_rad = 0;					     
+  TH2F *simc_Pm_vs_thnq_rad = 0;
 
   //--------SIMC NON-RADIATIVE---------
   TH1F *simc_Q2_norad = 0;			   	      		     
   TH1F *simc_Pm_norad = 0;					     				     
   TH1F *simc_th_nq_norad = 0;									                                           
+  TH2F *simc_Pm_vs_thnq_norad = 0;
 
   //Used in ApplyRadCorr() Method. DO NOT NEED TO BE INITIALIZED in analyze.C. These just hold existing histos
   
@@ -542,17 +552,33 @@ class analyze
   TH1F *data_Q2 = 0;			   	      		     
   TH1F *data_Pm = 0;					     				     
   TH1F *data_th_nq = 0;
+  TH2F *data_Pm_vs_thnq = 0;
 
   //-------RADIATIVE CORRECTION RATIO simc_Ynorad / simc_Yrad--------
   TH1F *ratio_Q2 = 0;
   TH1F *ratio_Pm = 0;
   TH1F *ratio_th_nq = 0;
+  TH2F *ratio_Pm_vs_thnq = 0;
 
 
   //-------DATA (AFTER APPLYING RADIATIVE CORRECTIONS)------
   TH1F *data_Q2_corr = 0;			   	      		     
   TH1F *data_Pm_corr = 0;					     				     
   TH1F *data_theta_nq_corr = 0;
+
+
+  //---------GetXsec() method related variable---------
+  Double_t PhaseSpace;   //to be calculated in the SIMC event loop (the one in non-radiative SIMC should be used after rad. corrections)
+
+  //Related Histograms
+  TH1F *dataPm = 0;
+  TH1F *simcPm = 0;
+  TH1F *simcPm_ps = 0;
+  //2D Pm vs. thnq (FullWeight) / Pm vs thnq (PhaseSpace)
+  TH2F *dataPm_v_thnq = 0;
+  TH2F *simcPm_v_thnq = 0;
+  TH2F *simcPm_v_thnq_ps = 0;
+
 
   //---------------------------------------------------------------------------------
 
@@ -636,11 +662,12 @@ class analyze
   TH2F *H_eXColl_vs_eYColl_total = 0;				     TH2F *H_eXColl_vs_eYColl_i = 0;				  
   TH2F *H_Em_vs_Pm_total = 0;					     TH2F *H_Em_vs_Pm_i = 0;					  
   TH2F *H_Em_nuc_vs_Pm_total = 0;				     TH2F *H_Em_nuc_vs_Pm_i = 0;					  
+  TH2F *H_Pm_vs_thnq_total = 0;                                      TH2F *H_Pm_vs_thnq_i = 0; 
   TH1F *H_bcmCurrent_total = 0;					     TH1F *H_bcmCurrent_i = 0;                                       
 
 
 
-  //-------------CalcAvgKin() Method Histograms---------------
+  //------------Average Kinematics Histograms---------------
   
   //Vertex Quantities (no Eloss) that will be used to calculate the theoretical cross section @ the average kinematics
   //The average kinematics then are used as input in a theory, to get the true cross section. Finally, a ratio
@@ -1136,6 +1163,10 @@ class analyze
 
   TString data_OutputFileName;
   TString data_OutputFileName_radCorr;
+  
+
+  TString Xsec_OutputFileName;
+
   //For Combinig Histograms (many runs)
   TString data_OutputFileName_combined;
 

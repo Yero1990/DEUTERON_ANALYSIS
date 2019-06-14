@@ -99,7 +99,29 @@ analyze::analyze(int run=-1000, string e_arm="SHMS", string type="data", string 
   H_sphi_pq_avg   = NULL;
   H_sphi_nq_avg   = NULL;
 
+  //Initialize SIMC 2D Average Kinematics Histograms
+  H_Pm_vs_thnq_v     = NULL;              //2d for average histogram denominator (Yield)
+  H_Ein_2Davg        = NULL;
+  H_kf_2Davg         = NULL;
+  H_theta_elec_2Davg = NULL;
+  H_Pf_2Davg         = NULL;
+  H_theta_prot_2Davg = NULL;
+  H_q_2Davg          = NULL;
+  H_theta_q_2Davg    = NULL;
+  H_Q2_2Davg         = NULL;
+  H_omega_2Davg      = NULL;
+  H_xbj_2Davg        = NULL;
+  H_Pm_2Davg         = NULL;
+  H_theta_pq_2Davg   = NULL;
+  H_theta_nq_2Davg   = NULL;
+  H_cphi_pq_2Davg    = NULL;
+  H_cphi_nq_2Davg    = NULL;
+  H_sphi_pq_2Davg    = NULL;
+  H_sphi_nq_2Davg    = NULL;
+
   //==Initialize DATA/SIMC Histograms==
+
+  H_Pm_ps = NULL;  //(Phase Space ONLY used in SIMC)
   
   //Primary (electron) Kinematics
   H_Q2 = NULL;
@@ -183,6 +205,10 @@ analyze::analyze(int run=-1000, string e_arm="SHMS", string type="data", string 
   H_Em_vs_Pm = NULL;
   H_Em_nuc_vs_Pm = NULL;
 
+  //2D Pm vs. thnq (used in 2D cross section calculation)
+  H_Pm_vs_thnq = NULL;
+  H_Pm_vs_thnq_ps = NULL;
+
   //Initialize Scaler Histograms
   H_bcmCurrent = NULL;
   
@@ -261,9 +287,29 @@ analyze::~analyze()
   delete H_sphi_pq_avg;      H_sphi_pq_avg   = NULL;
   delete H_sphi_nq_avg;      H_sphi_nq_avg   = NULL;
 
+  delete H_Pm_vs_thnq_v;        H_Pm_vs_thnq_v     = NULL;             
+  delete H_Ein_2Davg;           H_Ein_2Davg        = NULL;
+  delete H_kf_2Davg;            H_kf_2Davg         = NULL;
+  delete H_theta_elec_2Davg;    H_theta_elec_2Davg = NULL;
+  delete H_Pf_2Davg;            H_Pf_2Davg         = NULL;
+  delete H_theta_prot_2Davg;    H_theta_prot_2Davg = NULL;
+  delete H_q_2Davg;             H_q_2Davg          = NULL;
+  delete H_theta_q_2Davg;       H_theta_q_2Davg    = NULL;
+  delete H_Q2_2Davg;            H_Q2_2Davg         = NULL;
+  delete H_omega_2Davg;         H_omega_2Davg      = NULL;
+  delete H_xbj_2Davg;           H_xbj_2Davg        = NULL;
+  delete H_Pm_2Davg;            H_Pm_2Davg         = NULL;
+  delete H_theta_pq_2Davg;      H_theta_pq_2Davg   = NULL;
+  delete H_theta_nq_2Davg;      H_theta_nq_2Davg   = NULL;
+  delete H_cphi_pq_2Davg;       H_cphi_pq_2Davg    = NULL;
+  delete H_cphi_nq_2Davg;       H_cphi_nq_2Davg    = NULL;
+  delete H_sphi_pq_2Davg;       H_sphi_pq_2Davg    = NULL;
+  delete H_sphi_nq_2Davg;       H_sphi_nq_2Davg    = NULL;
 
-  //==Initialize DATA/SIMC Histograms==
-  
+  //==DELETE DATA/SIMC Histograms==
+
+  delete H_Pm_ps;      H_Pm_ps      = NULL;
+
   //Primary (electron) Kinematics
   delete H_Q2;         H_Q2         = NULL;
   delete H_omega;      H_omega      = NULL;
@@ -343,7 +389,11 @@ analyze::~analyze()
   delete H_hXColl_vs_hYColl; H_hXColl_vs_hYColl = NULL;
   delete H_eXColl_vs_eYColl; H_eXColl_vs_eYColl = NULL;
   delete H_Em_vs_Pm;         H_Em_vs_Pm         = NULL;
-  delete H_Em_nuc_vs_Pm;     H_Em_nuc_vs_Pm         = NULL;
+  delete H_Em_nuc_vs_Pm;     H_Em_nuc_vs_Pm     = NULL;
+
+  //2D Pm vs thnq
+  delete H_Pm_vs_thnq;       H_Pm_vs_thnq    = NULL;
+  delete H_Pm_vs_thnq_ps;    H_Pm_vs_thnq_ps = NULL;
 
   //Delete Scaler Histograms
   delete H_bcmCurrent; H_bcmCurrent = NULL;
@@ -395,7 +445,8 @@ void analyze::SetFileNames()
     simc_OutputFileName_rad = Form("%s_simc_histos_pm%d_%s%s_rad_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
     simc_OutputFileName_norad = Form("%s_simc_histos_pm%d_%s%s_norad_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
     simc_OutputFileName_radCorr = Form("%s_simc_histos_pm%d_%s%s_RadCorrRatio_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
-   
+
+    Xsec_OutputFileName = Form("Xsec_pm%d_%s%s_dataset%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
 
   }
   
@@ -1220,6 +1271,7 @@ void analyze::CreateHist()
   H_sphi_pq_2Davg     = new TH2F("H_sphi_pq_2Davg", "sin(#phi_{pq}) (2D Average)",thnq_nbins, thnq_xmin, thnq_xmax, Pm_nbins, Pm_xmin, Pm_xmax);
   H_sphi_nq_2Davg     = new TH2F("H_sphi_nq_2Davg", "sin(#phi_{nq}) (2D Average)",thnq_nbins, thnq_xmin, thnq_xmax, Pm_nbins, Pm_xmin, Pm_xmax);
 
+  H_Pm_ps = new TH1F("H_Pm_ps", "Missing Momentum Phase Space", Pm_nbins, Pm_xmin, Pm_xmax);
 
   //Primary (electron) Kinematics
   H_Q2 = new TH1F("H_Q2","Q2", Q2_nbins, Q2_xmin, Q2_xmax); 
@@ -1307,6 +1359,10 @@ void analyze::CreateHist()
 
   H_Em_vs_Pm = new TH2F("H_Em_vs_Pm", "E_{miss} vs. P_{miss}", Pm_nbins, -0.01, 0.2, Em_nbins, Em_xmin, Em_xmax);
   H_Em_nuc_vs_Pm = new TH2F("H_Em_nuc_vs_Pm", "E_{miss.nuc} vs. P_{miss}", Pm_nbins, -0.01, 0.2, Em_nbins, Em_xmin, Em_xmax);
+
+  //2D Pm vs. thnq (for cross section calculation)
+  H_Pm_vs_thnq  = new TH2F("H_Pm_vs_thnq", "Pm vs. #theta_{nq}", thnq_nbins, thnq_xmin, thnq_xmax, Pm_nbins, Pm_xmin, Pm_xmax);
+  H_Pm_vs_thnq_ps  = new TH2F("H_Pm_vs_thnq_ps", "Pm vs. #theta_{nq}", thnq_nbins, thnq_xmin, thnq_xmax, Pm_nbins, Pm_xmin, Pm_xmax);
 
 
   //Scaler Histograms
@@ -1598,7 +1654,7 @@ void analyze::ReadTree(string rad_flag="")
 	 
 	  inROOT = new TFile(simc_InputFileName_norad, "READ");
 	}
-      //Read Radiative if doing radiation (1) or radiative_corrections (-1)
+      //Read Radiative if doing radiation (1) or radiative_corrections OFF (-1)
       else if(radiate_flag==1 || radiate_flag==-1){
 	cout << "Analyzing SIMC with Radiation ON " << endl;
 	inROOT = new TFile(simc_InputFileName_rad, "READ");
@@ -1826,6 +1882,7 @@ void analyze::EventLoop()
 	  
 	  
 	  base_cuts = c_edelta&&c_hdelta&&c_W&&c_Em&&c_ztarDiff&&c_Q2&&c_MM&&c_th_nq;
+	  base_cuts_2d = c_edelta&&c_hdelta&&c_Em&&c_ztarDiff&&c_Q2;  //used for Pm vs. thnq (cross section)
 	  pid_cuts = c_shms_cal&&c_ctime;
 	  
 	  //----------------------------END DEFINE CUTS-------------------------------------
@@ -1860,6 +1917,13 @@ void analyze::EventLoop()
 		  
 		  //----------------------Fill DATA Histograms-----------------------
 		  
+		  //2D Histos
+		  if(base_cuts_2d&&pid_cuts&&hmsColl_Cut&&shmsColl_Cut)
+		    {
+		      H_Pm_vs_thnq->Fill(th_nq/dtr, Pm);
+		    
+		    }
+
 		  if(base_cuts&&pid_cuts&&hmsColl_Cut&&shmsColl_Cut)
 		    {
 		      //Trigger Detector
@@ -1990,9 +2054,15 @@ void analyze::EventLoop()
 	  
 	  tree->GetEntry(ientry);
 	  
+	  //Check if theory cross section is 0. If so, skip event
+	  if(sig==0) continue;
+
 	  //SIMC FullWeight
 	  FullWeight = Normfac * Weight * prob_abs / nentries;
-	  
+	  //SIMC Phase Space	  
+	  PhaseSpace = Normfac  / nentries;    //sig->theory cross section
+
+
 	  //--------Calculated Kinematic Varibales----------------
 	  
 	  //Convert MeV to GeV
@@ -2133,7 +2203,7 @@ void analyze::EventLoop()
 	  th_p_v = Pf_vec_v.Theta();
 
 	  //Can be checked later against the SIMC pm_v. (It should be identical)
-	  //pm_v = sqrt(Pmx_lab*Pmx_lab + Pmy_lab*Pmy_lab + Pmz_lab*Pmz_lab);
+	  //Pm_v = sqrt(Pmx_lab_v*Pmx_lab_v + Pmy_lab_v*Pmy_lab_v + Pmz_lab_v*Pmz_lab_v);
 	  
 	  //--------Rotate the recoil system from +z to +q-------
 	  qvec_v = fQ_v.Vect();
@@ -2180,7 +2250,9 @@ void analyze::EventLoop()
 	  
 	  
 	  //--------------------------------------------------------------
-	  
+
+
+
 	  //Define DATA/SIMC CUTS (BETTER BE THE SAME CUTS!)
 	  if(edelta_cut_flag){c_edelta = e_delta>edel_min&&e_delta<edel_max;} 
 	  else{c_edelta=1;} //OFF means NO LIMITS on CUT (ALWAYS TRUE)
@@ -2225,13 +2297,13 @@ void analyze::EventLoop()
 	  
 	  //-------------------------------Fill SIMC Histograms--------------------------
 	  
-	  //=====Fill SIMC 2D Average Kinematics in Pmiss vs. theta_nq (This is actually the numerator in the average.)====
+	  //=====Fill SIMC 2D Average Kinematics in Pmiss vs. theta_nq (This is actually the denominator in the average.)====
 
 	  if(base_cuts_2d&&hmsColl_Cut&&shmsColl_Cut)
 	    {
 	      
 	      	      
-	      H_Pm_vs_thnq_v    ->Fill(th_nq_v/dtr, Pm_v, FullWeight);	      
+	      H_Pm_vs_thnq_v    ->Fill(th_nq_v/dtr, Pm_v, FullWeight);	      //  
 	      H_Ein_2Davg       ->Fill(th_nq_v/dtr, Pm_v, Ein_v*FullWeight);
 	      H_kf_2Davg        ->Fill(th_nq_v/dtr, Pm_v, kf_v*FullWeight);
 	      H_theta_elec_2Davg->Fill(th_nq_v/dtr, Pm_v, (th_e_v/dtr)*FullWeight);
@@ -2249,6 +2321,12 @@ void analyze::EventLoop()
 	      H_cphi_nq_2Davg    ->Fill(th_nq_v/dtr, Pm_v, cos(ph_nq_v)*FullWeight);
 	      H_sphi_pq_2Davg    ->Fill(th_nq_v/dtr, Pm_v, sin(ph_pq_v)*FullWeight);
 	      H_sphi_nq_2Davg    ->Fill(th_nq_v/dtr, Pm_v, sin(ph_nq_v)*FullWeight);
+
+	      
+	      //This is NOT used in the average. This is for the 2D cross section Pm vs. thnq binned in thnq 
+	      H_Pm_vs_thnq->Fill(th_nq/dtr, Pm, FullWeight);
+	      H_Pm_vs_thnq_ps->Fill(th_nq/dtr, Pm, PhaseSpace);
+
 
 	    }
 
@@ -2297,7 +2375,10 @@ void analyze::EventLoop()
 	    H_cphi_nq_avg   ->Fill(Pm_v, cos(ph_nq_v)*FullWeight);
 	    H_sphi_pq_avg   ->Fill(Pm_v, sin(ph_pq_v)*FullWeight);
 	    H_sphi_nq_avg   ->Fill(Pm_v, sin(ph_nq_v)*FullWeight);
-	    
+
+	    //Phase Space
+	    H_Pm_ps->Fill(Pm, PhaseSpace);
+
 	    //Primary (electron) Kinematics
 	    H_Q2->Fill(Q2, FullWeight);
 	    H_omega->Fill(nu, FullWeight);
@@ -2617,7 +2698,10 @@ void analyze::ApplyWeight()
     //2D Collimator Histos
     H_hXColl_vs_hYColl->Scale(FullWeight);
     H_eXColl_vs_eYColl->Scale(FullWeight);
-    
+
+    //2D Pm vs. theta_nq
+    H_Pm_vs_thnq->Scale(FullWeight);
+
     H_Em_vs_Pm->Scale(FullWeight);
 
     //Initialize Scaler Histograms
@@ -2738,7 +2822,9 @@ void analyze::WriteHist(string rad_flag="")
       //2D Collimator Histos
       H_hXColl_vs_hYColl->Write();
       H_eXColl_vs_eYColl->Write();
-      
+
+      H_Pm_vs_thnq->Write();
+
       H_Em_vs_Pm->Write();
       H_Em_nuc_vs_Pm->Write();
 
@@ -2822,6 +2908,9 @@ void analyze::WriteHist(string rad_flag="")
       H_sphi_pq_2Davg     ->Write();
       H_sphi_nq_2Davg     ->Write(); 
 
+      //Write PhaseSpace to SIMC ROOT (Only rad. corr phase space should be used)
+      H_Pm_ps->Write();
+
       //Primary (electron) Kinematics
       H_Q2->Write();
       H_omega->Write();
@@ -2899,7 +2988,10 @@ void analyze::WriteHist(string rad_flag="")
       //2D Collimator Histos
       H_hXColl_vs_hYColl->Write();
       H_eXColl_vs_eYColl->Write();
-         
+
+      H_Pm_vs_thnq->Write();
+      H_Pm_vs_thnq_ps->Write();
+
       H_Em_vs_Pm->Write();
 
     }
@@ -3040,6 +3132,7 @@ void analyze::CombineHistos()
     data_file->GetObject("H_hXColl_vs_hYColl",H_hXColl_vs_hYColl_i);
     data_file->GetObject("H_eXColl_vs_eYColl",H_eXColl_vs_eYColl_i);
     data_file->GetObject("H_Em_vs_Pm",H_Em_vs_Pm_i);
+    data_file->GetObject("H_Pm_vs_thnq",H_Pm_vs_thnq_i);
     data_file->GetObject("H_Em_nuc_vs_Pm",H_Em_nuc_vs_Pm_i);
     data_file->GetObject("H_bcmCurrent",H_bcmCurrent_i);
     
@@ -3124,7 +3217,8 @@ void analyze::CombineHistos()
       H_hXColl_vs_hYColl_i->Write();		  
       H_eXColl_vs_eYColl_i->Write();		  
       H_Em_vs_Pm_i->Write();			  
-      H_Em_nuc_vs_Pm_i->Write();		  
+      H_Em_nuc_vs_Pm_i->Write();
+      H_Pm_vs_thnq_i->Write();
       H_bcmCurrent_i->Write();                  
       outROOT->Close();
     
@@ -3211,8 +3305,9 @@ void analyze::CombineHistos()
       outROOT->GetObject("H_eXColl_vs_eYColl",H_eXColl_vs_eYColl_total);
       outROOT->GetObject("H_Em_vs_Pm",H_Em_vs_Pm_total);
       outROOT->GetObject("H_Em_nuc_vs_Pm",H_Em_nuc_vs_Pm_total);
+      outROOT->GetObject("H_Pm_vs_thnq",H_Pm_vs_thnq_total);
       outROOT->GetObject("H_bcmCurrent",H_bcmCurrent_total);
-      H_edelta_total->Sumw2();
+     
       
       //Add Current Histogram to Running Sum      
       H_charge_total->Add(                             H_charge_i);			          
@@ -3287,6 +3382,7 @@ void analyze::CombineHistos()
       H_eXColl_vs_eYColl_total->Add(		       H_eXColl_vs_eYColl_i);		  
       H_Em_vs_Pm_total->Add(			       H_Em_vs_Pm_i);			  
       H_Em_nuc_vs_Pm_total->Add(		       H_Em_nuc_vs_Pm_i);		  
+      H_Pm_vs_thnq_total->Add(		               H_Pm_vs_thnq_i);		  
       H_bcmCurrent_total->Add(			       H_bcmCurrent_i);                    
     
       
@@ -3364,6 +3460,7 @@ void analyze::CombineHistos()
       H_eXColl_vs_eYColl_total->Write("", TObject::kOverwrite);	
       H_Em_vs_Pm_total->Write("", TObject::kOverwrite);		
       H_Em_nuc_vs_Pm_total->Write("", TObject::kOverwrite);	
+      H_Pm_vs_thnq_total->Write("", TObject::kOverwrite);	
       H_bcmCurrent_total->Write("", TObject::kOverwrite);		
      
 
@@ -3468,6 +3565,7 @@ void analyze::ChargeNorm()
    outROOT->GetObject("H_eXColl_vs_eYColl",H_eXColl_vs_eYColl_total);
    outROOT->GetObject("H_Em_vs_Pm",H_Em_vs_Pm_total);
    outROOT->GetObject("H_Em_nuc_vs_Pm",H_Em_nuc_vs_Pm_total);
+   outROOT->GetObject("H_Pm_vs_thnq",H_Pm_vs_thnq_total);
    outROOT->GetObject("H_bcmCurrent",H_bcmCurrent_total);
    
    
@@ -3543,6 +3641,8 @@ void analyze::ChargeNorm()
    H_hXColl_vs_hYColl_total->Scale(charge_norm);
    H_eXColl_vs_eYColl_total->Scale(charge_norm);
    H_Em_vs_Pm_total->Scale(charge_norm);
+   H_Em_nuc_vs_Pm_total->Scale(charge_norm);
+   H_Pm_vs_thnq_total->Scale(charge_norm);
    H_bcmCurrent_total->Scale(charge_norm);
    
    outROOT->ReOpen("UPDATE");
@@ -3619,6 +3719,7 @@ void analyze::ChargeNorm()
    H_eXColl_vs_eYColl_total->Write("", TObject::kOverwrite);	
    H_Em_vs_Pm_total->Write("", TObject::kOverwrite);		
    H_Em_nuc_vs_Pm_total->Write("", TObject::kOverwrite);	
+   H_Pm_vs_thnq_total->Write("", TObject::kOverwrite);
    H_bcmCurrent_total->Write("", TObject::kOverwrite);
 
   outROOT->Close();
@@ -3694,22 +3795,25 @@ void analyze::CalcRadCorr()
   rad_file->GetObject("H_Q2", simc_Q2_rad);
   rad_file->GetObject("H_Pm", simc_Pm_rad);
   rad_file->GetObject("H_theta_nq", simc_th_nq_rad);
+  rad_file->GetObject("H_Pm_vs_thnq", simc_Pm_vs_thnq_rad);
 
   norad_file->cd();	
   norad_file->GetObject("H_Q2", simc_Q2_norad);
   norad_file->GetObject("H_Pm", simc_Pm_norad);
   norad_file->GetObject("H_theta_nq", simc_th_nq_norad);
-  
+  norad_file->GetObject("H_Pm_vs_thnq", simc_Pm_vs_thnq_norad);
+
   //Calculate Non-Radiative to Radiative SIMC Ratio 
   simc_Q2_norad->Divide(simc_Q2_rad);
   simc_Pm_norad->Divide(simc_Pm_rad);
   simc_th_nq_norad->Divide(simc_th_nq_rad);
+  simc_Pm_vs_thnq_norad->Divide(simc_Pm_vs_thnq_rad);
 
   //Rename Histograms  / Set Title
   simc_Q2_norad->SetNameTitle("H_Q2_ratio", "SIMC Q2_{norad} / Q2_{rad} Ratio");
   simc_Pm_norad->SetNameTitle("H_Pm_ratio", "SIMC Pm_{norad} / Pm_{rad} Ratio");
   simc_th_nq_norad->SetNameTitle("H_th_nq_ratio", "SIMC th_nq_{norad} / th_nq_{rad} Ratio");
-
+  simc_Pm_vs_thnq_norad->SetNameTitle("H_Pm_vs_thnq_ratio", "SIMC (Pm vs #theta_{nq})_{norad}/(Pm vs #theta_{nq})_{rad} Ratio");
 
   //Write Radiative Correction Ratios to ROOTfile
   TFile *rad_ratio_file = new TFile(simc_OutputFileName_radCorr, "RECREATE");
@@ -3719,6 +3823,7 @@ void analyze::CalcRadCorr()
   simc_Q2_norad->Write();
   simc_Pm_norad->Write();
   simc_th_nq_norad->Write();
+  simc_Pm_vs_thnq_norad->Write();
 
   rad_ratio_file->Close();
 
@@ -3736,24 +3841,36 @@ void analyze::ApplyRadCorr()
   cout << "Calling ApplyRadCorr() . . . " << endl;
   
   //Read Data Un-RadCorr and SIMC RadCorr ROOTfiles
-  TFile *data_file = new TFile(data_OutputFileName, "READ");
+  TFile *data_file = new TFile(data_OutputFileName_combined, "READ");
   TFile *radCorr_file = new TFile(simc_OutputFileName_radCorr, "READ");
 
 
   data_file->cd();	
   data_file->GetObject("H_Q2", data_Q2);
   data_file->GetObject("H_Pm", data_Pm);
-  data_file->GetObject("H_th_nq", data_th_nq);
+  data_file->GetObject("H_theta_nq", data_th_nq);
+  data_file->GetObject("H_Pm_vs_thnq", data_Pm_vs_thnq);
 
   radCorr_file->cd();	
   radCorr_file->GetObject("H_Q2_ratio", ratio_Q2);
   radCorr_file->GetObject("H_Pm_ratio", ratio_Pm);
   radCorr_file->GetObject("H_th_nq_ratio", ratio_th_nq);
+  radCorr_file->GetObject("H_Pm_vs_thnq_ratio", ratio_Pm_vs_thnq);
 
   //Apply Radiative Corrections to Data
   data_Q2->Multiply(ratio_Q2);
   data_Pm->Multiply(ratio_Pm);
   data_th_nq->Multiply(ratio_th_nq);
+  if(ratio_Pm_vs_thnq){
+    cout << "2D Multiply Succesful " << endl;
+    data_Pm_vs_thnq->Multiply(ratio_Pm_vs_thnq);
+  }
+  else{
+      cout << "Did not find ratio_Pm_vs_thnq" << endl;
+      cout << "check in " << data_OutputFileName_combined << endl;
+      cout << "check in " << simc_OutputFileName_radCorr << endl;
+
+  }
 
   //Write Radiative Corrected Data to ROOTfile
   TFile *data_radcorr = new TFile(data_OutputFileName_radCorr, "RECREATE");
@@ -3763,11 +3880,68 @@ void analyze::ApplyRadCorr()
   data_Q2->Write();
   data_Pm->Write();
   data_th_nq->Write();
+  data_Pm_vs_thnq->Write();
 
   data_radcorr->Close();
 
 }
 
+//__________________________________________________________________________________
+void analyze::GetXsec()
+{
+  cout << "Calling GetXsec() " << endl;
+  /*
+    Brief: This method reads in the radiative corrected data file and the SIMC un-radiated file. Get the
+    Data Pmiss,  SIMC Pmiss,  and SIMC Phase Space.  Then, Divide out the phase space in dataPm and simcPm 
+    to get the data and simc cross sections.
+   */
+  Bool_t file_not_exist = gSystem->AccessPathName(data_OutputFileName_radCorr) || gSystem->AccessPathName(simc_OutputFileName_norad); 
+
+  if (file_not_exist) {
+    cout << "Not all files were found to calculate the cross section. " << endl;
+    exit(1);
+      }
+      //Read Data RadCorr and SIMC norad ROOTfiles
+  TFile *data_file = new TFile(data_OutputFileName_radCorr, "READ");
+  TFile *simc_file = new TFile(simc_OutputFileName_norad, "READ");
+
+  data_file->cd();
+  data_file->GetObject("H_Pm", dataPm); 
+  data_file->GetObject("H_Pm_vs_thnq", dataPm_v_thnq); 
+
+  simc_file->cd();                                                         
+  simc_file->GetObject("H_Pm", simcPm);
+  simc_file->GetObject("H_Pm_ps", simcPm_ps); 
+  simc_file->GetObject("H_Pm_vs_thnq", simcPm_v_thnq);
+  simc_file->GetObject("H_Pm_vs_thnq_ps", simcPm_v_thnq_ps); 
+
+  //Calculate the cross sections
+  dataPm->Divide(simcPm_ps);
+  simcPm->Divide(simcPm_ps);
+
+  dataPm_v_thnq->Divide(simcPm_v_thnq_ps);
+  simcPm_v_thnq->Divide(simcPm_v_thnq, simcPm_v_thnq_ps);
+
+  //Set Histo Names/Title
+  dataPm->SetNameTitle("H_dataXsec", "Data Cross Sections");
+  simcPm->SetNameTitle("H_simcXsec", "SIMC Cross Sections"); 
+  dataPm_v_thnq->SetNameTitle("H_data2DXsec", "2D Pm vs #theta_{nq} Data Cross Sections");
+  simcPm_v_thnq->SetNameTitle("H_simc2DXsec", "2D Pm vs #theta_{nq} SIMC Cross Sections");
+
+  //Create new TFile to write cross sections
+  TFile *file_Xsec = new TFile(Xsec_OutputFileName, "RECREATE");
+  file_Xsec->cd();
+
+  dataPm->Write();
+  simcPm->Write();
+  dataPm_v_thnq->Write();
+  simcPm_v_thnq->Write();
+
+  file_Xsec->Close();
+  data_file->Close();
+  simc_file->Close();
+
+}
 
 //---------------AUXILIARY FUNCTIONS TO CALCULATE Pmx, Pmy, Pmz in SIMC (same as HCANA) -------------------
 
@@ -3960,6 +4134,7 @@ void analyze::run_simc_analysis(Bool_t rad_corr_flag=0)
       WriteHist("do_rad_corr");
       CalcRadCorr();
       ApplyRadCorr();
+      GetXsec();
     }
   
 
