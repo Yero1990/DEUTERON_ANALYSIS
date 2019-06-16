@@ -1,0 +1,34 @@
+*************************
+D(e,e'p)n Cross Sections
+*************************
+
+June 16, 2019;
+
+The directories: pm80/, pm580/ and pm750/  contain the
+ROOTfiles with the 2D Pm vs. theta_nq histograms obtained from
+the main analysis code, analyze.C
+
+ploXsec.C : C++ code that gets the theta_nq projections of the
+2D histos and plots the 1D cross sections for various theta_nq bins.
+
+plotXsec.py : python code (original from avg kin.) that read the ROOTfiles
+with the 2D Pm vs. theta_nq and write to file the bin information
+containing the cross sections for data, PWIA and FSI for each (Pm, thnq) bin
+
+
+The theory cross sections obtained from SIMC are from Laget, and represent
+average cross sections, since the input kinematics in SIMC are the central
+kinematics at the vertex, NOT the averaged kinematics.
+
+----------------------
+
+The averaged kinematics I had sent Werner, he used as input in the theory,
+external to SIMC to get the cross sections at the averaged kinematics.
+These represent the cross sections at the true kinematics.  These
+cross sections will be used to calculate the bin centering corrections as
+follows:
+
+dataSig_corr = dataSig * ( theorySig / theorySig_avg )
+
+where theorySig: theory cross sections at the average kinematics
+and theorySig_avg are the theory cross sections at the central kinematics.

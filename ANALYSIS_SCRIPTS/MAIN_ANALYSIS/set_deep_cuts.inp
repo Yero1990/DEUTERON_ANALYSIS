@@ -19,7 +19,7 @@ RUN_DATA: 1
 ;IMPORTANT: If doing radiative corrections, set to -1 
 radiate: -1
 
-;Do Radiative Corrections (Will analyze both rad/no-rad simc. Also, assumes data file exists)
+;Do Radiative Corrections (1) (Will analyze both rad/no-rad simc. Also, assumes data file exists)
 ;IMPORTANT: If doing radiative corrections, set radiate: -1 (see above) 
 rad_corr_flag: 1
 
@@ -27,16 +27,16 @@ rad_corr_flag: 1
 #Units: Enegy/Momentum/W [GeV], spec_delta [%]  
 
 ;80 MeV, 580 MeV, 750 MeV
-pm_setting : 580
+pm_setting : 750
 
 ;Theoretical Calculation: laget,  misak, . . . 
-theory     : laget      
+theory     : laget
 
 ;Theoretical Model: pwia, fsi,
 model      : fsi
 
 ;DataSet 1, 2, 3  
-data_set   : 1               
+data_set   : 3
 
 #------TURN CUTS ON/OFF------
 # True (ON) =  1,  False (OFF) = 0

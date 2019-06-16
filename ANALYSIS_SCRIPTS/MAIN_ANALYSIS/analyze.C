@@ -437,7 +437,7 @@ void analyze::SetFileNames()
     
     //Set Output Names
     data_OutputFileName = Form("%s_data_histos_pm%d_set%d_%d.root",reaction.c_str(), pm_setting, data_set, runNUM);
-    data_OutputFileName_radCorr = Form("%s_data_histos_pm%d_set%d_%d_radcorr.root",reaction.c_str(), pm_setting, data_set, runNUM);
+    data_OutputFileName_radCorr = Form("%s_data_histos_pm%d_set%d_combined_radcorr.root",reaction.c_str(), pm_setting, data_set);
     report_OutputFileName = Form("report_%s_pm%d_set%d.dat", reaction.c_str(), pm_setting, data_set);
 
     data_OutputFileName_combined = Form("%s_data_histos_pm%d_set%d_combined.root",reaction.c_str(), pm_setting, data_set);
@@ -1007,7 +1007,7 @@ void analyze::SetHistBins()
       //Missing Energy                    //Q2			          //Final Proton Momentum			     
       Em_nbins = nbins;			  Q2_nbins = 60;	   	   Pf_nbins = nbins;				    
       Em_xmin = -0.05;			  Q2_xmin = 2.5; 	   	   Pf_xmin = 2.5;				    
-      Em_xmax = 0.1;			  Q2_xmax = 5.;       	   	   Pf_xmax = 3.2;				    
+      Em_xmax = 0.1;			  Q2_xmax = 5.5;       	   	   Pf_xmax = 3.2;				    
       					 			   	 						    
       //Missing Momentum(40 MeV) 	  //omega (E-E')	   	   //Final Proton Energy				    
       Pm_nbins = 30;			  om_nbins = nbins;	   	   Ep_nbins = nbins;				    
@@ -1038,8 +1038,8 @@ void analyze::SetHistBins()
       
       // X-bJORKEN                         //th_nq (10 deg)                 //Proton Kin. Energy         //phi_nq 		  
       xbj_nbins = nbins;		   thnq_nbins = 18;                 Kp_nbins = nbins; 	          phnq_nbins = nbins; 
-      xbj_xmin = 0.8;			   thnq_xmin = 0;                   Kp_xmin = 1.6;   	          phnq_xmin = -1.;	  
-      xbj_xmax = 1.2;			   thnq_xmax = 180;                 Kp_xmax = 2.6;  	          phnq_xmax =  1;    
+      xbj_xmin = 0.8;			   thnq_xmin = 5;                   Kp_xmin = 1.6;   	          phnq_xmin = -1.;	  
+      xbj_xmax = 1.2;			   thnq_xmax = 185;                 Kp_xmax = 2.6;  	          phnq_xmax =  1;    
      
       //Neutron Kin. Energy                 //Neutron Final Energy, En       //phi_pq (Out-Of-Plane Angle between proton and q-vector)  
       Kn_nbins = nbins;                      En_nbins = nbins;		     phpq_nbins = nbins;					      
@@ -1102,7 +1102,7 @@ void analyze::SetHistBins()
       
       //Missing Energy                    //Q2			          //Final Proton Momentum			     
       Em_nbins = 40;			  Q2_nbins = 60;	   	   Pf_nbins = nbins;				    
-      Em_xmin = -0.1;			  Q2_xmin = 2.5; 	   	   Pf_xmin = 1.5;				    
+      Em_xmin = -0.05;			  Q2_xmin = 2.5; 	   	   Pf_xmin = 1.5;				    
       Em_xmax = 0.1;			  Q2_xmax = 5.5;       	   	   Pf_xmax = 2.5;				    
       					 			   	 						    
       //Missing Momentum(40 MeV) 	  //omega (E-E')	   	   //Final Proton Energy				    
@@ -1133,9 +1133,9 @@ void analyze::SetHistBins()
       MM2_xmax = 0.01;			  
       
       // X-bJORKEN                         //th_nq (10 deg)                 //Proton Kin. Energy          //phi_nq 		  
-      xbj_nbins = nbins;		   thnq_nbins = 8;                  Kp_nbins = nbins; 		   phnq_nbins = nbins; 
+      xbj_nbins = nbins;		   thnq_nbins = 9;                  Kp_nbins = nbins; 		   phnq_nbins = nbins; 
       xbj_xmin = 0.5;			   thnq_xmin = 5;                   Kp_xmin = 1.;   		   phnq_xmin = -1.;	  
-      xbj_xmax = 2.0;			   thnq_xmax = 85;                  Kp_xmax = 1.8;  		   phnq_xmax =  1;    
+      xbj_xmax = 2.0;			   thnq_xmax = 95;                  Kp_xmax = 1.8;  		   phnq_xmax =  1;    
      
       //Neutron Kin. Energy                 //Neutron Final Energy, En        //phi_pq (Out-Of-Plane Angle between proton and q-vector)  
       Kn_nbins = nbins;                      En_nbins = nbins;		      phpq_nbins = nbins;					      
@@ -2060,7 +2060,7 @@ void analyze::EventLoop()
 	  //SIMC FullWeight
 	  FullWeight = Normfac * Weight * prob_abs / nentries;
 	  //SIMC Phase Space	  
-	  PhaseSpace = Normfac  / nentries;    //sig->theory cross section
+	  PhaseSpace = Normfac * Jacobian_corr  / nentries;    //sig->theory cross section
 
 
 	  //--------Calculated Kinematic Varibales----------------
@@ -2908,7 +2908,7 @@ void analyze::WriteHist(string rad_flag="")
       H_sphi_pq_2Davg     ->Write();
       H_sphi_nq_2Davg     ->Write(); 
 
-      //Write PhaseSpace to SIMC ROOT (Only rad. corr phase space should be used)
+      //Write PhaseSpace to SIMC ROOT (Only norad SIMC should be used)
       H_Pm_ps->Write();
 
       //Primary (electron) Kinematics
