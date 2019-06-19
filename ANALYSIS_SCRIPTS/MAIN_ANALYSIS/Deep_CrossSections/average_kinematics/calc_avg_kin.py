@@ -19,6 +19,7 @@
 #
 
 import sys
+from sys import argv
 import getopt
 
 from LT import datafile
@@ -52,80 +53,6 @@ MN = 939.566
 MD = 1875.61
 me = 0.51099; 
 
-
-'''
-# directory for results of simc av kin analysis
-dir = "./results/"
-# filename of result files (except kinematics)
-simc_file_ext = ".pwia.rfn_norad.root"
-simc_head = ""
-# extension for output files
-output_ext = ".data"
-output_dir = "./"
-#------------------------------------------------------------
-def usage():   # describe the usage of this program
-   print "\nusage: calc_av_kin.py [-options] kinematics file \n"
-   print "options:      -h,? this message "
-   print "              -d directory of simc result files"
-   print "                 (../results/)"
-   print "              -e filename extension (kin.extension) "
-   print "                 (.pwia.rfn_norad.root)"
-   print "              -H filename head "
-   print "                 ()"
-   print "              -D output directory"
-   print "                 (./)"
-   print "              -o output filename extension () "
-
-#------------------------------------------------------------
-
-#------------------------------------------------------------
-# Commandline arguments
-
-args = sys.argv[1:]  # argument list w/o program name
-#------------------------------------------------------------
-# handle options
-options = "h?e:o:d:D:H:"  # the ones following the colon require an argument
-
-try:
-   options, arguments = getopt.getopt(args, options)
-
-except getopt.GetoptError, (msg, opt) :   
-   
-   # print help information and exit:
-   print "ERROR in option : ",  opt, " reason: ", msg
-   usage()
-   sys.exit(2)
-
-# handle the option values
-for o, v in options:
-
-    if o == "-h" or o == "-?":
-        # help
-        usage()
-        sys.exit(2)
-    if o == "-d":
-        dir = v
-    if o == "-e":
-        simc_file_ext = v
-    if o == "-o":
-        output_ext = v
-    if o == "-D":
-        output_dir = v
-    if o == "-H":
-        simc_head = v
-        
-#------------------------------------------------------------
-# old and new database names must be given
-if (len(arguments) != 1):
-     print 'you need to enter the name of the kinematics file ! \n'
-     usage()
-     sys.exit(-1)
-
-kinematics_file = arguments[0]
-print "will analyze all in : ", kinematics_file
-
-kin_file=datafile.dfile(kinematics_file)
-'''
 #------------------------------------------------------------
 # header information for the output file
 header = \
@@ -139,25 +66,30 @@ header = \
 #\\ xb = th_nq
 #\\ yb = pm
 # current header line:
-#! i_bin[i,0]/ i_xbin[i,1]/ i_ybin[i,2]/ th_nq_bin[f,3]/ pm_bin[f,4]/ Ei[f,5]/ kf[f,6]/ th_e[f,7]/ nu[f,8]/ nu_calc[f,9]/ Q2[f,10]/ Q2_calc[f,11]/ q_lab[f,12]/ q_lab_calc[f,13]/ Ep_calc[f,14]/ Pf[f,15]/ Pm[f,16]/ Pm_calc[f,17]/ En_calc[f,18]/ beta_cm[f,19]/ gamma_cm[f,20]/ PfPar_q[f,21]/ PfPerp_q[f,22]/ th_pq[f,23]/ th_pq_calc[f,24]/ PfPar_cm[f,25]/ th_pq_calc_cm[f,26]/ th_nq[f,27]/ th_nq_calc[f,28]/  cphi_pq[f,29]/  sphi_pq[f,30]/  alpha_calc[f,31]/           
+#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ Ei[f,5]/ kf[f,6]/ th_e[f,7]/ omega_mc[f,8]/ omega[f,9]/ Q2[f,10]/ Q2_calc[f,11]/ q_mc[f,12]/ q_lab[f,13]/ Ep_calc[f,14]/ pf[f,15]/ pm_mc[f,16]/ pm[f,17]/ En_calc[f,18]/ beta_cm[f,19]/ gamma_cm[f,20]/ PfPar_q[f,21]/ PfPerp_q[f,22]/ theta_pq[f,23]/ theta_pq_calc[f,24]/ PfPar_cm[f,25]/ th_pq_cm[f,26]/ th_nq_mc[f,27]/ th_nq_calc[f,28]/  cos_phi[f,29]/  sin_phi[f,30]/  alpha_c[f,31]/ nx[i,32]/ ny[i,33]/ cont[f,34]/        
 """
 #------------------------------------------------------------
 
-# list of histograms
-
-#This is only for multiple kinematics
-#n=0
-#for l in kin_file.data:
-#    n += 1
-#    kin_n = l['kin']
-#    kin = kin_n.split('_').pop()
 
 #create output file to write avg kin
-output_file = 'pm750_pwia_norad_avgkin_set2.txt'
+pm_set = int(sys.argv[1])
+model = sys.argv[2]
+data_set = int(sys.argv[3])
+
+print argv
+#usage: /apps/python/2.7.12/bin/python calc_avg_kin.py 80 fsi 1
+if pm_set == 80:
+   output_file = 'pm%i_%s_norad_avgkin.txt'%(pm_set, model)
+else:
+   output_file = 'pm%i_%s_norad_avgkin_set%i.txt'%(pm_set, model, data_set)
+
+
 o = open(output_file,'w')
 
 #Open root file to read avg kin histos
-root_file = '../../deep_simc_histos_pm750_lagetpwia_norad_set2.root'
+root_file = '../../root_files/average_kinematics/deep_simc_histos_pm%i_laget%s_norad_set%i.root'%(pm_set,  model, data_set)
+
+
 # open file
 rf = R.TFile(root_file)
 #if rf.IsOpen() == 0:
@@ -210,7 +142,7 @@ for i,acont in enumerate(all.cont):
    if (acont == 0.):
       # skip zero content bins
       continue
-
+      #print('acont = ',acont)
    else:
       
       # convert rad to deg and GeV to MeV 
@@ -259,10 +191,10 @@ for i,acont in enumerate(all.cont):
       Pf_par = ( Pf**2 + q_calc**2 - Pm_calc**2)/ (2.*q_calc)
       Pf_perp2 = Pf**2 - Pf_par**2
       if (Pf_perp2 < 0.):
-         print 'calculated Pf_perp**2<0. : ', Pf_perp2,' --->   estimate it using theta_pq :', th_pq
-         print 'Pf_par = ', Pf_par, ', Pf_perp(pf) = ', Pf*np.sin(dtr*th_pq), ', Pf_perp(pm) = ', Pm*np.sin(dtr*th_nq)   
-         Pf_perp = Pf*np.sin(dtr*th_pq)
-         th_pq_calc = th_pq
+         print 'calculated Pf_perp**2<0. : ', Pf_perp2,' --->   estimate it using theta_pq :', thpq
+         print 'Pf_par = ', Pf_par, ', Pf_perp(pf) = ', Pf*np.sin(dtr*thpq), ', Pf_perp(pm) = ', Pm*np.sin(dtr*thnq)   
+         Pf_perp = Pf*np.sin(dtr*thpq)
+         th_pq_calc = thpq
       else:
          Pf_perp = np.sqrt(Pf_perp2)
          cthpq = Pf_par/Pf     #Cos(theta_pq)
@@ -300,7 +232,7 @@ for i,acont in enumerate(all.cont):
       # write output file
   
 
-      l = "%i %i %i %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f\n"%( \
+      l = "%i %i %i %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %i %i %f\n"%( \
                                                                                                                                   # 0
                                                                                                                                   i_bin, \
                                                                                                                                   # 1
@@ -364,7 +296,13 @@ for i,acont in enumerate(all.cont):
                                                                                                                                   # 30
                                                                                                                                   sphi_pq, \
                                                                                                                                   # 31
-                                                                                                                                  alpha_calc)
+                                                                                                                                  alpha_calc, \
+                                                                                                                                  # 32
+                                                                                                                                  all.nx, \
+                                                                                                                                  # 33
+                                                                                                                                  all.ny, \
+                                                                                                                                  # 34
+                                                                                                                                  all.cont[i])
                                                                           
       o.write(l)
 o.close()

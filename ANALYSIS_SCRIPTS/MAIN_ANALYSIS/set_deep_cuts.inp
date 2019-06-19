@@ -33,7 +33,7 @@ pm_setting : 750
 theory     : laget
 
 ;Theoretical Model: pwia, fsi,
-model      : fsi
+model      : pwia
 
 ;DataSet 1, 2, 3  
 data_set   : 3

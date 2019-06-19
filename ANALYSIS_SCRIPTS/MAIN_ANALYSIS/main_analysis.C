@@ -214,6 +214,9 @@ int main_analysis()
 	  //call method to run simc analysis. This method call all necessary methods to analyze simc.(See analyze.C)
 	  //rad_corr_flag| 0: do NOT do radiative corrections,  1: do radiatie corrections (controlled from input file) 
 	  a1.run_simc_analysis(rad_corr_flag);
+	  
+	  
+
 	}
 	  
       }

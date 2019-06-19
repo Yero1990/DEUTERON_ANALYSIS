@@ -444,7 +444,11 @@ void analyze::SetFileNames()
 
     simc_OutputFileName_rad = Form("%s_simc_histos_pm%d_%s%s_rad_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
     simc_OutputFileName_norad = Form("%s_simc_histos_pm%d_%s%s_norad_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
-    simc_OutputFileName_radCorr = Form("%s_simc_histos_pm%d_%s%s_RadCorrRatio_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
+    
+    //SIMC radiative corr. ratio for PWIA and FSI (It is reccommended to use fsi to radiatively correct data, as FSI better represent data)
+    simc_OutputFileName_radCorr_pwia = Form("%s_simc_histos_pm%d_%spwia_RadCorrRatio_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), data_set);
+    simc_OutputFileName_radCorr_fsi = Form("%s_simc_histos_pm%d_%sfsi_RadCorrRatio_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), data_set);
+
 
     Xsec_OutputFileName = Form("Xsec_pm%d_%s%s_dataset%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
 
@@ -1650,9 +1654,8 @@ void analyze::ReadTree(string rad_flag="")
       if(rad_flag=="do_rad_corr")
 	{
 	  cout << "Doing Radiative Corrections . . . " << endl;
-       
-	 
 	  inROOT = new TFile(simc_InputFileName_norad, "READ");
+
 	}
       //Read Radiative if doing radiation (1) or radiative_corrections OFF (-1)
       else if(radiate_flag==1 || radiate_flag==-1){
@@ -2060,7 +2063,7 @@ void analyze::EventLoop()
 	  //SIMC FullWeight
 	  FullWeight = Normfac * Weight * prob_abs / nentries;
 	  //SIMC Phase Space	  
-	  PhaseSpace = Normfac * Jacobian_corr  / nentries;    //sig->theory cross section
+	  PhaseSpace = Normfac * Jacobian_corr  / nentries;    //Phase Space with corr. factor
 
 
 	  //--------Calculated Kinematic Varibales----------------
@@ -3462,6 +3465,8 @@ void analyze::CombineHistos()
       H_Em_nuc_vs_Pm_total->Write("", TObject::kOverwrite);	
       H_Pm_vs_thnq_total->Write("", TObject::kOverwrite);	
       H_bcmCurrent_total->Write("", TObject::kOverwrite);		
+
+      cout << "***TOTAL RUNNING CHARGE: " <<  H_charge_total->Integral(0, 10) << endl;   
      
 
       outROOT->Close();
@@ -3816,7 +3821,11 @@ void analyze::CalcRadCorr()
   simc_Pm_vs_thnq_norad->SetNameTitle("H_Pm_vs_thnq_ratio", "SIMC (Pm vs #theta_{nq})_{norad}/(Pm vs #theta_{nq})_{rad} Ratio");
 
   //Write Radiative Correction Ratios to ROOTfile
+  if(model=="pwia"){simc_OutputFileName_radCorr =  simc_OutputFileName_radCorr_pwia;}
+  else if(model=="fsi"){simc_OutputFileName_radCorr =  simc_OutputFileName_radCorr_fsi;}
+
   TFile *rad_ratio_file = new TFile(simc_OutputFileName_radCorr, "RECREATE");
+
   rad_ratio_file->cd();
 
   //Write To File
@@ -3842,8 +3851,10 @@ void analyze::ApplyRadCorr()
   
   //Read Data Un-RadCorr and SIMC RadCorr ROOTfiles
   TFile *data_file = new TFile(data_OutputFileName_combined, "READ");
-  TFile *radCorr_file = new TFile(simc_OutputFileName_radCorr, "READ");
 
+  //explicitly use FSI rad. corrections. (FIXME: This assumes that fsi radCorr simc file
+  // exists. This means that FSI must be run first)
+  TFile *radCorr_file = new TFile(simc_OutputFileName_radCorr_fsi, "READ"); 
 
   data_file->cd();	
   data_file->GetObject("H_Q2", data_Q2);
@@ -3861,16 +3872,8 @@ void analyze::ApplyRadCorr()
   data_Q2->Multiply(ratio_Q2);
   data_Pm->Multiply(ratio_Pm);
   data_th_nq->Multiply(ratio_th_nq);
-  if(ratio_Pm_vs_thnq){
-    cout << "2D Multiply Succesful " << endl;
-    data_Pm_vs_thnq->Multiply(ratio_Pm_vs_thnq);
-  }
-  else{
-      cout << "Did not find ratio_Pm_vs_thnq" << endl;
-      cout << "check in " << data_OutputFileName_combined << endl;
-      cout << "check in " << simc_OutputFileName_radCorr << endl;
+  data_Pm_vs_thnq->Multiply(ratio_Pm_vs_thnq);
 
-  }
 
   //Write Radiative Corrected Data to ROOTfile
   TFile *data_radcorr = new TFile(data_OutputFileName_radCorr, "RECREATE");
@@ -3901,7 +3904,8 @@ void analyze::GetXsec()
     cout << "Not all files were found to calculate the cross section. " << endl;
     exit(1);
       }
-      //Read Data RadCorr and SIMC norad ROOTfiles
+
+  //Read Data RadCorr and SIMC norad ROOTfiles
   TFile *data_file = new TFile(data_OutputFileName_radCorr, "READ");
   TFile *simc_file = new TFile(simc_OutputFileName_norad, "READ");
 
@@ -4128,7 +4132,11 @@ void analyze::run_simc_analysis(Bool_t rad_corr_flag=0)
       cout << " Doing Radiative Corrections " << endl;
       cout << "_____________________________" << endl;
       cout << "_____________________________" << endl;
-
+      SetFileNames();
+      SetCuts();
+      SetDefinitions();
+      SetHistBins();
+      CreateHist();
       ReadTree("do_rad_corr");
       EventLoop();
       WriteHist("do_rad_corr");

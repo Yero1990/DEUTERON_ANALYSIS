@@ -32,3 +32,4 @@ dataSig_corr = dataSig * ( theorySig / theorySig_avg )
 
 where theorySig: theory cross sections at the average kinematics
 and theorySig_avg are the theory cross sections at the central kinematics.
+

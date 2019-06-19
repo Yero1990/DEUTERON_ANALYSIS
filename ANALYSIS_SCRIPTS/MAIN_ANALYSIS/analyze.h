@@ -1159,7 +1159,10 @@ class analyze
   //Output ROOTfile Name
   TString simc_OutputFileName_rad;
   TString simc_OutputFileName_norad;
+
   TString simc_OutputFileName_radCorr;
+  TString simc_OutputFileName_radCorr_pwia;
+  TString simc_OutputFileName_radCorr_fsi;
 
   TString data_OutputFileName;
   TString data_OutputFileName_radCorr;
