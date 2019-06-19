@@ -8,12 +8,14 @@ void compare_deep(int set, int pm, string model, string rad)
   gStyle->SetOptStat(1001111);
   
   //Pre-defined SIMC/data root file names containing histogram object to comapare
-  TString simc_filename_fsi = Form("../deep_simc_histos_pm%d_lagetfsi_rad_set%d.root", pm, set);
-  TString simc_filename_pwia = Form("../deep_simc_histos_pm%d_lagetpwia_rad_set%d.root", pm, set);
+  //TString simc_filename_fsi = Form("../deep_simc_histos_pm%d_lagetfsi_rad_set%d.root", pm, set);
+  //TString simc_filename_pwia = Form("../deep_simc_histos_pm%d_lagetpwia_rad_set%d.root", pm, set);
+  TString simc_filename_fsi = "../root_files/pm80_Xsec/deep_simc_histos_pm80_lagetfsi_rad_set1.root";
+  TString simc_filename_pwia = "../root_files/pm80_Xsec/deep_simc_histos_pm80_lagetpwia_rad_set1.root ";
 
   //Data File
-  TString data_filename = Form("../deep_data_histos_pm%d_set%d_combined.root", pm, set); 
-
+  //TString data_filename = Form("../deep_data_histos_pm%d_set%d_combined.root", pm, set); 
+  TString data_filename = "../root_files/pm80_Xsec/deep_data_histos_pm80_set1_combined.root";
   
   //Open SIMC/data ROOT files;
   
