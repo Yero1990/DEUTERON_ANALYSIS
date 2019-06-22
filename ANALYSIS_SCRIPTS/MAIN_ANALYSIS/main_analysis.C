@@ -98,17 +98,28 @@ int main_analysis()
 	run = stoi(line);                               
 	
 	cnt++;  //line counter
-	if(get_total_lines(runlist_name)==cnt){
-	  Qnorm_flag=1;
-	  cout << "Reached Final Run: " << run << endl;
-	}
+	//if(get_total_lines(runlist_name)==cnt){
+	//  Qnorm_flag=1;
+	//  cout << "Reached Final Run: " << run << endl;
+	//	}
 	
 	if(react_type=="heep"){
+	  //Set Qnorm_flag for individual runs
+	  Qnorm_flag=1; 
+
 	  cout << "==================================" << endl;
 	  cout << Form("Analyzing H(e,e'p) DATA: Run %i ",  run) << endl;
 	  cout << "==================================" << endl;
 	}
+
+      
+	
 	else if(react_type=="deep"){
+
+	  if(get_total_lines(runlist_name)==cnt){                                                                                    
+	    Qnorm_flag=1;                                                                                                              
+	    cout << "Reached Final Run: " << run << endl;                                                                             
+	  }  
 	  cout << "==================================" << endl;
 	  cout << Form("Analyzing D(e,e'p)n DATA: Run %i ", run) << endl;
 	  cout << Form("Pm: %d MeV || Set: %d", pm_set, dataSet) << endl;

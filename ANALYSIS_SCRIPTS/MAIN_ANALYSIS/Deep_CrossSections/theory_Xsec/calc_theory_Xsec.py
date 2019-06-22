@@ -25,7 +25,7 @@ header = \
 #\\ xb = th_nq
 #\\ yb = pm
 # current header line:
-#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ nx[f,5]/ ny[f,6]/  pwiaXsec[f,7]/    
+#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/  pwiaXsec[f,5]/    
 """
 #------------------------------------------------------------
 #create output file to write cross section @ avg kinematics
@@ -82,8 +82,6 @@ i_x = B.get_data(f, 'i_x')      #ith th_nq bin number
 i_y = B.get_data(f, 'i_y')      #ith Pm bin number
 xb  = B.get_data(f, 'xb')   #theta_nq central bin value [deg]
 yb  = B.get_data(f, 'yb')     #Pmiss cental bin value [GeV]
-nx    = B.get_data(f, 'nx')     #total number of bins in theta_nq
-ny    = B.get_data(f, 'ny')     #total number of bins in Pm
 
 
 #===============================================================================
@@ -116,7 +114,7 @@ for i, e0_i in enumerate(Ei):
     sigma.append(sig)
     print('sig = ',sig)
     # Write to File
-    l = '%i %i %i %.6f %.6f %.6f %.6f %.12e\n'%(i_b[i], i_x[i], i_y[i], xb[i], yb[i], nx[i], ny[i], sig)
+    l = '%i %i %i %.6f %.6f %.12e\n'%(i_b[i], i_x[i], i_y[i], xb[i], yb[i], sig)
     o.write(l)
 o.close()
 

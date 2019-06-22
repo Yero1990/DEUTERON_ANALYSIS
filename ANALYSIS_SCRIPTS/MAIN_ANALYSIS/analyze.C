@@ -470,6 +470,7 @@ void analyze::SetFileNames()
     //Set Output Names
     data_OutputFileName = Form("%s_data_histos_%d.root",reaction.c_str(), runNUM);
     data_OutputFileName_radCorr = Form("%s_data_histos_%d_radcorr.root",reaction.c_str(), runNUM); 
+    data_OutputFileName_combined = Form("%s_data_histos_%d_combined.root",reaction.c_str(), runNUM); 
     report_OutputFileName = Form("report_%s.dat", reaction.c_str());
 
     simc_OutputFileName_rad = Form("%s_simc_histos_%d_rad.root",reaction.c_str(), runNUM);
@@ -2581,7 +2582,7 @@ void analyze::ApplyWeight()
     LD2_slope = 0.0008;
     
     if(reaction=="heep"){
-      tgtBoil_corr = (1.-LH2_slope * avg_current_bcm_cut);
+      tgtBoil_corr = 1.;//(1.-LH2_slope * avg_current_bcm_cut);
     }
     
     if(reaction=="deep"){

@@ -49,7 +49,7 @@ header = \
 #\\ xb = th_nq
 #\\ yb = pm
 # current header line:
-#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ nx[f,5]/ ny[f,6]/  pwiaXsec[f,7]/  pwiaXsec_err[f,8]/  fsiXsec[f,9]/   fsiXsec_err[f,10]/  dataXsec[f,11]/  dataXsec_err[f,12]/  
+#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ pwiaXsec[f,5]/  pwiaXsec_err[f,6]/  fsiXsec[f,7]/   fsiXsec_err[f,8]/  dataXsec[f,9]/  dataXsec_err[f,10]/  
 """
 #------------------------------------------------------------
 
@@ -82,7 +82,7 @@ if pm_set == 80:
    root_file_pwia = '../../root_files/pm%i_Xsec/Xsec_pm%i_lagetpwia_dataset%i.root'%(pm_set, pm_set, data_set)
    root_file_fsi = '../../root_files/pm%i_Xsec/Xsec_pm%i_lagetfsi_dataset%i.root'%(pm_set, pm_set, data_set)
 else:
-   root_file_pwia = '../../root_files/pm%i_Xsec/set%i/Xsec_pm%i_lagetpwia_dataset%i.root'%(pm_set, data_set, pm_set, data_set)                                                                             
+   root_file_pwia = '../../root_files/pm%i_Xsec/set%i/Xsec_pm%i_lagetpwia_dataset%i.root'%(pm_set, data_set, pm_set, data_set)  
    root_file_fsi = '../../root_files/pm%i_Xsec/set%i/Xsec_pm%i_lagetfsi_dataset%i.root'%(pm_set, data_set, pm_set, data_set)   
 
 # open PWIA file
@@ -145,7 +145,7 @@ for i,acont in enumerate(all.cont):
       
 
 
-   l = "%i %i %i %f %f %f %f %.12e %.12e %.12e %.12e %.12e %.12e\n"%(i_bin, i_xbin, i_ybin, thnq_b, pm_b, all.nx, all.ny, pwiaXsec, pwiaXsec_err, fsiXsec, fsiXsec_err, dataXsec, dataXsec_err)
+   l = "%i %i %i %f %f %.12e %.12e %.12e %.12e %.12e %.12e\n"%(i_bin, i_xbin, i_ybin, thnq_b, pm_b,  pwiaXsec, pwiaXsec_err, fsiXsec, fsiXsec_err, dataXsec, dataXsec_err)
              
                                                                           
    o.write(l)

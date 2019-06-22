@@ -17,7 +17,7 @@ header = \
 #\\ xb = th_nq
 #\\ yb = pm
 # current header line:
-#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ bc_fact_fsi[f,7]/   bc_fact_fsi_err[f,8]/  dataXsec[f,9]/  dataXsec_err[f,10]/  dataXsec_bc[f,11]/  dataXsec_bc_err[f,12]/    
+#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ bc_fact_fsi[f,5]/  bc_fact_fsi_err[f,6]/  dataXsec[f,7]/  dataXsec_err[f,8]/  dataXsec_bc[f,9]/  dataXsec_bc_err[f,10]/    
 """
 #------------------------------------------------------------
 
