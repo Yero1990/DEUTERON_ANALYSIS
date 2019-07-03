@@ -3,7 +3,7 @@
 #code usage:  ./run_swif.sh [options]
 #where [options] ---> status,  delete
 
-workflow_name="d2_750MeV_set1_Check"
+workflow_name="d2_highPmiss_FULL"
 #workflow_name="SHMS_LH2_boiling_studies"
 #workflow_name="SHMS_boiling_studies"
 #workflow_name="pcal_calib"
@@ -23,7 +23,12 @@ workflow_name="d2_750MeV_set1_Check"
 
 #-----------POST 3288--------- 
 #runlist_name="runlists/d2580_set1.dat"
-runlist_name="runlists/d2750_set1.dat"
+#runlist_name="runlists/d2580_set2.dat"
+#runlist_name="runlists/d2750_set1.dat"
+#runlist_name="runlists/d2750_set2.dat"
+#runlist_name="runlists/d2750_set3.dat"
+runlist_name="runlists/d2_full.dat"
+
 #runlist_name="runlists/h2.dat"
 
 
@@ -33,7 +38,6 @@ spec=" --spectrometer COIN "
 #spec=" --spectrometer SHMS_COIN "
 #spec=" --spectrometer HMS_ALL "
 #spec=" --spectrometer SHMS_ALL "
-
 events="--events -1"
 range="--run 3289"
 filelist=" --run file $runlist_name "

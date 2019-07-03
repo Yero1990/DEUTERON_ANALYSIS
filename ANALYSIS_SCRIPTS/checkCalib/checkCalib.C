@@ -87,7 +87,7 @@ void checkCalib(string spec, int run)
   //TString filename = Form("../../../ROOTfiles/good_Heep_hmsProt/hprot_kg%d.root", run);
   //TString filename = Form("../../../ROOTfiles/coin_replay_trkStudy_%d_-1.root", run);
   
-  TString filename = "../../../ROOTfiles/coin_replay_deep_check_3289_-1.root";
+  TString filename = "../../../ROOTfiles/pm580_set1.root";
   // TString filename = "../../../ROOTfiles/pm580_total.root";
 
 

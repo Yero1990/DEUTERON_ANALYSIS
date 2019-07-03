@@ -1,0 +1,7 @@
+# run command to calculate. av kin for thnqpm
+# old calc
+%run py_calc/calc_thnq_pm_av_kin_nz.py -d../../exp_results_q2/q2_analysis_root/q2_avgkin_thnq_pm_WB/ -e _avg_kin.root -H q2_ -D ./kin_av_thnq_pm/ q2_kinematics_list.data
+# new calc
+%run py_calc/calc_thnq_pm_av_kin_nz.py -d../../exp_results_q2/q2_analysis_root/q2_avgkin_thnq_pm_WB/ -e _avg_kin_oo.root -H q2_ -D ./kin_av_oo_thnq_pm/ q2_kinematics_list.data
+# new SIMC calc
+%run py_calc/calc_thnq_pm_av_kin_nz.py -d../../exp_results_q2/q2_analysis_root/q2_avgkin_thnq_pm_WB_new/ -e _avg_kin_oo.root -H q2_ -D ./kin_av_oo_thnq_pm_WB_new/ q2_kinematics_list.data

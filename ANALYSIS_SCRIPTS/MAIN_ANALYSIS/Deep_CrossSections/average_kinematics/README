@@ -1,0 +1,19 @@
+*******************************
+Extracting Average Kinematics 
+from 2D Pmiss vs. theta_nq
+*******************************
+
+To extract the average kinematics:
+
+** run the code calc_avg_kin.py
+
+This code reads a ROOTfile with the existing 2D Pmiss vs. theta_nq
+histograms averaged over the kinematic variables, Ein, kf, theta_p, 
+theta_e, etc.
+
+In essence, the code used the python module bin_info2.py to extract
+the relevant information from the 2D histo.  
+This module uses the method: get_histo_data(histo), which
+loops over the x and y range of the 2D histo bins (nested loop)
+and extracts the bin content (representing the averaged quantity on
+that specific (Pm, th_nq) bin), and it error.  

@@ -1,0 +1,49 @@
+**************************
+Bin-Centering Corrections
+**************************
+
+June 17, 2019
+
+To do bin-centering corrections, an average theoretical cross section as
+well as the cross section at the average kinemtics are needed.
+
+---------------------------------------------------------------------------
+Averaged Theoretical Cross Section:
+
+code:  ../../average_Xsec/calc_Xsec.py
+
+description: read the 2D average Cross Sections from DATA and Theory, and
+	     extracts the cross section in (Pm, theta_nq) bins
+
+The average theoretical cross section is calculated from central kinematics.
+By using the vertex kinemtaics from the simulation program (SIMC) as input
+in the Lage_Xsec_fp_1.f code.  This code has already been adapted to work
+as a module in SIMC. The average cross sections are therefore calculated from
+the ( SIMC Yield / Phase Space ) using the Laget model.
+
+---------------------------------------------------------------------------
+
+---------------------------------------------------------------------------
+Theoretical Cross Section at the Average:
+
+code: calc_cross.py (uses Laget subroutine to extract cross section)
+      Laget_Xsec_fp_1.f (Theory calculation code )
+      
+      For Misak and CD-Bonn theory,  Werner has the codes for those. 
+
+avg.kin_files: ../../average_kinematics/pm{80,580,750}_{pwia, fsi}_norad_avgkin_set{1,2,3}.txt
+
+The theoretical cross sections at the "average kinematics" is calculated.
+For this, the average kinematics in (Pm, theta_nq) bins are needed first.
+The averaged kinematics in Pm vs. theta_nq bins has been calculated (from
+SIMC only) in the analyze.C code ( see ../../../analyze.C )
+
+The average kinematics .txt files are used as input in the calc_theory_Xsec.py code to extract the
+Laget Cross Sections.
+
+---------------------------------------------------------------------------
+
+By taking the ratio of: (Xsec @ avg. kin.)  / (avg. Xsec @ central kin.) one is able 
+to correct the data cross section from the bin center to an averaged over that bin.
+
+Data_Xsec_corr = Data_Xsec_UnCorr * (theory Xsec @ avg. kin.)  / (avg. theory Xsec @ central kin.) 

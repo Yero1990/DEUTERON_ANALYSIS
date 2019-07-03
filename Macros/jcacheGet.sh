@@ -17,7 +17,7 @@ spec=$1
 
 #for run in {1149..1171}
 #do
-filename='d2580_set1.dat'
+filename='d2750_set3.dat'
 #filename='target_boiling_study/Al_boiling_hms_Apr_02_2018.dat'
 
 for run in $(cat $filename) ; do    

@@ -66,7 +66,6 @@ int main_analysis()
     single_run_flag = stoi(split(FindString("single_run_flag", inputCutFileName)[0], ':')[1]);
     react_type = "deep";
     
-
     
     ifs.close();
   }
@@ -99,17 +98,28 @@ int main_analysis()
 	run = stoi(line);                               
 	
 	cnt++;  //line counter
-	if(get_total_lines(runlist_name)==cnt){
-	  Qnorm_flag=1;
-	  cout << "Reached Final Run: " << run << endl;
-	}
+	//if(get_total_lines(runlist_name)==cnt){
+	//  Qnorm_flag=1;
+	//  cout << "Reached Final Run: " << run << endl;
+	//	}
 	
 	if(react_type=="heep"){
+	  //Set Qnorm_flag for individual runs
+	  Qnorm_flag=1; 
+
 	  cout << "==================================" << endl;
 	  cout << Form("Analyzing H(e,e'p) DATA: Run %i ",  run) << endl;
 	  cout << "==================================" << endl;
 	}
+
+      
+	
 	else if(react_type=="deep"){
+
+	  if(get_total_lines(runlist_name)==cnt){                                                                                    
+	    Qnorm_flag=1;                                                                                                              
+	    cout << "Reached Final Run: " << run << endl;                                                                             
+	  }  
 	  cout << "==================================" << endl;
 	  cout << Form("Analyzing D(e,e'p)n DATA: Run %i ", run) << endl;
 	  cout << Form("Pm: %d MeV || Set: %d", pm_set, dataSet) << endl;
@@ -215,6 +225,9 @@ int main_analysis()
 	  //call method to run simc analysis. This method call all necessary methods to analyze simc.(See analyze.C)
 	  //rad_corr_flag| 0: do NOT do radiative corrections,  1: do radiatie corrections (controlled from input file) 
 	  a1.run_simc_analysis(rad_corr_flag);
+	  
+	  
+
 	}
 	  
       }

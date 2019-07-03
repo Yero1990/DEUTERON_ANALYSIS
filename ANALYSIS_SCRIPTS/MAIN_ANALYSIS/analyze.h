@@ -56,8 +56,11 @@ class analyze
   //Normalize combined histos by total charge (only done after the very last run)
   void ChargeNorm(); 
   
-  //Calculate Average Kinematics (Used for bin-centering corrections)
-  void CalcAvgKin();
+
+  //----------Get Cross Sections (Divide Radiative Corrected Yield by Phase Space-----------
+  void GetXsec();
+
+
 
   //------------Run Analysis Mehods--------------
   void run_simc_analysis(Bool_t rad_corr_flag=0);
@@ -166,6 +169,11 @@ class analyze
   Double_t pcal_xmax = 1.5;
 
   //---------KINEMATICS-----
+  //Incident Energy
+  Double_t Ein_nbins = 100;
+  Double_t Ein_xmin = 10.;
+  Double_t Ein_xmax = 11.;
+
   
   //Missing Energy
   Double_t Em_nbins = 100;
@@ -285,7 +293,15 @@ class analyze
   Double_t thpq_xmin = -0.05;
   Double_t thpq_xmax = 1.2;
 
+  //ph_nq (Angle between proton and q-vector)
+  Double_t phnq_nbins = nbins;
+  Double_t phnq_xmin = -1.;
+  Double_t phnq_xmax = 1.;
 
+  //ph_pq (Angle between proton and q-vector)
+  Double_t phpq_nbins = nbins;
+  Double_t phpq_xmin = -1.;
+  Double_t phpq_xmax = 1.;
 
   //------Target Reconstruction Variables (Hall Coord. System)----------
   Double_t xtar_nbins = nbins;
@@ -432,6 +448,7 @@ class analyze
   TH1F *H_Em;
   TH1F *H_Em_nuc;
   TH1F *H_Pm;
+  TH1F *H_Pm_ps;   //only used by simc (phase space)
   TH1F *H_Pmx_lab;
   TH1F *H_Pmy_lab;
   TH1F *H_Pmz_lab;
@@ -448,7 +465,11 @@ class analyze
   TH1F *H_theta_prot;
   TH1F *H_theta_pq;
   TH1F *H_theta_nq;
-
+  TH1F *H_cphi_pq;
+  TH1F *H_cphi_nq;
+  TH1F *H_sphi_pq;
+  TH1F *H_sphi_nq;
+  
   //Target Reconstruction Histos
   TH1F *H_hx_tar;
   TH1F *H_hy_tar;
@@ -496,6 +517,10 @@ class analyze
   TH2F *H_Em_vs_Pm;
   TH2F *H_Em_nuc_vs_Pm;
 
+  //2D Pmiss vs. Theta_nq (Used for 2D cross sections, binned in theta_nq)
+  TH2F *H_Pm_vs_thnq;
+  TH2F *H_Pm_vs_thnq_ps;  //Phase Space 2D (use for cross section calculation)
+
   //Create Scaler Related Histogram (ONLY FOR SCALERS)
   TH1F *H_bcmCurrent;
 
@@ -513,11 +538,13 @@ class analyze
   TH1F *simc_Q2_rad = 0;			   	      		     
   TH1F *simc_Pm_rad = 0;					     				     
   TH1F *simc_th_nq_rad = 0;					     
+  TH2F *simc_Pm_vs_thnq_rad = 0;
 
   //--------SIMC NON-RADIATIVE---------
   TH1F *simc_Q2_norad = 0;			   	      		     
   TH1F *simc_Pm_norad = 0;					     				     
   TH1F *simc_th_nq_norad = 0;									                                           
+  TH2F *simc_Pm_vs_thnq_norad = 0;
 
   //Used in ApplyRadCorr() Method. DO NOT NEED TO BE INITIALIZED in analyze.C. These just hold existing histos
   
@@ -525,17 +552,33 @@ class analyze
   TH1F *data_Q2 = 0;			   	      		     
   TH1F *data_Pm = 0;					     				     
   TH1F *data_th_nq = 0;
+  TH2F *data_Pm_vs_thnq = 0;
 
   //-------RADIATIVE CORRECTION RATIO simc_Ynorad / simc_Yrad--------
   TH1F *ratio_Q2 = 0;
   TH1F *ratio_Pm = 0;
   TH1F *ratio_th_nq = 0;
+  TH2F *ratio_Pm_vs_thnq = 0;
 
 
   //-------DATA (AFTER APPLYING RADIATIVE CORRECTIONS)------
   TH1F *data_Q2_corr = 0;			   	      		     
   TH1F *data_Pm_corr = 0;					     				     
   TH1F *data_theta_nq_corr = 0;
+
+
+  //---------GetXsec() method related variable---------
+  Double_t PhaseSpace;   //to be calculated in the SIMC event loop (the one in non-radiative SIMC should be used after rad. corrections)
+
+  //Related Histograms
+  TH1F *dataPm = 0;
+  TH1F *simcPm = 0;
+  TH1F *simcPm_ps = 0;
+  //2D Pm vs. thnq (FullWeight) / Pm vs thnq (PhaseSpace)
+  TH2F *dataPm_v_thnq = 0;
+  TH2F *simcPm_v_thnq = 0;
+  TH2F *simcPm_v_thnq_ps = 0;
+
 
   //---------------------------------------------------------------------------------
 
@@ -584,6 +627,10 @@ class analyze
   TH1F *H_theta_prot_total = 0;					     TH1F *H_theta_prot_i = 0;					  
   TH1F *H_theta_pq_total = 0;					     TH1F *H_theta_pq_i = 0;					  
   TH1F *H_theta_nq_total = 0;					     TH1F *H_theta_nq_i = 0;					  
+  TH1F *H_cphi_pq_total = 0;					     TH1F *H_cphi_pq_i = 0;					  
+  TH1F *H_cphi_nq_total = 0;					     TH1F *H_cphi_nq_i = 0;	
+  TH1F *H_sphi_pq_total = 0;					     TH1F *H_sphi_pq_i = 0;					  
+  TH1F *H_sphi_nq_total = 0;					     TH1F *H_sphi_nq_i = 0;
   TH1F *H_hx_tar_total = 0;					     TH1F *H_hx_tar_i = 0;						  
   TH1F *H_hy_tar_total = 0;					     TH1F *H_hy_tar_i = 0;						  
   TH1F *H_hz_tar_total = 0;					     TH1F *H_hz_tar_i = 0;						  
@@ -615,82 +662,144 @@ class analyze
   TH2F *H_eXColl_vs_eYColl_total = 0;				     TH2F *H_eXColl_vs_eYColl_i = 0;				  
   TH2F *H_Em_vs_Pm_total = 0;					     TH2F *H_Em_vs_Pm_i = 0;					  
   TH2F *H_Em_nuc_vs_Pm_total = 0;				     TH2F *H_Em_nuc_vs_Pm_i = 0;					  
+  TH2F *H_Pm_vs_thnq_total = 0;                                      TH2F *H_Pm_vs_thnq_i = 0; 
   TH1F *H_bcmCurrent_total = 0;					     TH1F *H_bcmCurrent_i = 0;                                       
 
 
 
-  //---------CalcAvgKin() Method Histograms---------------
+  //------------Average Kinematics Histograms---------------
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  //Vertex Quantities (no Eloss) that will be used to calculate the theoretical cross section @ the average kinematics
+  //The average kinematics then are used as input in a theory, to get the true cross section. Finally, a ratio
+  //can be taken: f_bc = sigma_true (avg.kin) / sigma_avg(cent. kin), as the bin-centering correction to the data
+  //These corrections are applied after radiative corrections, therefore, the average kinematics must be calculated
+  //with radiative effects turned OFF.
+
+  Double_t Ein_v;               //incident beam energy at vertex (simulates external rad. has rad. tail) ??? 
+  Double_t Q2_v;                //Q2 (vertex)  
+  Double_t nu_v;                //energy transfer = Ein_v - Ef_v
+  Double_t q_lab_v;             //magintude of 3-vector q
+  Double_t Pm_v;                //missing momentum at the vertex
+  Double_t Pm_par_v;            //parallel compoent of missing momentum at vertex
+  Double_t Pf_v;                //final proton momentum at the vertex
+  Double_t Ep_v;                //final proton energy at the vertex
+  Double_t Ef_v;                //final electron energy at the vertex
+
+  Double_t ki_v;
+  Double_t kf_v;
+  Double_t X_v;
+
+  //Vertex X'tar / Y'tar: 
+  //Recently added (These are needed to use with hcana methods TransportToLab(Pf, xptar, yptar, p_vec),
+  //which required these quantities as input. Then, the angles at the vertex can be determined)
+
+  Double_t e_xptar_v;           
+  Double_t e_yptar_v;
+  Double_t h_xptar_v;
+  Double_t h_yptar_v;
+
+
+  //Declare Neccessary Variables To be used to transport to Lab (at the vertex). **The '_v' suffix refers to vertex
+  TLorentzVector fP0_v;           // Beam 4-momentum
+  TLorentzVector fP1_v;           // Scattered electron 4-momentum
+  TLorentzVector fA_v;            // Target 4-momentum
+  TLorentzVector fA1_v;           // Final system 4-momentum
+  TLorentzVector fQ_v;            // Momentum transfer 4-vector
+  TLorentzVector fX_v;            // Detected secondary particle 4-momentum (GeV)
+  TLorentzVector fB_v;            // Recoil system 4-momentum (GeV)
+
+  TVector3 Pf_vec_v;              //final proton momentum vector at the vertex
+  TVector3 kf_vec_v;              //final electron momentum vector at the vertex
+
+  //Declare necessary variables for rotaion from +z to +q
+  TVector3 qvec_v;
+  TVector3 kfvec_v;
+  TRotation rot_to_q_v;
+  TVector3 bq_v;   //recoil system in lab frame (Pmx, Pmy, Pmz)
+  TVector3 xq_v;   //detected system in lab frame
+  TVector3 p_miss_q_v;   //recoil system in q-frame
+
+  //Additional Vertex Variables
+  //Missing Momentum components in Hall Coord. System (+X beam-left, +Y up, +Z downstream)
+  Double_t Pmx_lab_v;
+  Double_t Pmy_lab_v;
+  Double_t Pmz_lab_v;
+  //Missing Momentum components in the q-frame
+  Double_t Pmx_q_v;
+  Double_t Pmy_q_v;
+  Double_t Pmz_q_v;
+
+  //Vertex q-vector angle relative to beam (+z)
+  Double_t th_q_v;
+  Double_t ph_q_v;
+
+  //Vertex Proton / Neutron angles relative to q
+  Double_t th_pq_v;     //theta_pq_v
+  Double_t ph_pq_v;     //phi_pq_v
+  Double_t th_nq_v;     //theta_nq_v
+  Double_t ph_nq_v;      //phi_nq_v
+
+  //Proton / Electron In-Plane Scattering Angles (vertex)
+  Double_t th_e_v;     
+  Double_t th_p_v;
+
+  //Declare Vertex Histograms
+  TH1F *H_Ein_v;
+  TH1F *H_kf_v;
+  TH1F *H_theta_elec_v;
+  TH1F *H_Pf_v;
+  TH1F *H_theta_prot_v;
+  TH1F *H_q_v;
+  TH1F *H_theta_q_v;
+  TH1F *H_Q2_v;
+  TH1F *H_omega_v;
+  TH1F *H_xbj_v;
+  TH1F *H_Pm_v;          //for denominator in 1D Avg Kin. (Missing Momentum Yield) 
+  TH1F *H_theta_pq_v;
+  TH1F *H_theta_nq_v;
+  TH1F *H_cphi_pq_v;
+  TH1F *H_cphi_nq_v;
+  TH1F *H_sphi_pq_v;
+  TH1F *H_sphi_nq_v;
+
+  //Declare Average Kinematic Histograms
+  TH1F *H_Ein_avg;
+  TH1F *H_kf_avg;
+  TH1F *H_theta_elec_avg;
+  TH1F *H_Pf_avg;
+  TH1F *H_theta_prot_avg;
+  TH1F *H_q_avg;
+  TH1F *H_theta_q_avg;
+  TH1F *H_Q2_avg;
+  TH1F *H_omega_avg;
+  TH1F *H_xbj_avg;
+  TH1F *H_Pm_avg;
+  TH1F *H_theta_pq_avg;
+  TH1F *H_theta_nq_avg;
+  TH1F *H_cphi_pq_avg;
+  TH1F *H_cphi_nq_avg;
+  TH1F *H_sphi_pq_avg;
+  TH1F *H_sphi_nq_avg;
+
+  //Declare 2D Average Kinematic Histograms (Pmiss_v vs. theta_nq_v averaged over different kinematics)
+  TH2F *H_Pm_vs_thnq_v;              //2d for average histogram denominator (Yield)
+  TH2F *H_Ein_2Davg;
+  TH2F *H_kf_2Davg;
+  TH2F *H_theta_elec_2Davg;
+  TH2F *H_Pf_2Davg;
+  TH2F *H_theta_prot_2Davg;
+  TH2F *H_q_2Davg;
+  TH2F *H_theta_q_2Davg;
+  TH2F *H_Q2_2Davg;
+  TH2F *H_omega_2Davg;
+  TH2F *H_xbj_2Davg;
+  TH2F *H_Pm_2Davg;
+  TH2F *H_theta_pq_2Davg;
+  TH2F *H_theta_nq_2Davg;
+  TH2F *H_cphi_pq_2Davg;
+  TH2F *H_cphi_nq_2Davg;
+  TH2F *H_sphi_pq_2Davg;
+  TH2F *H_sphi_nq_2Davg;
 
 
   //------------------------------Data Related Variables--------------------------------
@@ -761,6 +870,7 @@ class analyze
   Bool_t MM_cut_flag;
 
   Bool_t base_cuts;
+  Bool_t base_cuts_2d;  //only for 2D Avg Kin Histos (excludes th_nq cuts, as we are plotting Pm vs th_nq)
   Bool_t pid_cuts;
 
   Bool_t c_edelta;    Double_t edel_min;      Double_t edel_max;
@@ -782,6 +892,7 @@ class analyze
   Bool_t c_shms_cal;  Double_t shms_cal_min;   Double_t shms_cal_max;
   Bool_t c_ctime;     Double_t ctime_min;      Double_t ctime_max;
 
+  int radiate_flag; //Analyze radiative or non-radiative SIMC?
 
   //------------------------------------------------------------------------------------
 
@@ -931,17 +1042,7 @@ class analyze
   Double_t theta_rq;
   Double_t SF_weight_recon;
   Double_t h_Thf;
-  //Vertex Quantities (no Eloss) that will be used to calculated the cross section @ the average kinematics
-  Double_t Ein_v;               //incident beam energy at vertex (simulates external rad. has rad. tail) ??? 
-  Double_t Q2_v;
-  Double_t nu_v;
-  Double_t q_lab_v;
-  Double_t pm_v;
-  Double_t pm_par_v;
-  Double_t pf_v;
-  Double_t Ep_v;
-  Double_t Ef_v;
-  
+
   Double_t prob_abs;  // Probability of absorption of particle in the HMS Collimator
                       //(Must be multiplies by the weight. If particle interation is
                       //NOT simulated, it is set to 1.)
@@ -1058,10 +1159,17 @@ class analyze
   //Output ROOTfile Name
   TString simc_OutputFileName_rad;
   TString simc_OutputFileName_norad;
+
   TString simc_OutputFileName_radCorr;
+  TString simc_OutputFileName_radCorr_pwia;
+  TString simc_OutputFileName_radCorr_fsi;
 
   TString data_OutputFileName;
   TString data_OutputFileName_radCorr;
+  
+
+  TString Xsec_OutputFileName;
+
   //For Combinig Histograms (many runs)
   TString data_OutputFileName_combined;
 
@@ -1139,7 +1247,7 @@ class analyze
 
   //------------------------------
 
-
+  
 
 };
 
