@@ -25,7 +25,7 @@ header = \
 #\\ xb = th_nq
 #\\ yb = pm
 # current header line:
-#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/  pwiaXsec[f,5]/    
+#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/  pwiaXsec[f,5]/  pwiaGEp[f,6]/   pwiaGMp[f,7]/   pwia_sigMott[f,8]/   pwia_Ksig_cc1[f,9]/    
 """
 #------------------------------------------------------------
 #create output file to write cross section @ avg kinematics
@@ -92,10 +92,14 @@ yb  = B.get_data(f, 'yb')     #Pmiss cental bin value [GeV]
 th_cm = B.get_data(f, 'th_pq_cm')*dtr     #center of mass in-plane angle between proton and q-vector [rad]
 omega = B.get_data(f,  'omega')           #energy transfer [MeV]
 q = B.get_data(f, 'q_lab')                #magnitude of 3-momentum transfer [MeV]
-Q2 = q**2 - omega**2                       #4-Momentum Transfer [MeV^2]
+Q2 = B.get_data(f, 'Q2_calc')                      #4-Momentum Transfer [MeV^2]
 cphi = B.get_data(f, 'cos_phi')           #Cos(phi) 
-phi = np.arccos(cphi)                      #phi, out-of-plane angle between the proton and q-vector (angle between reaction-scattering plane) [rad]
+phi = np.arccos(cphi)                     #phi, out-of-plane angle between the proton and q-vector (angle between reaction-scattering plane) [rad]
 Ei = B.get_data(f, 'Ei')                  #Incident Beam Energy [MeV]
+GEp = B.get_data(f, 'GEp')                #Proton Electric Form Factor at the avg. kinematics
+GMp = B.get_data(f, 'GMp')                #Proton Magnetic Form Factor at the avg. kinematics
+sigMott = B.get_data(f, 'sigMott')        #Mott cross section at the avg. kinematics
+Ksig_cc1 = B.get_data(f, 'Ksig_cc1')      #deForest cc1 cross section at the avg. kinematics
 
 
 # DO PWIA
@@ -114,7 +118,7 @@ for i, e0_i in enumerate(Ei):
     sigma.append(sig)
     print('sig = ',sig)
     # Write to File
-    l = '%i %i %i %.6f %.6f %.12e\n'%(i_b[i], i_x[i], i_y[i], xb[i], yb[i], sig)
+    l = '%i %i %i %.6f %.6f %.12e  %.6f  %.6f  %.6f  %.6f\n'%(i_b[i], i_x[i], i_y[i], xb[i], yb[i], sig, GEp[i], GMp[i], sigMott[i], Ksig_cc1[i])
     o.write(l)
 o.close()
 
@@ -132,6 +136,10 @@ else:
 
 #Add Key to the output_file header
 output_file.add_key('fsiXsec', 'f')
+output_file.add_key('fsiGEp', 'f')
+output_file.add_key('fsiGMp', 'f')
+output_file.add_key('fsi_sigMott', 'f')
+output_file.add_key('fsi_Ksig_cc1', 'f')
 
 #NOTE: The PWIA and FSI avg. kin. files bin-numbering must be EXACTLY the same. THerefore, there is no need to read them a second time.
 
@@ -143,10 +151,14 @@ output_file.add_key('fsiXsec', 'f')
 th_cm = B.get_data(f, 'th_pq_cm')*dtr     #center of mass in-plane angle between proton and q-vector [rad]
 omega = B.get_data(f,  'omega')           #energy transfer [MeV]
 q = B.get_data(f, 'q_lab')                #magnitude of 3-momentum transfer [MeV]
-Q2 = q**2 - omega**2                       #4-Momentum Transfer [MeV^2]
+Q2 = B.get_data(f, 'Q2_calc')                #4-Momentum Transfer [MeV^2]
 cphi = B.get_data(f, 'cos_phi')           #Cos(phi) 
 phi = np.arccos(cphi)                      #phi, out-of-plane angle between the proton and q-vector (angle between reaction-scattering plane) [rad]
 Ei = B.get_data(f, 'Ei')                  #Incident Beam Energy [MeV]
+GEp = B.get_data(f, 'GEp')                #Proton Electric Form Factor at the avg. kinematics
+GMp = B.get_data(f, 'GMp')                #Proton Magnetic Form Factor at the avg. kinematics
+sigMott = B.get_data(f, 'sigMott')        #Mott cross section at the avg. kinematics
+Ksig_cc1 = B.get_data(f, 'Ksig_cc1')      #deForest cc1 cross section at the avg. kinematics
 
 
 # DO FSI
@@ -165,6 +177,10 @@ for i, e0_i in enumerate(Ei):
     #sigma.append(sig)
 
     output_file.data[i]['fsiXsec'] = float("%.12e"%(sig))
+    output_file.data[i]['fsiGEp'] = float("%.6f"%(GEp[i]))
+    output_file.data[i]['fsiGMp'] = float("%.6f"%(GMp[i]))
+    output_file.data[i]['fsi_sigMott'] = float("%.6f"%(sigMott[i]))
+    output_file.data[i]['fsi_Ksig_cc1'] = float("%.6f"%(Ksig_cc1[i]))
 
     print('sig = ',sig)
     # Write to File

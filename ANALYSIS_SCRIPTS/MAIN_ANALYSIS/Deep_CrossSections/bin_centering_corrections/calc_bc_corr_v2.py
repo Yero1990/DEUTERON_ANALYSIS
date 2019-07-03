@@ -16,7 +16,7 @@ header = """
 #\\ xb = th_nq                                                                                                    
 #\\ yb = pm                                                                        
 # current header line:  
-#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ bc_fact_pwia[f,5]/  bc_fact_pwia_err[f,6]/  bc_fact_fsi[f,7]/  bc_fact_fsi_err[f,8]/  dataXsec[f,9]/  dataXsec_err[f,10]/  dataXsec_bc[f,11]/  dataXsec_bc_err[f,12]/  pwiaXsec_theory[f,13]/   fsiXsec_theory[f,14]/ 
+#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ bc_fact_pwia[f,5]/  bc_fact_pwia_err[f,6]/  bc_fact_fsi[f,7]/  bc_fact_fsi_err[f,8]/  dataXsec[f,9]/  dataXsec_err[f,10]/  dataXsec_bc[f,11]/  dataXsec_bc_err[f,12]/  pwiaXsec_theory[f,13]/   fsiXsec_theory[f,14]/   red_dataXsec[f,15]/   red_dataXsec_err[f,16]/   red_pwiaXsec[f,17]/   red_fsiXsec[f,18]/
 """
 
 #create output file to write avg kin                                                                                      
@@ -24,7 +24,7 @@ pm_set = int(sys.argv[1])
 data_set = int(sys.argv[2])                                                                                                            
 print argv                                                                                   
          
-#usage: /apps/python/2.7.12/bin/python.py calc_bc_corr.py 580  1           
+#usage: /apps/python/2.7.12/bin/python.py calc_bc_corr_v2.py 580  1           
 if pm_set == 80:                                                                                                       
     output_file = 'pm%i_laget_bc_corr.txt'%(pm_set)                
 else:
@@ -54,6 +54,9 @@ thnq_t = B.get_data(ft, 'xb')
 pm_t = B.get_data(ft, 'yb')
 pwiaXsec_theory = B.get_data(ft, 'pwiaXsec') 
 fsiXsec_theory = B.get_data(ft, 'fsiXsec') 
+pwia_Ksig_cc1 = B.get_data(ft, 'pwia_Ksig_cc1')    #deForest K*sig_cc1 factor for calculating the reduced cross section
+fsi_Ksig_cc1 = B.get_data(ft, 'fsi_Ksig_cc1')
+
 
 #Get Average Xsec                                                                                                                         
 ib_a = B.get_data(fa, 'i_b')             #2D Bin Number
@@ -76,9 +79,9 @@ dataXsec_avg_err = B.get_data(fa, 'dataXsec_err')
 #the calculations for the matching bins.
 
 #Calculate Bin Centering Factor
-#Loop over ith theory bin
+#Loop over ith theory 2Dbin
 for i, ib in enumerate(ib_t):
-    #Loop over jth avg bin
+    #Loop over jth avg Xsec 2Dbin
     for j, jb in enumerate(ib_a):
         #print('ib=',ib,' : jb=',jb, ' diff=',ib-jb)
         if ((ib-jb)==0):
@@ -104,7 +107,18 @@ for i, ib in enumerate(ib_t):
                 dataXsec_bc_corr = dataXsec_avg[j] *  bc_factor_fsi
                 dataXsec_bc_corr_err = np.sqrt(bc_factor_fsi**2 * (dataXsec_avg_err[j]*dataXsec_avg_err[j])  +   (dataXsec_avg[j]*dataXsec_avg[j]) *bc_factor_fsi_err**2)   
                 
-                l= "%i %i %i %f %f %f %f %f %f %.12e %.12e %.12e %.12e %.12e %.12e\n"%(ib, ix_t[i], iy_t[i], thnq_t[i], pm_t[i], bc_factor_pwia, bc_factor_pwia_err, bc_factor_fsi, bc_factor_fsi_err, dataXsec_avg[i], dataXsec_avg_err[i],  dataXsec_bc_corr,  dataXsec_bc_corr_err,  pwiaXsec_theory[i],  fsiXsec_theory[i]  ) 
+                #Calculate the reduced Cross Sections:  sig_reduced = d^5(sigma) / K*sig_cc1 
+                red_dataXsec =  dataXsec_bc_corr / fsi_Ksig_cc1[i]
+                red_dataXsec_err =  dataXsec_bc_corr_err / fsi_Ksig_cc1[i]
+
+                red_fsiXsec = fsiXsec_theory[i] / fsi_Ksig_cc1[i]
+                red_pwiaXsec = pwiaXsec_theory[i] / pwia_Ksig_cc1[i]
+
+                print(fsiXsec_theory[i],' , ',fsi_Ksig_cc1[i])
+                print(pwiaXsec_theory[i],' , ',pwia_Ksig_cc1[i])
+
+                l= "%i %i %i %f %f %f %f %f %f %.12e %.12e %.12e %.12e %.12e  %.12e  %.12e  %.12e   %.12e   %.12e\n"%(ib, ix_t[i], iy_t[i], thnq_t[i], pm_t[i], bc_factor_pwia, bc_factor_pwia_err, bc_factor_fsi, bc_factor_fsi_err, dataXsec_avg[i], dataXsec_avg_err[i],  dataXsec_bc_corr,  dataXsec_bc_corr_err, pwiaXsec_theory[i],  fsiXsec_theory[i], red_dataXsec, red_dataXsec_err, red_fsiXsec, red_pwiaXsec) 
+                #l= "%i %i %i %f %f %f %f %f %f %.12e %.12e %.12e %.12e %.12e %.12 \n"%(ib, ix_t[i], iy_t[i], thnq_t[i], pm_t[i], bc_factor_pwia, bc_factor_pwia_err, bc_factor_fsi, bc_factor_fsi_err, dataXsec_avg[i], dataXsec_avg_err[i],  dataXsec_bc_corr,  dataXsec_bc_corr_err,  pwiaXsec_theory[i],  fsiXsec_theory[i]) 
                 o.write(l)
 o.close()
                         

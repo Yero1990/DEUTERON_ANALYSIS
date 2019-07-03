@@ -145,7 +145,7 @@ for i,acont in enumerate(all.cont):
       
 
 
-   l = "%i %i %i %f %f %.12e %.12e %.12e %.12e %.12e %.12e\n"%(i_bin, i_xbin, i_ybin, thnq_b, pm_b,  pwiaXsec, pwiaXsec_err, fsiXsec, fsiXsec_err, dataXsec, dataXsec_err)
+      l = "%i %i %i %f %f %.12e %.12e %.12e %.12e %.12e %.12e\n"%(i_bin, i_xbin, i_ybin, thnq_b, pm_b,  pwiaXsec, pwiaXsec_err, fsiXsec, fsiXsec_err, dataXsec, dataXsec_err)
              
                                                                           
    o.write(l)

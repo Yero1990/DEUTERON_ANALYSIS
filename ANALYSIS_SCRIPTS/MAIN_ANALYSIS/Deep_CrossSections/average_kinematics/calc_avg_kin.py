@@ -1,22 +1,7 @@
-#
-# calculate averaged kinematics from SIMC analysis (Hari's thesis)
-#
-# some input variables needed to be scaled to the correct units 
-#
-# use the same kinematics file that has been used to produce
-# the mceep input files
-#
-# this is for thnq_pm 2d histos
-#
-
 #!/usr/bin/python
-#
-# python script to analyze a range of kinematics and runs
-#
 
-#
-# use only those bins that have a non-zero content -> smaller files
-#
+# calculate averaged kinematics from SIMC analysis of 2D Histos (Pm vs. th_nq bins)
+
 
 import sys
 from sys import argv
@@ -36,12 +21,8 @@ from ROOT import *
 from ROOT import *
 
 import numpy as np
+from deForest_Xsec import *   #import deForest sig_cc1, mott, GMp, GEp functs.
 
-# from math import *
-# import everything for handling 2d histograms
-# import bin_info as BI
-# use a corrected version (this ignores the overflow bins)
-# import bin_info1 as BI
 
 # some constants
 dtr = np.pi/180.
@@ -51,7 +32,7 @@ MP = 938.272
 MN = 939.566
 #MD = 1875.6127
 MD = 1875.61
-me = 0.51099; 
+me = 0.51099 
 
 #------------------------------------------------------------
 # header information for the output file
@@ -66,7 +47,7 @@ header = \
 #\\ xb = th_nq
 #\\ yb = pm
 # current header line:
-#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ Ei[f,5]/ kf[f,6]/ th_e[f,7]/ omega_mc[f,8]/ omega[f,9]/ Q2[f,10]/ Q2_calc[f,11]/ q_mc[f,12]/ q_lab[f,13]/ Ep_calc[f,14]/ pf[f,15]/ pm_mc[f,16]/ pm[f,17]/ En_calc[f,18]/ beta_cm[f,19]/ gamma_cm[f,20]/ PfPar_q[f,21]/ PfPerp_q[f,22]/ theta_pq[f,23]/ theta_pq_calc[f,24]/ PfPar_cm[f,25]/ th_pq_cm[f,26]/ th_nq_mc[f,27]/ th_nq_calc[f,28]/  cos_phi[f,29]/  sin_phi[f,30]/  alpha_c[f,31]/ nx[i,32]/ ny[i,33]/ cont[f,34]/        
+#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ Ei[f,5]/ kf[f,6]/ th_e[f,7]/ omega_mc[f,8]/ omega[f,9]/ Q2[f,10]/ Q2_calc[f,11]/ q_mc[f,12]/ q_lab[f,13]/ Ep_calc[f,14]/ pf[f,15]/ pm_mc[f,16]/ pm[f,17]/ En_calc[f,18]/ beta_cm[f,19]/ gamma_cm[f,20]/ PfPar_q[f,21]/ PfPerp_q[f,22]/ theta_pq[f,23]/ theta_pq_calc[f,24]/ PfPar_cm[f,25]/ th_pq_cm[f,26]/ th_nq_mc[f,27]/ th_nq_calc[f,28]/  cos_phi[f,29]/  sin_phi[f,30]/  alpha_c[f,31]/  GEp[f,32]/   GMp[f,33]/   sigMott[f,34]/   Ksig_cc1[f,35]/  nx[i,36]/ ny[i,37]/ cont[f,38]/        
 """
 #------------------------------------------------------------
 
@@ -90,14 +71,8 @@ o = open(output_file,'w')
 root_file = '../../root_files/average_kinematics/deep_simc_histos_pm%i_laget%s_norad_set%i.root'%(pm_set,  model, data_set)
 
 
-# open file
+# open ROOTfile
 rf = R.TFile(root_file)
-#if rf.IsOpen() == 0:
-#   print "problem opening : ", root_file
-#continue
-# get contens
-# use only those that are filled
-
 
 # start with 2D yield histo, Fill(Pm, thnq, FullWeight)
 all = BI.get_histo_data_arrays(rf.H_Pm_vs_thnq_v) 
@@ -132,7 +107,7 @@ bin_info_sphi_pq   = BI.get_histo_data_arrays(rf.H_sphi_pq_2Davg)      # sin(phi
 
 #Loop over bin number (xbin, ybin)->(th_nq_bin, Pm_bin)
 for i,acont in enumerate(all.cont):
-
+   
    # get bin values
    i_bin = all.i[i]
    i_xbin = all.ix[i]
@@ -142,7 +117,7 @@ for i,acont in enumerate(all.cont):
    if (acont == 0.):
       # skip zero content bins
       continue
-      #print('acont = ',acont)
+      #   print('acont = ',acont)
    else:
       
       # convert rad to deg and GeV to MeV 
@@ -161,12 +136,12 @@ for i,acont in enumerate(all.cont):
       thnq      = bin_info_thnq.cont[i]
       cphi_pq   = bin_info_cphi_pq.cont[i]
       sphi_pq   = bin_info_sphi_pq.cont[i]
-      
+
 
       # calculate electron kinematics from measured, averaged quantities
       Ef = np.sqrt(kf*kf + me*me)  
       nu_calc = Ei - Ef
-          
+
       Q2_calc = 4.*Ei*Ef*np.sin(the*dtr/2.)**2
       q_calc = np.sqrt(Q2_calc + nu_calc*nu_calc)    # |q| in the lab frame
       if q_calc==0.:
@@ -182,7 +157,7 @@ for i,acont in enumerate(all.cont):
       else:
          Pm_calc = np.sqrt ( Pm_calc2 )
       En_calc = np.sqrt(MN**2 + Pm_calc**2);
-          
+
       # center of mass motion
       beta_cm = q_calc/(MD+nu_calc)
       gamma_cm = 1./np.sqrt(1. - beta_cm**2)
@@ -203,21 +178,21 @@ for i,acont in enumerate(all.cont):
 
       # proton angle in the cm
       thp_calc_cm = 0.
-       
+
       if Pf_par_cm == 0. :
          thp_calc_cm = np.pi
       if Pf_par_cm > 0. :
          thp_calc_cm = np.arctan(Pf_perp/Pf_par_cm)
       if Pf_par_cm < 0. :
          thp_calc_cm = np.pi+np.arctan(Pf_perp/Pf_par_cm)
-       
+
       theta_pq_cm = thp_calc_cm/dtr
-          
+
       # calculate angles using calculated Pmiss
       denom = q_calc**2 + Pm_calc**2 - Pf**2
       num = (2.*q_calc*Pm_calc)
-          
-      cth_nq = -2.;   #Cos(theta_nq)
+
+      cth_nq = -2.    #Cos(theta_nq)
       if num > 0. : 
          cth_nq = denom/num
          theta_nq_calc = 0.
@@ -228,11 +203,16 @@ for i,acont in enumerate(all.cont):
       p_n_minus = En_calc - pz_n
       alpha_calc = p_n_minus/MN
 
-      
-      # write output file
-  
+      #Calculate the deForest Cross Section Factor  K * sig_cc1,  where K = Pf * Ep , units: ub * MeV^2 / sr^2
+      sig_Mott =  sigMott(kf, the, Q2_calc)   #ub / sr
+      GE_p = GEp(Q2_calc)
+      GM_p = GMp(Q2_calc)
+      de_Forest = deForest(Q2_calc, q_calc, Pf, Pm_calc, the, cphi_pq, th_pq_calc, sig_Mott, GE_p, GM_p)
 
-      l = "%i %i %i %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %i %i %f\n"%( \
+      # write output file
+
+
+      l = "%i %i %i %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %i %i %f\n"%( \
                                                                                                                                   # 0
                                                                                                                                   i_bin, \
                                                                                                                                   # 1
@@ -298,10 +278,18 @@ for i,acont in enumerate(all.cont):
                                                                                                                                   # 31
                                                                                                                                   alpha_calc, \
                                                                                                                                   # 32
-                                                                                                                                  all.nx, \
+                                                                                                                                  GE_p, \
                                                                                                                                   # 33
-                                                                                                                                  all.ny, \
+                                                                                                                                  GM_p, \
                                                                                                                                   # 34
+                                                                                                                                  sig_Mott, \
+                                                                                                                                  # 35
+                                                                                                                                  de_Forest, \
+                                                                                                                                  # 36
+                                                                                                                                  all.nx, \
+                                                                                                                                  # 37
+                                                                                                                                  all.ny, \
+                                                                                                                                  # 38
                                                                                                                                   all.cont[i])
                                                                           
       o.write(l)

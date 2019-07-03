@@ -9,8 +9,8 @@ void compare_heep(int run)
   //TString simc_filename =  "weighted_ep_coin_simc_1854.root"; //"ep_coin_simc_1929.root";
   
   //Pre-defined SIMC/data root file names containing histogram object to comapare
-  TString simc_filename =  Form("../heep_simc_histos_%d.root", run);                      
-  TString data_filename = Form("../heep_data_histos_%d.root",run); 
+  TString simc_filename =  Form("../heep_simc_histos_%d_rad.root", run);                      
+  TString data_filename = Form("../heep_data_histos_%d_combined.root",run); 
 
   //Where to store plots
   string plots_dir = "./";
