@@ -1042,9 +1042,9 @@ void analyze::SetHistBins()
       MM2_xmax = 0.01;			  
       
       // X-bJORKEN                         //th_nq (10 deg)                 //Proton Kin. Energy         //phi_nq 		  
-      xbj_nbins = nbins;		   thnq_nbins = 18;                 Kp_nbins = nbins; 	          phnq_nbins = nbins; 
-      xbj_xmin = 0.8;			   thnq_xmin = 5;                   Kp_xmin = 1.6;   	          phnq_xmin = -1.;	  
-      xbj_xmax = 1.2;			   thnq_xmax = 185;                 Kp_xmax = 2.6;  	          phnq_xmax =  1;    
+      xbj_nbins = nbins;		   thnq_nbins = 19;                 Kp_nbins = nbins; 	          phnq_nbins = nbins; 
+      xbj_xmin = 0.8;			   thnq_xmin = 0;                   Kp_xmin = 1.6;   	          phnq_xmin = -1.;	  
+      xbj_xmax = 1.2;			   thnq_xmax = 190;                 Kp_xmax = 2.6;  	          phnq_xmax =  1;    
      
       //Neutron Kin. Energy                 //Neutron Final Energy, En       //phi_pq (Out-Of-Plane Angle between proton and q-vector)  
       Kn_nbins = nbins;                      En_nbins = nbins;		     phpq_nbins = nbins;					      
@@ -1138,9 +1138,9 @@ void analyze::SetHistBins()
       MM2_xmax = 0.01;			  
       
       // X-bJORKEN                         //th_nq (10 deg)                 //Proton Kin. Energy          //phi_nq 		  
-      xbj_nbins = nbins;		   thnq_nbins = 9;                  Kp_nbins = nbins; 		   phnq_nbins = nbins; 
-      xbj_xmin = 0.5;			   thnq_xmin = 5;                   Kp_xmin = 1.;   		   phnq_xmin = -1.;	  
-      xbj_xmax = 2.0;			   thnq_xmax = 95;                  Kp_xmax = 1.8;  		   phnq_xmax =  1;    
+      xbj_nbins = nbins;		   thnq_nbins = 19;                  Kp_nbins = nbins; 		   phnq_nbins = nbins; 
+      xbj_xmin = 0.5;			   thnq_xmin = 0;                   Kp_xmin = 1.;   		   phnq_xmin = -1.;	  
+      xbj_xmax = 2.0;			   thnq_xmax = 190;                  Kp_xmax = 1.8;  		   phnq_xmax =  1;    
      
       //Neutron Kin. Energy                 //Neutron Final Energy, En        //phi_pq (Out-Of-Plane Angle between proton and q-vector)  
       Kn_nbins = nbins;                      En_nbins = nbins;		      phpq_nbins = nbins;					      
@@ -3855,7 +3855,7 @@ void analyze::ApplyRadCorr()
   TFile *data_file = new TFile(data_OutputFileName_combined, "READ");
 
   //explicitly use FSI rad. corrections. (FIXME: This assumes that fsi radCorr simc file
-  // exists. This means that FSI must be run first)
+  // exists. This means that FSI must be run first, or must exits in the current directory)
   TFile *radCorr_file = new TFile(simc_OutputFileName_radCorr_fsi, "READ"); 
 
   data_file->cd();	

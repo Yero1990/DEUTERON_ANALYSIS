@@ -12,16 +12,16 @@ simc_fname: worksim_voli/d2_pm580_lagetfsi_rad_set1.root
 #--------Analyze DATA or SIMC-------
 # True (ON) =  1,  False (OFF) = 0
 
-RUN_SIMC: 1
+RUN_SIMC: 0
 RUN_DATA: 1
 
 ;Analyze Radiative(1) or NonRadiative(0) SIMC?
 ;IMPORTANT: If doing radiative corrections, set to -1 
-radiate: 1
+radiate: -1
 
 ;Do Radiative Corrections (1) (Will analyze both rad/no-rad simc. Also, assumes data file exists)
 ;IMPORTANT: If doing radiative corrections, set radiate: -1 (see above) 
-rad_corr_flag: 0
+rad_corr_flag: 1
 
 #------ D(e,e'p)n Missing Momentum Settings -------
 #Units: Enegy/Momentum/W [GeV], spec_delta [%]  
@@ -33,7 +33,7 @@ pm_setting : 80
 theory     : laget
 
 ;Theoretical Model: pwia, fsi,
-model      : fsi
+model      : pwia
 
 ;DataSet 1, 2, 3  
 data_set   : 1
@@ -42,21 +42,21 @@ data_set   : 1
 # True (ON) =  1,  False (OFF) = 0
 
 ;Basic Kinematics Cuts
-bool Em      = 1
+bool Em      = 0
 bool W       = 0
-bool h_delta = 1
-bool e_delta = 1
+bool h_delta = 0
+bool e_delta = 0
 bool ztar_diff = 0
 bool Q2 = 0
 bool th_nq = 0
 bool MM = 0
 
 ;PID Cuts
-bool shmsCal_EtotTrackNorm  = 1
-bool coin_time              = 1
+bool shmsCal_EtotTrackNorm  = 0
+bool coin_time              = 0
 
 ;Collimator Cuts
-bool hmsCollCut   =  1
+bool hmsCollCut   =  0
 bool shmsCollCut  =  0
 
 ;Collimator Cuts Scale 

@@ -33,3 +33,29 @@ dataSig_corr = dataSig * ( theorySig / theorySig_avg )
 where theorySig: theory cross sections at the average kinematics
 and theorySig_avg are the theory cross sections at the central kinematics.
 
+-----------------------
+
+The order in directories to get the momentum distributions are:
+
+1. average_kinematics
+In this directory, 'calc_avg_kin.py' code read the 2D avg. kin histos from the
+ROOTfiles, and calculates additional kinematics using the avg. kinematics. A .txt file
+is generated containing the average kinematics values and the corresponding bin information.
+(It is important to have the same binning scheme for the 80, 580, 750 MeV setting for Pm and th_nq, 
+as these form the 2D histos, and they must be consistent. So bin22 in one setting must be the same 
+bin22 in the other, for example.)
+
+2. average_Xsec
+In this directory, the 2D_Pm_vs_thnq_Xsec are extracted from the 2D Histograms for both data and SIMC. These are
+reffered to as the average cross sections
+
+3. theory_Xsec
+In this directory, the model cross sections are calculated at the average kinematics. So the .txt files containing
+the average kinematics in <average_kinematics> directory are read as input, and the Lage_Xsec code is used (external to SIMC)
+to calculate the model cross sections. 
+
+4. bin_centering_corrections
+In this directory, the average and model cross sections from directories in (2) and (3) are used to do the bin centering
+corrections as follows:  dataXsec_bc_corr = dataXsec_bc_uncorr * (theory_Xsec / theory_avg_Xsec)
+The data before and after bin centering corrections, and the model cross sections (evaluated at the avg. kin), and the
+reduced cross sections for both data and theory  are then written to a file

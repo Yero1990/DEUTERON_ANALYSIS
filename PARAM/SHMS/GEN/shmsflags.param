@@ -15,10 +15,9 @@
 pdelta_offset = 0.0; (%)   hdelta_tar = hdelta_tar + hdelta_offset
 
  
- ptheta_offset = 0.  ; (rad) hyp_tar = hyp_tar + htheta_offses                              
+ptheta_offset = 0.  ; (rad) hyp_tar = hyp_tar + htheta_offses                              
 
 
-;pphi_offset = -8.681269905E-4; (rad) hxp_tar = hxp_tar + hphi_offset
 pphi_offset = 0; (rad) hxp_tar = hxp_tar + hphi_offset
 
 ; The following offsets are applied to the central kinematic variables
@@ -28,7 +27,6 @@ pthetacentral_offset = 0.0
 
 ;out-of-plane offset determined by comparing Pmiss Y  simc/data for Runs 3288 / 3289 April 10, 1019
 p_oopcentral_offset = 0.00     ;radians
-;p_oopcentral_offset = 0.0005   
 
 
 ;  SHMS central momentum offset determined from carbon elastic data fall 2017

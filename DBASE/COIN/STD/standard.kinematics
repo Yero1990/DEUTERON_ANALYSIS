@@ -81,7 +81,7 @@ ppartmass = 0.00051099
 htheta_lab = -54.945
 ptheta_lab = 8.938
 hpcentral = 2.1943
-ppcentral = 8.7
+ppcentral = 8.5342488 ;8.7
 
 
 
@@ -94,8 +94,9 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -37.338
 ptheta_lab = 12.194
-hpcentral = 2.935545   ;original: 2.938    
-ppcentral = 8.5342488 ;8.535956   original: 8.7
+hpcentral = 2.935545   ;original: 2.938,  FINAL: 2.935545   
+ppcentral = 8.5342488  ;original: 8.7,    FINAL: 8.5342488
+
 
 #Pm = 80 MeV (set1)
 3289
@@ -105,8 +106,8 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -38.896
 ptheta_lab = 12.194
-hpcentral = 2.840   ;2.8454097  original: 2.8438
-ppcentral = 8.5342488 ;8.535956   original: 8.7
+hpcentral = 2.840                ;FINAL 2.840, 2.8454097  original: 2.8438
+ppcentral = 8.5342488            ;original: 8.7  FINAL: 8.5342488
 
 #Pm = 580 (Momentum seems significantly off --Run Not In Use)
 3290
@@ -171,8 +172,8 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -33.545
 ptheta_lab = 13.93     
-hpcentral = 3.47588   ;original: 3.48
-ppcentral = 8.5342488  ;original: 8.7
+hpcentral = 3.47588   ;original: 3.48,  FINAL: 3.47588
+ppcentral = 8.5342488  ;original: 8.7,  FINAL: 8.5342488
 
 3372
 gpbeam = 10.6005
@@ -201,8 +202,8 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -42.9
 ptheta_lab =  9.928  
-hpcentral = 2.310387   ;original: 2.31
-ppcentral = 8.5342488   ;original: 8.7
+hpcentral = 2.310387   ;original: 2.31,  FINAL: 2.310387
+ppcentral = 8.5342488    ;original: 8.7,  FINAL: 8.5342488
 
 3375
 gpbeam = 10.6005
@@ -231,8 +232,8 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -47.605
 ptheta_lab = 8.495   
-hpcentral = 1.891227  ;original: 1.8899
-ppcentral = 8.5342488 ;original: 8.7
+hpcentral = 1.891227  ;original: 1.8899, FINAL: 1.891227
+ppcentral = 8.5342488     ;original: 8.7,    FINAL: 8.5342488
 
 3379
 gpbeam = 10.6005
