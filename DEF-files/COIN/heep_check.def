@@ -17,7 +17,9 @@ block T.coin.pTRIG*
 block T.coin.pEDTM*
 block T.coin.hTRIG*
 block T.coin.pT*
+block T.coin.hT*
 block T.coin.pFADC*
+block T.coin.hFADC*
 
 #Kinematics
 block P.kin.*       

@@ -117,8 +117,7 @@ for i, ib in enumerate(ib_t):
                 print(fsiXsec_theory[i],' , ',fsi_Ksig_cc1[i])
                 print(pwiaXsec_theory[i],' , ',pwia_Ksig_cc1[i])
 
-                l= "%i %i %i %f %f %f %f %f %f %.12e %.12e %.12e %.12e %.12e  %.12e  %.12e  %.12e   %.12e   %.12e\n"%(ib, ix_t[i], iy_t[i], thnq_t[i], pm_t[i], bc_factor_pwia, bc_factor_pwia_err, bc_factor_fsi, bc_factor_fsi_err, dataXsec_avg[i], dataXsec_avg_err[i],  dataXsec_bc_corr,  dataXsec_bc_corr_err, pwiaXsec_theory[i],  fsiXsec_theory[i], red_dataXsec, red_dataXsec_err, red_fsiXsec, red_pwiaXsec) 
-                #l= "%i %i %i %f %f %f %f %f %f %.12e %.12e %.12e %.12e %.12e %.12 \n"%(ib, ix_t[i], iy_t[i], thnq_t[i], pm_t[i], bc_factor_pwia, bc_factor_pwia_err, bc_factor_fsi, bc_factor_fsi_err, dataXsec_avg[i], dataXsec_avg_err[i],  dataXsec_bc_corr,  dataXsec_bc_corr_err,  pwiaXsec_theory[i],  fsiXsec_theory[i]) 
+                l= "%i %i %i %f %f %f %f %f %f %.12e %.12e %.12e %.12e %.12e  %.12e  %.12e  %.12e   %.12e   %.12e\n"%(ib, ix_t[i], iy_t[i], thnq_t[i], pm_t[i], bc_factor_pwia, bc_factor_pwia_err, bc_factor_fsi, bc_factor_fsi_err, dataXsec_avg[i], dataXsec_avg_err[i],  dataXsec_bc_corr,  dataXsec_bc_corr_err, pwiaXsec_theory[i],  fsiXsec_theory[i], red_dataXsec, red_dataXsec_err, red_pwiaXsec, red_fsiXsec) 
                 o.write(l)
 o.close()
                         

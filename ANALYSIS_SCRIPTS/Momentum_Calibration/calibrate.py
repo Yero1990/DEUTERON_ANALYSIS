@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 
 
 
-f = B.get_file('D2_heep_kin.txt')
+
+f = B.get_file('D2_heep_kin_original.txt')
 
 Run = B.get_data(f, 'Run')
 NMR = B.get_data(f, 'nmr_true')
@@ -12,43 +13,58 @@ hP_uncorr  = B.get_data(f, 'nmr_P')   #Un-Corrected HMS Momentum
 cF = B.get_data(f, 'hPcorr_factor')
 cF_err = B.get_data(f, 'hPcorr_factor_err')
 
-#fit NMR
-#fit = B.linefit(hP_uncorr, NMR, 0.0005)
-#B.plot_exp(hP_uncorr, NMR, 0.0005,  color='black', marker='s', label='HMS P Corr. Factor')
-#B.plot_line(fit.xpl, fit.ypl)
+#HMS Momentum resolution is better than: 0.1 % or 0.1/100=1e-3  (This should be the uncertainty in the correction factor)
+cF_err = np.array([1e-3, 1e-3, 1e-3, 1e-3])
+
 
 fig0 = B.pl.figure()
 #fit corr. factor
 fit = B.linefit(hP_uncorr, cF, cF_err)
-#fit = B.linefit(NMR, cF, cF_err)
+B.plot_exp(hP_uncorr,  cF, cF_err,  color='black', marker='s', label='H(e,e\'p) Data')
 
-B.plot_exp(hP_uncorr,  cF, cF_err,  color='black', marker='s', label='HMS P Corr. Factor')
-B.pl.xlabel('HMS P [GeV]')
-B.pl.ylabel('Correction Factor')
-B.pl.title('Momentum Corr. Factor Calibration')
-B.pl.grid(True)
+
+#Un-Corrected HMS Momentum fomr D(e,e'p)n
+x80 = 2.8438
+y80 = fit.line(x80)
+x580 = 2.194
+y580 = fit.line(x580)
+x750 = 2.091
+y750 = fit.line(x750)
+x_deut = np.array([x80, x580, x750])
+y_deut = np.array([y80, y580, y750])
+B.plot_exp(x80, y80, marker='s', color='blue', markersize=7, label='D(e,e\'p)n 80 MeV' )
+B.plot_exp(x580, y580, marker='s', color='green', markersize=7, label='D(e,e\'p)n 580 MeV' )
+B.plot_exp(x750, y750, marker='s', color='purple', markersize=7, label='D(e,e\'p)n 750 MeV' )
 
 B.plot_line(fit.xpl, fit.ypl, color='red', label='Linear Fit')
+
+B.pl.xlabel('HMS Un-Corrected Momentum, P$_{uncorr}$ [GeV]')
+B.pl.ylabel('Correction Factor')
+B.pl.title('HMS Momentum Correction Factor Calibration')
+B.pl.grid(True)
+
 B.pl.legend()
 
 
 
 fig1 = B.pl.figure()
-
-#Determine the corr. from the fit
-cF_fit = fit.line(NMR)
- 
-#Residuals
-cF_res = (cF_fit - cF)/cF
+cF_fit = fit.line(hP_uncorr)
+#Residuals (Percent Error)
+cF_res = abs(cF - cF_fit)/cF_fit * 100
 
 #Plot residuals
-B.plot_exp(hP_uncorr, cF_res, color='blue', marker='^', label='Corr. Factor Residuals')
+B.pl.ylim(-0.031, 0.031)
 
-B.pl.xlabel('HMS P [GeV]')
-B.pl.ylabel('Fit Residual, (Fit - Data)/Data')
-B.pl.title('Momentum Corr. Factor Residuals')
+B.plot_exp(hP_uncorr, cF_res, color='blue', marker='^', markersize=9, label='H(e,e\'p) Percent (%) Deviation from Fit')
+
+
+B.pl.xlabel('HMS Un-Corrected Momentum, P$_{uncorr}$ [GeV]')
+B.pl.ylabel('Correction Factor Percent Error [$\%$]')
+B.pl.title('Correction Factor Percent Error')
 B.pl.grid(True)
 B.pl.legend()
+
+
 
 #-------------Uncorrected Momentum(AFTER 3288)-------------------
 

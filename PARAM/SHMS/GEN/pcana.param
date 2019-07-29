@@ -10,8 +10,7 @@
 ;p_recon_coeff_filename = "DEUTERON_ANALYSIS/DATFILES/shms-2017-optimized_delta_newfit3_original.dat"; 
 ;p_recon_coeff_filename = "DEUTERON_ANALYSIS/DATFILES/shms_D2heep_optimized.dat";
 ;p_recon_coeff_filename = "DEUTERON_ANALYSIS/DATFILES/shms_D2heep_optimized_noytar.dat";
-;p_recon_coeff_filename = "DEUTERON_ANALYSIS/DATFILES/shms_ytarOptimized.dat";  
-p_recon_coeff_filename = "DEUTERON_ANALYSIS/DATFILES/shms_OptimizedFINAL_post3288.dat"; 
+p_recon_coeff_filename = "DEUTERON_ANALYSIS/DATFILES/shms_ytarOptimized.dat";  
 ;p_recon_coeff_filename = "DEUTERON_ANALYSIS/DATFILES/shms_pre3288_optim1.dat"; 
 ;p_recon_coeff_filename = "DEUTERON_ANALYSIS/DATFILES/shms_pre3288_optim2.dat"; 
-;p_recon_coeff_filename = "DEUTERON_ANALYSIS/DATFILES/test.dat";
+;p_recon_coeff_filename = "DEUTERON_ANALYSIS/DATFILES/shms_OptimizedFINAL_post3288.dat"; 

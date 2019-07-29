@@ -98,10 +98,7 @@ int main_analysis()
 	run = stoi(line);                               
 	
 	cnt++;  //line counter
-	//if(get_total_lines(runlist_name)==cnt){
-	//  Qnorm_flag=1;
-	//  cout << "Reached Final Run: " << run << endl;
-	//	}
+
 	
 	if(react_type=="heep"){
 	  //Set Qnorm_flag for individual runs
@@ -116,14 +113,17 @@ int main_analysis()
 	
 	else if(react_type=="deep"){
 
-	  if(get_total_lines(runlist_name)==cnt){                                                                                    
-	    Qnorm_flag=1;                                                                                                              
-	    cout << "Reached Final Run: " << run << endl;                                                                             
-	  }  
+ 
 	  cout << "==================================" << endl;
 	  cout << Form("Analyzing D(e,e'p)n DATA: Run %i ", run) << endl;
 	  cout << Form("Pm: %d MeV || Set: %d", pm_set, dataSet) << endl;
 	  cout << "==================================" << endl;
+	  
+	  if(get_total_lines(runlist_name)==cnt){                                                                                    
+	    Qnorm_flag=1;                                                                                                              
+	    cout << "Reached Final Run: " << run << endl;                                                                             
+	  } 
+	
 	}
 	
 	//create instance of the 'analyze' class, called a1
@@ -163,7 +163,7 @@ int main_analysis()
 	}
 
 	else{
-	  //Open H(e,e'p) Elasic Run List
+	  //Open H(e,e'p)  Run List
 	  ifs.open(runlist_name);
 	  
 	  //Read Run List
