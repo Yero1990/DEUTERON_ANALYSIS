@@ -1,1 +1,2 @@
-/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm580_lagetpwia_norad_set1.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm580_lagetpwia_rad_set2.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm580_lagetpwia_norad_set2.data

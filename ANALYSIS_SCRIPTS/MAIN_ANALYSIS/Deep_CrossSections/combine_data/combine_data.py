@@ -205,7 +205,7 @@ for ib in range(len(i_b)):
     #Define the weights and red. Xsec values for the averaged data sets (determined above)
     w80  = 1. / red_dataXsec_err_1[ib]**2   ;  x80 = red_dataXsec_1[ib]
     w580 = 1. / red_dataXsec_avg_err_580**2 ;  x580 = red_dataXsec_avg_580
-    w750 = 1. / red_dataXsec_avg_err_750**2 ;  x750 = red_dataXsec_avg_580
+    w750 = 1. / red_dataXsec_avg_err_750**2 ;  x750 = red_dataXsec_avg_750
 
     if(x80==-1):
         x80 = 0;   w80  = 0
