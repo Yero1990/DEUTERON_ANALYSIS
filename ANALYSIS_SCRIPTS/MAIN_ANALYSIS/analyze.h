@@ -48,7 +48,6 @@ class analyze
 
   //-------Specialized Studies Methods-----------
   void CollimatorStudy();
-
   
   //---------Combined Histograms (for many runs at same kinematics, i.e. Pm=580, 750 MeV)--------
   void CombineHistos();
@@ -665,6 +664,45 @@ class analyze
   TH2F *H_Pm_vs_thnq_total = 0;                                      TH2F *H_Pm_vs_thnq_i = 0; 
   TH1F *H_bcmCurrent_total = 0;					     TH1F *H_bcmCurrent_i = 0;                                       
 
+  //SYSTEMATICS TOTAL		                                      //SYSTEMATICS ith		     
+  TH1F *H_Em_nuc_sys_total = 0;	     				      TH1F *H_Em_nuc_sys_i = 0;	     
+  TH1F *H_hdelta_sys_total = 0;	     				      TH1F *H_hdelta_sys_i = 0;	     
+  TH1F *H_edelta_sys_total = 0;	     				      TH1F *H_edelta_sys_i = 0;	     
+  TH1F *H_ztar_diff_sys_total = 0;	     			      TH1F *H_ztar_diff_sys_i = 0;	     
+  TH1F *H_Q2_sys_total = 0;		     			      TH1F *H_Q2_sys_i = 0;		     
+  TH1F *H_theta_nq_sys_total = 0;	     			      TH1F *H_theta_nq_sys_i = 0;	                                          
+  TH1F *H_pcal_etotTrkNorm_sys_total = 0;			      TH1F *H_pcal_etotTrkNorm_sys_i = 0;
+  TH1F *H_ctime_sys_total = 0;	     				      TH1F *H_ctime_sys_i = 0;	       	          				    
+  TH2F *H_hXColl_vs_hYColl_sys_total = 0;			      TH2F *H_hXColl_vs_hYColl_sys_i = 0;
+  //Emiss Systematics
+  TH1F *H_Pm_sysEm_nominal_total = 0;                                 TH1F *H_Pm_sysEm_nominal_i = 0;
+  TH1F *H_Pm_sysEm_loose_total = 0;                                   TH1F *H_Pm_sysEm_loose_i = 0;
+  TH1F *H_Pm_sysEm_tight_total = 0;                                   TH1F *H_Pm_sysEm_tight_i = 0;
+  //HMS Delta Systematics
+  TH1F *H_Pm_syshdelta_nominal_total = 0;                             TH1F *H_Pm_syshdelta_nominal_i = 0;
+  TH1F *H_Pm_syshdelta_loose_total = 0;                               TH1F *H_Pm_syshdelta_loose_i = 0;
+  TH1F *H_Pm_syshdelta_tight_total = 0;                               TH1F *H_Pm_syshdelta_tight_i = 0;
+  //SHMS Delta Systematics
+  TH1F *H_Pm_sysedelta_nominal_total = 0;                             TH1F *H_Pm_sysedelta_nominal_i = 0;
+  TH1F *H_Pm_sysedelta_loose_total = 0;                               TH1F *H_Pm_sysedelta_loose_i = 0;
+  TH1F *H_Pm_sysedelta_tight_total = 0;                               TH1F *H_Pm_sysedelta_tight_i = 0;
+  //Ztar Difference Systematics
+  TH1F *H_Pm_sysZtarDiff_nominal_total = 0;                           TH1F *H_Pm_sysZtarDiff_nominal_i = 0;
+  TH1F *H_Pm_sysZtarDiff_loose_total = 0;                             TH1F *H_Pm_sysZtarDiff_loose_i = 0;
+  TH1F *H_Pm_sysZtarDiff_tight_total = 0;                             TH1F *H_Pm_sysZtarDiff_tight_i = 0;
+  //SHMS Cal. Systematics
+  TH1F *H_Pm_sysEtotTrkNorm_nominal_total = 0;                        TH1F *H_Pm_sysEtotTrkNorm_nominal_i = 0;
+  TH1F *H_Pm_sysEtotTrkNorm_loose_total = 0;                          TH1F *H_Pm_sysEtotTrkNorm_loose_i = 0;
+  TH1F *H_Pm_sysEtotTrkNorm_tight_total = 0;                          TH1F *H_Pm_sysEtotTrkNorm_tight_i = 0;
+  //Coin Time Systematics
+  TH1F *H_Pm_sysCtime_nominal_total = 0;                              TH1F *H_Pm_sysCtime_nominal_i = 0;
+  TH1F *H_Pm_sysCtime_loose_total = 0;                                TH1F *H_Pm_sysCtime_loose_i = 0;
+  TH1F *H_Pm_sysCtime_tight_total = 0;                                TH1F *H_Pm_sysCtime_tight_i = 0;
+  //HMS Collimator Systematics
+  TH1F *H_Pm_syshColl_nominal_total = 0;                              TH1F *H_Pm_syshColl_nominal_i = 0;
+  TH1F *H_Pm_syshColl_loose_total = 0;                                TH1F *H_Pm_syshColl_loose_i = 0;
+  TH1F *H_Pm_syshColl_tight_total = 0;                                TH1F *H_Pm_syshColl_tight_i = 0;
+
 
 
   //------------Average Kinematics Histograms---------------
@@ -800,6 +838,48 @@ class analyze
   TH2F *H_cphi_nq_2Davg;
   TH2F *H_sphi_pq_2Davg;
   TH2F *H_sphi_nq_2Davg;
+
+  //-----------------------------SYSTEMATICS STUDIES HISTOGRAMS-------------------------
+
+  TH1F *H_Em_nuc_sys;
+  TH1F *H_hdelta_sys;
+  TH1F *H_edelta_sys;
+  TH1F *H_ztar_diff_sys;
+  TH1F *H_Q2_sys;
+  TH1F *H_theta_nq_sys;
+  TH1F *H_pcal_etotTrkNorm_sys;
+  TH1F *H_ctime_sys;
+  TH2F *H_hXColl_vs_hYColl_sys;
+
+  //Missing Momentum used for systematic studies. These will be used to take the data/simc ratio at various cuts
+  //Emiss Systematics
+  TH1F *H_Pm_sysEm_nominal;
+  TH1F *H_Pm_sysEm_loose;
+  TH1F *H_Pm_sysEm_tight;
+  //HMS Delta Systematics
+  TH1F *H_Pm_syshdelta_nominal;
+  TH1F *H_Pm_syshdelta_loose;
+  TH1F *H_Pm_syshdelta_tight;
+  //SHMS Delta Systematics
+  TH1F *H_Pm_sysedelta_nominal;
+  TH1F *H_Pm_sysedelta_loose;
+  TH1F *H_Pm_sysedelta_tight;
+  //Ztar Difference Systematics
+  TH1F *H_Pm_sysZtarDiff_nominal;
+  TH1F *H_Pm_sysZtarDiff_loose;
+  TH1F *H_Pm_sysZtarDiff_tight;
+  //SHMS Cal EtotTrackNorm Systematics
+  TH1F *H_Pm_sysEtotTrkNorm_nominal;
+  TH1F *H_Pm_sysEtotTrkNorm_loose;
+  TH1F *H_Pm_sysEtotTrkNorm_tight;
+  //Coincidence Time Systematics
+  TH1F *H_Pm_sysCtime_nominal;
+  TH1F *H_Pm_sysCtime_loose;
+  TH1F *H_Pm_sysCtime_tight;
+  //HMS Collimator Cut Systematics
+  TH1F *H_Pm_syshColl_nominal;
+  TH1F *H_Pm_syshColl_loose;
+  TH1F *H_Pm_syshColl_tight;
 
 
   //------------------------------Data Related Variables--------------------------------

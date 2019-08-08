@@ -5,7 +5,11 @@ void get_elastic(TString target, Double_t Ebeam, Double_t theta_elec)
   double rad2deg = 180./3.14159265359;
   
   //units: energy: GeV, angle: degree,  set speed of light c = 1.  
-
+  
+  //Code Usage (for Burcu :) ) :
+  //>>  root -l
+  //>> .L get_elastic.C
+  //>> get_elastic("h", 10.6005, 12.194)   
 
   //Electron Kinematics
   double Q2;           //4-momentum transfer squared

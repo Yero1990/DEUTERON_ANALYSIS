@@ -18,7 +18,7 @@ me = 0.51099;
 #define the proton magnetic form factor (See physics_proton.f)
 #Assumes Q2 is in MeV2
 def GMp(Q2):
-    print ('Calculating Magnetic Form factor')
+    #print ('Calculating Magnetic Form factor')
 
     Q2 = Q2*1e-6    #convert from MeV2 to GeV2
 
@@ -38,7 +38,7 @@ def GMp(Q2):
 #define the proton electric form factor
 #Assumes Q2 input is in MeV2
 def GEp(Q2):
-    print ('Calculating Electric Form factor')
+    #print ('Calculating Electric Form factor')
 
     Q2 = Q2*1e-6    #convert from MeV2 to GeV2
 
@@ -60,10 +60,14 @@ def sigMott(kf, th_e, Q2):
     #Units: kf ~ Ef [MeV]   electron momentum  
     #th_e[deg] electron angle  
     #Q2[MeV2]   4-momentum transfer
-    
-    th_e = th_e * dtr    # convert degree to radians
-    sig = (2.*alpha*hbarc*kf*np.cos(th_e/2.)/Q2 )**2   #MeV^2 * fm^2 *MeV^2/MeV^4--> fm2
-    sigMott = sig * 1e4    #convert fm^2 -> microbarn
+    if Q2<=0.:
+        the_e = -1.
+        sig = -1.
+        sigMott = -1.
+    else:
+        th_e = th_e * dtr    # convert degree to radians
+        sig = (2.*alpha*hbarc*kf*np.cos(th_e/2.)/Q2 )**2   #MeV^2 * fm^2 *MeV^2/MeV^4--> fm2
+        sigMott = sig * 1e4    #convert fm^2 -> microbarn
 
     return sigMott
 
@@ -154,7 +158,7 @@ def main():
     thpq = np.arcsin(sin_gamma) / dtr
     de_Forest = deForest(Q2, q, Pf, Pm, th_e, c_phi, thpq, sig_Mott, GE_p, GM_p)
 
-    print('GEp=',GE_p,':GMp=',GM_p,':sigMott=',sig_Mott,':deForest=',de_Forest)
+    #print('GEp=',GE_p,':GMp=',GM_p,':sigMott=',sig_Mott,':deForest=',de_Forest)
 
 if __name__ == "__main__":
     main()

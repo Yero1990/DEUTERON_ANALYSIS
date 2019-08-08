@@ -1,0 +1,15 @@
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetpwia_rad_set1_job1.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetpwia_rad_set1_job2.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetpwia_rad_set1_job3.data
+
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetpwia_norad_set1_job1.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetpwia_norad_set1_job2.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetpwia_norad_set1_job3.data
+
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_job1.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_job2.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_job3.data
+
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_norad_set1_job1.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_norad_set1_job2.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_norad_set1_job3.data

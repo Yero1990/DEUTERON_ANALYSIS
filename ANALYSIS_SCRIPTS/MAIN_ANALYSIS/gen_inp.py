@@ -1,0 +1,134 @@
+import os
+import subprocess as sp
+import sys
+from sys import argv
+
+
+#D(e,e'p) Input File Generator for Running Analysis to Get Cross Sections
+
+#User arguments
+model = sys.argv[1]    #"pwia" or "fsi"
+pm_set = int(sys.argv[2])    #Missing Momentum:  80, 580, 750
+data_set = int(sys.argv[3])  #for pm=80: 1,  580: 1 or 2,  750: 1, 2 or 3 
+
+
+#Usage: ipython gen_inp.py fsi  750 3
+
+#Define some relevant user inputs
+
+#Generate the D(e,e'p)n Input File Based on User Input 
+f = open('set_deep_cuts.inp', 'w')                               
+f.write('#-------Single Run Analysis---------                                                                          \n')                                          
+f.write(' Use this option if you only want to look at a single file in data/simc                                       \n')
+f.write('single_run_flag: 0                                                                                            \n')
+f.write('                                                                                                              \n')
+f.write(';Specify filenames                                                                                            \n')
+f.write('data_fname: ROOTfiles/pm580_set1.root                                                                         \n')
+f.write('data_report_fname: REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_deep_check_3291_-1.report                        \n')
+f.write('simc_fname: worksim_voli/d2_pm580_lagetfsi_rad_set1.root                                                      \n')
+f.write('                                                                                                              \n')
+f.write('#--------Analyze DATA or SIMC-------                                                                          \n')
+f.write('# True (ON) =  1,  False (OFF) = 0                                                                            \n')
+f.write('                                                                                                              \n')
+f.write('RUN_SIMC: 1                                                                                                   \n')
+f.write('RUN_DATA: 1                                                                                                   \n')
+f.write('                                                                                                              \n')
+f.write(';Analyze Radiative(1) or NonRadiative(0) SIMC?                                                                \n')
+f.write(';IMPORTANT: If doing radiative corrections, set to -1                                                         \n')
+f.write('radiate: -1                                                                                                   \n')
+f.write('                                                                                                              \n')
+f.write(';Do Radiative Corrections (1) (Will analyze both rad/no-rad simc. Also, assumes data file exists)             \n')
+f.write(';IMPORTANT: If doing radiative corrections, set radiate: -1 (see above)                                       \n')
+f.write('rad_corr_flag: 1                                                                                              \n')
+f.write('                                                                                                              \n')
+f.write('#------ D(e,e''p)n Missing Momentum Settings -------                                                          \n')
+f.write('#Units: Enegy/Momentum/W [GeV], spec_delta [%]                                                                \n')
+f.write('                                                                                                              \n')
+f.write(';80 MeV, 580 MeV, 750 MeV                                                                                     \n')
+f.write('pm_setting : %d                                                                                               \n'%(pm_set))
+f.write('                                                                                                              \n')
+f.write(';Theoretical Calculation: laget,  misak, . . .                                                                \n')
+f.write('theory     : laget                                                                                            \n')
+f.write('                                                                                                              \n')
+f.write(';Theoretical Model: pwia, fsi                                                                                 \n')
+f.write('model      : %s                                                                                               \n'%(model))
+f.write('                                                                                                              \n')
+f.write(';DataSet 1, 2, 3                                                                                              \n')
+f.write('data_set   : %d                                                                                                \n'%(data_set))
+f.write('                                                                                                              \n')
+f.write('#------TURN CUTS ON/OFF------                                                                                 \n')
+f.write('# True (ON) =  1,  False (OFF) = 0                                                                            \n')
+f.write('                                                                                                              \n')
+f.write(';Basic Kinematics Cuts                                                                                        \n')
+f.write('bool Em      = 1                                                                                              \n')
+f.write('bool W       = 0                                                                                              \n')
+f.write('bool h_delta = 1                                                                                              \n')
+f.write('bool e_delta = 1                                                                                              \n')
+f.write('bool ztar_diff = 1                                                                                            \n')
+f.write('bool Q2 = 1                                                                                                   \n')
+f.write('bool th_nq = 1                                                                                                \n')
+f.write('bool MM = 0                                                                                                   \n')
+f.write('                                                                                                              \n')
+f.write(';PID Cuts                                                                                                     \n')
+f.write('bool shmsCal_EtotTrackNorm  = 1                                                                               \n')
+f.write('bool coin_time              = 1                                                                               \n')
+f.write('                                                                                                              \n')
+f.write(';Collimator Cuts                                                                                              \n')
+f.write('bool hmsCollCut   =  1                                                                                        \n')
+f.write('bool shmsCollCut  =  0                                                                                        \n')
+f.write('                                                                                                              \n')
+f.write(';Collimator Cuts Scale                                                                                        \n')
+f.write('hms_scale         =  1                                                                                        \n')
+f.write('shms_scale        =  1                                                                                        \n')
+f.write('                                                                                                              \n')
+f.write('                                                                                                              \n')
+f.write('#------Set DATA/SIMC CUTS LIMITS ------                                                                       \n')
+f.write('Em_min : -0.02                                                                                                \n')
+f.write('Em_max : 0.04                                                                                                 \n')
+f.write('                                                                                                              \n')
+f.write('h_delta_min: -8.                                                                                              \n')
+f.write('h_delta_max:  8.                                                                                              \n')
+f.write('                                                                                                              \n')
+f.write('e_delta_min: -10                                                                                              \n')
+f.write('e_delta_max: 22                                                                                               \n')
+f.write('                                                                                                              \n')
+f.write('W_min: 0.85                                                                                                   \n')
+f.write('W_max: 1.05                                                                                                   \n')
+f.write('                                                                                                              \n')
+f.write('ztarDiff_min: -2.                                                                                             \n')
+f.write('ztarDiff_max: 2.                                                                                              \n')
+f.write('                                                                                                              \n')
+f.write('Q2_min: 4.                                                                                                    \n')
+f.write('Q2_max: 5.                                                                                                    \n')
+f.write('                                                                                                              \n')
+f.write('thnq_min: 35.                                                                                                 \n')
+f.write('thnq_max: 45.                                                                                                 \n')
+f.write('                                                                                                              \n')
+f.write('MM_min: 0.9                                                                                                   \n')
+f.write('MM_max: 0.985                                                                                                 \n')
+f.write('                                                                                                              \n')
+f.write(';SHMS Cal EtotTrackNorm Cut                                                                                   \n')
+f.write('shms_cal_min: 0.7                                                                                             \n')
+f.write('shms_cal_max: 5.                                                                                              \n')
+f.write('                                                                                                              \n')
+f.write('coin_time_min: 10.5                                                                                           \n')
+f.write('coin_time_max: 14.5                                                                                           \n')
+f.write('                                                                                                              \n')
+
+'''
+#======Get Xsec Using PWIA First=======
+#Assumes other relevant flags are properly set
+#Modify Input File
+s = open("set_deep_cuts.inp").read()
+s = s.replace('model      : fsi', 'model      : pwia')
+f=open("set_deep_cuts.inp",  "w")
+f.write(s)
+f.close()
+#Run Main Analysis Code
+sp.call("root -l -q \"main_analysis.C(2)\"", shell=True)
+
+#Mode relevant Output files to proper directory
+
+
+#Get Xsec Using FSI
+'''

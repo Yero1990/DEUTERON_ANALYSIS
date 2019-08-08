@@ -1,4 +1,4 @@
-void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="heep_check") {
+void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="deep_check") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {

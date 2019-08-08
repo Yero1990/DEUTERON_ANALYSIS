@@ -1,0 +1,35 @@
+***********
+  HOWTOs
+***********
+
+==========================================================
+====How to Run Analysis to get Average Cross Sections=====
+==========================================================
+
+The relevant input files and codes are:
+* set_deep_cuts.inp      (input file)
+* main_analysis.C        (steering code)
+* analyze.C / analyze.h  (source code)
+
+Step1: Check input file settings are:
+       RUN_SIMC: 1
+       RUN_DATA: 1  (DATA will be done first by the steering code as it is needed for later rad.  corrections.)
+       radiate: -1
+       rad_corr_flag: 1  (SIMC will read the radiative file first. Then if rad_corr_flag:1, then
+                           it will do a second pass of the anlysis by reading non-radiative file.
+			   and calculate/apply rad corr. to data)
+
+	**NOTE** : The code currently applies FSI radiative correction to the data, so it assumes
+	           the FSI radiative ratio ROOTfile exists. This means FSI model must run before 
+		   PWIA model. An alternative is to apply raditavie corrections using their
+		   respective models. This way, one can quantify the effect of the different
+		   radiative corr. models on the cross section, and get a systematic for that.
+	
+		   
+       Kinematic Setting Flags: 
+       The kinematic settings are chosen depending on which cross section you want.
+
+       Setting Cuts: The cuts are set to their nominal values. For systematic studies,
+       once can change them to see how the cross section changes.
+
+Step2: 

@@ -6,9 +6,9 @@
 #workflow_name="d2_highPmiss_FULL"
 #workflow_name="SHMS_LH2_boiling_studies"
 #workflow_name="SHMS_boiling_studies"
-workflow_name="deuteron_3289"
+#workflow_name="deuteron_3289"
+workflow_name="d2_80_pcal"
 
-#runlist_name="runlists/h2.dat"
 #runlist_name="current_prot.data"
 
 #runlist_name="h2_Pabs_shms.dat"

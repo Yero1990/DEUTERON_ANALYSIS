@@ -128,7 +128,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -54.992
 ptheta_lab =  12.194
-hpcentral = 2.1925 ;  original: 2.194 
+hpcentral = 2.1925     ;original: 2.194 
 ppcentral = 8.5342488  ;original: 8.7
 
 #Pm = 750 MeV (set1)
@@ -150,8 +150,8 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -55.0
 ptheta_lab = 12.194 
-hpcentral = 2.1925 ;original: 2.194 
-ppcentral = 8.5342488 ;original: 8.7
+hpcentral = 2.1925     ;original: 2.194 
+ppcentral = 8.5342488  ;original: 8.7
 
 #Pm = 750 MeV (Additional. Set 2)
 3357-3367
@@ -202,7 +202,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -42.9
 ptheta_lab =  9.928  
-hpcentral = 2.310387   ;original: 2.31,  FINAL: 2.310387
+hpcentral = 2.310387     ;original: 2.31,  FINAL: 2.310387
 ppcentral = 8.5342488    ;original: 8.7,  FINAL: 8.5342488
 
 3375
@@ -232,7 +232,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -47.605
 ptheta_lab = 8.495   
-hpcentral = 1.891227  ;original: 1.8899, FINAL: 1.891227
+hpcentral = 1.891227      ;original: 1.8899, FINAL: 1.891227
 ppcentral = 8.5342488     ;original: 8.7,    FINAL: 8.5342488
 
 3379
