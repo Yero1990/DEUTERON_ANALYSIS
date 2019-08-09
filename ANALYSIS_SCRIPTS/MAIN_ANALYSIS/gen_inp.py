@@ -114,21 +114,4 @@ f.write('                                                                       
 f.write('coin_time_min: 10.5                                                                                           \n')
 f.write('coin_time_max: 14.5                                                                                           \n')
 f.write('                                                                                                              \n')
-
-'''
-#======Get Xsec Using PWIA First=======
-#Assumes other relevant flags are properly set
-#Modify Input File
-s = open("set_deep_cuts.inp").read()
-s = s.replace('model      : fsi', 'model      : pwia')
-f=open("set_deep_cuts.inp",  "w")
-f.write(s)
 f.close()
-#Run Main Analysis Code
-sp.call("root -l -q \"main_analysis.C(2)\"", shell=True)
-
-#Mode relevant Output files to proper directory
-
-
-#Get Xsec Using FSI
-'''

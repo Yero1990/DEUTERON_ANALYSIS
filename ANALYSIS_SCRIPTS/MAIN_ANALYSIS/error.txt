@@ -1,0 +1,148 @@
+['calc_Xsec.py', '80', '1']
+Error in <TFile::TFile>: file ../../root_files/pm80_pwiaXsec_set1/Xsec_pm80_lagetpwia_dataset1.root does not exist
+Error in <TFile::TFile>: file ../../root_files/pm80_fsiXsec_set1/Xsec_pm80_lagetfsi_dataset1.root does not exist
+Traceback (most recent call last):
+  File "calc_Xsec.py", line 108, in <module>
+    bin_info_fsiRC_dataXsec  = BI.get_histo_data_arrays(rf_fsi.H_data2DXsec)         #FSI radiative corrected data Xsec
+AttributeError: TFile object has no attribute 'H_data2DXsec'
+['calc_Xsec.py', '580', '1']
+Error in <TFile::TFile>: file ../../root_files/pm580_pwiaXsec_set1/Xsec_pm580_lagetpwia_dataset1.root does not exist
+Error in <TFile::TFile>: file ../../root_files/pm580_fsiXsec_set1/Xsec_pm580_lagetfsi_dataset1.root does not exist
+Traceback (most recent call last):
+  File "calc_Xsec.py", line 108, in <module>
+    bin_info_fsiRC_dataXsec  = BI.get_histo_data_arrays(rf_fsi.H_data2DXsec)         #FSI radiative corrected data Xsec
+AttributeError: TFile object has no attribute 'H_data2DXsec'
+['calc_Xsec.py', '580', '2']
+Error in <TFile::TFile>: file ../../root_files/pm580_pwiaXsec_set2/Xsec_pm580_lagetpwia_dataset2.root does not exist
+Error in <TFile::TFile>: file ../../root_files/pm580_fsiXsec_set2/Xsec_pm580_lagetfsi_dataset2.root does not exist
+Traceback (most recent call last):
+  File "calc_Xsec.py", line 108, in <module>
+    bin_info_fsiRC_dataXsec  = BI.get_histo_data_arrays(rf_fsi.H_data2DXsec)         #FSI radiative corrected data Xsec
+AttributeError: TFile object has no attribute 'H_data2DXsec'
+['calc_Xsec.py', '750', '1']
+Error in <TFile::TFile>: file ../../root_files/pm750_pwiaXsec_set1/Xsec_pm750_lagetpwia_dataset1.root does not exist
+Error in <TFile::TFile>: file ../../root_files/pm750_fsiXsec_set1/Xsec_pm750_lagetfsi_dataset1.root does not exist
+Traceback (most recent call last):
+  File "calc_Xsec.py", line 108, in <module>
+    bin_info_fsiRC_dataXsec  = BI.get_histo_data_arrays(rf_fsi.H_data2DXsec)         #FSI radiative corrected data Xsec
+AttributeError: TFile object has no attribute 'H_data2DXsec'
+['calc_Xsec.py', '750', '2']
+Error in <TFile::TFile>: file ../../root_files/pm750_pwiaXsec_set2/Xsec_pm750_lagetpwia_dataset2.root does not exist
+Error in <TFile::TFile>: file ../../root_files/pm750_fsiXsec_set2/Xsec_pm750_lagetfsi_dataset2.root does not exist
+Traceback (most recent call last):
+  File "calc_Xsec.py", line 108, in <module>
+    bin_info_fsiRC_dataXsec  = BI.get_histo_data_arrays(rf_fsi.H_data2DXsec)         #FSI radiative corrected data Xsec
+AttributeError: TFile object has no attribute 'H_data2DXsec'
+['calc_Xsec.py', '750', '3']
+Error in <TFile::TFile>: file ../../root_files/pm750_pwiaXsec_set3/Xsec_pm750_lagetpwia_dataset3.root does not exist
+Error in <TFile::TFile>: file ../../root_files/pm750_fsiXsec_set3/Xsec_pm750_lagetfsi_dataset3.root does not exist
+Traceback (most recent call last):
+  File "calc_Xsec.py", line 108, in <module>
+    bin_info_fsiRC_dataXsec  = BI.get_histo_data_arrays(rf_fsi.H_data2DXsec)         #FSI radiative corrected data Xsec
+AttributeError: TFile object has no attribute 'H_data2DXsec'
+['/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/bin_centering_corrections/calc_bc_corr.py', '80', '1']
+---------------------------------------------------------------------------
+IndexError                                Traceback (most recent call last)
+/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/bin_centering_corrections/calc_bc_corr.py in <module>()
+    119     #--------------------------------------Calculate Bin Centering Correction Factor and Reduced Xsec--------------------------------------
+    120 
+--> 121     if fsiXsec_theory[i]>0. and fsiXsec_avg[i]>0.:
+    122         bc_factor_fsi = fsiXsec_theory[i] / fsiXsec_avg[i]                                                       #FSI Bin Centering Correction Factor
+    123         bc_factor_fsi_err = fsiXsec_theory[i] / (fsiXsec_avg[i] * fsiXsec_avg[i]) * fsiXsec_avg_err[i]
+
+IndexError: index 0 is out of bounds for axis 0 with size 0
+['/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/bin_centering_corrections/calc_bc_corr.py', '580', '1']
+---------------------------------------------------------------------------
+IndexError                                Traceback (most recent call last)
+/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/bin_centering_corrections/calc_bc_corr.py in <module>()
+    151         red_pwiaXsec =  pwiaXsec_theory[i] / pwia_Ksig_cc1[i]
+    152 
+--> 153     l= "%i %i %i %f %f %f %f %f %f %.12e %.12e %.12e %.12e %.12e %12e %.12e  %.12e  %.12e  %.12e   %.12e   %.12e   %.12e    %.12e\n"%(ib, ix_t[i], iy_t[i], thnq_t[i], pm_t[i], bc_factor_pwia, bc_factor_pwia_err, bc_factor_fsi, bc_factor_fsi_err, pwiaRC_dataXsec_avg[i], pwiaRC_dataXsec_avg_err[i], fsiRC_dataXsec_avg[i], fsiRC_dataXsec_avg_err[i],  fsiRC_dataXsec_pwiabc_corr,  fsiRC_dataXsec_pwiabc_corr_err,  fsiRC_dataXsec_fsibc_corr,  fsiRC_dataXsec_fsibc_corr_err, pwiaXsec_theory[i],  fsiXsec_theory[i], red_dataXsec, red_dataXsec_err, red_pwiaXsec, red_fsiXsec)
+    154     o.write(l)
+    155 
+
+IndexError: index 0 is out of bounds for axis 0 with size 0
+['/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/bin_centering_corrections/calc_bc_corr.py', '580', '2']
+---------------------------------------------------------------------------
+IndexError                                Traceback (most recent call last)
+/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/bin_centering_corrections/calc_bc_corr.py in <module>()
+    151         red_pwiaXsec =  pwiaXsec_theory[i] / pwia_Ksig_cc1[i]
+    152 
+--> 153     l= "%i %i %i %f %f %f %f %f %f %.12e %.12e %.12e %.12e %.12e %12e %.12e  %.12e  %.12e  %.12e   %.12e   %.12e   %.12e    %.12e\n"%(ib, ix_t[i], iy_t[i], thnq_t[i], pm_t[i], bc_factor_pwia, bc_factor_pwia_err, bc_factor_fsi, bc_factor_fsi_err, pwiaRC_dataXsec_avg[i], pwiaRC_dataXsec_avg_err[i], fsiRC_dataXsec_avg[i], fsiRC_dataXsec_avg_err[i],  fsiRC_dataXsec_pwiabc_corr,  fsiRC_dataXsec_pwiabc_corr_err,  fsiRC_dataXsec_fsibc_corr,  fsiRC_dataXsec_fsibc_corr_err, pwiaXsec_theory[i],  fsiXsec_theory[i], red_dataXsec, red_dataXsec_err, red_pwiaXsec, red_fsiXsec)
+    154     o.write(l)
+    155 
+
+IndexError: index 0 is out of bounds for axis 0 with size 0
+['/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/bin_centering_corrections/calc_bc_corr.py', '750', '1']
+---------------------------------------------------------------------------
+IndexError                                Traceback (most recent call last)
+/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/bin_centering_corrections/calc_bc_corr.py in <module>()
+    151         red_pwiaXsec =  pwiaXsec_theory[i] / pwia_Ksig_cc1[i]
+    152 
+--> 153     l= "%i %i %i %f %f %f %f %f %f %.12e %.12e %.12e %.12e %.12e %12e %.12e  %.12e  %.12e  %.12e   %.12e   %.12e   %.12e    %.12e\n"%(ib, ix_t[i], iy_t[i], thnq_t[i], pm_t[i], bc_factor_pwia, bc_factor_pwia_err, bc_factor_fsi, bc_factor_fsi_err, pwiaRC_dataXsec_avg[i], pwiaRC_dataXsec_avg_err[i], fsiRC_dataXsec_avg[i], fsiRC_dataXsec_avg_err[i],  fsiRC_dataXsec_pwiabc_corr,  fsiRC_dataXsec_pwiabc_corr_err,  fsiRC_dataXsec_fsibc_corr,  fsiRC_dataXsec_fsibc_corr_err, pwiaXsec_theory[i],  fsiXsec_theory[i], red_dataXsec, red_dataXsec_err, red_pwiaXsec, red_fsiXsec)
+    154     o.write(l)
+    155 
+
+IndexError: index 0 is out of bounds for axis 0 with size 0
+['/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/bin_centering_corrections/calc_bc_corr.py', '750', '2']
+---------------------------------------------------------------------------
+IndexError                                Traceback (most recent call last)
+/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/bin_centering_corrections/calc_bc_corr.py in <module>()
+    151         red_pwiaXsec =  pwiaXsec_theory[i] / pwia_Ksig_cc1[i]
+    152 
+--> 153     l= "%i %i %i %f %f %f %f %f %f %.12e %.12e %.12e %.12e %.12e %12e %.12e  %.12e  %.12e  %.12e   %.12e   %.12e   %.12e    %.12e\n"%(ib, ix_t[i], iy_t[i], thnq_t[i], pm_t[i], bc_factor_pwia, bc_factor_pwia_err, bc_factor_fsi, bc_factor_fsi_err, pwiaRC_dataXsec_avg[i], pwiaRC_dataXsec_avg_err[i], fsiRC_dataXsec_avg[i], fsiRC_dataXsec_avg_err[i],  fsiRC_dataXsec_pwiabc_corr,  fsiRC_dataXsec_pwiabc_corr_err,  fsiRC_dataXsec_fsibc_corr,  fsiRC_dataXsec_fsibc_corr_err, pwiaXsec_theory[i],  fsiXsec_theory[i], red_dataXsec, red_dataXsec_err, red_pwiaXsec, red_fsiXsec)
+    154     o.write(l)
+    155 
+
+IndexError: index 0 is out of bounds for axis 0 with size 0
+['/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/bin_centering_corrections/calc_bc_corr.py', '750', '3']
+---------------------------------------------------------------------------
+IndexError                                Traceback (most recent call last)
+/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/bin_centering_corrections/calc_bc_corr.py in <module>()
+    151         red_pwiaXsec =  pwiaXsec_theory[i] / pwia_Ksig_cc1[i]
+    152 
+--> 153     l= "%i %i %i %f %f %f %f %f %f %.12e %.12e %.12e %.12e %.12e %12e %.12e  %.12e  %.12e  %.12e   %.12e   %.12e   %.12e    %.12e\n"%(ib, ix_t[i], iy_t[i], thnq_t[i], pm_t[i], bc_factor_pwia, bc_factor_pwia_err, bc_factor_fsi, bc_factor_fsi_err, pwiaRC_dataXsec_avg[i], pwiaRC_dataXsec_avg_err[i], fsiRC_dataXsec_avg[i], fsiRC_dataXsec_avg_err[i],  fsiRC_dataXsec_pwiabc_corr,  fsiRC_dataXsec_pwiabc_corr_err,  fsiRC_dataXsec_fsibc_corr,  fsiRC_dataXsec_fsibc_corr_err, pwiaXsec_theory[i],  fsiXsec_theory[i], red_dataXsec, red_dataXsec_err, red_pwiaXsec, red_fsiXsec)
+    154     o.write(l)
+    155 
+
+IndexError: index 0 is out of bounds for axis 0 with size 0
+Entering Main . . .
+5
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/combine_data/make_plot.py in <module>()
+    230 
+    231 if __name__=="__main__":
+--> 232     main()
+    233 
+    234 
+
+/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/combine_data/make_plot.py in main()
+    225     #plot_theory_sets('pwia')
+    226     #plot_theory_sets('fsi')
+--> 227     plot_final()
+    228 
+    229 
+
+/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/combine_data/make_plot.py in plot_final()
+    198         B.pl.figure(i)
+    199 
+--> 200         B.plot_exp(pm[thnq==ithnq], red_dataXsec_avg[thnq==ithnq]*MeV2fm, red_dataXsec_avg_err[thnq==ithnq]*MeV2fm, color='black', logy=True, label='Data' )
+    201         B.plot_exp(pm[thnq==ithnq], red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm, red_dataXsec_avg_err[thnq==ithnq]*MeV2fm, marker='s', color='gray', markerfacecolor='none', label='Data(Error < 20 % )' )
+    202         B.plot_exp(pm[thnq==ithnq], red_pwiaXsec_avg[thnq==ithnq]*MeV2fm, linestyle='--', color='red', logy=True, label='Laget PWIA')
+
+/home/cyero/.local/lib/python2.7/site-packages/LabTools-0.2.8-py2.7.egg/LT/plotting.pyc in plot_exp(x, y, dy, dyt, marker, linestyle, label, ecolor_1, elinewidth, capsize, mew, linewidth, logy, min_val, scale, x_label, y_label, plot_title, skip_labels, axes, **kwargs)
+    148     # negative error bars
+    149     diff = yy - dyy
+--> 150     if (diff.min() <= 0.) :
+    151         if logy:
+    152             print '---> errorbars go negative !'
+
+/apps/python/2.7.12/lib/python2.7/site-packages/numpy/core/_methods.pyc in _amin(a, axis, out, keepdims)
+     27 
+     28 def _amin(a, axis=None, out=None, keepdims=False):
+---> 29     return umr_minimum(a, axis, None, out, keepdims)
+     30 
+     31 def _sum(a, axis=None, dtype=None, out=None, keepdims=False):
+
+ValueError: zero-size array to reduction operation minimum which has no identity

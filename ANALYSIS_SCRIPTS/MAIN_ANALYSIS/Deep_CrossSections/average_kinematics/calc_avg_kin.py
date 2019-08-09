@@ -57,7 +57,7 @@ pm_set = int(sys.argv[1])
 model = sys.argv[2]
 data_set = int(sys.argv[3])
 
-print argv
+#print argv
 #usage: /apps/python/2.7.12/bin/python calc_avg_kin.py 80 fsi 1
 if pm_set == 80:
    output_file = 'pm%i_%s_norad_avgkin.txt'%(pm_set, model)
@@ -114,10 +114,10 @@ for i,acont in enumerate(all.cont):
    i_ybin = all.iy[i]
    thnq_b = all.xb[i]
    pm_b = all.yb[i]
-   if (acont == 0.):
+   if (acont == -1):
       # skip zero content bins
-      continue
-      #   print('acont = ',acont)
+      #continue
+      print('acont = ',acont)
    else:
       
       # convert rad to deg and GeV to MeV 
@@ -152,7 +152,7 @@ for i,acont in enumerate(all.cont):
       # calculated missing momentum
       Pm_calc2 = (nu_calc+MD-Ep)**2 - MN**2
       if (Pm_calc2 < 0.):
-         print 'calculated pm**2 < 0. ', Pm_calc2, ' use Pm_avg : ', Pm
+         #print 'calculated pm**2 < 0. ', Pm_calc2, ' use Pm_avg : ', Pm
          Pm_calc = Pm   #set it to the average Pm from 2D histo
       else:
          Pm_calc = np.sqrt ( Pm_calc2 )
@@ -166,8 +166,8 @@ for i,acont in enumerate(all.cont):
       Pf_par = ( Pf**2 + q_calc**2 - Pm_calc**2)/ (2.*q_calc)
       Pf_perp2 = Pf**2 - Pf_par**2
       if (Pf_perp2 < 0.):
-         print 'calculated Pf_perp**2<0. : ', Pf_perp2,' --->   estimate it using theta_pq :', thpq
-         print 'Pf_par = ', Pf_par, ', Pf_perp(pf) = ', Pf*np.sin(dtr*thpq), ', Pf_perp(pm) = ', Pm*np.sin(dtr*thnq)   
+         #print 'calculated Pf_perp**2<0. : ', Pf_perp2,' --->   estimate it using theta_pq :', thpq
+         #print 'Pf_par = ', Pf_par, ', Pf_perp(pf) = ', Pf*np.sin(dtr*thpq), ', Pf_perp(pm) = ', Pm*np.sin(dtr*thnq)   
          Pf_perp = Pf*np.sin(dtr*thpq)
          th_pq_calc = thpq
       else:
@@ -193,6 +193,7 @@ for i,acont in enumerate(all.cont):
       num = (2.*q_calc*Pm_calc)
 
       cth_nq = -2.    #Cos(theta_nq)
+      theta_nq_calc = -1.
       if num > 0. : 
          cth_nq = denom/num
          theta_nq_calc = 0.

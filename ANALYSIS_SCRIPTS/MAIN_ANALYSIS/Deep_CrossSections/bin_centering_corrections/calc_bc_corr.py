@@ -40,28 +40,28 @@ pm_set = int(sys.argv[1])
 data_set = int(sys.argv[2])                                                                                                            
 print argv                                                                                   
          
-#usage: /apps/python/2.7.12/bin/python.py calc_bc_corr_v2.py 580  1           
+#usage: /apps/python/2.7.12/bin/python.py calc_bc_corr.py 580  1           
 
 #create output file to write avg kin                                                                                      
 if pm_set == 80:                                                                                                       
-    output_file = 'pm%i_laget_bc_corr_test.txt'%(pm_set)                
+    output_file = 'pm%i_laget_bc_corr.txt'%(pm_set)                
 else:
-    output_file = 'pm%i_laget_bc_corr_set%i_test.txt'%(pm_set, data_set)
+    output_file = 'pm%i_laget_bc_corr_set%i.txt'%(pm_set, data_set)
 
 o = open(output_file,'w')  
 o.write(header)
 
 #Load Theory Xsec @ Avg. Kin.
 if pm_set == 80:
-    ft = B.get_file('../theory_Xsec/pm%i_laget_theory_test.txt'%(pm_set))
+    ft = B.get_file('../theory_Xsec/pm%i_laget_theory.txt'%(pm_set))
 else:
-    ft = B.get_file('../theory_Xsec/pm%i_laget_theory_set%i_test.txt'%(pm_set, data_set)) 
+    ft = B.get_file('../theory_Xsec/pm%i_laget_theory_set%i.txt'%(pm_set, data_set)) 
 
 #Load Averaged Xsec
 if pm_set == 80:                                       
-    fa = B.get_file('../average_Xsec/pm%i_laget_test.txt'%(pm_set))                                   
+    fa = B.get_file('../average_Xsec/pm%i_laget.txt'%(pm_set))                                   
 else:                                                                                                                                                       
-    fa = B.get_file('../average_Xsec/pm%i_laget_set%i_test.txt'%(pm_set, data_set)) 
+    fa = B.get_file('../average_Xsec/pm%i_laget_set%i.txt'%(pm_set, data_set)) 
 
 
 #Get Bin Information (Does no matter which file, as they have the same binning scheme)
@@ -143,7 +143,7 @@ for i, ib in enumerate(ib_t):
         
 
 
-    #Calculate the Theoretical Momentum Distributions
+    #Calculate the Theoretical Reduced Cross Sections (Momentum Distributions in PWIA)
     if fsiXsec_theory[i]>0. and fsi_Ksig_cc1[i]>0.:
         red_fsiXsec =  fsiXsec_theory[i] / fsi_Ksig_cc1[i]
 

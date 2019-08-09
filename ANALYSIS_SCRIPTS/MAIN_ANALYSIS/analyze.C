@@ -594,6 +594,22 @@ void analyze::SetCuts()
   ctime_min = stod(split(FindString("coin_time_min", input_CutFileName)[0], ':')[1]);
   ctime_max = stod(split(FindString("coin_time_max", input_CutFileName)[0], ':')[1]);
 
+  cout << "-------------------------------------" << endl;
+  cout << "Cut Limits Set" << endl;
+  if(Em_cut_flag) {cout << Form("Missin Energy:(%f, %f) GeV", Em_min, Em_max ) << endl;}
+  if(W_cut_flag) {cout << Form("Invariant Mass:(%f,%f) GeV", W_min, W_max ) << endl;}
+  if(hdelta_cut_flag) {cout << Form("HMS Delta:(%f, %f) %s ", hdel_min, hdel_max, "%" ) << endl;}
+  if(edelta_cut_flag) {cout << Form("SHMS Delta:(%f, %f) %s ",edel_min, edel_max, "%" ) << endl;}
+  if(ztar_diff_cut_flag) {cout << Form("ZtarDiff:(%f,%f) cm", ztarDiff_min, ztarDiff_max ) << endl;}
+  if(Q2_cut_flag) {cout <<  Form("Q2: (%f,%f) GeV2",Q2_min, Q2_max ) << endl;}
+  if(MM_cut_flag) {cout <<  Form("Missing Mass:(%f,%f) GeV", MM_min, MM_max ) << endl;}
+  if(shmsCal_cut_flag) {cout <<  Form("SHMS EcalTotTrackNorm: (%f,%f)",shms_cal_min, shms_cal_max) << endl;}
+  if(coin_cut_flag) {cout <<  Form("Coincidence  Time: (%f,%f) ns", ctime_min, ctime_max) << endl;}
+  if(hmsCollCut_flag) {cout <<  Form("HMS Collimator Scale: %f", hms_scale ) << endl;}
+  if(shmsCollCut_flag) {cout <<  Form("SHMS Collimator Scale: %f",shms_scale ) << endl;}
+  cout << "--------------------------------------" << endl;
+
+  
 
 
   cout << "Ending SetCuts() . . ." << endl;
@@ -3440,6 +3456,22 @@ void analyze::WriteReport()
       cout << "Report File does NOT exist, will create one . . . " << endl;
       
       out_file.open(report_OutputFileName);
+        out_file << "#-------------------------------------" << endl;
+	out_file << "         #Cut Limits Set             " << endl;
+	out_file << "#-------------------------------------" << endl;
+	if(Em_cut_flag) {out_file << Form("#Missing Energy:(%f, %f) GeV", Em_min, Em_max ) << endl;}
+	if(W_cut_flag) {out_file << Form("#Invariant Mass:(%f,%f) GeV", W_min, W_max ) << endl;}
+	if(hdelta_cut_flag) {out_file << Form("#HMS Delta:(%f, %f) ", hdel_min, hdel_max ) << endl;}
+	if(edelta_cut_flag) {out_file << Form("#SHMS Delta:(%f, %f) ",edel_min, edel_max ) << endl;}
+	if(ztar_diff_cut_flag) {out_file << Form("#ZtarDiff:(%f,%f) cm", ztarDiff_min, ztarDiff_max ) << endl;}
+	if(Q2_cut_flag) {out_file <<  Form("#Q2: (%f,%f) GeV2",Q2_min, Q2_max ) << endl;}
+	if(MM_cut_flag) {out_file <<  Form("#Missing Mass:(%f,%f) GeV", MM_min, MM_max ) << endl;}
+	if(shmsCal_cut_flag) {out_file <<  Form("#SHMS EcalTotTrackNorm: (%f,%f)",shms_cal_min, shms_cal_max) << endl;}
+	if(coin_cut_flag) {out_file <<  Form("#Coincidence  Time: (%f,%f) ns", ctime_min, ctime_max) << endl;}
+	if(hmsCollCut_flag) {out_file <<  Form("#HMS Collimator Scale: %f", hms_scale ) << endl;}
+	if(shmsCollCut_flag) {out_file <<  Form("#SHMS Collimator Scale: %f",shms_scale ) << endl;}
+	out_file << "#--------------------------------------" << endl;
+
       out_file << "#!Run[i,0]/" << std::setw(25) << "charge[f,1]/" << std::setw(25) << "cpuLT[f,2]/"  << std::setw(25) << "cpuLT_err[f,3]/"  << std::setw(25) << "tLT[f,3]/"  << std::setw(25) <<  "hTrkEff[f,4]/" << std::setw(25) <<  "hTrkEff_err[f,5]/" << std::setw(25) << "eTrkEff[f,5]/" << std::setw(25) << "eTrkEff_err[f,5]/"  << std::setw(25) <<  "tgtBoil_factor[f,6]/" <<  std::setw(25)  << "avg_current[f,6]/"  << std::setw(25) << "pS1X_rate[f,7]/"  << std::setw(25) << "ptrig1_rate[f,8]/" << std::setw(25) << "ptrig2_rate[f,9]/" << std::setw(25) << "ptrig3_rate[f,10]/" << std::setw(25) << "ptrig4_rate[f,11]/" << std::setw(25) << "ptrig6_rate[f,12]/" << std::setw(25) << "coin_scaler[f,13]/"  << std::setw(25) <<  "HMS_Angle[f,13]/"  << std::setw(25) << "HMS_Pcen[f,14]/"  << std::setw(25) << "SHMS_Angle[f,15]/"   << std::setw(25) << "SHMS_Pcen[f,16]/"  << std::setw(25) << "HMS_Xmp[f,17]/" << std::setw(25) << "HMS_Ymp[f,18]/" << std::setw(25) << "SHMS_Xmp[f,19]/" << std::setw(25) << "SHMS_Ymp[f,20]/" << std::setw(25) << "xBPM[f,21]/" << std::setw(25) << "yBPM[f,22]/" << endl;
       out_file.close();
       in_file.close();
@@ -4784,10 +4816,13 @@ vector <string> analyze::FindString(string keyword, string fname)
 
   while(getline(ifile, line))
     {
-        
+      //Check 1st character of found string
+      TString cmt = line[0];
+      
       found = line.find(keyword);
       
       if(found<0||found>1000){found=-1;} //not found
+      if(cmt==";" || cmt=="#" || cmt=="!") {found=-1;}  //Found commented line. So Skip
 
       if(found!=-1){
 	

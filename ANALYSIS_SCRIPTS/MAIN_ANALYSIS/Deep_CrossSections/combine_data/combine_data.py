@@ -29,12 +29,12 @@ fout.write(header)
 
 
 #Open File Containing Reduced Cross Sections
-fname80 = '../bin_centering_corrections/pm80_laget_bc_corr_test.txt'
-fname580_set1 = '../bin_centering_corrections/pm580_laget_bc_corr_set1_test.txt'
-fname580_set2 = '../bin_centering_corrections/pm580_laget_bc_corr_set2_test.txt'
-fname750_set1 = '../bin_centering_corrections/pm750_laget_bc_corr_set1_test.txt'
-fname750_set2 = '../bin_centering_corrections/pm750_laget_bc_corr_set2_test.txt'
-fname750_set3 = '../bin_centering_corrections/pm750_laget_bc_corr_set3_test.txt'
+fname80 = '../bin_centering_corrections/pm80_laget_bc_corr.txt'
+fname580_set1 = '../bin_centering_corrections/pm580_laget_bc_corr_set1.txt'
+fname580_set2 = '../bin_centering_corrections/pm580_laget_bc_corr_set2.txt'
+fname750_set1 = '../bin_centering_corrections/pm750_laget_bc_corr_set1.txt'
+fname750_set2 = '../bin_centering_corrections/pm750_laget_bc_corr_set2.txt'
+fname750_set3 = '../bin_centering_corrections/pm750_laget_bc_corr_set3.txt'
 
 
 #Get bin information from each file
