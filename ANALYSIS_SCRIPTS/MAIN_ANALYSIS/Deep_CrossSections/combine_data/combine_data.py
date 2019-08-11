@@ -1,5 +1,8 @@
 import LT.box as B
 import numpy as np
+import sys           
+import os                                                      
+from sys import argv  
 
 #This Code:
 # **NOTE** ONLY Reduced Cross Sections (Momentum Distributions) can be combined. Cross Sections CANNOT be combined, 
@@ -11,8 +14,15 @@ import numpy as np
 
 MeV2fm = 197**3    #convert MeV^-3 to fm^3
 
+#User Input (Dir. Name to store output)
+sys_ext = sys.argv[1]   
 
-output_file='redXsec_combined.txt'
+#check if directory exists, else creates it.
+if not os.path.exists(sys_ext):
+    os.makedirs(sys_ext)
+
+
+output_file='./%s/redXsec_combined.txt'%(sys_ext)
 
 fout = open(output_file, 'w') 
 
@@ -29,12 +39,12 @@ fout.write(header)
 
 
 #Open File Containing Reduced Cross Sections
-fname80 = '../bin_centering_corrections/pm80_laget_bc_corr.txt'
-fname580_set1 = '../bin_centering_corrections/pm580_laget_bc_corr_set1.txt'
-fname580_set2 = '../bin_centering_corrections/pm580_laget_bc_corr_set2.txt'
-fname750_set1 = '../bin_centering_corrections/pm750_laget_bc_corr_set1.txt'
-fname750_set2 = '../bin_centering_corrections/pm750_laget_bc_corr_set2.txt'
-fname750_set3 = '../bin_centering_corrections/pm750_laget_bc_corr_set3.txt'
+fname80 = '../bin_centering_corrections/%s/pm80_laget_bc_corr.txt'%(sys_ext)
+fname580_set1 = '../bin_centering_corrections/%s/pm580_laget_bc_corr_set1.txt'%(sys_ext)
+fname580_set2 = '../bin_centering_corrections/%s/pm580_laget_bc_corr_set2.txt'%(sys_ext)
+fname750_set1 = '../bin_centering_corrections/%s/pm750_laget_bc_corr_set1.txt'%(sys_ext)
+fname750_set2 = '../bin_centering_corrections/%s/pm750_laget_bc_corr_set2.txt'%(sys_ext)
+fname750_set3 = '../bin_centering_corrections/%s/pm750_laget_bc_corr_set3.txt'%(sys_ext)
 
 
 #Get bin information from each file

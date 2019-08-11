@@ -6,7 +6,7 @@
 import sys
 from sys import argv
 import getopt
-
+import os
 from LT import datafile
 import bin_info2 as BI
 
@@ -50,25 +50,33 @@ header = \
 #! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ Ei[f,5]/ kf[f,6]/ th_e[f,7]/ omega_mc[f,8]/ omega[f,9]/ Q2[f,10]/ Q2_calc[f,11]/ q_mc[f,12]/ q_lab[f,13]/ Ep_calc[f,14]/ pf[f,15]/ pm_mc[f,16]/ pm[f,17]/ En_calc[f,18]/ beta_cm[f,19]/ gamma_cm[f,20]/ PfPar_q[f,21]/ PfPerp_q[f,22]/ theta_pq[f,23]/ theta_pq_calc[f,24]/ PfPar_cm[f,25]/ th_pq_cm[f,26]/ th_nq_mc[f,27]/ th_nq_calc[f,28]/  cos_phi[f,29]/  sin_phi[f,30]/  alpha_c[f,31]/  GEp[f,32]/   GMp[f,33]/   sigMott[f,34]/   Ksig_cc1[f,35]/  nx[i,36]/ ny[i,37]/ cont[f,38]/        
 """
 #------------------------------------------------------------
+#print argv
+#usage: /apps/python/2.7.12/bin/python calc_avg_kin.py 80 fsi 1
 
-
-#create output file to write avg kin
+#User INput
 pm_set = int(sys.argv[1])
 model = sys.argv[2]
 data_set = int(sys.argv[3])
+sys_ext = sys.argv[4]   #systematics directory name extension  
 
-#print argv
-#usage: /apps/python/2.7.12/bin/python calc_avg_kin.py 80 fsi 1
+#Create Directory to put output if it does not exist
+dir_name="./%s" % (sys_ext)
+
+#check if directory exists, else creates it.
+if not os.path.exists(dir_name):
+   os.makedirs(dir_name)
+
+#create output file to write avg kin
 if pm_set == 80:
-   output_file = 'pm%i_%s_norad_avgkin.txt'%(pm_set, model)
+   output_file = '%s/pm%i_%s_norad_avgkin.txt'%(sys_ext, pm_set, model)
 else:
-   output_file = 'pm%i_%s_norad_avgkin_set%i.txt'%(pm_set, model, data_set)
+   output_file = '%s/pm%i_%s_norad_avgkin_set%i.txt'%(sys_ext, pm_set, model, data_set)
 
 
 o = open(output_file,'w')
 
 #Open root file to read avg kin histos
-root_file = '../../root_files/average_kinematics/deep_simc_histos_pm%i_laget%s_norad_set%i.root'%(pm_set,  model, data_set)
+root_file = '../../root_files/average_kinematics/%s/deep_simc_histos_pm%i_laget%s_norad_set%i.root'%(sys_ext, pm_set,  model, data_set)
 
 
 # open ROOTfile

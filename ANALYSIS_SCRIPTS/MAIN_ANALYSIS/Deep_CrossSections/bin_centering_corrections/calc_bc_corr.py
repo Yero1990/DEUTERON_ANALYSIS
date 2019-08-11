@@ -1,5 +1,6 @@
 import LT.box as B
 import numpy as np
+import os
 import sys                             
 from sys import argv    
 import getopt       
@@ -37,31 +38,37 @@ header = """
 
 #User Input
 pm_set = int(sys.argv[1])                                                                            
-data_set = int(sys.argv[2])                                                                                                            
+data_set = int(sys.argv[2])
+sys_ext = sys.argv[3]
+                                                                                                            
 print argv                                                                                   
          
 #usage: /apps/python/2.7.12/bin/python.py calc_bc_corr.py 580  1           
 
+#check if directory exists, else creates it.
+if not os.path.exists(sys_ext):
+    os.makedirs(sys_ext)
+
 #create output file to write avg kin                                                                                      
 if pm_set == 80:                                                                                                       
-    output_file = 'pm%i_laget_bc_corr.txt'%(pm_set)                
+    output_file = './%s/pm%i_laget_bc_corr.txt'%(sys_ext, pm_set)                
 else:
-    output_file = 'pm%i_laget_bc_corr_set%i.txt'%(pm_set, data_set)
+    output_file = './%s/pm%i_laget_bc_corr_set%i.txt'%(sys_ext, pm_set, data_set)
 
 o = open(output_file,'w')  
 o.write(header)
 
 #Load Theory Xsec @ Avg. Kin.
 if pm_set == 80:
-    ft = B.get_file('../theory_Xsec/pm%i_laget_theory.txt'%(pm_set))
+    ft = B.get_file('../theory_Xsec/%s/pm%i_laget_theory.txt'%(sys_ext, pm_set))
 else:
-    ft = B.get_file('../theory_Xsec/pm%i_laget_theory_set%i.txt'%(pm_set, data_set)) 
+    ft = B.get_file('../theory_Xsec/%s/pm%i_laget_theory_set%i.txt'%(sys_ext, pm_set, data_set)) 
 
 #Load Averaged Xsec
 if pm_set == 80:                                       
-    fa = B.get_file('../average_Xsec/pm%i_laget.txt'%(pm_set))                                   
-else:                                                                                                                                                       
-    fa = B.get_file('../average_Xsec/pm%i_laget_set%i.txt'%(pm_set, data_set)) 
+    fa = B.get_file('../average_Xsec/%s/pm%i_laget.txt'%(sys_ext, pm_set))                                   
+else:                                                           
+    fa = B.get_file('../average_Xsec/%s/pm%i_laget_set%i.txt'%(sys_ext, pm_set, data_set)) 
 
 
 #Get Bin Information (Does no matter which file, as they have the same binning scheme)

@@ -3,13 +3,25 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import interp1d
 import numpy.ma as ma
+import sys                                     
+import os                                                                                                       
+from sys import argv  
 
 #Conversion factor:  1 fm = 1/ (197 MeV),   
 #The reduced cross section is in MeV^-3 units
 MeV2fm = 197**3    #convert MeV^-3 to fm^3
 
+#User Input (Dir. Name to store output)
+sys_ext = sys.argv[1]   
+
+dir_name = sys_ext+"_plots"
+print(dir_name)
+#check if directory exists, else creates it.
+if not os.path.exists(dir_name):
+    os.makedirs(dir_name)
+
 #Get Reduced Xsec Data File
-f = B.get_file('./redXsec_combined.txt')
+f = B.get_file('./%s/redXsec_combined.txt'%(sys_ext))
 
 #Get Bin Information
 i_b = B.get_data(f, 'i_b')    #2D bin number
@@ -97,9 +109,9 @@ def plot_data_sets():
 
         B.pl.legend()
     
-        B.pl.savefig('./plots/dataSets_redXsec_thnq%i.pdf'%(ithnq))
+        B.pl.savefig(dir_name+'/dataSets_redXsec_thnq%i.pdf'%(ithnq))
 
-    B.pl.show('same')
+    #B.pl.show('same')
 
 def plot_theory_sets(model=''):
     
@@ -144,9 +156,9 @@ def plot_theory_sets(model=''):
 
             B.pl.legend()
     
-            B.pl.savefig('./plots/%s_theorySets_redXsec_thnq%i.pdf'%(model, ithnq))
+            B.pl.savefig(dir_name+'/%s_theorySets_redXsec_thnq%i.pdf'%(model, ithnq))
 
-        B.pl.show('same')
+        #B.pl.show('same')
 
     if (model=='fsi'):
         thnq_arr = [5, 15, 25, 35, 45, 55, 65, 75, 85, 95, 105]  #central theta_nq value 
@@ -178,9 +190,9 @@ def plot_theory_sets(model=''):
             
             B.pl.legend()
             
-            B.pl.savefig('./plots/%s_theorySets_redXsec_thnq%i.pdf'%(model, ithnq))
+            B.pl.savefig(dir_name+'/%s_theorySets_redXsec_thnq%i.pdf'%(model, ithnq))
                 
-        B.pl.show('same')
+        #B.pl.show('same')
 
 def plot_final():
 
@@ -211,19 +223,19 @@ def plot_final():
 
         B.pl.legend()
             
-        B.pl.savefig('./plots/final_redXsec_thnq%i.pdf'%(ithnq))
+        B.pl.savefig(dir_name+'/final_redXsec_thnq%i.pdf'%(ithnq))
 
 
-    B.pl.show('same')
+    #B.pl.show('same')
 
 
 def main():
     print('Entering Main . . .')
 
-    #plot_data_sets()
+    plot_data_sets()
 
-    #plot_theory_sets('pwia')
-    #plot_theory_sets('fsi')
+    plot_theory_sets('pwia')
+    plot_theory_sets('fsi')
     plot_final()
 
 
@@ -384,6 +396,6 @@ B.pl.xlabel('Recoil Momenta [GeV/c]', fontsize=15)
 B.pl.ylabel(r'$\sigma_{red}$ [fm$^{3}$]', fontsize=15)
 
 B.pl.legend()
-B.pl.show('same')
+#B.pl.show('same')
 
 '''

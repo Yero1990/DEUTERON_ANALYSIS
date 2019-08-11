@@ -1,5 +1,6 @@
 #Code to extract the average DATA and SIMC cross sections from the 2D Pm vs. theta_nq Histos
 
+import os
 import sys
 from sys import argv
 import getopt
@@ -57,21 +58,27 @@ header = \
 #User Input
 pm_set = int(sys.argv[1])
 data_set = int(sys.argv[2])
+sys_ext = sys.argv[3]
+
+dir_name = "./%s"%(sys_ext)
+#check if output directory exists, else creates it.
+if not os.path.exists(dir_name):
+   os.makedirs(dir_name)
 
 print argv
 
 #create output file to write Xsec avg over kin. bin
 if pm_set == 80:
-   output_file = 'pm%i_laget.txt'%(pm_set)
+   output_file = './%s/pm%i_laget.txt'%(sys_ext, pm_set)
 else:
-   output_file = 'pm%i_laget_set%i.txt'%(pm_set, data_set)
+   output_file = './%s/pm%i_laget_set%i.txt'%(sys_ext, pm_set, data_set)
 
 
 o = open(output_file,'w')
 
 #----------------------------------Open root file that sets histo binning---------------------------------------
 
-bin_file = '../../root_files/average_kinematics/deep_simc_histos_pm%i_lagetpwia_norad_set%i.root'%(pm_set, data_set) 
+bin_file = '../../root_files/average_kinematics/%s/deep_simc_histos_pm%i_lagetpwia_norad_set%i.root'%(sys_ext, pm_set, data_set) 
 
 bf = R.TFile(bin_file)
 bf.cd()
@@ -80,8 +87,8 @@ bf.Close()
 #----------------------------------------------------------------------------------------------------------------
 
 #Open root file to read cross sections from 2D Pm vs. thnq
-root_file_pwia = '../../root_files/pm%i_pwiaXsec_set%i/Xsec_pm%i_lagetpwia_dataset%i.root'%(pm_set, data_set, pm_set, data_set)  
-root_file_fsi = '../../root_files/pm%i_fsiXsec_set%i/Xsec_pm%i_lagetfsi_dataset%i.root'%(pm_set, data_set, pm_set, data_set)   
+root_file_pwia = '../../root_files/pm%i_pwiaXsec_set%i_%s/Xsec_pm%i_lagetpwia_dataset%i.root'%(pm_set, data_set, sys_ext, pm_set, data_set)  
+root_file_fsi = '../../root_files/pm%i_fsiXsec_set%i_%s/Xsec_pm%i_lagetfsi_dataset%i.root'%(pm_set, data_set, sys_ext, pm_set, data_set)   
 
 # open PWIA file
 rf_pwia = R.TFile(root_file_pwia)

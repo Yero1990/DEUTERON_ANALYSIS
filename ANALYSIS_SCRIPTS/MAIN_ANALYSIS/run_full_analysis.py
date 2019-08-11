@@ -6,40 +6,46 @@ import sys
 from sys import argv
 
 
+#Extension name given for specified systematic study
+#Usage: ipython run_full_analysis nominal (or Em_0.60)
 
-
-
+sys_ext = sys.argv[1]   
 
 
 def main():
     print('Entering Main . . .')
-    '''
+
+    print(sys_ext)
+
+        
     #Analyze Calibrated ROOTfiles to get Charge Norm. Corrected Yield
-    analyze_ROOTfiles('pwia', 80, 1)
-    analyze_ROOTfiles('fsi', 80, 1)
+    analyze_ROOTfiles('pwia', 80, 1, sys_ext)
+    analyze_ROOTfiles('fsi', 80, 1, sys_ext)
     
-    analyze_ROOTfiles('pwia', 580, 1)
-    analyze_ROOTfiles('fsi', 580, 1)
+    analyze_ROOTfiles('pwia', 580, 1, sys_ext)
+    analyze_ROOTfiles('fsi', 580, 1, sys_ext)
        
-    analyze_ROOTfiles('pwia', 580, 2)
-    analyze_ROOTfiles('fsi', 580, 2)
+    analyze_ROOTfiles('pwia', 580, 2, sys_ext)
+    analyze_ROOTfiles('fsi', 580, 2, sys_ext)
     
-    analyze_ROOTfiles('pwia', 750, 1)
-    analyze_ROOTfiles('fsi', 750, 1)
+    analyze_ROOTfiles('pwia', 750, 1, sys_ext)
+    analyze_ROOTfiles('fsi', 750, 1, sys_ext)
     
-    analyze_ROOTfiles('pwia', 750, 2)
-    analyze_ROOTfiles('fsi', 750, 2)
+    analyze_ROOTfiles('pwia', 750, 2, sys_ext)
+    analyze_ROOTfiles('fsi', 750, 2, sys_ext)
     
-    analyze_ROOTfiles('pwia', 750, 3)
-    analyze_ROOTfiles('fsi', 750, 3)
-    '''
+    analyze_ROOTfiles('pwia', 750, 3, sys_ext)
+    analyze_ROOTfiles('fsi', 750, 3, sys_ext)
+     
     #Assumes all ROOTfiles with Histos Objects have been created
-    calc_all_Xsec()
+    calc_all_Xsec(sys_ext)
 
 
-def analyze_ROOTfiles(model='', pm_set=0, data_set=0):
+def analyze_ROOTfiles(model='', pm_set=0, data_set=0, sys_ext=''):
 
     #Input: model='fsi' or 'pwia',  pm_set=80, 580, 750,  data_set=1,2,3
+    #the sys_ext: any chosen name for the specific systematic study, for example, 'nominal'
+    #or 'Em_0.40'
 
     #Make sure the current directory does not have *.root or report_* files before running
     
@@ -50,23 +56,31 @@ def analyze_ROOTfiles(model='', pm_set=0, data_set=0):
     gen_inp(model, pm_set, data_set)
 
     #Run main_analysis script ( the 2 means to use set_deep_cuts.inp )
-    os.system("root -l -q \"main_analysis.C(2)\"")
+    os.system("root -l -q -b \"main_analysis.C(2)\"")
 
-    #declare directory name
-    dir_name="./root_files/pm%i_%sXsec_set%i" % (pm_set, model, data_set)
+    #declare directory name to store ALL root_files and report_files
+    dir_name="./root_files/pm%i_%sXsec_set%i_%s" % (pm_set, model, data_set, sys_ext)
+
+    #declare directory name to store average kin. root_files
+    dir_name_kin="./root_files/average_kinematics/%s" % (sys_ext)
+
 
     #check if directory exists, else creates it.
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
+   
+    #check if kin. avg directory exists, else creates it.
+    if not os.path.exists(dir_name_kin):
+        os.makedirs(dir_name_kin)
 
     #copy SIMC *norad* to avg. kin dir (for calculation of avg. kin. later on)
-    os.system("cp deep_simc_*norad*.root root_files/average_kinematics")
+    os.system("cp deep_simc_*norad*.root "+dir_name_kin)
 
     #move ouput to relevant directory
     os.system("mv *.root report_deep* "+dir_name)
 
 
-def calc_all_Xsec():
+def calc_all_Xsec(sys_ext=''):
 
     #----------PART2: CALCULATE AVERAGE KINEMATICS-------------
     
@@ -75,34 +89,34 @@ def calc_all_Xsec():
     os.chdir(dir_name)
 
     #80 MeV
-    os.system("python calc_avg_kin.py 80 pwia 1")
-    os.system("python calc_avg_kin.py 80 fsi 1")
+    os.system("python calc_avg_kin.py 80 pwia 1 %s"%(sys_ext))
+    os.system("python calc_avg_kin.py 80 fsi 1 %s"%(sys_ext))
     #580 MeV
-    os.system("python calc_avg_kin.py 580 pwia 1")
-    os.system("python calc_avg_kin.py 580 fsi 1")
-    os.system("python calc_avg_kin.py 580 pwia 2")
-    os.system("python calc_avg_kin.py 580 fsi 2")
+    os.system("python calc_avg_kin.py 580 pwia 1 %s"%(sys_ext))
+    os.system("python calc_avg_kin.py 580 fsi 1 %s"%(sys_ext))
+    os.system("python calc_avg_kin.py 580 pwia 2 %s"%(sys_ext))
+    os.system("python calc_avg_kin.py 580 fsi 2 %s"%(sys_ext))
     #750 MeV
-    os.system("python calc_avg_kin.py 750 pwia 1")
-    os.system("python calc_avg_kin.py 750 fsi 1")
-    os.system("python calc_avg_kin.py 750 pwia 2")
-    os.system("python calc_avg_kin.py 750 fsi 2")
-    os.system("python calc_avg_kin.py 750 pwia 3")
-    os.system("python calc_avg_kin.py 750 fsi 3")
+    os.system("python calc_avg_kin.py 750 pwia 1 %s"%(sys_ext))
+    os.system("python calc_avg_kin.py 750 fsi 1 %s"%(sys_ext))
+    os.system("python calc_avg_kin.py 750 pwia 2 %s"%(sys_ext))
+    os.system("python calc_avg_kin.py 750 fsi 2 %s"%(sys_ext))
+    os.system("python calc_avg_kin.py 750 pwia 3 %s"%(sys_ext))
+    os.system("python calc_avg_kin.py 750 fsi 3 %s"%(sys_ext))
 
     #----------PART3: EXTRACT THEORY XSEC FROM AVERAGE KINEMATICS-------------
     dir_name="../theory_Xsec/"
     os.chdir(dir_name)
 
     #80 MeV
-    os.system("ipython calc_theory_Xsec.py 80 1")
+    os.system("ipython calc_theory_Xsec.py 80 1 %s"%(sys_ext))
     #580 MeV
-    os.system("ipython calc_theory_Xsec.py 580 1")
-    os.system("ipython calc_theory_Xsec.py 580 2")
+    os.system("ipython calc_theory_Xsec.py 580 1 %s"%(sys_ext))
+    os.system("ipython calc_theory_Xsec.py 580 2 %s"%(sys_ext))
     #750 MeV
-    os.system("ipython calc_theory_Xsec.py 750 1")
-    os.system("ipython calc_theory_Xsec.py 750 2")
-    os.system("ipython calc_theory_Xsec.py 750 3")
+    os.system("ipython calc_theory_Xsec.py 750 1 %s"%(sys_ext))
+    os.system("ipython calc_theory_Xsec.py 750 2 %s"%(sys_ext))
+    os.system("ipython calc_theory_Xsec.py 750 3 %s"%(sys_ext))
 
 
     #----------PART4: EXTRACT AVERAGE DATA/MODEL XSEC FROM SIMC -------------
@@ -110,14 +124,14 @@ def calc_all_Xsec():
     os.chdir(dir_name)
      
     #80 MeV
-    os.system("python calc_Xsec.py 80 1")
+    os.system("python calc_Xsec.py 80 1 %s"%(sys_ext))
     #580 MeV
-    os.system("python calc_Xsec.py 580 1")
-    os.system("python calc_Xsec.py 580 2")
+    os.system("python calc_Xsec.py 580 1 %s"%(sys_ext))
+    os.system("python calc_Xsec.py 580 2 %s"%(sys_ext))
     #750 MeV
-    os.system("python calc_Xsec.py 750 1")
-    os.system("python calc_Xsec.py 750 2")
-    os.system("python calc_Xsec.py 750 3")
+    os.system("python calc_Xsec.py 750 1 %s"%(sys_ext))
+    os.system("python calc_Xsec.py 750 2 %s"%(sys_ext))
+    os.system("python calc_Xsec.py 750 3 %s"%(sys_ext))
 
     #----------PART5: APPLY BIN-CENTERING CORRECTIONS -------------
     #This part produces a file with all the Xsec and red. Xsec for all kinematics/sets
@@ -126,14 +140,14 @@ def calc_all_Xsec():
     os.chdir(dir_name)
     
     #80 MeV
-    os.system("ipython calc_bc_corr.py 80 1")
+    os.system("ipython calc_bc_corr.py 80 1 %s"%(sys_ext))
     #580 MeV
-    os.system("ipython calc_bc_corr.py 580 1")
-    os.system("ipython calc_bc_corr.py 580 2")
+    os.system("ipython calc_bc_corr.py 580 1 %s"%(sys_ext))
+    os.system("ipython calc_bc_corr.py 580 2 %s"%(sys_ext))
     #750 MeV
-    os.system("ipython calc_bc_corr.py 750 1")
-    os.system("ipython calc_bc_corr.py 750 2")
-    os.system("ipython calc_bc_corr.py 750 3")
+    os.system("ipython calc_bc_corr.py 750 1 %s"%(sys_ext))
+    os.system("ipython calc_bc_corr.py 750 2 %s"%(sys_ext))
+    os.system("ipython calc_bc_corr.py 750 3 %s"%(sys_ext))
 
    #----------PART6: COMBINE Red. Xsec -------------
    #Combine reduced cross sections from all kin. / sets (NOT Cross Sections)
@@ -141,8 +155,8 @@ def calc_all_Xsec():
     dir_name="../combine_data/"
     os.chdir(dir_name)
 
-    os.system("ipython combine_data.py")  #produces a .txt files with all the combined Xsec from theory and data
-    os.system("ipython make_plot.py")
+    os.system("ipython combine_data.py %s"%(sys_ext))  #produces a .txt files with all the combined Xsec from theory and data
+    os.system("ipython make_plot.py %s"%(sys_ext))
 
 
 def gen_inp(model='', pm_set=0, data_set=0):

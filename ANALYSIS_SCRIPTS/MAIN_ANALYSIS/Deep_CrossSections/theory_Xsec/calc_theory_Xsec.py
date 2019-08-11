@@ -12,6 +12,7 @@ else:
 import LT.box as B
 import numpy as np
 import sys
+import os
 from sys import argv
 
 #------------------------------------------------------------
@@ -29,15 +30,23 @@ header = \
 """
 #------------------------------------------------------------
 #create output file to write cross section @ avg kinematics
+
+#usage: ipython calc_cross.py 580 1 sys_ext
+
+#User Input
 pm_set = int(sys.argv[1])
 data_set = int(sys.argv[2])
+sys_ext = sys.argv[3]
+
+#check if directory exists, else creates it.
+if not os.path.exists(sys_ext):
+    os.makedirs(sys_ext)
 
 print argv
-#usage: ipython calc_cross.py 580 1
 if pm_set == 80:
-   output_file = 'pm%i_laget_theory.txt'%(pm_set)
+   output_file = './%s/pm%i_laget_theory.txt'%(sys_ext, pm_set)
 else:
-   output_file = 'pm%i_laget_theory_set%i.txt'%(pm_set, data_set)
+   output_file = './%s/pm%i_laget_theory_set%i.txt'%(sys_ext, pm_set, data_set)
 
 o = open(output_file,'w')
 # write header
@@ -71,9 +80,9 @@ save_grid = 0
 
 # read the averaged kinematics file
 if pm_set == 80:
-    f = B.get_file('../average_kinematics/pm%i_pwia_norad_avgkin.txt'%(pm_set))
+    f = B.get_file('../average_kinematics/%s/pm%i_pwia_norad_avgkin.txt'%(sys_ext,pm_set))
 else: 
-    f = B.get_file('../average_kinematics/pm%i_pwia_norad_avgkin_set%i.txt'%(pm_set, data_set))
+    f = B.get_file('../average_kinematics/%s/pm%i_pwia_norad_avgkin_set%i.txt'%(sys_ext, pm_set, data_set))
 
 
 #Read Headers to be written to the output Xsec file
@@ -135,12 +144,12 @@ o.close()
 
 # read the averaged kinematics file, and output file to write cross sections
 if pm_set == 80:
-    f = B.get_file('../average_kinematics/pm%i_fsi_norad_avgkin.txt'%(pm_set))
-    fname = 'pm%i_laget_theory.txt'%(pm_set)
+    f = B.get_file('../average_kinematics/%s/pm%i_fsi_norad_avgkin.txt'%(sys_ext, pm_set))
+    fname = './%s/pm%i_laget_theory.txt'%(sys_ext, pm_set)
     output_file = B.get_file(fname)
 else: 
-    f = B.get_file('../average_kinematics/pm%i_fsi_norad_avgkin_set%i.txt'%(pm_set, data_set))
-    fname = 'pm%i_laget_theory_set%i.txt'%(pm_set, data_set)
+    f = B.get_file('../average_kinematics/%s/pm%i_fsi_norad_avgkin_set%i.txt'%(sys_ext, pm_set, data_set))
+    fname = './%s/pm%i_laget_theory_set%i.txt'%(sys_ext, pm_set, data_set)
     output_file = B.get_file(fname)
 
 #Add Key to the output_file header
