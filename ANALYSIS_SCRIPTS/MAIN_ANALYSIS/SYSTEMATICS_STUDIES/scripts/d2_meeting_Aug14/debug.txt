@@ -1,0 +1,17 @@
+----------------------------------
+('dataXsec80=', 4.462763906452e-06, 'dataXsec80_err=', 3.750778767518e-07)
+('dataXsec80_nom=', 4.413528600355e-06, 'dataXsec80_err_nom=', 3.943654357802e-07)
+('ib=', 110, ' pm=', 0.18, ' thnq=', 45.0, ' del80=', -4.923530609699994e-08, ' var_del80=', 1.4840683309468593e-14, ' sig_del80=', 1.2182234322762223e-07, ' R80=', -0.40415661686136595)
+----------------------------------
+----------------------------------
+('dataXsec80=', 1.562444873031e-06, 'dataXsec80_err=', 2.12797602084e-07)
+('dataXsec80_nom=', 1.354485055038e-06, 'dataXsec80_err_nom=', 2.102267697742e-07)
+('ib=', 131, ' pm=', 0.22, ' thnq=', 45.0, ' del80=', -2.07959817993e-07, ' var_del80=', -1.0875247230059094e-15, ' sig_del80=', 3.297763974280011e-08, ' R80=', -6.3060855663087025)
+----------------------------------
+
+
+The sig / del criteria from Barlow for systematics effects depends on 
+the statistical uncertainty of the cross sections. Would it be better
+to determine the systematics at the momentum distributuion level, where
+the data is combined?  Or are we only allowed to determine systematic effects
+on direct observables? 

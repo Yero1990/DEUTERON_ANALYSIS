@@ -6,6 +6,9 @@ import numpy.ma as ma
 import sys                                     
 import os                                                                                                       
 from sys import argv  
+import matplotlib
+matplotlib.use('Agg')
+
 
 #Conversion factor:  1 fm = 1/ (197 MeV),   
 #The reduced cross section is in MeV^-3 units
@@ -85,7 +88,7 @@ def plot_data_sets():
 
     for i, ithnq in enumerate(thnq_arr):
         print(ithnq)
-            
+        plt.clf()
         B.pl.figure(i)
 
         B.plot_exp(pm[thnq==ithnq], red_dataXsec_580set1[thnq==ithnq]*MeV2fm, red_dataXsec_err_580set1[thnq==ithnq]*MeV2fm, color='red',  marker='^', label='580 (set1)')
@@ -132,7 +135,7 @@ def plot_theory_sets(model=''):
 
         for i, ithnq in enumerate(thnq_arr):
             print(ithnq)
-            
+            B.pl.clf()
             B.pl.figure(i)
 
             B.plot_exp(pm[thnq==ithnq], red_pwiaXsec_580set1[thnq==ithnq]*MeV2fm, color='red',  linestyle='--',  label='580 (set1)')
@@ -166,7 +169,7 @@ def plot_theory_sets(model=''):
 
         for i, ithnq in enumerate(thnq_arr):
             print(ithnq)
-            
+            B.pl.clf()
             B.pl.figure(i)
             
             B.plot_exp(pm[thnq==ithnq], red_fsiXsec_580set1[thnq==ithnq]*MeV2fm, color='red',  linestyle='--',  label='580 (set1)')
@@ -198,7 +201,7 @@ def plot_final():
 
     #----MASKING ARRAYS TO CHOOSE ERRORS BELOW 20 %-------
     #The Limit on the red. Xsec error should be placed at the very end, when the combined data is plotted (all data sets and overlapping bins have been combined)
-    red_dataXsec_avg_masked = np.ma.array(red_dataXsec_avg, mask=(red_dataXsec_avg_err>0.2*red_dataXsec_avg))
+    red_dataXsec_avg_masked = np.ma.array(red_dataXsec_avg, mask=(red_dataXsec_avg_err>0.5*red_dataXsec_avg))
     red_dataXsec_avg_masked = np.ma.filled(red_dataXsec_avg_masked.astype(float), -1.)
 
 
@@ -206,7 +209,7 @@ def plot_final():
 
     for i, ithnq in enumerate(thnq_arr):
         print(ithnq)
-            
+        B.pl.clf()
         B.pl.figure(i)
 
         B.plot_exp(pm[thnq==ithnq], red_dataXsec_avg[thnq==ithnq]*MeV2fm, red_dataXsec_avg_err[thnq==ithnq]*MeV2fm, color='black', logy=True, label='Data' )

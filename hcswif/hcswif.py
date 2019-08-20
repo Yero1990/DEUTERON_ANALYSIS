@@ -345,7 +345,7 @@ def addCommonJobInfo(workflow, parsed_args):
 
     # RAM in bytes
     if parsed_args.ram==None:
-        ram_bytes = 2500000000
+        ram_bytes = 5000000000
     else:
         ram_bytes = int(parsed_args.ram[0])
 

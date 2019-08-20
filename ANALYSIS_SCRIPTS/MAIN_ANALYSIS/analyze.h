@@ -59,6 +59,8 @@ class analyze
   //----------Get Cross Sections (Divide Radiative Corrected Yield by Phase Space-----------
   void GetXsec();
 
+  //---------Get the mean value of the ztarget DIfference---------------
+  Double_t getZtarMean(int pm_set=0, int dataset=0, string model="", string analysis="");
 
 
   //------------Run Analysis Mehods--------------
@@ -703,7 +705,10 @@ class analyze
   TH1F *H_Pm_syshColl_loose_total = 0;                                TH1F *H_Pm_syshColl_loose_i = 0;
   TH1F *H_Pm_syshColl_tight_total = 0;                                TH1F *H_Pm_syshColl_tight_i = 0;
 
-
+  //Hsitos to get ZtarDiff Mean
+  TH1F *simc_ztarDiff =  0;
+  TH1F *data_ztarDiff =  0;
+  Double_t ztd_mean = 0;
 
   //------------Average Kinematics Histograms---------------
   

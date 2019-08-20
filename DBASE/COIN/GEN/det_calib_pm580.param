@@ -3,3 +3,4 @@
 #include "DEUTERON_ANALYSIS/PARAM/HMS/DC/hdc_tzero_per_wire_pm580.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_calib_pm580.param"
 #include "DEUTERON_ANALYSIS/PARAM/SHMS/DC/pdc_tzero_per_wire_pm580.param"
+#include "DEUTERON_ANALYSIS/PARAM/SHMS/CAL/pcal_calib580.param"

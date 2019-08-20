@@ -108,7 +108,7 @@ vector <string> FindString(string keyword, string fname)
       found = line.find(keyword);
       
       if(found<0 || found>1000){found=-1;} //not found
-      if(cmt==";" || cmt=="#" || cmt=="!") {found=-1;}  //Found commented line. So Skip
+      if(cmt==";" || cmt=="!") {found=-1;}  //Found commented line. So Skip
 
       if(found!=-1){
 	

@@ -1,35 +1,17 @@
 #!/bin/bash
+ 
 
-
-#filename='/u/group/E12-10-003/cyero/simc_deep/input_kinematics.dat'
-
-#for fname in $(cat $filename) ; do    
-
-#RUN SIMC
+#CHANGE TO MAIN_ANALYSIS DIRECTORY FOR DEUTERON ANALYSIS
 CMD1="cd /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/"
-#CMD2="root -l -q -b \"run_simc_d2.C(\\\"${fname}\\\")\""
-CMD2="/apps/python/2.7.12/bin/python run_full_analysis.py nominal"
 
-#echo "Changing Directory to $CMD1"
+#ARGUMENT is description of cut being varied. Ex. Em40MeV, Em50MeV, ztar2cm, etc. (this is for systematic studies)
+#Make sure to make the appropiate changes to the cut ranges in the input file of run_full_analysis.py
+CMD2="/apps/python/2.7.12/bin/python run_full_analysis_TEST.py Ztar"        
+                                                                           
+
 eval ${CMD1}
 
-#echo "**********************************************"
-#echo "level 0"
-#echo "**********************************************"
-#echo
-#echo
-#eval "echo $ROOTSYS"
-
-#echo "**********************************************"
-#echo "level 1"
-#echo "**********************************************"
 source /site/12gev_phys/softenv.sh 2.3
     
-#eval "echo $ROOTSYS"
-
 eval ${CMD2}
 
-#echo "**********************************************"
-#echo "Finished!"
-
-#done

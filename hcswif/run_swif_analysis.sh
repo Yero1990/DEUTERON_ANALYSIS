@@ -4,7 +4,7 @@
 #where [options] ---> status,  delete
 
 #workflow_name="heep_coin_elec"
-workflow_name="d2_analysis"
+workflow_name="d2_analysis_ZtarSystematics"
 
 #runlist_name="current_elec.data"
 #runlist_name="current_prot.data"
@@ -18,15 +18,15 @@ shell_type="--shell bash"
 #shell_script=" --command /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/hcswif/run_simc_deep.sh"
 shell_script=" --command /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/run_analysis.sh"
 #shell_script=" --command file /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/hcswif/my_command_list.txt"  #created multiple jobs (as opposed to one giant job) for each simc file inside .txt
-time="--time 3600"   #max run time per job in seconds allowed before killing jobs (at most 24 hours per job, as each is 5 million events)
-disk_usage=" --disk 1000000000 "   #in bytes (or 1 Gb default). (1 Gb per job currently used.)
-ram=" --ram 2000000000 "
+time=" --time 172800"   #max run time per job in seconds allowed before killing jobs (at most 24 hours per job, as each is 5 million events)
+disk_usage=" --disk 10000000000 "   #in bytes (or 1 Gb default). (1 Gb per job currently used.)
+ram=" --ram 10000000000 "
 cpu_cores=" --cpu 8"   #number of cpu cores requested 
 project=" --project c-comm2017 "
 workflow=" --name $workflow_name"
 
 
-CMD="python3 hcswif.py $mode $shell_script $time $disk_usage $cpu_cores $project $workflow"
+CMD="python3 hcswif.py $mode $shell_script $time $disk_usage $cpu_cores $project $workflow "
 #echo $CMD
 
 view_file="python3 -m json.tool ${workflow_name}.json"

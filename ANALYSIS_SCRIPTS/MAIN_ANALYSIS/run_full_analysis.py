@@ -4,10 +4,11 @@ import glob
 import subprocess as sp
 import sys
 from sys import argv
+import numpy as np
 
 
-#Extension name given for specified systematic study
-#Usage: ipython run_full_analysis nominal (or Em_0.60)
+#Extension name given for specified systematic study, for ex. Em30MeV means we put a cut on Emiss of < 30 MeV, and run the full code
+#Usage: ipython run_full_analysis nominal (or Em30MeV, Em50MeV, Em60MeV, Em80MeV)
 
 sys_ext = sys.argv[1]   
 
@@ -15,9 +16,6 @@ sys_ext = sys.argv[1]
 def main():
     print('Entering Main . . .')
 
-    print(sys_ext)
-
-        
     #Analyze Calibrated ROOTfiles to get Charge Norm. Corrected Yield
     analyze_ROOTfiles('pwia', 80, 1, sys_ext)
     analyze_ROOTfiles('fsi', 80, 1, sys_ext)
@@ -76,15 +74,15 @@ def analyze_ROOTfiles(model='', pm_set=0, data_set=0, sys_ext=''):
     #copy SIMC *norad* to avg. kin dir (for calculation of avg. kin. later on)
     os.system("cp deep_simc_*norad*.root "+dir_name_kin)
 
-    #move ouput to relevant directory
-    os.system("mv *.root report_deep* "+dir_name)
+    #move ouput root_file, report and input_cut file to relevant directory
+    os.system("mv *.root report_deep* set_deep* "+dir_name)
 
 
 def calc_all_Xsec(sys_ext=''):
 
     #----------PART2: CALCULATE AVERAGE KINEMATICS-------------
     
-    #Change to relevatn directory (full path)
+    #Change to relevant directory (full path)
     dir_name="/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/average_kinematics/"
     os.chdir(dir_name)
 
@@ -156,8 +154,16 @@ def calc_all_Xsec(sys_ext=''):
     os.chdir(dir_name)
 
     os.system("ipython combine_data.py %s"%(sys_ext))  #produces a .txt files with all the combined Xsec from theory and data
-    os.system("ipython make_plot.py %s"%(sys_ext))
+    os.system("python make_plot.py %s"%(sys_ext))
 
+
+    #-------PART7: CALCULATE SYSTEMATICS EFFECTS (assumes nominal cuts Xsec already exits)---------
+    #dir_name="/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/SYSTEMATICS_STUDIES/scripts"
+    #os.chdir(dir_name)
+
+    #os.system("python systematics.py %s %f"%(sys_ext, 0.2))  #the 2nd argument represents the statistcal uncertainty (ex. we want < 20% uncertainty in Xsec)
+    #os.system("python systematics.py %s %f"%(sys_ext, 0.5))
+    #os.system("python systematics.py %s %f"%(sys_ext, 0.9))
 
 def gen_inp(model='', pm_set=0, data_set=0):
 
@@ -228,9 +234,8 @@ def gen_inp(model='', pm_set=0, data_set=0):
     f.write('                                                                                                              \n')
     f.write('                                                                                                              \n')
     f.write('#------Set DATA/SIMC CUTS LIMITS ------                                                                       \n')
-    f.write('Em_min : -0.02                                                                                                \n')  #nominal Em_min
-    f.write('Em_max : 0.04                                                                                                 \n')  #nominal Em_max
-    f.write(';Em_max : 0.01                                                                                                 \n')  #systematics (vary)
+    f.write('Em_min : -0.02                                                                                                \n')  
+    f.write('Em_max : 0.04                                                                                                 \n')  
     f.write('                                                                                                              \n')
     f.write('h_delta_min: -8.                                                                                              \n')
     f.write('h_delta_max:  8.                                                                                              \n')
@@ -267,234 +272,3 @@ def gen_inp(model='', pm_set=0, data_set=0):
 if __name__=="__main__":
     main()
 
-'''
-#==Pm= 750 FSI (set1)==
-
-#Generate Input File for D(e,e'p)
-os.system("python gen_inp.py fsi  750 1")
-
-#Run main_analysis script
-os.system("root -l -q \"main_analysis.C(2)\"")
-
-#declare directory name
-dir_name="./pm750_fsi_set1"
-
-#check if directory exists, else creates it.
-if not os.path.exists(dir_name):
-    os.makedirs(dir_name)
-
-#copy SIMC *norad* to avg. kin dir (for calculation of avg. kin. later on)
-os.system("cp deep_simc_*norad* root_files/average_kinematics")
-
-#move ouput to relevant directory
-os.system("mv *.root report_deep* "+dir_name)
-
-
-
-
-#==Pm= 750 FSI (set2)==
-
-#Generate Input File for D(e,e'p)
-os.system("python gen_inp.py fsi  750 2")
-
-#Run main_analysis script
-os.system("root -l -q \"main_analysis.C(2)\"")
-
-#declare directory name
-dir_name="./pm750_fsi_set2"
-
-#check if directory exists, else creates it.
-if not os.path.exists(dir_name):
-    os.makedirs(dir_name)
-
-#move ouput to relevant directory
-os.system("mv *.root report_deep* "+dir_name)
-
-
-
-
-#==Pm= 750 FSI (set3)==
-
-#Generate Input File for D(e,e'p)
-os.system("python gen_inp.py fsi  750 3")
-
-#Run main_analysis script
-os.system("root -l -q \"main_analysis.C(2)\"")
-
-#declare directory name
-dir_name="./pm750_fsi_set3"
-
-#check if directory exists, else creates it.
-if not os.path.exists(dir_name):
-    os.makedirs(dir_name)
-
-#move ouput to relevant directory
-os.system("mv *.root report_deep* "+dir_name)
-
-
-#==Pm= 750 PWIA (set1)==
-
-#Generate Input File for D(e,e'p)
-os.system("python gen_inp.py pwia  750 1")
-
-#Run main_analysis script
-os.system("root -l -q \"main_analysis.C(2)\"")
-
-#declare directory name
-dir_name="./pm750_pwia_set1"
-
-#check if directory exists, else creates it.
-if not os.path.exists(dir_name):
-    os.makedirs(dir_name)
-
-#move ouput to relevant directory
-os.system("mv *.root report_deep* "+dir_name)
-
-
-#==Pm= 750 PWIA (set2)==
-
-#Generate Input File for D(e,e'p)
-os.system("python gen_inp.py pwia 750 2")
-
-#Run main_analysis script
-os.system("root -l -q \"main_analysis.C(2)\"")
-
-#declare directory name
-dir_name="./pm750_pwia_set2"
-
-#check if directory exists, else creates it.
-if not os.path.exists(dir_name):
-    os.makedirs(dir_name)
-
-#move ouput to relevant directory
-os.system("mv *.root report_deep* "+dir_name)
-
-#==Pm= 750 PWIA (set3)==
-
-#Generate Input File for D(e,e'p)
-os.system("python gen_inp.py pwia 750 3")
-
-#Run main_analysis script
-os.system("root -l -q \"main_analysis.C(2)\"")
-
-#declare directory name
-dir_name="./pm750_pwia_set3"
-
-#check if directory exists, else creates it.
-if not os.path.exists(dir_name):
-    os.makedirs(dir_name)
-
-#move ouput to relevant directory
-os.system("mv *.root report_deep* "+dir_name)
-
-
-
-#==Pm= 80 FSI (set1)==
-
-#Generate Input File for D(e,e'p)
-os.system("python gen_inp.py fsi 80 1")
-
-#Run main_analysis script
-os.system("root -l -q \"main_analysis.C(2)\"")
-
-#declare directory name
-dir_name="./pm80_fsi_set1"
-
-#check if directory exists, else creates it.
-if not os.path.exists(dir_name):
-    os.makedirs(dir_name)
-
-#move ouput to relevant directory
-os.system("mv *.root report_deep* "+dir_name)
-
-#==Pm= 80 PWIA (set1)==
-
-#Generate Input File for D(e,e'p)
-os.system("python gen_inp.py pwia 80 1")
-
-#Run main_analysis script
-os.system("root -l -q \"main_analysis.C(2)\"")
-
-#declare directory name
-dir_name="./pm80_pwia_set1"
-
-#check if directory exists, else creates it.
-if not os.path.exists(dir_name):
-    os.makedirs(dir_name)
-
-#move ouput to relevant directory
-os.system("mv *.root report_deep* "+dir_name)
-
-#==Pm= 580 FSI (set1)==
-
-#Generate Input File for D(e,e'p)
-os.system("python gen_inp.py fsi 580 1")
-
-#Run main_analysis script
-os.system("root -l -q \"main_analysis.C(2)\"")
-
-#declare directory name
-dir_name="./pm580_fsi_set1"
-
-#check if directory exists, else creates it.
-if not os.path.exists(dir_name):
-    os.makedirs(dir_name)
-
-#move ouput to relevant directory
-os.system("mv *.root report_deep* "+dir_name)
-
-#==Pm= 580 FSI (set2)==
-
-#Generate Input File for D(e,e'p)
-os.system("python gen_inp.py fsi 580 2")
-
-#Run main_analysis script
-os.system("root -l -q \"main_analysis.C(2)\"")
-
-#declare directory name
-dir_name="./pm580_fsi_set2"
-
-#check if directory exists, else creates it.
-if not os.path.exists(dir_name):
-    os.makedirs(dir_name)
-
-#move ouput to relevant directory
-os.system("mv *.root report_deep* "+dir_name)
-
-#==Pm= 580 PWIA (set1)==
-
-#Generate Input File for D(e,e'p)
-os.system("python gen_inp.py pwia 580 1")
-
-#Run main_analysis script
-os.system("root -l -q \"main_analysis.C(2)\"")
-
-#declare directory name
-dir_name="./pm580_pwia_set1"
-
-#check if directory exists, else creates it.
-if not os.path.exists(dir_name):
-    os.makedirs(dir_name)
-
-#move ouput to relevant directory
-os.system("mv *.root report_deep* "+dir_name)
-
-#==Pm= 580 PWIA (set2)==
-
-#Generate Input File for D(e,e'p)
-os.system("python gen_inp.py pwia 580 2")
-
-#Run main_analysis script
-os.system("root -l -q \"main_analysis.C(2)\"")
-
-#declare directory name
-dir_name="./pm580_pwia_set2"
-
-#check if directory exists, else creates it.
-if not os.path.exists(dir_name):
-    os.makedirs(dir_name)
-
-#move ouput to relevant directory
-os.system("mv *.root report_deep* "+dir_name)
-
-'''
