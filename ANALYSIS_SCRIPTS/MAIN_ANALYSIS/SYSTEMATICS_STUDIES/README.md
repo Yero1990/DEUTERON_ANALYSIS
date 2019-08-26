@@ -64,23 +64,18 @@ Consider a measurement done two different ways (i.e. apply different cuts). Let 
 (a1, sig_1) and (a2, sig_2) where one of the measurements is a subset of the other and where 'sig' is the error bar or standard deviation of the measurement 'a'.
 The difference, delta = a1 - a2 then has an associated uncertainty, (sig_delta)**2 = sig_1**2 - sig_2**2  (this is the difference of their variances)
 Then, if : 
-      	   delta / sig_delta < 2 (or the difference in the measurements is within 2 std. 
+      	   delta / sig_delta < 2 to 4 (or the difference in the measurements is from 2 to 4 standard deviations)
 
 
-----SYSTEMATICS STUDIES RUN PLAN---- 
-
-cd to: /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/
-
-1) Set the cut to be studied in the systematics
-   a) >> emacs run_full_analysis.py
-   
-
-   >> cd /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/hcswif
-  
-   >> ./run_swif_analysis.sh  
-   [This command calls the shell script '
-   
+The dataXsec vs. variational cuts was plotted for all Pmiss of a given theta_nq bin as well, in order to determine how large were
+the variations in the cross section as a function of the different cuts. 
 
 
--------------------------------------------------------------------
+-----CUT RANGES STUDIED-----
+Missing Energy (Emiss): (-20, 30),  (-20, 40), (-20, 45), (-20, 50), (-20, 60), (-20, 80) MeV
+ZtarDifference : |Ztar Diff.| < n cm,   where n = 0.5, 1.0, 1.5, 2.0, 2.5, 3.0
+HMS Collimator: scale n, where n = 1.1, 1.0, 0.9, 0.8     **scale refers to the collimator geometrical cut to match its actual size (1 means a collimator cut of its actual size)
 
+SHMS Calorimeter EtotTrackNorm: cut ON: (0.7, 5.), cut OFF  
+Coincidence Time Cut:   Cut ON: (10.5, 14.5) ns, cut OFF   
+==> If the variable on which the cut is being made is sufficiently clean, it is enought to turn the cut on/off

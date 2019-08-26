@@ -12,10 +12,12 @@ import plot_utils as pu   #module with my defined fucntions for plotting
 #systematic error. 
 
 def calc_systematics(study='', sys_ext1='',sys_ext2='', stats_thrs=0.):
- 
+
+    print('Calculating Systematics for %s,  Cut Setting:%s'%(study, sys_ext2))
+
     #Argument: sys_ext1,2 are the extension name of the systematics studies files to be read. sys_ext1 = 'Em80MeV' by default (see main)
     #The sys_ext2 (assume to be subset of the cut varied) is subtracted from sys_ext1 (assumed to be total set of the cut varied),
-    #stats_thrs is the satistics threshold to set on the measued cross section.
+    #stats_thrs is the satistics threshold to set on the measued cross section. (only plot XSec below ceratin stats. uncertainty)
 
     #check if directory to store systematics datafiles exists, else creates it.
     study_dir = "../datafiles/"+study+"_study"
@@ -192,7 +194,7 @@ def calc_systematics(study='', sys_ext1='',sys_ext2='', stats_thrs=0.):
 
     #Mask Xsec and Ratio Arrays given a statistical uncertainty > threshold
 
-    #NOMINAL Xsec (Cut with the larget set)
+    #NOMINAL Xsec (Cut with the largest set)
     dataXsec_80_nom_masked = np.ma.array(dataXsec_80_nom, mask=(dataXsec_err_80_nom>stats_thrs*dataXsec_80_nom))  #mask if (sig>stats_thrs %) of mean
     dataXsec_80_nom_masked = np.ma.filled(dataXsec_80_nom_masked.astype(float), -1.)   #assign the mask a value of "-1"
    
@@ -243,7 +245,7 @@ def calc_systematics(study='', sys_ext1='',sys_ext2='', stats_thrs=0.):
             var_del80 = dataXsec_err_80_nom[ib]**2 - dataXsec_err_80[ib]**2      #difference of the variances
             sig_del80 = np.sqrt(abs(var_del80))                               #standard deviation
             if(sig_del80>0):
-                R80 =  del80 / sig_del80                                     #Ratio of diffences in Xsec to std. dev (if >2, is sig. difference
+                R80 =  del80 / sig_del80                                     #Ratio of diffences in Xsec to std. dev (if R>4, there is significant difference)
                 #print('----------------------------------')
                 #print('dataXsec80=',dataXsec_80_masked[ib],'dataXsec80_err=',dataXsec_err_80[ib])
                 #print('dataXsec80_nom=',dataXsec_80_nom_masked[ib],'dataXsec80_err_nom=',dataXsec_err_80_nom[ib])
@@ -269,7 +271,7 @@ def calc_systematics(study='', sys_ext1='',sys_ext2='', stats_thrs=0.):
                 R580set1 =  del_580set1 / sig_del580set1                                         #Ratio of diffences in Xsec to std. dev (if >2, is sig. difference
             else:
                 R580set1 = -1000.
-        #Else, set to -1
+        #Else, set to -1000.
         else:
             del_580set1 = -1000.
             var_del580set1 = -1000.
@@ -287,7 +289,7 @@ def calc_systematics(study='', sys_ext1='',sys_ext2='', stats_thrs=0.):
                 R580set2 =  del_580set2 / sig_del580set2                                         #Ratio of diffences in Xsec to std. dev (if >2, is sig. difference
             else:
                 R580set2 = -1000.
-        #Else, set to -1
+        #Else, set to -1000.
         else:
             del_580set2 = -1000.
             var_del580set2 = -1000.
@@ -306,7 +308,7 @@ def calc_systematics(study='', sys_ext1='',sys_ext2='', stats_thrs=0.):
                 R750set1 =  del_750set1 / sig_del750set1                                         #Ratio of diffences in Xsec to std. dev (if >2, is sig. difference
             else:
                 R750set1 = -1000.
-        #Else, set to -1
+        #Else, set to -1000.
         else:
             del_750set1 = -1000.
             var_del750set1 = -1000.
@@ -324,7 +326,7 @@ def calc_systematics(study='', sys_ext1='',sys_ext2='', stats_thrs=0.):
                 R750set2 =  del_750set2 / sig_del750set2                                         #Ratio of diffences in Xsec to std. dev (if >2, is sig. difference
             else:
                 R750set2 = -1000.
-        #Else, set to -1
+        #Else, set to -1000.
         else:
             del_750set2 = -1000.
             var_del750set2 = -1000.
@@ -342,7 +344,7 @@ def calc_systematics(study='', sys_ext1='',sys_ext2='', stats_thrs=0.):
                 R750set3 =  del_750set3 / sig_del750set3                                         #Ratio of diffences in Xsec to std. dev (if >2, is sig. difference
             else:
                 R750set3 = -1000.
-        #Else, set to -1
+        #Else, set to -1000.
         else:
             del_750set3 = -1000.
             var_del750set3 = -1000.
@@ -352,19 +354,19 @@ def calc_systematics(study='', sys_ext1='',sys_ext2='', stats_thrs=0.):
         fout.write("%i %i %i %f %f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.6f %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e\n" % (i_b[ib], i_x[ib], i_y[ib], xb[ib], yb[ib], del80, sig_del80, R80, del_580set1, sig_del580set1, R580set1, del_580set2, sig_del580set2, R580set2, del_750set1, sig_del750set1, R750set1,  del_750set2, sig_del750set2, R750set2,  del_750set3, sig_del750set3, R750set3, dataXsec_80_nom_masked[ib], dataXsec_err_80_nom[ib], dataXsec_580set1_nom_masked[ib], dataXsec_err_580set1_nom[ib], dataXsec_580set2_nom_masked[ib], dataXsec_err_580set2_nom[ib], dataXsec_750set1_nom_masked[ib], dataXsec_err_750set1_nom[ib], dataXsec_750set2_nom_masked[ib], dataXsec_err_750set2_nom[ib], dataXsec_750set3_nom_masked[ib], dataXsec_err_750set3_nom[ib], dataXsec_80_masked[ib], dataXsec_err_80[ib], dataXsec_580set1_masked[ib], dataXsec_err_580set1[ib], dataXsec_580set2_masked[ib], dataXsec_err_580set2[ib], dataXsec_750set1_masked[ib], dataXsec_err_750set1[ib], dataXsec_750set2_masked[ib], dataXsec_err_750set2[ib], dataXsec_750set3_masked[ib], dataXsec_err_750set3[ib]))
 
 
-    print('Loop Done')
+    print('Finished!')
     fout.close()
 
 
 def main():
     print('Entering Main . . .')
-   
+
     #User Input (what type of systematics? Enter two descriptions)
     #We want to compare the largest set with any other subsets variable cuts. (Ex. Em80MeV-Em40MeV, or Em80MeV-Em50MeV,  . . . )
     
+    stats_thrs = 0.5  #Statistics Threshold (ONLY use data Xsec which are withih the statistical uncertainty of the mean Xsec)
 
-    study= "Em"      #What Systematic Study to be done? "Em", "Ztar", "hColl", 
-    sys_ext1 = "Em80MeV"  # the largest (total) set
+
 
     #---------Specific for User Input ONLY---------------
     #sys_ext2 = sys.argv[1] #"Em30MeV"   #second systematics name to compare with nominal 
@@ -377,19 +379,74 @@ def main():
     #plot_data_sets(sys_ext1, sys_ext2)
     #-----------------------------------------------------
 
-    stats_thrs = 0.5  #Statistics Threshold (ONLY use data Xsec which are withih the statistical uncertainty of the mean Xsec)
+    '''
+    #--------Calc. ALl Systematics for Missing Energy Cut Variation-----------
+    
+    #Emiss Systematics
+    study= "Em"      #What Systematic Study to be done? "Em", "Ztar", "hColl", 
+    sys_ext1 = "Em80MeV"  # the largest (total) set
 
-    #Calc. ALl Systematics for Missing Energy Cut Variation
     calc_systematics(study, sys_ext1, "Em30MeV", stats_thrs)
     calc_systematics(study, sys_ext1, "Em40MeV", stats_thrs)
     calc_systematics(study, sys_ext1, "Em45MeV", stats_thrs)
     calc_systematics(study, sys_ext1, "Em50MeV", stats_thrs)
     calc_systematics(study, sys_ext1, "Em60MeV", stats_thrs)
     
-    #plot_systematics(study, stats_thrs)
+    #Call Plotting Functions
     pu.plotEm_syst(study, stats_thrs)
+    pu.plotXsec_vs_Emcuts(study, stats_thrs, 45) #the last argument is the theta_nq central bin value
 
+    
 
+    #--------Calc. ALl Systematics for ZtarDiff Cut Variation------------
+    #Ztar Systematics
+    study= "Ztar"      #What Systematic Study to be done? "Em", "Ztar", "hColl", 
+    sys_ext1 = "Ztar3.0cm"  # the largest (total) set
+
+    calc_systematics(study, sys_ext1, "Ztar2.5cm", stats_thrs)
+    calc_systematics(study, sys_ext1, "Ztar2.0cm", stats_thrs)
+    calc_systematics(study, sys_ext1, "Ztar1.5cm", stats_thrs)
+    calc_systematics(study, sys_ext1, "Ztar1.0cm", stats_thrs)
+    calc_systematics(study, sys_ext1, "Ztar0.5cm", stats_thrs)
+    
+    pu.plotZtar_syst(study, stats_thrs)
+    pu.plotXsec_vs_Ztarcuts(study, stats_thrs, 45)
+
+    
+    #--------Calc. All Systematics for HMS Collimator Cut Variation------------
+    #hColl Systematics
+    study= "hColl"      #What Systematic Study to be done? "Em", "Ztar", "hColl", 
+    sys_ext1 = "hColl1.1"  # the largest (total) set
+
+    calc_systematics(study, sys_ext1, "hColl1.0", stats_thrs)
+    calc_systematics(study, sys_ext1, "hColl0.9", stats_thrs)
+    calc_systematics(study, sys_ext1, "hColl0.8", stats_thrs)
+    
+    pu.plothColl_syst(study, stats_thrs)
+    pu.plotXsec_vs_hCollcuts(study, stats_thrs, 45)
+
+    
+    #--------Calc. All Systematics for Coincidence Time  Cut Variation------------
+    #ctime Systematics
+    study= "ctime"      #What Systematic Study to be done? "Em", "Ztar", "hColl", 
+    sys_ext1 = "ctimeOFF"  # the largest (total) set
+
+    calc_systematics(study, sys_ext1, "ctimeON", stats_thrs)
+
+    pu.plotctime_syst(study, stats_thrs)
+    pu.plotXsec_vs_ctimecuts(study, stats_thrs, 45)
+
+    '''
+    #--------Calc. All Systematics for SHMS Cal  Cut Variation------------
+    #ctime Systematics
+    study= "shmsCal"      #What Systematic Study to be done? "Em", "Ztar", "hColl", 
+    sys_ext1 = "shmsCalOFF"  # the largest (total) set
+
+    calc_systematics(study, sys_ext1, "shmsCalON", stats_thrs)
+
+    pu.plotpcal_syst(study, stats_thrs)
+    pu.plotXsec_vs_pcalcuts(study, stats_thrs, 45)
+    
 
 if __name__=="__main__":
     main()

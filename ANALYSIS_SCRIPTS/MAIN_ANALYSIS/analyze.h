@@ -1,3 +1,9 @@
+/*
+Author: Carlos Yero
+email: cyero002@fiu.edu, cyero@jlab.org
+Date: August 22, 2019 
+*/
+
 #ifndef ANALYZE_H
 #define ANALYZE_H
 

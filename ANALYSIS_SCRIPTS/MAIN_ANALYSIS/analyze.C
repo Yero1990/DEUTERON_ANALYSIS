@@ -1,3 +1,10 @@
+/*
+Author: Carlos Yero
+email: cyero002@fiu.edu, cyero@jlab.org
+Date: August 22, 2019 
+*/
+
+
 #include<iostream>
 #include "analyze.h"
 
@@ -584,7 +591,7 @@ void analyze::SetCuts()
 
   ztarDiff_min = stod(split(FindString("ztarDiff_min", input_CutFileName)[0], ':')[1]); 
   ztarDiff_max = stod(split(FindString("ztarDiff_max", input_CutFileName)[0], ':')[1]);
-  //ztd_mean = getZtarMean(pm_setting, data_set, model, analysis);  //Get Mean of ZtarDiff 
+  ztd_mean = getZtarMean(pm_setting, data_set, model, analysis);  //Get Mean of ZtarDiff 
 
   Q2_min = stod(split(FindString("Q2_min", input_CutFileName)[0], ':')[1]); 
   Q2_max = stod(split(FindString("Q2_max", input_CutFileName)[0], ':')[1]);
@@ -1968,7 +1975,7 @@ void analyze::EventLoop()
 	  else{c_Em=1;}
 	  
 	  if(ztar_diff_cut_flag){ 
-	    cout << "data_zmean = " << ztd_mean << endl;
+	    //cout << "data_zmean = " << ztd_mean << endl;
 
 	    c_ztarDiff = ztar_diff>(ztd_mean + ztarDiff_min)&&ztar_diff<(ztd_mean + ztarDiff_max);
 	    //c_ztarDiff = ztar_diff>ztarDiff_min&&ztar_diff<ztarDiff_max;
@@ -2509,7 +2516,7 @@ void analyze::EventLoop()
 	  else{c_Em=1;}
 
 	  if(ztar_diff_cut_flag){ 
-	    cout << "simc_zmean = " << ztd_mean << endl;
+	    //cout << "simc_zmean = " << ztd_mean << endl;
 	    //ztd_mean = getZtarMean(pm_setting, data_set, model, "simc");  //Get Mean of ZtarDiff 
 	    c_ztarDiff = ztar_diff>(ztd_mean + ztarDiff_min)&&ztar_diff<(ztd_mean + ztarDiff_max);
 	    //c_ztarDiff = ztar_diff>ztarDiff_min&&ztar_diff<ztarDiff_max;
@@ -4655,6 +4662,8 @@ void analyze::ApplyRadCorr()
   data_th_nq->Multiply(ratio_th_nq);
   data_Pm_vs_thnq->Multiply(ratio_Pm_vs_thnq);
 
+  //Testing Systematic Studies Dependence on Rad. COrr Ratio
+  //Do not apply rad. corr, and study systematic effects
 
   //Write Radiative Corrected Data to ROOTfile
   TFile *data_radcorr = new TFile(data_OutputFileName_radCorr, "RECREATE");
