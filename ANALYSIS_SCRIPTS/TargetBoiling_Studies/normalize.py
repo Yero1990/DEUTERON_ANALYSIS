@@ -140,15 +140,15 @@ fig1 = B.pl.figure()
 
 #PLOT C12
 B.plot_exp(avg_current_bcm4b_C12, trkY4b_C12, trkY_err4b_C12, color='black', marker='o', label='data: C12 tracking Yield')
-B.plot_line(trkY_fit_C12.xpl, trkY_fit_C12.ypl, color='black', label='fit: slope = %.4f +/- %.4f \n     offset = %.2f +/- %.2f' % (trk_slope_C12, trk_slope_err_C12, trk_offset_C12, trk_offset_err_C12))
+B.plot_line(trkY_fit_C12.xpl, trkY_fit_C12.ypl, color='black', label='fit: slope = %.8f +/- %.8f \n     offset = %.2f +/- %.2f' % (trk_slope_C12, trk_slope_err_C12, trk_offset_C12, trk_offset_err_C12))
 
 #PLOT LH2
 B.plot_exp(avg_current_bcm4b_LH2, trkY4b_LH2, trkY_err4b_LH2, color='blue', marker='s', label='data: LH2 tracking Yield')
-B.plot_line(trkY_fit_LH2.xpl, trkY_fit_LH2.ypl, color='blue', label='fit: slope = %.4f +/- %.4f \n     offset = %.2f +/- %.2f' % (trk_slope_LH2, trk_slope_err_LH2, trk_offset_LH2, trk_offset_err_LH2))
+B.plot_line(trkY_fit_LH2.xpl, trkY_fit_LH2.ypl, color='blue', label='fit: slope = %.8f +/- %.8f \n     offset = %.2f +/- %.2f' % (trk_slope_LH2, trk_slope_err_LH2, trk_offset_LH2, trk_offset_err_LH2))
 
 #PLOT LD2
 B.plot_exp(avg_current_bcm4b_LD2, trkY4b_LD2, trkY_err4b_LD2, color='red', marker='^', label='data: LD2 tracking Yield')
-B.plot_line(trkY_fit_LD2.xpl, trkY_fit_LD2.ypl, color='red', label='fit: slope = %.4f +/- %.4f \n     offset = %.2f +/- %.2f' % (trk_slope_LD2, trk_slope_err_LD2, trk_offset_LD2, trk_offset_err_LD2))
+B.plot_line(trkY_fit_LD2.xpl, trkY_fit_LD2.ypl, color='red', label='fit: slope = %.8f +/- %.8f \n     offset = %.2f +/- %.2f' % (trk_slope_LD2, trk_slope_err_LD2, trk_offset_LD2, trk_offset_err_LD2))
 
 
 

@@ -721,6 +721,190 @@ def plotpcal_syst(study='', stats_thrs=0.):
         
         B.pl.savefig(dir_name+'/full_sys_thnq%i.pdf'%(ithnq))
 
+
+#PLOTS either radiative or bin-centering corr. systemtatics
+def plotRCBC_syst(study='', stats_thrs=0.):
+
+    #Reads the systematics data files and plots the Roger Barlow Ratio R vs. Pmiss (if R>4 sig. there is a sig. difference)
+
+    stats_thrs = stats_thrs*100.
+
+    #check if directory to store systematics exists, else creates it.
+    study_dir = study+"_study/"
+    dir_name = "../full_systematics_plots/"+study_dir
+    if not os.path.exists(dir_name):
+        os.makedirs(dir_name)
+
+
+    #Set systematic file names
+    fname="../datafiles/"+study_dir+"systematics%s.txt"%(study)
+
+    f = B.get_file(fname)
+        
+    thnq = B.get_data(f, 'xb') 
+    pm = B.get_data(f, 'yb') 
+    
+    #Roger Barlow Ratio for Radiative or Bin-Centering
+    R80      = B.get_data(f,'R80')       ;  del80      = B.get_data(f,'del80')        ; sig_del80      = B.get_data(f,'sig_del80')          
+    R580set1 = B.get_data(f,'R580set1')  ;  del580set1 = B.get_data(f,'del_580set1')  ; sig_del580set1 = B.get_data(f,'sig_del580set1')
+    R580set2 = B.get_data(f,'R580set2')  ;  del580set2 = B.get_data(f,'del_580set2')  ; sig_del580set2 = B.get_data(f,'sig_del580set2')
+    R750set1 = B.get_data(f,'R750set1')  ;  del750set1 = B.get_data(f,'del_750set1')  ; sig_del750set1 = B.get_data(f,'sig_del750set1')
+    R750set2 = B.get_data(f,'R750set2')  ;  del750set2 = B.get_data(f,'del_750set2')  ; sig_del750set2 = B.get_data(f,'sig_del750set2')
+    R750set3 = B.get_data(f,'R750set3')  ;  del750set3 = B.get_data(f,'del_750set3')  ; sig_del750set3 = B.get_data(f,'sig_del750set3')
+   
+    #Get the Xsec and its Error
+    if(study=='radiative'):
+        #Radiative Corrected Xsec (PWIA)
+        dataXsec_80_pwiaRC          = B.get_data(f, 'dataXsec_80_pwiaRC') 
+        dataXsec_80_err_pwiaRC      = B.get_data(f, 'dataXsec_err_80_pwiaRC') 
+        dataXsec_580set1_pwiaRC     = B.get_data(f, 'dataXsec_580set1_pwiaRC') 
+        dataXsec_580set1_err_pwiaRC = B.get_data(f, 'dataXsec_err_580set1_pwiaRC')
+        dataXsec_580set2_pwiaRC     = B.get_data(f, 'dataXsec_580set2_pwiaRC') 
+        dataXsec_580set2_err_pwiaRC = B.get_data(f, 'dataXsec_err_580set2_pwiaRC')
+        dataXsec_750set1_pwiaRC     = B.get_data(f, 'dataXsec_750set1_pwiaRC') 
+        dataXsec_750set1_err_pwiaRC = B.get_data(f, 'dataXsec_err_750set1_pwiaRC')
+        dataXsec_750set2_pwiaRC     = B.get_data(f, 'dataXsec_750set2_pwiaRC') 
+        dataXsec_750set2_err_pwiaRC = B.get_data(f, 'dataXsec_err_750set2_pwiaRC')
+        dataXsec_750set3_pwiaRC     = B.get_data(f, 'dataXsec_750set3_pwiaRC') 
+        dataXsec_750set3_err_pwiaRC = B.get_data(f, 'dataXsec_err_750set3_pwiaRC')
+        #Radiative Corrected Xsec (FSI)
+        dataXsec_80_fsiRC           = B.get_data(f, 'dataXsec_80_fsiRC') 
+        dataXsec_80_err_fsiRC       = B.get_data(f, 'dataXsec_err_80_fsiRC') 
+        dataXsec_580set1_fsiRC      = B.get_data(f, 'dataXsec_580set1_fsiRC') 
+        dataXsec_580set1_err_fsiRC  = B.get_data(f, 'dataXsec_err_580set1_fsiRC')
+        dataXsec_580set2_fsiRC      = B.get_data(f, 'dataXsec_580set2_fsiRC') 
+        dataXsec_580set2_err_fsiRC  = B.get_data(f, 'dataXsec_err_580set2_fsiRC')
+        dataXsec_750set1_fsiRC      = B.get_data(f, 'dataXsec_750set1_fsiRC') 
+        dataXsec_750set1_err_fsiRC  = B.get_data(f, 'dataXsec_err_750set1_fsiRC')
+        dataXsec_750set2_fsiRC      = B.get_data(f, 'dataXsec_750set2_fsiRC') 
+        dataXsec_750set2_err_fsiRC  = B.get_data(f, 'dataXsec_err_750set2_fsiRC')
+        dataXsec_750set3_fsiRC      = B.get_data(f, 'dataXsec_750set3_fsiRC') 
+        dataXsec_750set3_err_fsiRC  = B.get_data(f, 'dataXsec_err_750set3_fsiRC')
+
+    if(study=='binCentering'):
+        #Bin Center Corrected Xsec (PWIA)
+        dataXsec_80_pwiaBC          = B.get_data(f, 'dataXsec_80_pwiaBC') 
+        dataXsec_80_err_pwiaBC      = B.get_data(f, 'dataXsec_err_80_pwiaBC') 
+        dataXsec_580set1_pwiaBC     = B.get_data(f, 'dataXsec_580set1_pwiaBC') 
+        dataXsec_580set1_err_pwiaBC = B.get_data(f, 'dataXsec_err_580set1_pwiaBC')
+        dataXsec_580set2_pwiaBC     = B.get_data(f, 'dataXsec_580set2_pwiaBC') 
+        dataXsec_580set2_err_pwiaBC = B.get_data(f, 'dataXsec_err_580set2_pwiaBC')
+        dataXsec_750set1_pwiaBC     = B.get_data(f, 'dataXsec_750set1_pwiaBC') 
+        dataXsec_750set1_err_pwiaBC = B.get_data(f, 'dataXsec_err_750set1_pwiaBC')
+        dataXsec_750set2_pwiaBC     = B.get_data(f, 'dataXsec_750set2_pwiaBC') 
+        dataXsec_750set2_err_pwiaBC = B.get_data(f, 'dataXsec_err_750set2_pwiaBC')
+        dataXsec_750set3_pwiaBC     = B.get_data(f, 'dataXsec_750set3_pwiaBC') 
+        dataXsec_750set3_err_pwiaBC = B.get_data(f, 'dataXsec_err_750set3_pwiaBC')
+        #Bin Center Corrected Xsec (FSI)
+        dataXsec_80_fsiBC           = B.get_data(f, 'dataXsec_80_fsiBC') 
+        dataXsec_80_err_fsiBC       = B.get_data(f, 'dataXsec_err_80_fsiBC') 
+        dataXsec_580set1_fsiBC      = B.get_data(f, 'dataXsec_580set1_fsiBC') 
+        dataXsec_580set1_err_fsiBC  = B.get_data(f, 'dataXsec_err_580set1_fsiBC')
+        dataXsec_580set2_fsiBC      = B.get_data(f, 'dataXsec_580set2_fsiBC') 
+        dataXsec_580set2_err_fsiBC  = B.get_data(f, 'dataXsec_err_580set2_fsiBC')
+        dataXsec_750set1_fsiBC      = B.get_data(f, 'dataXsec_750set1_fsiBC') 
+        dataXsec_750set1_err_fsiBC  = B.get_data(f, 'dataXsec_err_750set1_fsiBC')
+        dataXsec_750set2_fsiBC      = B.get_data(f, 'dataXsec_750set2_fsiBC') 
+        dataXsec_750set2_err_fsiBC  = B.get_data(f, 'dataXsec_err_750set2_fsiBC')
+        dataXsec_750set3_fsiBC      = B.get_data(f, 'dataXsec_750set3_fsiBC') 
+        dataXsec_750set3_err_fsiBC  = B.get_data(f, 'dataXsec_err_750set3_fsiBC')
+
+    #Define theta_nq bins to plot
+    thnq_arr = [5, 15, 25, 35, 45, 55, 65, 75, 85, 95, 105]
+
+    #Loop over theta_nq angle bins
+    for i, ithnq in enumerate(thnq_arr):
+        print('theta_nq:',ithnq,' deg')
+
+        
+        th_nq_min = ithnq - 5
+        th_nq_max = ithnq + 5
+        
+        B.pl.figure(i)
+        B.pl.clf()
+       
+        B.plot_exp(pm[thnq==ithnq], R80[thnq==ithnq], color='black', marker='s', label=r'80 MeV Systematics' )
+        B.plot_exp(pm[thnq==ithnq], R580set1[thnq==ithnq], color='blue', marker='o', label='580 (set1) MeV Systematics' )
+        B.plot_exp(pm[thnq==ithnq], R580set2[thnq==ithnq], color='green', marker='^',label='580 (set2) MeV Systematics' )
+        B.plot_exp(pm[thnq==ithnq], R750set1[thnq==ithnq], color='red', marker='>', label='750 (set1) MeV Systematics' )
+        B.plot_exp(pm[thnq==ithnq], R750set2[thnq==ithnq], color='magenta', marker='v', label='750 (set2) MeV Systematics' )
+        B.plot_exp(pm[thnq==ithnq], R750set3[thnq==ithnq], color='cyan', marker='<', label='750 (set3) MeV Systematics' )    
+            
+        B.pl.xlabel('Neutron Recoil Momenta [GeV]')
+        B.pl.ylabel(r'Ratio, $\frac{\Delta}{\sigma_{\Delta}}$')
+        B.pl.axes().grid()
+        B.pl.ylim(-10, 10)
+        B.pl.xlim(0, 2.0)
+        
+        B.pl.axhline(y=-2., color='black', linestyle='--')
+        B.pl.axhline(y=2., color='black', linestyle='--')
+        
+        B.pl.axhline(y=-4., color='black', linestyle='-')
+        B.pl.axhline(y=4., color='black', linestyle='-')
+        
+        
+        B.pl.title(r'Ratio $\frac{\Delta}{\sigma_{\Delta}}$, $\theta_{nq}:(%i, %i)$, Stats. (within %.1f %%)'%(th_nq_min, th_nq_max, stats_thrs))
+        
+        B.pl.legend(loc='upper right', fontsize='xx-small')
+        
+        B.pl.savefig(dir_name+'/full_sys_thnq%i.pdf'%(ithnq))
+
+
+        if(study=='radiative'):
+            B.pl.figure(i+1)
+            
+            B.plot_exp(pm[thnq==ithnq], dataXsec_80_pwiaRC[thnq==ithnq],       dataXsec_80_err_pwiaRC[thnq==ithnq],      color='black', marker='s',  markersize=1, label=r'PWIA Radiative Corrected Systematics)' )
+            B.plot_exp(pm[thnq==ithnq], dataXsec_580set1_pwiaRC[thnq==ithnq],  dataXsec_580set1_err_pwiaRC[thnq==ithnq], color='black', marker='o',  markersize=1)
+            B.plot_exp(pm[thnq==ithnq], dataXsec_580set2_pwiaRC[thnq==ithnq],  dataXsec_580set2_err_pwiaRC[thnq==ithnq], color='black', marker='^',  markersize=1)
+            B.plot_exp(pm[thnq==ithnq], dataXsec_750set1_pwiaRC[thnq==ithnq],  dataXsec_750set1_err_pwiaRC[thnq==ithnq], color='black', marker='>',  markersize=1)
+            B.plot_exp(pm[thnq==ithnq], dataXsec_750set2_pwiaRC[thnq==ithnq],  dataXsec_750set2_err_pwiaRC[thnq==ithnq], color='black', marker='v',  markersize=1)
+            B.plot_exp(pm[thnq==ithnq], dataXsec_750set3_pwiaRC[thnq==ithnq],  dataXsec_750set3_err_pwiaRC[thnq==ithnq], color='black', marker='<',  markersize=1)    
+            
+            B.plot_exp(pm[thnq==ithnq], dataXsec_80_fsiRC[thnq==ithnq],       dataXsec_80_err_fsiRC[thnq==ithnq],      color='red', marker='s', markersize=1, label=r'FSI Radiative Corrected Systematics' )
+            B.plot_exp(pm[thnq==ithnq], dataXsec_580set1_fsiRC[thnq==ithnq],  dataXsec_580set1_err_fsiRC[thnq==ithnq], color='red', marker='o', markersize=1)
+            B.plot_exp(pm[thnq==ithnq], dataXsec_580set2_fsiRC[thnq==ithnq],  dataXsec_580set2_err_fsiRC[thnq==ithnq], color='red', marker='^', markersize=1)
+            B.plot_exp(pm[thnq==ithnq], dataXsec_750set1_fsiRC[thnq==ithnq],  dataXsec_750set1_err_fsiRC[thnq==ithnq], color='red', marker='>', markersize=1)
+            B.plot_exp(pm[thnq==ithnq], dataXsec_750set2_fsiRC[thnq==ithnq],  dataXsec_750set2_err_fsiRC[thnq==ithnq], color='red', marker='v', markersize=1)
+            B.plot_exp(pm[thnq==ithnq], dataXsec_750set3_fsiRC[thnq==ithnq],  dataXsec_750set3_err_fsiRC[thnq==ithnq], color='red', marker='<', markersize=1)
+
+            B.pl.xlabel('Neutron Recoil Momenta [GeV]')
+            B.pl.ylabel(r'Data Cross Section, $\frac{d\sigma}{d\Omega}$')
+            B.pl.yscale('log')
+
+            B.pl.title(r'Data Cross Section, $\theta_{nq}:(%i, %i)$, Stats. (within %.1f %%)'%(th_nq_min, th_nq_max, stats_thrs))
+        
+            B.pl.legend(loc='upper right')
+        
+            B.pl.savefig(dir_name+'/dataXsecRC_thnq%i.pdf'%(ithnq))
+
+
+        if(study=='binCentering'):
+            B.pl.figure(i+2)
+            
+            B.plot_exp(pm[thnq==ithnq], dataXsec_80_pwiaBC[thnq==ithnq],       dataXsec_80_err_pwiaBC[thnq==ithnq],      color='black', marker='s',  markersize=1, label=r'PWIA BinCenter Corrected Systematics)' )
+            B.plot_exp(pm[thnq==ithnq], dataXsec_580set1_pwiaBC[thnq==ithnq],  dataXsec_580set1_err_pwiaBC[thnq==ithnq], color='black', marker='o',  markersize=1)
+            B.plot_exp(pm[thnq==ithnq], dataXsec_580set2_pwiaBC[thnq==ithnq],  dataXsec_580set2_err_pwiaBC[thnq==ithnq], color='black', marker='^',  markersize=1)
+            B.plot_exp(pm[thnq==ithnq], dataXsec_750set1_pwiaBC[thnq==ithnq],  dataXsec_750set1_err_pwiaBC[thnq==ithnq], color='black', marker='>',  markersize=1)
+            B.plot_exp(pm[thnq==ithnq], dataXsec_750set2_pwiaBC[thnq==ithnq],  dataXsec_750set2_err_pwiaBC[thnq==ithnq], color='black', marker='v',  markersize=1)
+            B.plot_exp(pm[thnq==ithnq], dataXsec_750set3_pwiaBC[thnq==ithnq],  dataXsec_750set3_err_pwiaBC[thnq==ithnq], color='black', marker='<',  markersize=1)    
+            
+            B.plot_exp(pm[thnq==ithnq], dataXsec_80_fsiBC[thnq==ithnq],       dataXsec_80_err_fsiBC[thnq==ithnq],      color='red', marker='s',  markersize=1, label=r'FSI BinCenter Corrected Systematics' )
+            B.plot_exp(pm[thnq==ithnq], dataXsec_580set1_fsiBC[thnq==ithnq],  dataXsec_580set1_err_fsiBC[thnq==ithnq], color='red', marker='o',  markersize=1)
+            B.plot_exp(pm[thnq==ithnq], dataXsec_580set2_fsiBC[thnq==ithnq],  dataXsec_580set2_err_fsiBC[thnq==ithnq], color='red', marker='^',  markersize=1)
+            B.plot_exp(pm[thnq==ithnq], dataXsec_750set1_fsiBC[thnq==ithnq],  dataXsec_750set1_err_fsiBC[thnq==ithnq], color='red', marker='>',  markersize=1)
+            B.plot_exp(pm[thnq==ithnq], dataXsec_750set2_fsiBC[thnq==ithnq],  dataXsec_750set2_err_fsiBC[thnq==ithnq], color='red', marker='v',  markersize=1)
+            B.plot_exp(pm[thnq==ithnq], dataXsec_750set3_fsiBC[thnq==ithnq],  dataXsec_750set3_err_fsiBC[thnq==ithnq], color='red', marker='<',  markersize=1)
+
+            B.pl.xlabel('Neutron Recoil Momenta [GeV]')
+            B.pl.ylabel(r'Data Cross Section, $\frac{d\sigma}{d\Omega}$')
+            B.pl.yscale('log')
+
+            B.pl.title(r'Data Cross Section, $\theta_{nq}:(%i, %i)$, Stats. (within %.1f %%)'%(th_nq_min, th_nq_max, stats_thrs))
+        
+            B.pl.legend(loc='upper right')
+        
+            B.pl.savefig(dir_name+'/dataXsecBC_thnq%i.pdf'%(ithnq))
+
 #-------------------------------------------------------------------------------------------
 
 def plotXsec_vs_Emcuts(study='', stats_thrs=0.,  thnq_bin = 0.):
@@ -2442,3 +2626,5 @@ def plotXsec_vs_pcalcuts(study='', stats_thrs=0., thnq_bin = 0):
         
         B.pl.close()
         print('Finished 750 (set3) MeV')
+
+
