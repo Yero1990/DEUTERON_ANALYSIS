@@ -17,8 +17,8 @@ def main():
     print('Entering Main . . .')
 
     #Emiss Systematic Study
-    if(study=="Em_test"):
-        cut_arr = np.array([30, 40, 45, 50, 60, 80])  #Missing Energy in MeV
+    if(study=="Em_test1mr"):
+        cut_arr = np.array([40.])  #Missing Energy in MeV
     #Ztar Difference Systematic Study
     if(study=="Ztar"):
         cut_arr = np.array([3.0, 2.5])
@@ -34,7 +34,7 @@ def main():
 
     for i in range(len(cut_arr)):
 
-        if(study=="Em_test"):
+        if(study=="Em_test1mr"):
             cut_value = cut_arr[i] / 1000.   #convert to GeV
             sys_ext = study+"%sMeV"%(cut_arr[i])  #descriptive name of systematic study
         if(study=="Ztar"):
@@ -204,7 +204,7 @@ def calc_all_Xsec(sys_ext=''):
     dir_name="../combine_data/"
     os.chdir(dir_name)
 
-    os.system("ipython combine_data.py %s"%(sys_ext))  #produces a .txt files with all the combined Xsec from theory and data
+    os.system("python combine_data.py %s"%(sys_ext))  #produces a .txt files with all the combined Xsec from theory and data
     os.system("python make_plot.py %s"%(sys_ext))
 
 
@@ -218,7 +218,7 @@ def calc_all_Xsec(sys_ext=''):
 
 def gen_inp(model='', pm_set=0, data_set=0, study='', cut_value=0):
     
-    if(study=="Em_test"):
+    if(study=="Em_test1mr"):
 
         #Generate the D(e,e'p)n Input File Based on User Input 
         f = open('set_deep_cuts.inp', 'w')                               

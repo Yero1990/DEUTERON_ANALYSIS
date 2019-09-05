@@ -1,1 +1,1 @@
-/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm750_lagetfsi_norad_set3.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_nom.data

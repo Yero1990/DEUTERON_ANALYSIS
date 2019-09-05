@@ -474,16 +474,16 @@ void analyze::SetFileNames()
   
     //Set Input Names
 
-    data_InputFileName = Form("ROOTfiles/coin_replay_%s_check_%d_-1.root", reaction.c_str(), runNUM);
-    data_InputReport = Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_%s_check_%d_-1.report", reaction.c_str(), runNUM); 
+    data_InputFileName = Form("ROOTfiles/coin_replay_%s_check_%d_-1_theSyst.root", reaction.c_str(), runNUM);
+    data_InputReport = Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_%s_check_%d_-1_theSyst.report", reaction.c_str(), runNUM); 
 
     //OLD SIMC ROOTfile PATHs
     //simc_InputFileName_rad = Form("worksim_voli/d2_pm%d_%s%s_rad_set%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
     //simc_InputFileName_norad = Form("worksim_voli/d2_pm%d_%s%s_norad_set%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
 
     //NEW SIMC ROOTfile PATHs (THese have 5 Million Events Generated, and the seed used has been changed to be random in deut_simc)
-    simc_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
-    simc_InputFileName_norad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_norad_set%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+    simc_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_theSyst.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+    simc_InputFileName_norad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_norad_set%d_theSyst.root", pm_setting, theory.c_str(), model.c_str(), data_set );
 
     //Read single file input 
     if(runNUM==-1){

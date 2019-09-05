@@ -56,18 +56,12 @@ args = parser.parse_args()
 kinematics = dfile(args.kin_file)
 
 
-
-# setup the file names
-# old calc
-# kin_dir = './kin_av_APt/'
-# new calc
+#Get the argument flags given from command line
 kin_dir = args.data_dir
 kin_head = args.input_file_header
 kin_tail = args.input_file_ext
 
-# old calc
-# differ_dir = './differ_Apt/'
-# new calc
+
 differ_dir = args.output_dir
 differ_head = args.output_file_header
 differ_tail = args.output_file_ext

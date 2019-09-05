@@ -6,7 +6,7 @@ from sys import argv
 import getopt       
 
 '''
-Code that reads averaged Xsec(data and simc) ans theory cross sections.  
+Code that reads averaged Xsec(data and simc) and theory cross sections.  
 The ratio (sig_theory_FSI(or PWIA)/sig_avg_FSI(or PWIA) is taken to determine the bin centering
 correction factor, for either model, which enables one to do systematics on model dependency of bin-centering correction. 
 The bin-centering factor is then applied to the FSI radiative corrected data ONLY. The bin-centering factor using FSI

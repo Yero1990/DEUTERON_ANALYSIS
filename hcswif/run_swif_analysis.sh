@@ -4,7 +4,7 @@
 #where [options] ---> status,  delete
 
 #workflow_name="heep_coin_elec"
-workflow_name="d2_analysis_shmsCalSsyetmatics"
+workflow_name="d2_analysis_Em"
 
 #runlist_name="current_elec.data"
 #runlist_name="current_prot.data"
