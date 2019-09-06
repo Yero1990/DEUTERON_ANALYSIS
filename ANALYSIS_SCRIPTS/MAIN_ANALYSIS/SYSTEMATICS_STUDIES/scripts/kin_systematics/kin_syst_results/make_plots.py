@@ -193,8 +193,11 @@ def compare_Xsec(pm_set=0, data_set=0):
     #code that compares change in the data Xsec / mr  (comparing two different files in which the SHMS e' angle was changed by +1mr)
     # [(Xsec_nom - Xsec_+1mr) / Xsec_nom ] / 1mr  --> relative change in Xsec when angle is changed by 1 mr.
 
-    f1      = dfile('../../../../Deep_CrossSections/bin_centering_corrections/Em_test40.0MeV/pm80_laget_bc_corr.txt')
-    f2      = dfile('../../../../Deep_CrossSections/bin_centering_corrections/Em_test1mr40.0MeV/pm80_laget_bc_corr.txt')
+    f1      = dfile('../../../../Deep_CrossSections/bin_centering_corrections/Em_nom40MeV/pm80_laget_bc_corr.txt')
+    f2      = dfile('../../../../Deep_CrossSections/bin_centering_corrections/Em_yptarp1mr40MeV/pm80_laget_bc_corr.txt')
+    f3      = dfile('../../../../Deep_CrossSections/bin_centering_corrections/Em_yptarm1mr40MeV/pm80_laget_bc_corr.txt')
+    f4      = dfile('../../../../Deep_CrossSections/bin_centering_corrections/Em_the_p1mr40MeV/pm80_laget_bc_corr.txt')
+
     fwb_fsi = dfile('../summary_files/DervTable_pm80_fsi_set1.txt')
     #fwb_pwia = dfile('../summary_files/DervTable_pm80_pwia_set1.txt')
 
@@ -206,28 +209,41 @@ def compare_Xsec(pm_set=0, data_set=0):
     #wb_ds_dthe_pwia = fwb_pwia['ds_dthe']
 
     dataXsec_nom_bc = f1['fsiRC_dataXsec_fsibc_corr']
-    dataXsec_1mr_bc = f2['fsiRC_dataXsec_fsibc_corr']
-    
-    dataXsec_nom = f1['fsiRC_dataXsec']
-    dataXsec_1mr = f2['fsiRC_dataXsec']
+    dataXsec_p1mr_bc = f2['fsiRC_dataXsec_fsibc_corr']
+    dataXsec_m1mr_bc = f3['fsiRC_dataXsec_fsibc_corr']
+    dataXsec_the_p1mr_bc = f4['fsiRC_dataXsec_fsibc_corr']
 
+    #dataXsec_nom = f1['fsiRC_dataXsec']
+    #dataXsec_p1mr = f2['fsiRC_dataXsec']
+    #dataXsec_m1mr = f3['fsiRC_dataXsec']
    
     fsiXsec_nom = f1['fsiXsec_theory']
-    fsiXsec_1mr = f2['fsiXsec_theory']
-      
+    fsiXsec_p1mr = f2['fsiXsec_theory']
+    fsiXsec_m1mr = f3['fsiXsec_theory']
+
+
+
     pwiaXsec_nom = f1['pwiaXsec_theory']
-    pwiaXsec_1mr = f2['pwiaXsec_theory']
-   
+    pwiaXsec_p1mr = f2['pwiaXsec_theory']
+    pwiaXsec_m1mr = f3['pwiaXsec_theory']
 
     #convert to NaN if value is found to be -1. (this way, plotting is ignored for NaN, while it is not for -1.)
-    convert2NaN(dataXsec_nom, value=-1.)
-    convert2NaN(dataXsec_1mr, value=-1.)
+    #convert2NaN(dataXsec_nom, value=-1.)
+    #convert2NaN(dataXsec_p1mr, value=-1.)
+    #convert2NaN(dataXsec_m1mr, value=-1.)
+        
     convert2NaN(dataXsec_nom_bc, value=-1.)
-    convert2NaN(dataXsec_1mr_bc, value=-1.)
+    convert2NaN(dataXsec_p1mr_bc, value=-1.)
+    convert2NaN(dataXsec_m1mr_bc, value=-1.)
+    convert2NaN(dataXsec_the_p1mr_bc, value=-1.)
+
     convert2NaN(fsiXsec_nom,  value=-1.)
-    convert2NaN(fsiXsec_1mr,  value=-1.)
+    convert2NaN(fsiXsec_p1mr,  value=-1.)
+    convert2NaN(fsiXsec_m1mr,  value=-1.)
+
     convert2NaN(pwiaXsec_nom, value=-1.)
-    convert2NaN(pwiaXsec_1mr, value=-1.)
+    convert2NaN(pwiaXsec_p1mr, value=-1.)
+    convert2NaN(pwiaXsec_m1mr, value=-1.)
 
 
 
@@ -243,11 +259,13 @@ def compare_Xsec(pm_set=0, data_set=0):
                
         y = np.array([0 for i in range(len(pm[thnq==ithnq]))])
 
+        ds_dthe_data_bc_p1mr = (dataXsec_nom_bc[thnq==ithnq] -  dataXsec_p1mr_bc[thnq==ithnq])/dataXsec_nom_bc[thnq==ithnq] * 100.  # % / mr  change in XSec
+        ds_dthe_data_bc_m1mr = (dataXsec_nom_bc[thnq==ithnq] -  dataXsec_m1mr_bc[thnq==ithnq])/dataXsec_nom_bc[thnq==ithnq] * 100.  # % / mr  change in XSec
         
-        ds_dthe_data_bc = (dataXsec_nom_bc[thnq==ithnq] -  dataXsec_1mr_bc[thnq==ithnq])/dataXsec_nom_bc[thnq==ithnq] * 100.  # % / mr  change in XSec
-        ds_dthe_data = (dataXsec_nom[thnq==ithnq] -  dataXsec_1mr[thnq==ithnq])/dataXsec_nom[thnq==ithnq] * 100. 
-        ds_dthe_pwia = (pwiaXsec_nom[thnq==ithnq] -  pwiaXsec_1mr[thnq==ithnq])/pwiaXsec_nom[thnq==ithnq] * 100.  # % / mr  change in XSec
-        ds_dthe_fsi = (fsiXsec_nom[thnq==ithnq] -  fsiXsec_1mr[thnq==ithnq])/fsiXsec_nom[thnq==ithnq] * 100.  # % / mr  change in XSec
+        ds_dthe_data_bc_the_p1mr = (dataXsec_nom_bc[thnq==ithnq] -  dataXsec_the_p1mr_bc[thnq==ithnq])/dataXsec_nom_bc[thnq==ithnq] * 100.  # % / mr  change in XSec
+
+        ds_dthe_pwia = (pwiaXsec_nom[thnq==ithnq] -  pwiaXsec_p1mr[thnq==ithnq])/pwiaXsec_nom[thnq==ithnq] * 100.  # % / mr  change in XSec
+        ds_dthe_fsi = (fsiXsec_nom[thnq==ithnq] -  fsiXsec_p1mr[thnq==ithnq])/fsiXsec_nom[thnq==ithnq] * 100.  # % / mr  change in XSec
 
 
         #============Plot Xsec Derivatives==================
@@ -255,13 +273,17 @@ def compare_Xsec(pm_set=0, data_set=0):
         fig1 = B.pl.figure(i)
         B.pl.clf()
 
-        B.plot_exp(pm[thnq==ithnq], wb_ds_dthe_fsi[thnq==ithnq], marker='o', color='blue', label=r'WB FSI: $\frac{d\sigma}{d\theta_{e}}$')
+        B.plot_exp(pm[thnq==ithnq], wb_ds_dthe_fsi[thnq==ithnq], marker='D', color='black', label=r'WB FSI: $\frac{d\sigma}{d\theta_{e}}$')
 
-        B.plot_exp(pm[thnq==ithnq], ds_dthe_data, marker='s', color='red', label=r'DATA (rad corr.): $\frac{d\sigma}{d\theta_{e}}$')
-        B.plot_exp(pm[thnq==ithnq], ds_dthe_data_bc, marker='s', markerfacecolor='None', color='red', label=r'DATA (rad+bc corr.).: $\frac{d\sigma}{d\theta_{e}}$')
+        #B.plot_exp(pm[thnq==ithnq], ds_dthe_data, marker='s', color='red', label=r'DATA (rad corr.): $\frac{d\sigma}{d\theta_{e}}$')
+        B.plot_exp(pm[thnq==ithnq], ds_dthe_data_bc_p1mr, marker='s', markerfacecolor='None', color='red', label=r'DATA (yptar+1mr).: $\frac{d\sigma}{d\theta_{e}}$')
 
-        B.plot_exp(pm[thnq==ithnq], ds_dthe_fsi, marker='^', color='green', label=r'SIMC FSI: $\frac{d\sigma}{d\theta_{e}}$')
-        B.plot_exp(pm[thnq==ithnq], ds_dthe_pwia, marker='v', color='magenta', label=r'SIMC PWIA: $\frac{d\sigma}{d\theta_{e}}$')
+        #B.plot_exp(pm[thnq==ithnq], ds_dthe_data_bc_the_p1mr, marker='s', color='red', label=r'DATA ($\theta_{e}$+1mr).: $\frac{d\sigma}{d\theta_{e}}$')
+
+        B.plot_exp(pm[thnq==ithnq], ds_dthe_data_bc_m1mr, marker='o', markerfacecolor='None', color='blue', label=r'DATA (yptar-1mr).: $\frac{d\sigma}{d\theta_{e}}$')
+
+        B.plot_exp(pm[thnq==ithnq], ds_dthe_fsi, marker='^', color='green', label=r'theory FSI (yptar+1mr): $\frac{d\sigma}{d\theta_{e}}$')
+        B.plot_exp(pm[thnq==ithnq], ds_dthe_pwia, marker='v', color='magenta', label=r'theory PWIA (yptar+1mr): $\frac{d\sigma}{d\theta_{e}}$')
 
         B.pl.xlim(0, 0.5)
         B.pl.ylim(-100,100)

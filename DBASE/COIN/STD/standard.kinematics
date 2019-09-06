@@ -105,7 +105,7 @@ gtargmass_amu = 2.014101
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -38.896
-ptheta_lab = 12.194
+ptheta_lab = 12.251   ;12.194
 hpcentral = 2.840                ;FINAL 2.840, 2.8454097  original: 2.8438
 ppcentral = 8.5342488            ;original: 8.7  FINAL: 8.5342488
 

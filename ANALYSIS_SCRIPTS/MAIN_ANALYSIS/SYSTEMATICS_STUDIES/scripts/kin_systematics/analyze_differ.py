@@ -1,63 +1,33 @@
 import numpy  as np
 dtr = np.pi/180.
 
-sigmas  = {\
-    # electron arm
-    'sig_the':1.0, \
-    'sig_phe':1.0, \
-    # proton arm
-    'sig_thp':1.0, \
-    'sig_php':1.0, \
-    # beam directopm
-    'sig_thb':0., \
-    'sig_phb':0., \
-    
-    # final electron energy relative sigma
-    'sig_ef':1.0e-3, \
-    # incident beam
-    'sig_E':1.0e-3
-        }
 
-def get_sig_tot(differ_file='',  ftable_name='', ftable_bin = np.array([]), variances = sigmas, print_all = False):
+def get_sig_tot(differ_file='',  ftable_name='', ftable_bin = np.array([]), print_all = False):
     data = open(differ_file).readlines()
     found = 0
     
     # This is where you enter the estimated uncertainties
     # sigma in mr 
     #electron arm uncertainties
-    #sig_the = 1.    #electron theta_e (in-plane, horizontal) uncertainty in mr
-    #sig_phe = 1.    #electron phi_e (out-of-plane, vertical) uncertainty in mr
+    sig_the = -1.    #electron theta_e (in-plane, horizontal) uncertainty in mr
+    sig_phe = 0.    #electron phi_e (out-of-plane, vertical) uncertainty in mr
     
     #proton (or hadron) arm uncertainties
-    #sig_thp = 1.    #proton theta_p (in-plane, horizontal) uncertainty mr 
-    #sig_php = 1.    #proton phi_p (out-of-plane, vertical) uncertainty mr
+    sig_thp = 0.    #proton theta_p (in-plane, horizontal) uncertainty mr 
+    sig_php = 0.    #proton phi_p (out-of-plane, vertical) uncertainty mr
     
     #beam direction uncertainties (need to ask Mark Jones)
-    #sig_thb = 0.     #beam theta_b (out-of-plane, vertical, YES! IT IS OPPOSITE) uncertainty
-    #sig_phb = 0.     #beam phi_b (in-plane, horizontal, YES! IT IS OPPOSITE) uncertainty
+    sig_thb = 0.     #beam theta_b (out-of-plane, vertical, YES! IT IS OPPOSITE) uncertainty
+    sig_phb = 0.     #beam phi_b (in-plane, horizontal, YES! IT IS OPPOSITE) uncertainty
     
     # relative sigma
     #final electron energy relative uncertainty (dEf/Ef)
-    #sig_ef = 1.e-3
+    sig_ef = 0.
     #beam energy relative uncertainty (dEb / Eb)
-    #sig_E = 1.e-3   
+    sig_E = 0.   
     
     # This is where you enter the estimated uncertainties
     # sigma in mr 
-    
-    sig_the = variances['sig_the']
-    sig_phe = variances['sig_phe']
-    
-    sig_thp = variances['sig_thp']
-    sig_php = variances['sig_php']
-    
-    sig_thb = variances['sig_thb']
-    sig_phb = variances['sig_phb'] 
-    
-    # final energy relative sigma
-    sig_ef = variances['sig_ef']
-    # incident energy
-    sig_E = variances['sig_E']
     
     ds_dthe = 0.
     ds_dphe = 0.

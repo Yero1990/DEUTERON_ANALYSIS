@@ -28,12 +28,7 @@ int main_analysis(int input)
   string line;
   int cnt = 0; //line counter
 
-  
-  //cout << "Please Select Which Input Cut File to Use . . ." << endl;
-  //cout << "1 = set_heep_cuts.inp,   2 = set_deep_cuts.inp "<< endl;
-  //cin >> input;
-  //cout << "" << endl;
-  
+
   //Do H(e,e'p)
   if (input==1){
     

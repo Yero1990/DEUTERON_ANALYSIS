@@ -11,22 +11,6 @@ import shutil as SU
 
 dtr = np.pi/180.
 
-loc_sigmas  = {\
-    # electron arm
-    'sig_the':1., \
-    'sig_phe':1., \
-    # proton arm
-    'sig_thp':1., \
-    'sig_php':1., \
-    # beam directopm
-    'sig_thb':0., \
-    'sig_phb':0., \
-    
-    # final electron energy relative sigma
-    'sig_ef':1.e-3, \
-    # incident beam
-    'sig_E':1.0e-3
-        }
 #----------------------------------------------------------------------
 def check_dir(current_dir):
     # create output directory (if necessary)
@@ -50,7 +34,7 @@ data_set = int(sys.argv[3])
 #Code usage example: ipython run_differ_general_v2.py 80 fsi 1
 
 #average kinematics directory for avg. kin with the nominal cut settings
-avg_kin_dir = '../../../Deep_CrossSections/average_kinematics/Em_test40.0MeV/'   #'./avg_kin_dir/'
+avg_kin_dir = '../../../Deep_CrossSections/average_kinematics/Em_nom40MeV/'   #'./avg_kin_dir/'
 results_dir = './kin_syst_results/'
 
 #create input/output filenames for average kinematics to be read/ to write out systematics results
@@ -190,7 +174,7 @@ for ik, ka in enumerate(kin_file.data):
    run_differ = './differ3'
    rc.run_command(run_differ, 'differ.out','differ_err')
    # now analyze differ, output tot_err is in %
-   tot_err = ad.get_sig_tot('differ.out',  ftable_name, ftable_bin, variances = loc_sigmas, print_all = False)
+   tot_err = ad.get_sig_tot('differ.out',  ftable_name, ftable_bin, print_all = False)
    if np.isnan(tot_err):
       print 'total_err could not be calculated, it is set to 100% for kinematics : ', kin_file, ' bin ib = ', ib
       tot_err = 100.      

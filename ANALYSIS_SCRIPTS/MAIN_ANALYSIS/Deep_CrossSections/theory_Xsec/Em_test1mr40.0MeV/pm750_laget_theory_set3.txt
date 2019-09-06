@@ -1,9 +1,0 @@
-
-# Laget Cross Section Results at the Averaged Kinematics
-# averaged kinematic varibles used as input to calculate the cross section 
-# kinematics: Ei, Q2, omega, th_pq_cm, phi_pq
-#
-#\ xb = th_nq
-#\ yb = pm
-# current header line:
-#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/  pwiaXsec[f,5]/  pwiaGEp[f,6]/   pwiaGMp[f,7]/   pwia_sigMott[f,8]/   pwia_Ksig_cc1[f,9]/    
