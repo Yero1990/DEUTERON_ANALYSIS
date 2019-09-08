@@ -1,1 +1,4 @@
-/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh 
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_elecp1MeV.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_elecp1mr.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetpwia_rad_set1_elecp1MeV.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetpwia_rad_set1_elecp1mr.data
