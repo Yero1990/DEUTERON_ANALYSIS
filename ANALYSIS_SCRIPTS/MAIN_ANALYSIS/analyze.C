@@ -473,18 +473,22 @@ void analyze::SetFileNames()
     data_set = stoi(split(FindString("data_set", input_CutFileName)[0], ':')[1]);
   
     //Set Input Names
-
-    data_InputFileName = Form("ROOTfiles/coin_replay_%s_check_%d_-1_the_p1mr.root", reaction.c_str(), runNUM);
+    data_InputFileName = Form("ROOTfiles/coin_replay_%s_check_%d_-1.root", reaction.c_str(), runNUM);
     data_InputReport = Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_%s_check_%d_-1.report", reaction.c_str(), runNUM); 
 
-    //OLD SIMC ROOTfile PATHs
-    //simc_InputFileName_rad = Form("worksim_voli/d2_pm%d_%s%s_rad_set%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
-    //simc_InputFileName_norad = Form("worksim_voli/d2_pm%d_%s%s_norad_set%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
-
+ 
     //NEW SIMC ROOTfile PATHs (THese have 5 Million Events Generated, and the seed used has been changed to be random in deut_simc)
-    simc_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_yptar_p1mr.root", pm_setting, theory.c_str(), model.c_str(), data_set );
-    simc_InputFileName_norad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_norad_set%d_yptar_p1mr.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+    simc_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_nom.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+    simc_InputFileName_norad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_norad_set%d_nom.root", pm_setting, theory.c_str(), model.c_str(), data_set );
 
+    //PSEUDO-DATA (Radiative SIMC with some small kin. offstes or at nominal setting)
+    //pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_nom.root",  pm_setting, theory.c_str(), model.c_str(), data_set);
+    //pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_ep1MeV_rec.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+    //pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_ep1MeV_thr.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+    //    pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_ep1mr_rec.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+    pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_ep1mr_thr.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+
+    
     //Read single file input 
     if(runNUM==-1){
       data_InputFileName = trim(split(FindString("data_fname", input_CutFileName)[0], ':')[1]);
@@ -501,6 +505,10 @@ void analyze::SetFileNames()
 
     simc_OutputFileName_rad = Form("%s_simc_histos_pm%d_%s%s_rad_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
     simc_OutputFileName_norad = Form("%s_simc_histos_pm%d_%s%s_norad_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
+
+    pseudo_OutputFileName = Form("%s_pseudo_histos_pm%d_%s%s_rad_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
+    pseudo_OutputFileName_radCorr = Form("%s_pseudo_histos_pm%d_%s%s_rad_set%d_radCorr.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
+
     
     //SIMC radiative corr. ratio for PWIA and FSI (It is reccommended to use fsi to radiatively correct data, as FSI better represent data)
     simc_OutputFileName_radCorr_pwia = Form("%s_simc_histos_pm%d_%spwia_RadCorrRatio_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), data_set);
@@ -508,6 +516,7 @@ void analyze::SetFileNames()
 
 
     Xsec_OutputFileName = Form("Xsec_pm%d_%s%s_dataset%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+    pseudoXsec_OutputFileName = Form("Xsec_pm%d_%s%s_dataset%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
 
   }
   
@@ -574,8 +583,6 @@ void analyze::SetCuts()
   hms_scale =  stod(split(FindString("hms_scale", input_CutFileName)[0], '=')[1]);
   shms_scale =  stod(split(FindString("shms_scale", input_CutFileName)[0], '=')[1]);
 
-
-
   //Read Cut Limits from set_heep(deep)_cuts.input file 
   Em_min = stod(split(FindString("Em_min", input_CutFileName)[0], ':')[1]);
   Em_max = stod(split(FindString("Em_max", input_CutFileName)[0], ':')[1]);
@@ -591,7 +598,8 @@ void analyze::SetCuts()
 
   ztarDiff_min = stod(split(FindString("ztarDiff_min", input_CutFileName)[0], ':')[1]); 
   ztarDiff_max = stod(split(FindString("ztarDiff_max", input_CutFileName)[0], ':')[1]);
-  
+
+
   if(reaction=="deep"){ztd_mean = getZtarMean(pm_setting, data_set, model, analysis); } //Get Mean of ZtarDiff 
 
   Q2_min = stod(split(FindString("Q2_min", input_CutFileName)[0], ':')[1]); 
@@ -608,6 +616,7 @@ void analyze::SetCuts()
   
   ctime_min = stod(split(FindString("coin_time_min", input_CutFileName)[0], ':')[1]);
   ctime_max = stod(split(FindString("coin_time_max", input_CutFileName)[0], ':')[1]);
+
 
   cout << "-------------------------------------" << endl;
   cout << "Cut Limits Set" << endl;
@@ -658,12 +667,17 @@ void analyze::SetDefinitions()
   string temp;
   
   //Read Angles (in deg)
-  temp = FindString("hHMS Angle", data_InputReport)[0];    //Find line containing string
+  temp = FindString("hHMS Angle", data_InputReport)[0];          //Find line containing string
   h_th = stod(split(temp, ':')[1]);                              //split string, take the number part, and conver to double
-
 
   temp = FindString("pSHMS Angle", data_InputReport)[0];
   e_th = stod(split(temp, ':')[1]);
+  
+  // if(analysis=="pseudo") { 
+  //   e_th = 12.251;
+  //  cout << "Offseting e- angle by +1 mr: "<< e_th  << endl;
+
+  //  }
   
   //Read Central Momenta (in GeV)
   temp = FindString("hHMS P Central", data_InputReport)[0]; 
@@ -1763,10 +1777,14 @@ void analyze::ReadTree(string rad_flag="")
 
   //-----------------------------------------------------------------
 
-  else if(analysis=="simc")
+  else if(analysis=="simc" || analysis=="pseudo")
     {
+      if(analysis=="simc"){
       cout << "Analyzing SIMC . . . " << endl;
-
+      }
+      else if (analysis=="pseudo"){
+	cout << "Analyzing Pseudo-Data . . . " << endl;
+      }
       //Read ROOTfile
   
       //If Doing Radiative Corrections, Read NON-RAD ROOTfile
@@ -1776,8 +1794,13 @@ void analyze::ReadTree(string rad_flag="")
 	  inROOT = new TFile(simc_InputFileName_norad, "READ");
 
 	}
+      //Read Pseudo-data Radiative if doing radiation (1) or radiative_corrections OFF (-1)
+      else if((radiate_flag==1 || radiate_flag==-1) && analysis=="pseudo"){
+	cout << "Analyzing Pseudo-Data (SIMC) with Radiation ON " << endl;
+	inROOT = new TFile(pseudo_InputFileName_rad, "READ");
+      }
       //Read Radiative if doing radiation (1) or radiative_corrections OFF (-1)
-      else if(radiate_flag==1 || radiate_flag==-1){
+      else if((radiate_flag==1 || radiate_flag==-1) && analysis=="simc"){
 	cout << "Analyzing SIMC with Radiation ON " << endl;
 	inROOT = new TFile(simc_InputFileName_rad, "READ");
       }
@@ -2296,7 +2319,7 @@ void analyze::EventLoop()
       
     }
   
-  else if(analysis=="simc")
+  else if(analysis=="simc" || analysis=="pseudo")
     {
 
       for(int ientry=0; ientry<nentries; ientry++)
@@ -2377,7 +2400,7 @@ void analyze::EventLoop()
 	  Pmy_lab = fB.Y(); 
 	  Pmz_lab = fB.Z(); 
 	  
-	  Pm = sqrt(Pmx_lab*Pmx_lab + Pmy_lab*Pmy_lab + Pmz_lab*Pmz_lab);
+	  //Pm = sqrt(Pmx_lab*Pmx_lab + Pmy_lab*Pmy_lab + Pmz_lab*Pmz_lab);
 	  
 	  //--------Rotate the recoil system from +z to +q-------
 	  qvec = fQ.Vect();
@@ -3266,7 +3289,7 @@ void analyze::WriteHist(string rad_flag="")
 
     }
   
-  else if(analysis=="simc")
+  else if(analysis=="simc" || analysis=="pseudo")
     {
       //Create output ROOTfile
      
@@ -3274,8 +3297,12 @@ void analyze::WriteHist(string rad_flag="")
       if(rad_flag=="do_rad_corr"){
 	outROOT = new TFile(simc_OutputFileName_norad, "RECREATE");
       }
+      //Write Pseudo-Data (SIMC) Radiative if doing radiation (1) or radiative_corrections for which radiate_flag=-1 (must be off)
+      else if((radiate_flag==1 || radiate_flag==-1) && analysis=="pseudo"){
+	outROOT = new TFile(pseudo_OutputFileName, "RECREATE");
+      }
       //Write Radiative if doing radiation (1) or radiative_corrections for which radiate_flag=-1 (must be off)
-      else if(radiate_flag==1 || radiate_flag==-1){
+      else if((radiate_flag==1 || radiate_flag==-1) && analysis=="simc"){
 	outROOT = new TFile(simc_OutputFileName_rad, "RECREATE");
       }
       //Write Non-Radiative 
@@ -4634,9 +4661,22 @@ void analyze::ApplyRadCorr()
 
    */
   cout << "Calling ApplyRadCorr() . . . " << endl;
+
+  //Check if filename exits
+  bool not_exist_data = gSystem->AccessPathName(data_OutputFileName_combined);  //true means it does not exist, false means it exits--> !not_exist
+  bool not_exist_pseudo = gSystem->AccessPathName(pseudo_OutputFileName); 
   
-  //Read Data Un-RadCorr 
-  TFile *data_file = new TFile(data_OutputFileName_combined, "READ");
+  TFile *data_file =NULL;
+
+  if(!not_exist_data){
+    //Read Data Un-RadCorr 
+    data_file = new TFile(data_OutputFileName_combined, "READ");
+  }
+  
+  if(!not_exist_pseudo){
+    //Read Pseudo-Data Un-RadCorr 
+    data_file = new TFile(pseudo_OutputFileName, "READ");
+  }
 
   //Read SIMC Radiative Correction Ratios (Either PWIA or FSI models)
   //This is useful later on to compare data cross sections using different rad. corr. models
@@ -4666,9 +4706,19 @@ void analyze::ApplyRadCorr()
   //Testing Systematic Studies Dependence on Rad. COrr Ratio
   //Do not apply rad. corr, and study systematic effects
 
-  //Write Radiative Corrected Data to ROOTfile
-  TFile *data_radcorr = new TFile(data_OutputFileName_radCorr, "RECREATE");
+  TFile *data_radcorr = NULL;
 
+
+  //Check wheter the input data or pseudo data file existed, to determine if we are analyzing data or pseudo-data
+  if(!not_exist_data){
+    //Write Radiative Corrected Data to ROOTfile
+    data_radcorr = new TFile(data_OutputFileName_radCorr, "RECREATE");
+  }
+  if(!not_exist_pseudo){
+    //Write Pseudo-Radiative Corrected Data to ROOTfile
+    data_radcorr = new TFile(pseudo_OutputFileName_radCorr, "RECREATE");
+  }
+  
   data_radcorr->cd();
 
   data_Q2->Write();
@@ -4690,15 +4740,26 @@ void analyze::GetXsec()
     to get the data and simc averaged cross sections.
    */
   Bool_t file_not_exist = gSystem->AccessPathName(data_OutputFileName_radCorr) || gSystem->AccessPathName(simc_OutputFileName_norad); 
+  Bool_t pseudo_file_not_exist = gSystem->AccessPathName(pseudo_OutputFileName_radCorr) || gSystem->AccessPathName(simc_OutputFileName_norad); 
 
-  if (file_not_exist) {
-    cout << "Not all files were found to calculate the cross section. " << endl;
-    exit(1);
-      }
+  TFile *data_file = NULL;
+  TFile *simc_file = NULL;
+  
+  if (!file_not_exist) {
+    cout << "Found Rad. Corr Data . . . Calculating Data Xsec" << endl;
 
-  //Read Data RadCorr and SIMC norad ROOTfiles
-  TFile *data_file = new TFile(data_OutputFileName_radCorr, "READ");
-  TFile *simc_file = new TFile(simc_OutputFileName_norad, "READ");
+    //Read Data RadCorr and SIMC norad ROOTfiles
+    data_file = new TFile(data_OutputFileName_radCorr, "READ");
+    simc_file = new TFile(simc_OutputFileName_norad, "READ");
+  }
+
+  if (!pseudo_file_not_exist) {
+    cout << "Found Rad. Corr Pseudo-Data . . . Calculating Pseudo-Data Xsec" << endl;
+
+    //Read Data RadCorr and SIMC norad ROOTfiles
+    data_file = new TFile(pseudo_OutputFileName_radCorr, "READ");
+    simc_file = new TFile(simc_OutputFileName_norad, "READ");
+  }
 
   data_file->cd();
   data_file->GetObject("H_Pm", dataPm); 
@@ -4723,8 +4784,18 @@ void analyze::GetXsec()
   dataPm_v_thnq->SetNameTitle("H_data2DXsec", "2D Pm vs #theta_{nq} Data Cross Sections");
   simcPm_v_thnq->SetNameTitle("H_simc2DXsec", "2D Pm vs #theta_{nq} SIMC Cross Sections");
 
-  //Create new TFile to write cross sections
-  TFile *file_Xsec = new TFile(Xsec_OutputFileName, "RECREATE");
+  TFile *file_Xsec = NULL;
+
+  if (!file_not_exist) {
+    //Create new TFile to write cross sections
+    file_Xsec = new TFile(Xsec_OutputFileName, "RECREATE");
+  }
+  if (!pseudo_file_not_exist) {
+    //Create new TFile to write pseudo-data  cross sections
+    file_Xsec = new TFile(pseudoXsec_OutputFileName, "RECREATE");
+  }
+
+  
   file_Xsec->cd();
 
   dataPm->Write();
@@ -4780,7 +4851,7 @@ Double_t analyze::getZtarMean(int pm_set=0, int dataset=0, string model="", stri
 
 
   //Return SIMC Ztar Mean Value
-  if(analysis=="simc"){
+  if(analysis=="simc" || analysis=="pseudo"){
     return simc_mean;
   }
   //Return DATA Ztar Mean Value
@@ -5020,4 +5091,25 @@ void analyze::run_data_analysis(Bool_t Qnorm_flag=0)
       cout << "Normalizing by Total Accumulated Charge . . ." << endl;
       ChargeNorm();
     }
+}
+
+//________________________________________________________
+void analyze::run_pseudo_analysis(Bool_t rad_corr_flag=0)
+{
+
+  //Run SIMC analysis. By default, it reads the radiative ROOTfile
+  //This ROOTfile will be treated as 'pseudo-data', in which SIMC kin. are varied a little bit
+  //and treated as data which means it need to read the radiative SIMC ROOTfile
+  
+  SetFileNames();
+  SetCuts();
+  SetDefinitions();
+  SetHistBins();
+  CreateHist();
+  ReadTree();
+  EventLoop();
+  WriteHist();
+  
+  
+
 }

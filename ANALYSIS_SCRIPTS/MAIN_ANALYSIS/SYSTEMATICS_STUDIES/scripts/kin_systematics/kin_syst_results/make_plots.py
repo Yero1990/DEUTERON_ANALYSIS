@@ -190,63 +190,55 @@ def get_stats_error(pm_set=0, data_set=0):
 
 
 def compare_Xsec(pm_set=0, data_set=0):
-    #code that compares change in the data Xsec / mr  (comparing two different files in which the SHMS e' angle was changed by +1mr)
-    # [(Xsec_nom - Xsec_+1mr) / Xsec_nom ] / 1mr  --> relative change in Xsec when angle is changed by 1 mr.
+    
+    #Brief:  This code compares the derivatives of 
 
+    #Read Derivatives From Werner's Code
+    fwb_fsi_the = dfile('../summary_files/+1mr_eAngle/DervTable_pm80_fsi_set1.txt')      #assume +1mr eAngle uncertainty
+    fwb_fsi_Pe = dfile('../summary_files/1e-3_eMomentum/DervTable_pm80_fsi_set1.txt')    #assume +1e-3 eMomentum relative uncertainty, dEf/Ef
+
+    #Read Data Files Containing Pseudo-Data Cross Sections
     f1      = dfile('../../../../Deep_CrossSections/bin_centering_corrections/Em_nom40MeV/pm80_laget_bc_corr.txt')
-    f2      = dfile('../../../../Deep_CrossSections/bin_centering_corrections/Em_yptarp1mr40MeV/pm80_laget_bc_corr.txt')
-    f3      = dfile('../../../../Deep_CrossSections/bin_centering_corrections/Em_yptarm1mr40MeV/pm80_laget_bc_corr.txt')
-    f4      = dfile('../../../../Deep_CrossSections/bin_centering_corrections/Em_the_p1mr40MeV/pm80_laget_bc_corr.txt')
+    f2      = dfile('../../../../Deep_CrossSections/bin_centering_corrections/Em_ep1mr_thr40MeV/pm80_laget_bc_corr.txt')
+    f3      = dfile('../../../../Deep_CrossSections/bin_centering_corrections/Em_ep1mr_rec40MeV/pm80_laget_bc_corr.txt')   #e- agnle offset in input file, but corrected in recon.
+    f4      = dfile('../../../../Deep_CrossSections/bin_centering_corrections/Em_ep1MeV_thr40MeV/pm80_laget_bc_corr.txt')    #e- momentum varied by +1 MeV in input file, but corrected in recon (-1 MeV)
+    f5      = dfile('../../../../Deep_CrossSections/bin_centering_corrections/Em_ep1MeV_rec40MeV/pm80_laget_bc_corr.txt')  #e- momentum varied by +1 MeV
 
-    fwb_fsi = dfile('../summary_files/DervTable_pm80_fsi_set1.txt')
-    #fwb_pwia = dfile('../summary_files/DervTable_pm80_pwia_set1.txt')
-
+    #Get Bin Center Values
     thnq = f1['xb']
     pm   = f1['yb']
 
+    #Get Werner's Derivatives
+    wb_ds_dthe_fsi = fwb_fsi_the['ds_dthe']   # % change in Xsec / 1mr in eAngle
+    wb_ds_dPe_fsi = fwb_fsi_Pe['ds_def']         # % change in Xsec / 1MeV in eMomentum                                                                       
 
-    wb_ds_dthe_fsi = fwb_fsi['ds_dthe']
-    #wb_ds_dthe_pwia = fwb_pwia['ds_dthe']
+    #---Get Pseudo-Data Radiative Corrected Xsec---
 
-    dataXsec_nom_bc = f1['fsiRC_dataXsec_fsibc_corr']
-    dataXsec_p1mr_bc = f2['fsiRC_dataXsec_fsibc_corr']
-    dataXsec_m1mr_bc = f3['fsiRC_dataXsec_fsibc_corr']
-    dataXsec_the_p1mr_bc = f4['fsiRC_dataXsec_fsibc_corr']
+    #nominal Xsec (nominal kinematics)
+    dataXsec_fsi_nom = f1['fsiRC_dataXsec']
+    dataXsec_fsi_nom_err = f1['fsiRC_dataXsec_err']
 
-    #dataXsec_nom = f1['fsiRC_dataXsec']
-    #dataXsec_p1mr = f2['fsiRC_dataXsec']
-    #dataXsec_m1mr = f3['fsiRC_dataXsec']
-   
-    fsiXsec_nom = f1['fsiXsec_theory']
-    fsiXsec_p1mr = f2['fsiXsec_theory']
-    fsiXsec_m1mr = f3['fsiXsec_theory']
+    #XSec with SHMS e- angle: +1mr offset on input file (thrown), but corrected (-1 mr) in SIMC reconstruced 
+    dataXsec_ep1mr_thr_fsi = f2['fsiRC_dataXsec']
+    dataXsec_ep1mr_thr_fsi_err = f2['fsiRC_dataXsec_err']
 
+    #XSec with SHMS e- angle: +1mr offset on SIMC reconstruced 
+    dataXsec_ep1mr_rec_fsi = f3['fsiRC_dataXsec']
+    dataXsec_ep1mr_rec_fsi_err = f3['fsiRC_dataXsec_err']
 
+    #XSec with SHMS e- momentum: +1MeV offset on input file (thrown), but corrected (-1 MeV) in SIMC reconstruced 
+    dataXsec_ep1MeV_thr_fsi = f4['fsiRC_dataXsec']
+    dataXsec_ep1MeV_thr_fsi_err = f4['fsiRC_dataXsec_err']
+ 
+    #XSec with SHMS e- momentum: +1MeV offset on SIMC reconstruced 
+    dataXsec_ep1MeV_rec_fsi = f5['fsiRC_dataXsec']
+    dataXsec_ep1MeV_rec_fsi_err = f5['fsiRC_dataXsec_err']
 
-    pwiaXsec_nom = f1['pwiaXsec_theory']
-    pwiaXsec_p1mr = f2['pwiaXsec_theory']
-    pwiaXsec_m1mr = f3['pwiaXsec_theory']
-
-    #convert to NaN if value is found to be -1. (this way, plotting is ignored for NaN, while it is not for -1.)
-    #convert2NaN(dataXsec_nom, value=-1.)
-    #convert2NaN(dataXsec_p1mr, value=-1.)
-    #convert2NaN(dataXsec_m1mr, value=-1.)
-        
-    convert2NaN(dataXsec_nom_bc, value=-1.)
-    convert2NaN(dataXsec_p1mr_bc, value=-1.)
-    convert2NaN(dataXsec_m1mr_bc, value=-1.)
-    convert2NaN(dataXsec_the_p1mr_bc, value=-1.)
-
-    convert2NaN(fsiXsec_nom,  value=-1.)
-    convert2NaN(fsiXsec_p1mr,  value=-1.)
-    convert2NaN(fsiXsec_m1mr,  value=-1.)
-
-    convert2NaN(pwiaXsec_nom, value=-1.)
-    convert2NaN(pwiaXsec_p1mr, value=-1.)
-    convert2NaN(pwiaXsec_m1mr, value=-1.)
-
-
-
+    convert2NaN(dataXsec_fsi_nom, value=-1.)
+    convert2NaN(dataXsec_ep1mr_thr_fsi, value=-1.)
+    convert2NaN(dataXsec_ep1mr_rec_fsi, value=-1.)
+    convert2NaN(dataXsec_ep1MeV_thr_fsi, value=-1.)
+    convert2NaN(dataXsec_ep1MeV_rec_fsi, value=-1.)
     
     thnq_arr = [5, 15, 25, 35, 45, 55, 65, 75, 85, 95, 105]
 
@@ -257,43 +249,76 @@ def compare_Xsec(pm_set=0, data_set=0):
         th_nq_min = ithnq - 5
         th_nq_max = ithnq + 5
                
-        y = np.array([0 for i in range(len(pm[thnq==ithnq]))])
+        #y = np.array([0 for i in range(len(pm[thnq==ithnq]))])
 
-        ds_dthe_data_bc_p1mr = (dataXsec_nom_bc[thnq==ithnq] -  dataXsec_p1mr_bc[thnq==ithnq])/dataXsec_nom_bc[thnq==ithnq] * 100.  # % / mr  change in XSec
-        ds_dthe_data_bc_m1mr = (dataXsec_nom_bc[thnq==ithnq] -  dataXsec_m1mr_bc[thnq==ithnq])/dataXsec_nom_bc[thnq==ithnq] * 100.  # % / mr  change in XSec
         
-        ds_dthe_data_bc_the_p1mr = (dataXsec_nom_bc[thnq==ithnq] -  dataXsec_the_p1mr_bc[thnq==ithnq])/dataXsec_nom_bc[thnq==ithnq] * 100.  # % / mr  change in XSec
+        #============eAngle Derivatives===============
+      
+        #Define Derivatives of Xsec w.r.to electron angle
+        ds_dthe_ep1mr_thr_fsi = (dataXsec_fsi_nom[thnq==ithnq] -  dataXsec_ep1mr_thr_fsi[thnq==ithnq])/dataXsec_fsi_nom[thnq==ithnq] * 100.  # % / mr  change in XSec
+        ds_dthe_ep1mr_rec_fsi = (dataXsec_fsi_nom[thnq==ithnq] -  dataXsec_ep1mr_rec_fsi[thnq==ithnq])/dataXsec_fsi_nom[thnq==ithnq] * 100.  
 
-        ds_dthe_pwia = (pwiaXsec_nom[thnq==ithnq] -  pwiaXsec_p1mr[thnq==ithnq])/pwiaXsec_nom[thnq==ithnq] * 100.  # % / mr  change in XSec
-        ds_dthe_fsi = (fsiXsec_nom[thnq==ithnq] -  fsiXsec_p1mr[thnq==ithnq])/fsiXsec_nom[thnq==ithnq] * 100.  # % / mr  change in XSec
+        #Error Propagation on relative error (thown):  r = (a-b)/a -->  dr2 = (dr_da)**2 *sig_a**2 + (dr_db)**2 *sig_b**2  (assuming 'a' and 'b' are un-correlated)
+        dr_da_1 = 1./(dataXsec_fsi_nom[thnq==ithnq]) - (dataXsec_fsi_nom[thnq==ithnq] -  dataXsec_ep1mr_thr_fsi[thnq==ithnq])/dataXsec_fsi_nom[thnq==ithnq]**2
+        dr_db_1 = -1./dataXsec_fsi_nom[thnq==ithnq]
+        dr_err_eAng_thr = np.sqrt( (dr_da_1 *  dataXsec_fsi_nom_err[thnq==ithnq])**2 + (dr_db_1 * dataXsec_ep1mr_thr_fsi_err[thnq==ithnq])**2 ) * 100.
+        
+        #Error Propagation on relative error (rec)
+        dr_da_2 = 1./(dataXsec_fsi_nom[thnq==ithnq]) - (dataXsec_fsi_nom[thnq==ithnq] -  dataXsec_ep1mr_rec_fsi[thnq==ithnq])/dataXsec_fsi_nom[thnq==ithnq]**2
+        dr_db_2 = -1./dataXsec_fsi_nom[thnq==ithnq]
+        dr_err_eAng_rec = np.sqrt( (dr_da_2 *  dataXsec_fsi_nom_err[thnq==ithnq])**2 + (dr_db_2 * dataXsec_ep1mr_rec_fsi_err[thnq==ithnq])**2 ) * 100.
+        
+        #==========eMomentum Derivatives================
+
+        #Define Derivatives of Xsec w.r.to electron Momentum
+        ds_dPe_ep1MeV_thr_fsi = (dataXsec_fsi_nom[thnq==ithnq] -  dataXsec_ep1MeV_thr_fsi[thnq==ithnq])/dataXsec_fsi_nom[thnq==ithnq] * 100.  # % / mr  change in XSec
+        ds_dPe_ep1MeV_rec_fsi = (dataXsec_fsi_nom[thnq==ithnq] -  dataXsec_ep1MeV_rec_fsi[thnq==ithnq])/dataXsec_fsi_nom[thnq==ithnq] * 100.  # % / mr  change in XSec
+        
+        #Error Propagation on relative error (thown):  r = (a-b)/a -->  dr2 = (dr_da)**2 *sig_a**2 + (dr_db)**2 *sig_b**2  (assuming 'a' and 'b' are un-correlated)
+        dr_da_3 = 1./(dataXsec_fsi_nom[thnq==ithnq]) - (dataXsec_fsi_nom[thnq==ithnq] -  dataXsec_ep1MeV_thr_fsi[thnq==ithnq])/dataXsec_fsi_nom[thnq==ithnq]**2
+        dr_db_3 = -1./dataXsec_fsi_nom[thnq==ithnq]
+        dr_err_eMom_thr = np.sqrt( (dr_da_3 *  dataXsec_fsi_nom_err[thnq==ithnq])**2 + (dr_db_3 * dataXsec_ep1MeV_thr_fsi_err[thnq==ithnq])**2 ) * 100.
+      
+        #Error Propagation on relative error (rec)
+        dr_da_4 = 1./(dataXsec_fsi_nom[thnq==ithnq]) - (dataXsec_fsi_nom[thnq==ithnq] -  dataXsec_ep1MeV_rec_fsi[thnq==ithnq])/dataXsec_fsi_nom[thnq==ithnq]**2
+        dr_db_4 = -1./dataXsec_fsi_nom[thnq==ithnq]
+        dr_err_eMom_rec = np.sqrt( (dr_da_4 *  dataXsec_fsi_nom_err[thnq==ithnq])**2 + (dr_db_4 * dataXsec_ep1MeV_rec_fsi_err[thnq==ithnq])**2 ) * 100.
+            
 
 
-        #============Plot Xsec Derivatives==================
+        #============Plot Xsec e- Angle Derivatives==================
         
         fig1 = B.pl.figure(i)
         B.pl.clf()
 
-        B.plot_exp(pm[thnq==ithnq], wb_ds_dthe_fsi[thnq==ithnq], marker='D', color='black', label=r'WB FSI: $\frac{d\sigma}{d\theta_{e}}$')
-
-        #B.plot_exp(pm[thnq==ithnq], ds_dthe_data, marker='s', color='red', label=r'DATA (rad corr.): $\frac{d\sigma}{d\theta_{e}}$')
-        B.plot_exp(pm[thnq==ithnq], ds_dthe_data_bc_p1mr, marker='s', markerfacecolor='None', color='red', label=r'DATA (yptar+1mr).: $\frac{d\sigma}{d\theta_{e}}$')
-
-        #B.plot_exp(pm[thnq==ithnq], ds_dthe_data_bc_the_p1mr, marker='s', color='red', label=r'DATA ($\theta_{e}$+1mr).: $\frac{d\sigma}{d\theta_{e}}$')
-
-        B.plot_exp(pm[thnq==ithnq], ds_dthe_data_bc_m1mr, marker='o', markerfacecolor='None', color='blue', label=r'DATA (yptar-1mr).: $\frac{d\sigma}{d\theta_{e}}$')
-
-        B.plot_exp(pm[thnq==ithnq], ds_dthe_fsi, marker='^', color='green', label=r'theory FSI (yptar+1mr): $\frac{d\sigma}{d\theta_{e}}$')
-        B.plot_exp(pm[thnq==ithnq], ds_dthe_pwia, marker='v', color='magenta', label=r'theory PWIA (yptar+1mr): $\frac{d\sigma}{d\theta_{e}}$')
+        B.plot_exp(pm[thnq==ithnq], wb_ds_dthe_fsi[thnq==ithnq], marker='D', color='black', label=r'WB FSI: $\frac{d\sigma}{d\theta_{e}}$')      
+        B.plot_exp(pm[thnq==ithnq], ds_dthe_ep1mr_rec_fsi, dr_err_eAng_rec,  marker='o', markerfacecolor='red', color='red', label=r'pseudo DATA FSI (+1 mr recon.).: $\frac{d\sigma}{d\theta_{e}}$')
+        B.plot_exp(pm[thnq==ithnq], ds_dthe_ep1mr_thr_fsi, dr_err_eAng_thr,  marker='o', markerfacecolor='blue', color='blue', label=r'pseudo DATA FSI (+1 mr thrown).: $\frac{d\sigma}{d\theta_{e}}$')
 
         B.pl.xlim(0, 0.5)
-        B.pl.ylim(-100,100)
+        B.pl.ylim(-50,50)
 
         B.pl.xlabel('Neutron Recoil Momenta [GeV]')
         B.pl.ylabel(r'Cross Section Variations [%/mrad or %/MeV]')
         B.pl.title(r'Xsec Derivatives $P_{m}$=%i (set%i) MeV, $\theta_{nq}:(%i, %i)$'%(pm_set, data_set, th_nq_min, th_nq_max))
         B.pl.legend(loc='upper right', fontsize='x-small', markerscale=1.0)
-        B.pl.savefig('plots/kin_derv_pm%i_thnq%i_compare.pdf'%(pm_set, ithnq))
+        B.pl.savefig('plots/kin_derv_pm%i_thnq%i_eAng.pdf'%(pm_set, ithnq))
     
+        fig2 = B.pl.figure(i)
+        B.pl.clf()
+        
+        B.plot_exp(pm[thnq==ithnq], wb_ds_dPe_fsi[thnq==ithnq], marker='D', color='black', label=r'WB FSI: $\frac{d\sigma}{dP_{e}}$')                        
+        B.plot_exp(pm[thnq==ithnq], ds_dPe_ep1MeV_rec_fsi, dr_err_eMom_rec,  marker='o', markerfacecolor='red', color='red', label=r'pseudo DATA FSI (+1 MeV recon.): $\frac{d\sigma}{dP_{e}}$')
+        B.plot_exp(pm[thnq==ithnq], ds_dPe_ep1MeV_thr_fsi, dr_err_eMom_thr,  marker='o', markerfacecolor='blue', color='blue', label=r'pseudo DATA FSI (+1 MeV thrown): $\frac{d\sigma}{dP_{e}}$')
+
+        B.pl.xlim(0, 0.5)
+        B.pl.ylim(-50,50)
+
+        B.pl.xlabel('Neutron Recoil Momenta [GeV]')
+        B.pl.ylabel(r'Cross Section Variations [%/mrad or %/MeV]')
+        B.pl.title(r'Xsec Derivatives $P_{m}$=%i (set%i) MeV, $\theta_{nq}:(%i, %i)$'%(pm_set, data_set, th_nq_min, th_nq_max))
+        B.pl.legend(loc='upper right', fontsize='x-small', markerscale=1.0)
+        B.pl.savefig('plots/kin_derv_pm%i_thnq%i_eMom.pdf'%(pm_set, ithnq))
 
 def convert2NaN(arr=np.array([]), value=0):
     #method to convert a specified value in a array to nan (not a number)

@@ -9,7 +9,7 @@ def get_sig_tot(differ_file='',  ftable_name='', ftable_bin = np.array([]), prin
     # This is where you enter the estimated uncertainties
     # sigma in mr 
     #electron arm uncertainties
-    sig_the = -1.    #electron theta_e (in-plane, horizontal) uncertainty in mr
+    sig_the = 0.    #electron theta_e (in-plane, horizontal) uncertainty in mr
     sig_phe = 0.    #electron phi_e (out-of-plane, vertical) uncertainty in mr
     
     #proton (or hadron) arm uncertainties
@@ -22,7 +22,7 @@ def get_sig_tot(differ_file='',  ftable_name='', ftable_bin = np.array([]), prin
     
     # relative sigma
     #final electron energy relative uncertainty (dEf/Ef)
-    sig_ef = 0.
+    sig_ef = 1.e-3
     #beam energy relative uncertainty (dEb / Eb)
     sig_E = 0.   
     

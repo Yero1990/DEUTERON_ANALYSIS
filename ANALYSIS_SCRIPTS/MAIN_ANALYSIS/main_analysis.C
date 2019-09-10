@@ -19,6 +19,7 @@ int main_analysis(int input)
   int dataSet;
   Bool_t run_simc_flag;
   Bool_t run_data_flag;
+  Bool_t run_pseudo_flag;
   Bool_t rad_corr_flag;
   Bool_t single_run_flag;
   Bool_t Qnorm_flag;  //flag to normalize by total charge once all ROOTfiles have been combined.
@@ -58,6 +59,7 @@ int main_analysis(int input)
     runlist_name = Form("runlists/d2_pm%i_set%i.dat", pm_set, dataSet);
     run_simc_flag = stoi(split(FindString("RUN_SIMC", inputCutFileName)[0], ':')[1]);
     run_data_flag = stoi(split(FindString("RUN_DATA", inputCutFileName)[0], ':')[1]);
+    run_pseudo_flag = stoi(split(FindString("RUN_PSEUDO", inputCutFileName)[0], ':')[1]);
     rad_corr_flag = stoi(trim(split(FindString("rad_corr_flag", inputCutFileName)[0], ':')[1])); 
     single_run_flag = stoi(split(FindString("single_run_flag", inputCutFileName)[0], ':')[1]);
     react_type = "deep";
@@ -136,6 +138,29 @@ int main_analysis(int input)
       }
     
   }
+
+  //===================PSEUDO-DATA (RADIATIVE SIMC)================
+  if(run_pseudo_flag)
+    {
+      
+      cout << "====================================" << endl;
+      cout << "Analyzing D(e,e'p)n SIMC PSEUDO-DATA" << endl;
+      cout << "====================================" << endl;
+
+      //get the 1st run from the runlist (all simc needs is to know the kinematic setting                                                                                                                        
+      //which can get from any run in the runlist.)                                                                                                                                                              
+      ifs.open(runlist_name);                                                                                                                                                                                    
+      getline(ifs, line);                                                                                                                                                                                        
+      run = stoi(line);   
+
+      //create instance of the 'analyze' class, called a1
+      analyze a1(run, "SHMS", "pseudo", react_type);
+      
+      //call method to run data analysis. This method call all necessary methods to analyze data.(See analyze.C)
+      a1.run_pseudo_analysis();
+	    
+
+    }
   
   //============================================================================================
 

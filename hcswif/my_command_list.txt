@@ -1,4 +1,12 @@
-/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_elecp1MeV.data
-/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_elecp1mr.data
-/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetpwia_rad_set1_elecp1MeV.data
-/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetpwia_rad_set1_elecp1mr.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_norad_set1_nom.data    
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_nom.data 
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetpwia_norad_set1_nom.data 
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetpwia_rad_set1_nom.data 
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_ep1MeV_rec.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_ep1MeV_thr.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetpwia_rad_set1_ep1MeV_rec.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetpwia_rad_set1_ep1MeV_thr.data
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_ep1mr_rec.data   
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_ep1mr_thr.data        
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetpwia_rad_set1_ep1mr_rec.data                         
+/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetpwia_rad_set1_ep1mr_thr.data 

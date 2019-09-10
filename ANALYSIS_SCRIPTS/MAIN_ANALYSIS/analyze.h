@@ -72,7 +72,7 @@ class analyze
   //------------Run Analysis Mehods--------------
   void run_simc_analysis(Bool_t rad_corr_flag=0);
   void run_data_analysis(Bool_t Qnorm_flag=0);
-
+  void run_pseudo_analysis(Bool_t rad_corr_flag=0);   //treat SIMC as 'pseudo-data' for kinematic systematic studies
 
  private:
   
@@ -1238,6 +1238,12 @@ class analyze
   
 
   //Input ROOTfile Name
+  TString pseudo_InputFileName_rad;  //'pseudo-data' input file  
+  TString pseudo_OutputFileName;
+  TString pseudo_OutputFileName_radCorr;
+  TString pseudoXsec_OutputFileName;
+  TString pseudoXsec_OutputFileName_radCorr;
+ 
   TString simc_InputFileName_rad;  
   TString simc_InputFileName_norad;
   TString data_InputFileName;

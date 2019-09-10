@@ -40,3 +40,53 @@ a .txt file containing the individual Xsec derivatives for each (thnq, Pm) bin, 
 relative error for each kinematic variable. The advantage of this .txt file is that it wan be used to plot
 quickly the derivatives or relative systematics errors vs. Pmiss.
 
+
+
+=================================
+=Comparison of Derivatives Study=
+=================================
+Date: September 10, 2019
+
+Brief: This study consists of comparing the kinematic derivatives calculated using Werner's code to those determined from SIMC.
+       Each kinematic variable is changed individually to study its effect on the cross section.
+
+In Werner's code: 
+   The relative uncertainty of the kinematic variable in question is set to a value (how well we know the kinematic), and the rest are set to zero
+   meaning, we think we know the rest perfectly.  (See analyze_differ.py)  Running Werner's code will produce a table of derivative with derivatives
+   for each kinematic bin (Pm, th_nq) in units of %/mr or %/MeV,  meaning, how much (percentege-wise) each cross section changes with a +1mr or +1MeV
+   change in the kinematic variable.
+
+In SIMC: 
+   To determine the derivatives via SIMC, if we were to compare the cross sections in DATA/SIMC by varying the cross section by a certain amount, 
+   the issue is that in DATA, we may already be off in our kinematics, even before we change by 1mr or MeV, so when we take the difference in cross
+   section, it may not truly represent a change /mr or /MeV, but it may be more.  ^
+                                                                                  |
+   **THIS IS WHY IT WAS DECIDED TO CALCULATE THE DERIVATIVES USING SIMC ONLY** ----
+
+   To determine the derivatives using SIMC:
+
+   ** Treat SIMC as PSEUDO-DATA (SIMC with radiative effects ON), and get the cross section the same as one would get using real data. That is, by dividing the Yield by SIMC PhaseSpace
+      where SIMC PhaseSpace. One would have SIMC rad/norad at the nominal kinematic setting, and apply the radiative corrections to the SIMC PSEUDO-DATA, just
+      as one would to the real data. The pseudo-data cross section at the offset kinematics are then compared to the pseudo-data cross sections at the nominal
+      kinemaics, and the change would have to be per the amount we changed the kinematics.
+
+      % change in Xsec / (MeV or mr) = (Xsec_Nominal - Xsec_KinOffset)/Xsec_Nominal  * 100
+
+      The derivative is nothing but the relative change in cross section, in percent.
+
+
+      **NOTE: When the kinematic offset is compared to the nominal, the kinematic is changed two ways. 
+      1) Keep the kinematics at the nominal setting in the input file (thrown) and apply the (1mr or 1MeV) offset at the reconstruction stage of the pseudo-data.
+      	 *** We simulate an offset in the reconstruction to mimic what actually happens in the experiment, when there is an offset in the spectrometer.
+
+      2) Vary the kinematics in the input file (thrown) and correct for in the reconstruction stage of the pseudo-data.
+      	 *** Varying the input (thrown) will give a completely different cross section(opposite to nominal), but we reconstruct at the correct kinematics. This
+	     is to mimic what would happen if apply an offset, when there should NOT be one. 
+      
+      The comparison between Werner's and SIMC derivatives will give us a better idea of the sensitivies in the cross section, from each kinematic variable.
+      These are just used as cross-checks that the derivatives behave as we expect when kinematics are changed. Then we can determine the true kinematic
+      relative uncertainties from the H(e,e'p) data.
+
+      
+    
+    
