@@ -134,7 +134,8 @@ tLT:            total live time using EDTM
 pAbs_corr:      proton absorption correction
 tgtBoil_corr:   target boiling correction
 Qtot:           total BCM4A charge (ask Dave Mack for uncertainty)
-
+f_rad:          radiative corrections based on PWIA of FSI, (so they may NOT be systematics. Have to ask . . .)
+f_bc:           bin centering corrections based on PWIA of FSI, (so they may NOT be systematics. Have to ask . . .) 
 ===================================================================================================================================
 
 KINEMATIC UNCERTAINTIES:
@@ -143,12 +144,13 @@ These uncertainties arise from our ignorance of the spectrometer angle and momen
 (Werner as a code which determined the systematics given the average kinematics. His code has the table of values
 obtained by varying the kinematics and observing changes in the cross section.)
 
-The systematics should be calculate for:
+The systematics should be calculated for:
 Ebeam: Beam Energy
 shms P:  SHMS (e-) absolute momentum
 shms theta_e + eyptar: SHMS (e-) in-plane angle
 shms phi_e + xptar: SHMS (e-) out-of-plane angle
 hms P: HMS (p) absolute momentum
+
 
 From Mark Jones, the initial values to try out are:
 dEb     =  3.77e-4  [GeV?]         beam energy uncertainty  

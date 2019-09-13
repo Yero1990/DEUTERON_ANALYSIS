@@ -1,0 +1,115 @@
+Questions to Ask / Updates to give for today's meeting:
+
+Correction Factor Systematics:
+
+**Updates**
+I completed the code to calculate the systematic uncertainty arising from each of the
+correction factors. In summary, for a given data set (with multiple runs), I calculate the
+correction factors for each run. (1/eff, 1/tgt_boil, 1/pAbs, . . .) and their uncertainties.
+Then, I calculate the weighted average of the correction factors, f, and calculate the systematic
+uncertainty as: dsig**2 = sig_exp**2 * (df/f)**2. I then add the individual systematic contributions,
+and their sum in quadrature to the to the final data file containing the bin-centerd corrected data cross sections.
+
+For the BCMs, I use dQ/Q = 2% (suggested by D. Mack, as he is currently working on improving this error)
+For the total live time, I assumed the uncertainty is negligible until we understand how to get the uncertainty (talked with D. Mack
+as well)
+
+**Questions**
+1) For the radiative and bin-centering corrections, I originally used the FSI model to do the corrections. Could
+   the difference in the cross section arising from using the PWIA model to do the corrections be considered a
+   source of systematics? THese are difference models used, so I would think we do expect a difference in the cross sections.
+   In HARI's thesis, he does not take these as systematics, but rather uses the FSI model only.
+
+---------------------------------------------------
+
+Kinematic Systematics:
+
+**Updates**
+With respect to determining the kinematic relative uncertainties, graduate student (Burcu Duran) is working on chi2 minimization
+using the Heep elastic runs after our experiment run 3288 (where the SHMS Q3 was fixed).  
+
+I fitted the W peak from data and simc for the elastic hydrogen data taken in our experiment to try and determine the errors.
+Mark had some ideas to estimate how well do we know the electron scattering angle. His idea was to vary the beam energy by the
+systematic uncertainty we have on it as follows:
+
+Emiss = (Eb - E') + Mp - Ep   : vary the beam enrgy by Eb + dEb and E'-dEb, 
+W(Eb+dEb, E'-dEb, th_e) : determine by how much W changes . . . THis is not clear to me yet. (Mark suggested to wait for the results of X2-Min)
+
+? ? ?
+Is there any other suggestion to estimate these uncertainties? Maybe offset the reconstructed variable in SIMC and observed
+how much W changed (we should also know from the derivatives), and then compare to the offset observed in data?  
+? ? ?
+
+**Questions**
+1) For the deuteron, if we know the Eb, E', th_e and (either P or th_p) then everything else is known. Does this mean that we should
+not worry about the systematics on those other quantities?  For example, if we determine the uncertainties on Eb, E', th_e and P, does
+that mean , we do not need the uncertainty on th_p?  
+
+2) How would we determine the uncertainties on the out-of-plane angles, phi_e, phi_p, etc.. from the elastics data? Since the 
+formula from W only uses the in-plane angles.
+
+PRL Article:
+
+Ideas of what tables/plots to include in the article:
+
+Table1: Correction Factors Systematics (of dataXsec or momentum distributions):
+-----------------------------------------------------------------------
+Pm  |  set  |  dsig2_htrk  |  dsig2_etrk  |   dsig2_tgtBoil   | . . .
+-----------------------------------------------------------------------
+80      1
+
+580     1        . . .           . . .          . . . 
+        2
+        .
+        . 
+        .
+
+
+Table2: Kinematics Systematics (of data Xsec or momentum distributions?):
+         
+**IMPORTANT**: How do we actually write all these values, since each (Pm, thnq) bin has 
+	       its own systematic error?  Should we only present the values of the most
+	       interesting kinematic bin (Pm, th_nq: 30,40 or th_nq:40,50), were FSI are small.
+==========
+==IDEA 1==
+==========
+------------------------------------------------------------------------------------------
+Pm   |   set    |   pm_bin   |  dsig2_Eb   |  dsig2_th_e   |  dsig2_ph_e    |   dsig2_tot
+------------------------------------------------------------------------------------------
+80        1          0.02      ...           ...             ...              ...
+	  	     0.06
+		     0.10
+ 		      .
+		      .	
+		      .
+580       1          
+-----------------------------------------------------------------------------
+** Footnote: For theta_nq: 35+/-5 deg
+
+==========
+==IDEA 2==
+==========
+** Kinematic systematics for momentum distribution of theta_nq: (35 +/- 5 deg)
+------------------------------------------------------------------------------
+  pm_bin [GeV]   |  dsig2_Eb   |  dsig2_th_e   |  dsig2_ph_e    |   dsig2_tot
+------------------------------------------------------------------------------
+ 0.02                 ...           ...             ...              ...
+ 0.06
+ 0.10
+ .
+ .
+ .
+ 0.580
+ . 
+ .
+ 0.750		    
+-----------------------------------------------------------------------------
+** Footnote: For theta_nq: 35+/-5 deg
+
+
+
+IDEAS ON PLOTS TO INCLUDE:
+
+Plot 1: Show comparison between the Hall A/C momentum distribution Data at 80 MeV setting for a given theta_nq  
+PLot 2: Show momentum distribution for the full Pmiss range covered for theta_nq: 35 +/- 5 deg or 45 +/- 5 deg 
+(With comparisons between different models)  --Discuss comaprisons between different models and data at small FSI region
