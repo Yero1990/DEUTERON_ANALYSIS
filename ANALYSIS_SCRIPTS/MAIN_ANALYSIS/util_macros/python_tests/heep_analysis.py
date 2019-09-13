@@ -15,7 +15,7 @@ from ROOT import *
 from ROOT import *
 
 
-def getYield(hscale):
+def getYield():
     #Declare empty numpy arrays to store yield and error
     simcY = np.empty(0)
     simcY_err = np.empty(0)
@@ -34,14 +34,14 @@ def getYield(hscale):
     dataW_err = ROOT.Double(0) #declare ROOT type double to store error
     
     #Read Report
-    f = B.get_file('../report_heep.dat')
+    f = B.get_file('../../report_heep.dat')
     run = B.get_data(f, 'Run')
     shms_rate = B.get_data(f, 'ptrig1_rate')  #SHMS 3/4 Rate
     eTrkEff = B.get_data(f, 'eTrkEff')
 
     
     #Open output txt file to store yields
-    fout = open('heep_yield_h%s.dat'%(hscale), 'w')
+    fout = open('heep_yield.dat', 'w')
 
     fout.write('#!Run[i,0]/    dataY[f,1]/      dataY_err[f,2]/    simcY[f,3]/       simcY_err[f,4]/    R[f,5]/            R_err[f,6]/          shms_3of4_rate[f,7]/  \n')
 
@@ -55,8 +55,8 @@ def getYield(hscale):
         
        
         #Set ROOTfile Names
-        simc_fname = '../root_files/collimator_study/Collimator_Eloss/%s/heep_simc_histos_%i.root' % (hscale, irun[1])
-        data_fname = '../root_files/collimator_study/%s/heep_data_histos_%i.root' % (hscale, irun[1])
+        simc_fname = '../../heep_simc_histos_%i_rad.root' % (irun[1])
+        data_fname = '../../heep_data_histos_%i_combined.root' % (irun[1])
         
         #Read ROOTfile and Get Histogram Objects
         simc_file = TFile(simc_fname)
@@ -89,13 +89,13 @@ def make_plot():
     hscale = 'noscale'
     
     #Read Report
-    f = B.get_file('heep_yield_hscale_%s.dat'%(hscale))
+    f = B.get_file('heep_yield.dat')
     Run = B.get_data(f, 'Run')
     shms_rate = B.get_data(f, 'shms_3of4_rate')  #SHMS 3/4 Rate
     R = B.get_data(f, 'R')
     R_err = B.get_data(f, 'R_err')
     
-    B.plot_exp(shms_rate, R, R_err, color='red', marker='^', label='scale=%s'%(hscale))
+    B.plot_exp(shms_rate, R, R_err, color='red', marker='^')
     my_xticks = ['45.306', '80.372', '271.991', '634.447']
     
     B.pl.xticks(shms_rate, my_xticks)  #label x-axis values
@@ -106,8 +106,9 @@ def make_plot():
     B.pl.xlabel('SHMS 3/4 Rate [kHz]')
     plt.axhline(y=1, color='black', linestyle='--')
     B.pl.legend()
-    #B.pl.show()
+    B.pl.show()
 
+    '''
     hscale = ['1', '0.95', '0.90', '0.85', '0.80', '0.75', '0.70']
     color_arr = ['green', 'blue', 'black', 'magenta', 'fuchsia', 'darkviolet','brown']   
     
@@ -135,20 +136,20 @@ def make_plot():
         B.pl.legend()
 
     B.pl.show('same')
-
+    '''
 
 def heep_analysis():
     
     print('Starting Main Analysis: ')
     
-    hscale = ['noscale', '1', '0.95', '0.90', '0.85', '0.80', '0.75', '0.70']
+    #hscale = ['noscale', '1', '0.95', '0.90', '0.85', '0.80', '0.75', '0.70']
 
     #for iscale in hscale:
     #    iscale_name = 'scale_%s'%(iscale)
     #    print (iscale_name)
         #Call Method to output a .dat file with H(e,e'p) Yield 
-    #    getYield(iscale_name)
-
+    
+    getYield()
     make_plot()
 
 heep_analysis()

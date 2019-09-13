@@ -7,7 +7,7 @@
 #workflow_name="SHMS_LH2_boiling_studies"
 #workflow_name="SHMS_boiling_studies"
 #workflow_name="deuteron_3289"
-workflow_name="d2_full"
+workflow_name="h2"
 
 #runlist_name="current_prot.data"
 
@@ -27,9 +27,10 @@ workflow_name="d2_full"
 #runlist_name="runlists/d2750_set1.dat"
 #runlist_name="runlists/d2750_set2.dat"
 #runlist_name="runlists/d2750_set3.dat"
-runlist_name="runlists/d2_full.dat"
+#runlist_name="runlists/d2_full.dat"
 
-#runlist_name="runlists/h2.dat"
+#-------------Elastic Data----------
+runlist_name="runlists/h2.dat"
 
 
 #Various optional flags to add to hcswif workflow

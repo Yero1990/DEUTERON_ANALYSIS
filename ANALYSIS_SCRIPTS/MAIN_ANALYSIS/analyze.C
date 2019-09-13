@@ -529,8 +529,8 @@ void analyze::SetFileNames()
     data_InputFileName = Form("ROOTfiles/coin_replay_%s_check_%d_-1.root", reaction.c_str(), runNUM);
     data_InputReport = Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_%s_check_%d_-1.report", reaction.c_str(), runNUM); 
 
-    simc_InputFileName_rad = Form("worksim_voli/D2_heep_%d_rad.root", runNUM);
-    simc_InputFileName_norad = Form("worksim_voli/D2_heep_%d_norad.root", runNUM);
+    simc_InputFileName_rad = Form("ROOTfiles/SIMC/D2_heep_%d_rad.root", runNUM);
+    simc_InputFileName_norad = Form("ROOTfiles/SIMC/D2_heep_%d_norad.root", runNUM);
     
 
     //Set Output Names
@@ -665,7 +665,8 @@ void analyze::SetDefinitions()
    
   //Read Spectrometer Kinematics from REPORT_FILE
   string temp;
-  
+
+  cout << "Line 669" << endl;
   //Read Angles (in deg)
   temp = FindString("hHMS Angle", data_InputReport)[0];          //Find line containing string
   h_th = stod(split(temp, ':')[1]);                              //split string, take the number part, and conver to double
@@ -678,7 +679,9 @@ void analyze::SetDefinitions()
   //  cout << "Offseting e- angle by +1 mr: "<< e_th  << endl;
 
   //  }
-  
+
+  cout << "Line 683" << endl;
+
   //Read Central Momenta (in GeV)
   temp = FindString("hHMS P Central", data_InputReport)[0]; 
   h_Pcen = stod(split(temp, ':')[1]);

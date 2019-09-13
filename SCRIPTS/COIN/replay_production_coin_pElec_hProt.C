@@ -1,4 +1,4 @@
-void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="deep_check") {
+void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="heep_check") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -35,7 +35,9 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
 
   // Load params for COIN trigger configuration
-  gHcParms->Load("DEUTERON_ANALYSIS/PARAM/TRIG/tcoin.param");
+  //  gHcParms->Load("DEUTERON_ANALYSIS/PARAM/TRIG/tcoin.param");
+  gHcParms->Load("DEUTERON_ANALYSIS/PARAM/TRIG/thms.param");                                                                                                
+
   //gHcParms->Load("PARAM/TRIG/tcoin.param");
 
 
