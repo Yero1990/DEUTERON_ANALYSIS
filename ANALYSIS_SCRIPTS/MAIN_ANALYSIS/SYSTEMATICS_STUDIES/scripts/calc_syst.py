@@ -23,7 +23,7 @@ def get_trkEff_syst(fname_syst, pm_set=0, data_set=0):
     
 
     #open report 
-    fname='../../root_files/pm%i_fsiXsec_set%i_Em40MeV/report_deep_pm%i_set%i.dat'%(pm_set, data_set, pm_set, data_set)
+    fname='../../root_files/pm%i_fsiXsec_set%i_Em_final40MeV/report_deep_pm%i_set%i.dat'%(pm_set, data_set, pm_set, data_set)
     r = dfile(fname)
 
     #Get Tracking Eff. and its error
@@ -89,7 +89,7 @@ def get_tgtboil_syst(fname_syst, pm_set, data_set):
   
 
     #open report
-    fname='../../root_files/pm%i_fsiXsec_set%i_Em40MeV/report_deep_pm%i_set%i.dat'%(pm_set, data_set, pm_set, data_set)
+    fname='../../root_files/pm%i_fsiXsec_set%i_Em_final40MeV/report_deep_pm%i_set%i.dat'%(pm_set, data_set, pm_set, data_set)
     r = dfile(fname)
 
     I = r['avg_current']     #in uA  (is an array if there are multiple runs per data set)
@@ -98,7 +98,7 @@ def get_tgtboil_syst(fname_syst, pm_set, data_set):
     #Code to determine the target boiling factor systematic effect on the cross section.
     m =  0.00080029          #LD2 slope from fit [fract. yield loss / uA]
     sig_m = 0.00007037       #uncertainty for LD2 target boiling fit slope
-    dI_I = 2.0/100.          #relative uncertainty in average current (Ask D. Mack. 2% ? same as charge)
+    dI_I = 2.0/100.          #relative uncertainty in average current
 
     sig_I = dI_I * I             
 
@@ -187,7 +187,7 @@ def get_tLT_syst(fname_syst, pm_set, data_set):
     #code to get the total live time (from EDTM) systematics
     
     #open report
-    fname='../../root_files/pm%i_fsiXsec_set%i_Em40MeV/report_deep_pm%i_set%i.dat'%(pm_set, data_set, pm_set, data_set)
+    fname='../../root_files/pm%i_fsiXsec_set%i_Em_final40MeV/report_deep_pm%i_set%i.dat'%(pm_set, data_set, pm_set, data_set)
     r = dfile(fname)
 
     tLT = r['tLT']     #total live time [fraction or %/100]
@@ -232,7 +232,7 @@ def get_Qtot_syst(fname_syst, pm_set, data_set):
     #code to get the systematics of the total accumulated charge (related to BCMs uncertainty)
       
     #open report
-    fname='../../root_files/pm%i_fsiXsec_set%i_Em40MeV/report_deep_pm%i_set%i.dat'%(pm_set, data_set, pm_set, data_set)
+    fname='../../root_files/pm%i_fsiXsec_set%i_Em_final40MeV/report_deep_pm%i_set%i.dat'%(pm_set, data_set, pm_set, data_set)
     r = dfile(fname)
 
     Q = r['charge']          #total accumulated charge (mC)
@@ -281,10 +281,10 @@ def get_radbc_syst(fname_syst, pm_set, data_set):
     #This code compares the pwia to fsi rad. corr. data Xsec, and 
     #estimate the relative error for each (Pm, th_nq) bin
     if(pm_set==80):
-        fname='../../Deep_CrossSections/bin_centering_corrections/Em40MeV/pm%i_laget_bc_corr.txt' % (pm_set)
+        fname='../../Deep_CrossSections/bin_centering_corrections/Em_nom40MeV/pm%i_laget_bc_corr.txt' % (pm_set)
         r = dfile(fname)
     else:    
-        fname='../../Deep_CrossSections/bin_centering_corrections/Em40MeV/pm%i_laget_bc_corr_set%i.txt' % (pm_set, data_set)
+        fname='../../Deep_CrossSections/bin_centering_corrections/Em_nom40MeV/pm%i_laget_bc_corr_set%i.txt' % (pm_set, data_set)
         r = dfile(fname)
 
     
@@ -322,6 +322,12 @@ def get_radbc_syst(fname_syst, pm_set, data_set):
     fsyst.add_key('dsig2_RC', 'f')
     fsyst.add_key('dsig2_BC', 'f')
 
+    fsyst.add_key('relDiff_RC', 'f')
+    fsyst.add_key('relDiff_RC_err', 'f')
+    fsyst.add_key('relDiff_BC', 'f')
+    fsyst.add_key('relDiff_BC_err', 'f')
+
+
     #get 2d bin
     ib = fsyst['i_b']
     
@@ -329,6 +335,12 @@ def get_radbc_syst(fname_syst, pm_set, data_set):
     for i, ib_i in enumerate(ib):
         fsyst.data[i]['dsig2_RC'] =  dsig2_RC[i]
         fsyst.data[i]['dsig2_BC'] =  dsig2_BC[i]
+ 
+        fsyst.data[i]['relDiff_RC'] =  relDiff_RC[i]
+        fsyst.data[i]['relDiff_RC_err'] =  relDiff_RC_err[i]
+       
+        fsyst.data[i]['relDiff_BC'] =  relDiff_BC[i]
+        fsyst.data[i]['relDiff_BC_err'] =  relDiff_BC_err[i]
 
     fsyst.save(fname_syst)
 
@@ -340,7 +352,7 @@ def make_syst_copy(pm_set, data_set):
     #get a final systematic error.
 
     #Make a copy of the bin-centerd corrected Xsec data file
-    path = '/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/bin_centering_corrections/Em40MeV/'
+    path = '/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/bin_centering_corrections/Em_nom40MeV/'
     if(pm_set==80):
         datafile = path + 'pm%i_laget_bc_corr.txt'%(pm_set)
         copyfile = path + 'pm%i_laget_bc_corr_syst.txt'%(pm_set)
@@ -364,12 +376,17 @@ def plot_relative_error(fname_syst, pm_set, data_set):
     pm           = fsyst['yb']
     dataXsec     = fsyst['fsiRC_dataXsec_fsibc_corr']
     dataXsec_err = fsyst['fsiRC_dataXsec_fsibc_corr_err']
-    
+     
+    relDiff_RC = fsyst['relDiff_RC'] 
+    relDiff_RC_err = fsyst['relDiff_RC_err'] 
+    relDiff_BC = fsyst['relDiff_BC'] 
+    relDiff_BC_err = fsyst['relDiff_BC_err']
+
     
     convert2NaN(dataXsec, value=-1)
 
     #Get Relative Errors
-    dsig_stats   = dataXsec_err / dataXsec  * 100.
+    dsig_stats   = dataXsec_err                    / dataXsec * 100.
     dsig_htrk    = np.sqrt(fsyst['dsig2_htrk'])    / dataXsec * 100.   #systematic errors from individual contributions
     dsig_etrk    = np.sqrt(fsyst['dsig2_etrk'])    / dataXsec * 100.
     dsig_tgtBoil = np.sqrt(fsyst['dsig2_tgtBoil']) / dataXsec * 100.
@@ -379,6 +396,8 @@ def plot_relative_error(fname_syst, pm_set, data_set):
     dsig_RC      = np.sqrt(fsyst['dsig2_RC'])      / dataXsec * 100.
     dsig_BC      = np.sqrt(fsyst['dsig2_BC'])      / dataXsec * 100.
     
+    
+
     dsig_tot2 = fsyst['dsig2_htrk'] + fsyst['dsig2_etrk'] + fsyst['dsig2_tgtBoil'] + fsyst['dsig2_pT'] + fsyst['dsig2_tLT'] + fsyst['dsig2_Qtot'] + fsyst['dsig2_RC'] + fsyst['dsig2_BC']
     dsig_tot2_v2 = fsyst['dsig2_htrk'] + fsyst['dsig2_etrk'] + fsyst['dsig2_tgtBoil'] + fsyst['dsig2_pT'] + fsyst['dsig2_tLT'] + fsyst['dsig2_Qtot'] 
 
@@ -421,25 +440,31 @@ def plot_relative_error(fname_syst, pm_set, data_set):
         B.pl.clf()
         
         B.pl.xlim(0, 0.3)
+        B.pl.ylim(-50, 50)
+       
+        B.plot_exp(pm[thnq==ithnq], relDiff_RC[thnq==ithnq]*100., relDiff_RC_err[thnq==ithnq]*100., color='black', marker='o', label=r'Rad. Corr Rel Err')   
+        B.plot_exp(pm[thnq==ithnq], relDiff_BC[thnq==ithnq]*100., relDiff_BC_err[thnq==ithnq]*100., color='red', marker='s', label=r'BC. Corr Rel Err')   
+
+
+        #B.plot_exp(pm[thnq==ithnq], y, dsig_htrk[thnq==ithnq], color='gray', marker='o', label=r'$h_{trk}$ syst.')   
+        #B.plot_exp(pm[thnq==ithnq], y, dsig_etrk[thnq==ithnq], color='brown', marker='o', label=r'$e_{trk}$ syst.') 
+        #B.plot_exp(pm[thnq==ithnq], y, dsig_tgtBoil[thnq==ithnq], color='red', marker='o', label=r'$tgt_{Boil}$ syst.')       
+        #B.plot_exp(pm[thnq==ithnq], y, dsig_pT[thnq==ithnq], color='blue', marker='o', label=r'$p_{Abs}$ syst.')       
+        #B.plot_exp(pm[thnq==ithnq], y, dsig_tLT[thnq==ithnq], color='green', marker='o', label=r'total live time syst.')       
+        #B.plot_exp(pm[thnq==ithnq], y, dsig_Qtot[thnq==ithnq], color='magenta', marker='o', label=r'total charge syst..')       
         
-        B.plot_exp(pm[thnq==ithnq], y, dsig_htrk[thnq==ithnq], color='gray', marker='o', label=r'$h_{trk}$ syst.')   
-        B.plot_exp(pm[thnq==ithnq], y, dsig_etrk[thnq==ithnq], color='brown', marker='o', label=r'$e_{trk}$ syst.') 
-        B.plot_exp(pm[thnq==ithnq], y, dsig_tgtBoil[thnq==ithnq], color='red', marker='o', label=r'$tgt_{Boil}$ syst.')       
-        B.plot_exp(pm[thnq==ithnq], y, dsig_pT[thnq==ithnq], color='blue', marker='o', label=r'$p_{Abs}$ syst.')       
-        B.plot_exp(pm[thnq==ithnq], y, dsig_tLT[thnq==ithnq], color='green', marker='o', label=r'total live time syst.')       
-        B.plot_exp(pm[thnq==ithnq], y, dsig_Qtot[thnq==ithnq], color='magenta', marker='o', label=r'total charge syst..')       
         #B.plot_exp(pm[thnq==ithnq], y, dsig_RC[thnq==ithnq], color='darkviolet', marker='o', label=r'radiative corr. syst..')       
         #B.plot_exp(pm[thnq==ithnq], y, dsig_BC[thnq==ithnq], color='cyan', marker='o', label=r'bin center corr. syst..')       
         
         #B.plot_exp(pm[thnq==ithnq], y, dsig_tot[thnq==ithnq], color='black', marker='o', label=r'total syst..')       
-        B.plot_exp(pm[thnq==ithnq], y, dsig_tot_v2[thnq==ithnq], color='black', marker='o', label=r'total syst..')       
+        #B.plot_exp(pm[thnq==ithnq], y, dsig_tot_v2[thnq==ithnq], color='black', marker='o', label=r'total syst..')       
 
 
         B.pl.xlabel('Neutron Recoil Momenta [GeV]')
         B.pl.ylabel(r'Relative Error [%]')
         B.pl.title(r'Relative Systematic Error $P_{m}$=%i (set%i) MeV, $\theta_{nq}:(%i, %i)$'%(pm_set, data_set, th_nq_min, th_nq_max))
         B.pl.legend(loc='upper right', fontsize='x-small', markerscale=1.0)
-        B.pl.savefig('../norm_systematics_plots/dsig_syst2_pm%i_thnq%i_eAng.pdf'%(pm_set, ithnq))
+        B.pl.savefig('../norm_systematics_plots/RCBC_pm%i_thnq%i.pdf'%(pm_set, ithnq))
 
 
 
@@ -452,18 +477,69 @@ def convert2NaN(arr=np.array([]), value=0):
             arr[i[0]] = np.nan
     return arr
 
+def plot_Xsec_Ratio(fname_syst, pm_set, data_set):
+    
+
+    #This code plots the ratio of dataXsec to PWIA
+    fsyst = dfile(fname_syst)
+    
+    #Read the final data Xsec and the systematics contributions
+    thnq         = fsyst['xb']
+    pm           = fsyst['yb']
+    dataXsec     = fsyst['fsiRC_dataXsec_fsibc_corr']
+    dataXsec_err = fsyst['fsiRC_dataXsec_fsibc_corr_err']
+    pwiaXsec     = fsyst['pwiaXsec_theory']
+
+    R = dataXsec / pwiaXsec
+    R_err = dataXsec_err / pwiaXsec
+
+    thnq_arr = [5, 15, 25, 35, 45, 55, 65, 75, 85, 95, 105]
+
+
+    #Loop over theta_nq angle bins
+    for i, ithnq in enumerate(thnq_arr):
+        print('theta_nq:',ithnq,' deg')
+
+        th_nq_min = ithnq - 5
+        th_nq_max = ithnq + 5
+               
+        #Plot relative statistical error
+        fig1 = B.pl.figure(i)
+        B.pl.clf()
+
+        B.pl.xlim(0, 0.3)
+        B.pl.ylim(0., 2.0)
+
+        B.plot_exp(pm[thnq==ithnq], R[thnq==ithnq], R_err[thnq==ithnq], color='black', marker='o', label=r'Ratio') #,  marker='D', color='black', label=r'statistics')      
+        B.pl.xlabel('Neutron Recoil Momenta [GeV]')
+        B.pl.ylabel(r'Ratio')
+        B.pl.title(r'Data to PWIA Xsec Ratio $P_{m}$=%i (set%i) MeV, $\theta_{nq}:(%i, %i)$'%(pm_set, data_set, th_nq_min, th_nq_max))
+        B.pl.legend(loc='upper right', fontsize='x-small', markerscale=1.0)
+        B.pl.savefig('../Xsec_Ratio/sig_ratio_pm%i_thnq%i.pdf'%(pm_set, ithnq))
+
 def main():
 
     #filename of copied data file (this will be used to write systematics)
-    fname = make_syst_copy(80, 1)
-    get_trkEff_syst(fname, 80, 1)
-    get_tgtboil_syst(fname, 80, 1)
-    get_pT_syst(fname, 80, 1)
-    get_tLT_syst(fname, 80, 1)
-    get_Qtot_syst(fname, 80, 1)
-    get_radbc_syst(fname, 80, 1)
+    #fname = make_syst_copy(80, 1)
+    
+    avg_kin_dir = "../../Deep_CrossSections/average_kinematics/Em_final40MeV/"
+    final_Xsec_dir = "../../Deep_CrossSections/bin_centering_corrections/Em_final40MeV/"
 
-    plot_relative_error(fname, 80, 1)
+    if(pm_set==80):
+        avg_kin_file = 'pm%i_%s_norad_avgkin_systematics.txt'%(pm_set, model) 
+        final_Xsec_file = 
+    else:
+        avg_kin_file = 'pm%i_%s_norad_avgkin_set%i_systematics.txt'%(pm_set, model, data_set)
+
+    #get_trkEff_syst(fname, 80, 1)
+    #get_tgtboil_syst(fname, 80, 1)
+    #get_pT_syst(fname, 80, 1)
+    #get_tLT_syst(fname, 80, 1)
+    #get_Qtot_syst(fname, 80, 1)
+    #get_radbc_syst(fname, 80, 1)
+
+    #plot_relative_error(fname, 80, 1)
+    #plot_Xsec_Ratio(fname, 80, 1)
 
 if __name__=="__main__":
     main()

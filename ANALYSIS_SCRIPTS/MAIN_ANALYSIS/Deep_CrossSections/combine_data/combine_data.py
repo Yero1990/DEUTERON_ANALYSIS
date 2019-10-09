@@ -1,4 +1,5 @@
 import LT.box as B
+from LT.datafile import dfile
 import numpy as np
 import sys           
 import os                                                      
@@ -144,7 +145,7 @@ for ib in range(len(i_b)):
         red_dataXsec_avg_err_750 = 1 / np.sqrt(w4 + w5 + w6)
  
 
-    #Calculate the Theoretical Reduced Xsec Arithmetic Average for a given (Pm, th_nq) bin of a given kin. set
+    #Calculate the Theoretical Reduced Xsec Arithmetic Mean for a given (Pm, th_nq) bin of a given kin. set
     
     #580 MeV (PWIA)
     c2p = 1.; x2p = red_pwiaXsec_2[ib]
@@ -267,6 +268,7 @@ for ib in range(len(i_b)):
     else:
         red_fsiXsec_avg = ( x80f + x580f + x750f) / (c80f + c580f + c750f)
 
+    
     l="%i %i %i %f  %f %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e\n" % (i_b[ib], i_x[ib], i_y[ib], xb[ib], yb[ib],red_dataXsec_1[ib], red_dataXsec_err_1[ib], red_dataXsec_2[ib], red_dataXsec_err_2[ib], red_dataXsec_3[ib], red_dataXsec_err_3[ib], red_dataXsec_4[ib], red_dataXsec_err_4[ib], red_dataXsec_5[ib], red_dataXsec_err_5[ib], red_dataXsec_6[ib], red_dataXsec_err_6[ib], red_dataXsec_avg_580, red_dataXsec_avg_err_580, red_dataXsec_avg_750, red_dataXsec_avg_err_750, red_dataXsec_avg, red_dataXsec_avg_err, red_pwiaXsec_1[ib], red_pwiaXsec_2[ib], red_pwiaXsec_3[ib], red_pwiaXsec_4[ib], red_pwiaXsec_5[ib], red_pwiaXsec_6[ib], red_pwiaXsec_580avg, red_pwiaXsec_750avg, red_fsiXsec_1[ib], red_fsiXsec_2[ib], red_fsiXsec_3[ib], red_fsiXsec_4[ib], red_fsiXsec_5[ib], red_fsiXsec_6[ib], red_fsiXsec_580avg, red_fsiXsec_750avg, red_pwiaXsec_avg, red_fsiXsec_avg )
     fout.write(l)
 fout.close()

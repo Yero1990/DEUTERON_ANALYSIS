@@ -9,6 +9,14 @@ from sys import argv
 import matplotlib
 matplotlib.use('Agg')
 
+def convert2NaN(arr=np.array([]), value=0):
+    #method to convert a specified value in a array to nan (not a number)
+    
+    for i in enumerate(arr):
+        if arr[i[0]]==value:
+            arr[i[0]] = np.nan
+    return arr
+
 
 #Conversion factor:  1 fm = 1/ (197 MeV),   
 #The reduced cross section is in MeV^-3 units
@@ -16,24 +24,47 @@ MeV2fm = 197**3    #convert MeV^-3 to fm^3
 
 #User Input (Dir. Name to store output)
 sys_ext = sys.argv[1]   
-
+    
 dir_name = sys_ext+"_plots"
 print(dir_name)
 #check if directory exists, else creates it.
 if not os.path.exists(dir_name):
     os.makedirs(dir_name)
+ 
+'''
+#Get Xsec Data Files
+f80 = B.get_file('../bin_centering_corrections/%s/pm80_laget_bc_corr.txt'%(sys_ext))
+
+#Get Bin Information (Same info for all files)
+i_b = B.get_data(f80, 'i_b')    #2D bin number
+i_x = B.get_data(f80, 'i_x')    #x (th_nq) bin number
+i_y = B.get_data(f80, 'i_y')    #y (pmiss) bin number
+thnq = B.get_data(f80, 'xb')      #th_nq value at bin center
+pm =  B.get_data(f80, 'yb')      #pmiss value at bin center
+
+#Get 80 MeV Xsec
+dataXsec_80     = B.get_data(f80, 'fsiRC_dataXsec_fsibc_corr')
+dataXsec_err_80 = B.get_data(f80, 'fsiRC_dataXsec_fsibc_corr_err')
+pwiaXsec_80     = B.get_data(f80, 'pwiaXsec_theory')
+fsiXsec_80      = B.get_data(f80, 'fsiXsec_theory')
+
+
+#convert '-1' to nan (better for plotting,as plots ignore nan)
+convert2NaN(dataXsec_80, value=-1)
+convert2NaN(dataXsec_err_80, value=-1)
+convert2NaN(pwiaXsec_80, value=-1)
+convert2NaN(fsiXsec_80, value=-1)
+'''
 
 #Get Reduced Xsec Data File
 f = B.get_file('./%s/redXsec_combined.txt'%(sys_ext))
 
-#Get Bin Information
-i_b = B.get_data(f, 'i_b')    #2D bin number
-i_x = B.get_data(f, 'i_x')    #x (th_nq) bin number
-i_y = B.get_data(f, 'i_y')    #y (pmiss) bin number
-thnq = B.get_data(f, 'xb')      #th_nq value at bin center
-pm =  B.get_data(f, 'yb')      #pmiss value at bin center
-
-
+#Get Bin Information (Same info for all files)                                                                                                  
+i_b = B.get_data(f, 'i_b')    #2D bin number                                                                    
+i_x = B.get_data(f, 'i_x')    #x (th_nq) bin number                                                                                    
+i_y = B.get_data(f, 'i_y')    #y (pmiss) bin number                                        
+thnq = B.get_data(f, 'xb')      #th_nq value at bin center                                                          
+pm =  B.get_data(f, 'yb')      #pmiss value at bin center   
 
 #Get 80 MeV Red. Xsec (prepare arrays for masking)
 red_dataXsec_80     = B.get_data(f, 'red_dataXsec_80')
@@ -78,8 +109,17 @@ red_fsiXsec_750avg   = B.get_data(f,'red_fsiXsec_750avg')
 #Get Combined Final Red Xsec for all kinematics
 red_dataXsec_avg     = B.get_data(f,'red_dataXsec_avg')
 red_dataXsec_avg_err = B.get_data(f,'red_dataXsec_avg_err')
+red_dataXsec_avg_syst_err = B.get_data(f,'red_dataXsec_avg_syst_err')
+red_dataXsec_avg_tot_err = B.get_data(f,'red_dataXsec_avg_tot_err')
+
 red_pwiaXsec_avg     = B.get_data(f,'red_pwiaXsec_avg')
 red_fsiXsec_avg      = B.get_data(f,'red_fsiXsec_avg')
+
+#convert '-1' to nan
+convert2NaN(red_dataXsec_avg, value=-1)
+convert2NaN(red_dataXsec_avg_err, value=-1)
+convert2NaN(red_pwiaXsec_avg, value=-1)
+convert2NaN(red_fsiXsec_avg, value=-1)
 
 def plot_data_sets():
     
@@ -197,208 +237,106 @@ def plot_theory_sets(model=''):
                 
         #B.pl.show('same')
 
+
+
+
 def plot_final():
 
-    #----MASKING ARRAYS TO CHOOSE ERRORS BELOW 20 %-------
+    #----MASKING ARRAYS TO CHOOSE ERRORS BELOW 50 %-------
     #The Limit on the red. Xsec error should be placed at the very end, when the combined data is plotted (all data sets and overlapping bins have been combined)
     red_dataXsec_avg_masked = np.ma.array(red_dataXsec_avg, mask=(red_dataXsec_avg_err>0.5*red_dataXsec_avg))
-    red_dataXsec_avg_masked = np.ma.filled(red_dataXsec_avg_masked.astype(float), -1.)
+    red_dataXsec_avg_masked = np.ma.filled(red_dataXsec_avg_masked.astype(float), np.nan)
 
 
+    ###print(XsecR)
+    
+    #Plot momentum distribution vs. Pmiss for different theta_nq
     thnq_arr = [5, 15, 25, 35, 45, 55, 65, 75, 85, 95, 105]
 
     for i, ithnq in enumerate(thnq_arr):
+
+        th_nq_min = ithnq - 5
+        th_nq_max = ithnq + 5
+
         print(ithnq)
         B.pl.clf()
         B.pl.figure(i)
 
-        B.plot_exp(pm[thnq==ithnq], red_dataXsec_avg[thnq==ithnq]*MeV2fm, red_dataXsec_avg_err[thnq==ithnq]*MeV2fm, color='black', logy=True, label='Data' )
-        B.plot_exp(pm[thnq==ithnq], red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm, red_dataXsec_avg_err[thnq==ithnq]*MeV2fm, marker='s', color='gray', markerfacecolor='none', label='Data(Error < 20 % )' )
+        B.plot_exp(pm[thnq==ithnq], red_dataXsec_avg[thnq==ithnq]*MeV2fm, red_dataXsec_avg_err[thnq==ithnq]*MeV2fm, marker='o', color='black', logy=True, label='Data' )
+        B.plot_exp(pm[thnq==ithnq], red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm, red_dataXsec_avg_err[thnq==ithnq]*MeV2fm, marker='o', color='gray', markerfacecolor='none', label='Statistical Error, (statistics < 50 % )' )
+        B.plot_exp(pm[thnq==ithnq], red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm, red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm, marker='o', color='red', markerfacecolor='none', label='Total Error, (statistics < 50 % )' )
+
         B.plot_exp(pm[thnq==ithnq], red_pwiaXsec_avg[thnq==ithnq]*MeV2fm, linestyle='--', color='red', logy=True, label='Laget PWIA')
         B.plot_exp(pm[thnq==ithnq], red_fsiXsec_avg[thnq==ithnq]*MeV2fm, linestyle='--', color='blue', logy=True, label='Laget FSI')
-        B.pl.xlabel('Neutron Recoil Momenta [GeV]')
+        B.pl.xlabel('Neutron Recoil Momenta [GeV/c]')
         B.pl.ylabel(r'Reduced Cross Section, $\sigma_{red} [fm^{3}]$')
         B.pl.ylim(0, 10)
-        th_nq_min = ithnq - 5
-        th_nq_max = ithnq + 5
         B.pl.title(r'Reduced Cross Section, $\theta_{nq}:(%i, %i)$'%(th_nq_min, th_nq_max))
         B.pl.yscale('log')
-
-        B.pl.legend()
-            
+        B.pl.legend()            
         B.pl.savefig(dir_name+'/final_redXsec_thnq%i.pdf'%(ithnq))
+ 
+        #Plot the relative errors dsig / sig  to know how large are the contributions from systematics and statistical      
+        B.pl.clf()
+        B.pl.figure(i+1)
+
+        y = np.array([0. for i in range(len(pm[thnq==ithnq]))])
+
+        dsig_sig_stats = red_dataXsec_avg_err[thnq==ithnq]*MeV2fm / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)
+        dsig_sig_syst = red_dataXsec_avg_syst_err[thnq==ithnq]*MeV2fm / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)
+        dsig_sig_tot = red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)
+
+        for i in range(len(y)):
+            if (np.isnan(dsig_sig_tot[i])):
+                y[i] = np.nan
+
+        B.plot_exp(pm[thnq==ithnq],  y, dsig_sig_stats*100., marker='o', color='b', label='Statistical Error')
+        B.plot_exp(pm[thnq==ithnq],  y, dsig_sig_syst*100., marker='o', color='r', label='Systematics Error')
+        B.plot_exp(pm[thnq==ithnq],  y, dsig_sig_tot*100., marker='o', color='k', label='Total Error')
+        B.pl.xlabel('Neutron Recoil Momenta [GeV/c]')
+        B.pl.ylabel(r'Relative Error [%]')
+        B.pl.ylim(-100, 100)
+        B.pl.title(r'Relative Error, $\theta_{nq}:(%i, %i)$'%(th_nq_min, th_nq_max))
+        B.pl.legend()            
+        B.pl.savefig(dir_name+'/final_redXsec_relativeError_thnq%i.pdf'%(ithnq))
 
 
-    #B.pl.show('same')
+        #Plot the relative errors to compare data to model
+        B.pl.clf()
+        B.pl.figure(i+2)
+   
+        relative_err_fsi = (red_dataXsec_avg_masked[thnq==ithnq] - red_fsiXsec_avg[thnq==ithnq]) / (red_dataXsec_avg_masked[thnq==ithnq]) * 100.
+        d_relative_err_fsi = (1./red_dataXsec_avg_masked[thnq==ithnq] - (red_dataXsec_avg_masked[thnq==ithnq] - red_fsiXsec_avg[thnq==ithnq]) /red_dataXsec_avg_masked[thnq==ithnq]**2) * red_dataXsec_avg_tot_err[thnq==ithnq]*100.
+ 
+        relative_err_pwia = (red_dataXsec_avg_masked[thnq==ithnq] - red_pwiaXsec_avg[thnq==ithnq]) / (red_dataXsec_avg_masked[thnq==ithnq]) * 100.
+        d_relative_err_pwia = (1./red_dataXsec_avg_masked[thnq==ithnq] - (red_dataXsec_avg_masked[thnq==ithnq] - red_pwiaXsec_avg[thnq==ithnq]) /red_dataXsec_avg_masked[thnq==ithnq]**2) * red_dataXsec_avg_tot_err[thnq==ithnq]*100.
 
+        B.plot_exp(pm[thnq==ithnq],  relative_err_fsi, d_relative_err_fsi, marker='o', color='r', label='relative error (FSI)')
+        B.plot_exp(pm[thnq==ithnq],  relative_err_pwia, d_relative_err_pwia, marker='s', color='b', label='relative error (PWIA)')
+
+        B.pl.xlabel('Neutron Recoil Momenta [GeV/c]')
+        B.pl.ylabel(r'Relative Error [%]')
+        B.pl.ylim(-100, 100)
+        B.pl.title(r'Relative Error, $\theta_{nq}:(%i, %i)$'%(th_nq_min, th_nq_max))
+        B.pl.legend()            
+        B.pl.savefig(dir_name+'/final_redXsec_relativeErrorModel_thnq%i.pdf'%(ithnq))
+        
+       
+
+  
 
 def main():
     print('Entering Main . . .')
 
-    plot_data_sets()
+    #plot_data_sets()
 
-    plot_theory_sets('pwia')
-    plot_theory_sets('fsi')
+    #plot_theory_sets('pwia')
+    #plot_theory_sets('fsi')
+    #plot_Xsec_vs_thnq()
     plot_final()
-
 
 
 if __name__=="__main__":
     main()
 
 
-
-'''
-#central th_nq values array
-thnq_arr = [5, 15, 25, 35, 45, 55, 65, 75, 85, 95]
-
-fig, ax = plt.subplots(2, 5, sharex=True, sharey=True)
-
-for i, ithnq in enumerate(thnq_arr):
-    fig.add_subplot(2, 5, i+1)
-
-    plt.tick_params(axis='x', which='both', bottom=False, top=False, labelbottom=False)     
-    plt.tick_params(axis='y', which='both', right=False, left=False, labelleft=False) 
-    B.plot_exp(pm[thnq==ithnq], red_dataXsec_80[thnq==ithnq], red_dataXsec_err_80[thnq==ithnq], logy=True)
-
-    B.pl.xlabel('')
-    B.pl.ylabel('')
-    
-    B.pl.title('')
-
-#B.pl.ylim(0, 0.000001)
-fig.text(0.5, 0.04, 'Missing Momentum [GeV]', ha='center')
-fig.text(0.04, 0.5, r'$\sigma_{red}$ [fm$^{3}$]', va='center', rotation='vertical')
-plt.subplots_adjust(left=0.125, bottom=0.1, right=0.9, top=0.9, wspace=0.2, hspace=0.2)
-
-'''
-
-
-#80 MeV
-
-
-'''
-#Get Bin-Conrr. Data Xsec, and theory
-thnq80 = B.get_data(f80, 'xb')  #thnq bin center value (deg)
-pm80 = B.get_data(f80, 'yb')    #pm bin cernter calue (GeV)
-dataXsec80 = B.get_data(f80, 'dataXsec_bc')
-dataXsec80_err = B.get_data(f80, 'dataXsec_bc_err')
-pwiaXsec80_theory = B.get_data(f80, 'pwiaXsec_theory')
-fsiXsec80_theory = B.get_data(f80, 'fsiXsec_theory')
-red_dataXsec80 = B.get_data(f80, 'red_dataXsec')
-red_dataXsec80_err = B.get_data(f80, 'red_dataXsec_err')
-red_pwiaXsec80_theory = B.get_data(f80, 'red_pwiaXsec')
-red_fsiXsec80_theory = B.get_data(f80, 'red_fsiXsec')
-
-thnq580_set1 = B.get_data(f580_set1, 'xb')  
-pm580_set1 = B.get_data(f580_set1, 'yb')   
-dataXsec580_set1 = B.get_data(f580_set1, 'dataXsec_bc')
-dataXsec580_err_set1 = B.get_data(f580_set1, 'dataXsec_bc_err')
-pwiaXsec580_theory_set1 = B.get_data(f580_set1, 'pwiaXsec_theory')
-fsiXsec580_theory_set1 = B.get_data(f580_set1, 'fsiXsec_theory')
-red_dataXsec580_set1 = B.get_data(f580_set1, 'red_dataXsec')
-red_dataXsec580_err_set1 = B.get_data(f580_set1, 'red_dataXsec_err')
-red_pwiaXsec580_theory_set1 = B.get_data(f580_set1, 'red_pwiaXsec')
-red_fsiXsec580_theory_set1 = B.get_data(f580_set1, 'red_fsiXsec')
-
-thnq580_set2 = B.get_data(f580_set2, 'xb')  
-pm580_set2 = B.get_data(f580_set2, 'yb')  
-dataXsec580_set2 = B.get_data(f580_set2, 'dataXsec_bc')
-dataXsec580_err_set2 = B.get_data(f580_set2, 'dataXsec_bc_err')
-pwiaXsec580_theory_set2 = B.get_data(f580_set2, 'pwiaXsec_theory')
-fsiXsec580_theory_set2 = B.get_data(f580_set2, 'fsiXsec_theory')
-red_dataXsec580_set2 = B.get_data(f580_set2, 'red_dataXsec')
-red_dataXsec580_err_set2 = B.get_data(f580_set2, 'red_dataXsec_err')
-red_pwiaXsec580_theory_set2 = B.get_data(f580_set2, 'red_pwiaXsec')
-red_fsiXsec580_theory_set2 = B.get_data(f580_set2, 'red_fsiXsec')
-
-thnq750_set1 = B.get_data(f750_set1, 'xb')  
-pm750_set1 = B.get_data(f750_set1, 'yb')  
-dataXsec750_set1 = B.get_data(f750_set1, 'dataXsec_bc')
-dataXsec750_err_set1 = B.get_data(f750_set1, 'dataXsec_bc_err')
-pwiaXsec750_theory_set1 = B.get_data(f750_set1, 'pwiaXsec_theory')
-fsiXsec750_theory_set1 = B.get_data(f750_set1, 'fsiXsec_theory')
-red_dataXsec750_set1 = B.get_data(f750_set1, 'red_dataXsec')
-red_dataXsec750_err_set1 = B.get_data(f750_set1, 'red_dataXsec_err')
-red_pwiaXsec750_theory_set1 = B.get_data(f750_set1, 'red_pwiaXsec')
-red_fsiXsec750_theory_set1 = B.get_data(f750_set1, 'red_fsiXsec')
-
-thnq750_set2 = B.get_data(f750_set2, 'xb')  
-pm750_set2 = B.get_data(f750_set2, 'yb')  
-dataXsec750_set2 = B.get_data(f750_set2, 'dataXsec_bc')
-dataXsec750_err_set2 = B.get_data(f750_set2, 'dataXsec_bc_err')
-pwiaXsec750_theory_set2 = B.get_data(f750_set2, 'pwiaXsec_theory')
-fsiXsec750_theory_set2 = B.get_data(f750_set2, 'fsiXsec_theory')
-red_dataXsec750_set2 = B.get_data(f750_set2, 'red_dataXsec')
-red_dataXsec750_err_set2 = B.get_data(f750_set2, 'red_dataXsec_err')
-red_pwiaXsec750_theory_set2 = B.get_data(f750_set2, 'red_pwiaXsec')
-red_fsiXsec750_theory_set2 = B.get_data(f750_set2, 'red_fsiXsec')
-
-thnq750_set3 = B.get_data(f750_set3, 'xb')  
-pm750_set3 = B.get_data(f750_set3, 'yb')  
-dataXsec750_set3 = B.get_data(f750_set3, 'dataXsec_bc')
-dataXsec750_err_set3 = B.get_data(f750_set3, 'dataXsec_bc_err')
-pwiaXsec750_theory_set3 = B.get_data(f750_set3, 'pwiaXsec_theory')
-fsiXsec750_theory_set3 = B.get_data(f750_set3, 'fsiXsec_theory')
-red_dataXsec750_set3 = B.get_data(f750_set3, 'red_dataXsec')
-red_dataXsec750_err_set3 = B.get_data(f750_set3, 'red_dataXsec_err')
-red_pwiaXsec750_theory_set3 = B.get_data(f750_set3, 'red_pwiaXsec')
-red_fsiXsec750_theory_set3 = B.get_data(f750_set3, 'red_fsiXsec')
-
-
-#Plot Data
-#B.plot_exp(pm80[thnq80==40], dataXsec80[thnq80==40], dataXsec80_err[thnq80==40], marker='s', color='r', label='DATA (80 MeV)', logy=True)
-#B.plot_exp(pm580_set1[thnq580_set1==40], dataXsec580_set1[thnq580_set1==40], dataXsec580_err_set1[thnq580_set1==40], marker='s', color='b', label='DATA (580 MeV)', logy=True)
-#B.plot_exp(pm750_set1[thnq750_set1==40], dataXsec750_set1[thnq750_set1==40], dataXsec750_err_set1[thnq750_set1==40], marker='s', color='g', label='DATA (750 MeV)', logy=True)
-
-#Reduced Cross Section
-
-#Convert from MeV^-3 to fm^3
-red_dataXsec80 = red_dataXsec80 * MeV2fm
-red_dataXsec580_set1 = red_dataXsec580_set1 * MeV2fm
-red_dataXsec750_set1 = red_dataXsec750_set1 * MeV2fm
-red_dataXsec580_set2 = red_dataXsec580_set2 * MeV2fm
-red_dataXsec750_set2 = red_dataXsec750_set2 * MeV2fm
-red_dataXsec750_set3 = red_dataXsec750_set3 * MeV2fm
-
-red_dataXsec80_err = red_dataXsec80_err * MeV2fm
-red_dataXsec580_err_set1 = red_dataXsec580_err_set1 * MeV2fm
-red_dataXsec750_err_set1 = red_dataXsec750_err_set1 * MeV2fm
-red_dataXsec580_err_set2 = red_dataXsec580_err_set2 * MeV2fm
-red_dataXsec750_err_set2 = red_dataXsec750_err_set2 * MeV2fm
-red_dataXsec750_err_set3 = red_dataXsec750_err_set3 * MeV2fm
-
-#Theory
-red_pwiaXsec80_theory = red_pwiaXsec80_theory * MeV2fm
-red_fsiXsec80_theory = red_fsiXsec80_theory * MeV2fm
-red_pwiaXsec580_theory_set1 = red_pwiaXsec580_theory_set1 * MeV2fm
-red_fsiXsec580_theory_set1 = red_fsiXsec580_theory_set1 * MeV2fm
-red_pwiaXsec750_theory_set1 = red_pwiaXsec750_theory_set1 * MeV2fm
-red_fsiXsec750_theory_set1 = red_fsiXsec750_theory_set1 * MeV2fm
-
-
-#Plot Data
-B.plot_exp(pm80[thnq80==40], red_dataXsec80[thnq80==40], red_dataXsec80_err[thnq80==40], marker='s', color='r', label='DataSet1 (80 MeV)', logy=True)
-B.plot_exp(pm580_set1[thnq580_set1==40], red_dataXsec580_set1[thnq580_set1==40], red_dataXsec580_err_set1[thnq580_set1==40], marker='s', color='b', label='DataSet1 (580 MeV)', logy=True)
-B.plot_exp(pm580_set2[thnq580_set2==40], red_dataXsec580_set2[thnq580_set2==40], red_dataXsec580_err_set2[thnq580_set2==40], marker='^', color='b', label='DataSet2 (580 MeV)', logy=True)
-B.plot_exp(pm750_set1[thnq750_set1==40], red_dataXsec750_set1[thnq750_set1==40], red_dataXsec750_err_set1[thnq750_set1==40], marker='s', color='g', label='DataSet1 (750 MeV)', logy=True)
-B.plot_exp(pm750_set2[thnq750_set2==40], red_dataXsec750_set2[thnq750_set2==40], red_dataXsec750_err_set2[thnq750_set2==40], marker='^', color='g', label='DataSet2 (750 MeV)', logy=True)
-B.plot_exp(pm750_set3[thnq750_set3==40], red_dataXsec750_set3[thnq750_set3==40], red_dataXsec750_err_set3[thnq750_set3==40], marker='o', color='g', label='DataSet3 (750 MeV)', logy=True)
-
-#Plot Theory
-B.plot_exp(pm80[thnq80==40], red_pwiaXsec80_theory[thnq80==40], linestyle='--', color='r', label='Laget PWIA (80 MeV)', logy=True)
-B.plot_exp(pm80[thnq80==40], red_fsiXsec80_theory[thnq80==40], linestyle='-', color='r', label='Laget FSI (80 MeV)', logy=True)
-
-B.plot_exp(pm580_set1[thnq580_set1==40], red_pwiaXsec580_theory_set1[thnq580_set1==40], linestyle='--', color='b', label='Laget PWIA (580 MeV)', logy=True)
-B.plot_exp(pm580_set1[thnq580_set1==40], red_fsiXsec580_theory_set1[thnq580_set1==40], linestyle='-', color='b', label='Laget FSI (580 MeV)', logy=True)
-
-B.plot_exp(pm750_set1[thnq750_set1==40], red_pwiaXsec750_theory_set1[thnq750_set1==40], linestyle='--', color='g', label='Laget PWIA (750 MeV)', logy=True)
-B.plot_exp(pm750_set1[thnq750_set1==40], red_fsiXsec750_theory_set1[thnq750_set1==40], linestyle='-', color='g', label='Laget FSI (750 MeV)', logy=True)
-
-B.pl.xlabel('Recoil Momenta [GeV/c]', fontsize=15)
-B.pl.ylabel(r'$\sigma_{red}$ [fm$^{3}$]', fontsize=15)
-
-B.pl.legend()
-#B.pl.show('same')
-
-'''

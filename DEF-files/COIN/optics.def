@@ -12,6 +12,7 @@ block P.cal.etotnorm
 block P.cal.etracknorm
 block P.kin.*
 block P.react.*
+block P.extcor.*
 block P.hod.beta*
 block P.hod.start*
 
@@ -28,6 +29,7 @@ block H.cal.etotnorm
 block H.cal.etracknorm
 block H.kin.*
 block H.react.*
+block H.extcor.*
 block H.hod.beta*
 block H.hod.start*
 

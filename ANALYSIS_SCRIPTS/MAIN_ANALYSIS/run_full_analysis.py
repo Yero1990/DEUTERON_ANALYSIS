@@ -17,7 +17,7 @@ def main():
     print('Entering Main . . .')
 
     #Emiss Systematic Study
-    if(study=="Em_ep1mr_thr"):
+    if(study=="Em_final"):
         cut_arr = np.array([40])  #Missing Energy in MeV
     #Ztar Difference Systematic Study
     if(study=="Ztar"):
@@ -34,7 +34,7 @@ def main():
 
     for i in range(len(cut_arr)):
 
-        if(study=="Em_ep1mr_thr"):
+        if(study=="Em_final"):
             cut_value = cut_arr[i] / 1000.   #convert to GeV
             sys_ext = study+"%sMeV"%(cut_arr[i])  #descriptive name of systematic study
         if(study=="Ztar"):
@@ -64,7 +64,8 @@ def main():
         #Analyze Calibrated ROOTfiles to get Charge Norm. Corrected Yield
         analyze_ROOTfiles('pwia', 80, 1, sys_ext, study, cut_value)
         analyze_ROOTfiles('fsi', 80, 1, sys_ext, study, cut_value)
-        '''
+        
+        
         analyze_ROOTfiles('pwia', 580, 1, sys_ext, study, cut_value)
         analyze_ROOTfiles('fsi', 580, 1, sys_ext, study, cut_value)
         
@@ -79,7 +80,8 @@ def main():
         
         analyze_ROOTfiles('pwia', 750, 3, sys_ext, study, cut_value)
         analyze_ROOTfiles('fsi', 750, 3, sys_ext, study, cut_value)
-        '''
+        
+        
         #Assumes all ROOTfiles with Histos Objects have been created
         calc_all_Xsec(sys_ext)
         
@@ -140,7 +142,8 @@ def calc_all_Xsec(sys_ext=''):
     #80 MeV
     os.system("python calc_avg_kin.py 80 pwia 1 %s"%(sys_ext))
     os.system("python calc_avg_kin.py 80 fsi 1 %s"%(sys_ext))
-    '''
+    
+    
     #580 MeV
     os.system("python calc_avg_kin.py 580 pwia 1 %s"%(sys_ext))
     os.system("python calc_avg_kin.py 580 fsi 1 %s"%(sys_ext))
@@ -153,14 +156,15 @@ def calc_all_Xsec(sys_ext=''):
     os.system("python calc_avg_kin.py 750 fsi 2 %s"%(sys_ext))
     os.system("python calc_avg_kin.py 750 pwia 3 %s"%(sys_ext))
     os.system("python calc_avg_kin.py 750 fsi 3 %s"%(sys_ext))
-    '''
+    
+    
     #----------PART3: EXTRACT THEORY XSEC FROM AVERAGE KINEMATICS-------------
     dir_name="../theory_Xsec/"
     os.chdir(dir_name)
 
     #80 MeV
     os.system("ipython calc_theory_Xsec.py 80 1 %s"%(sys_ext))
-    '''
+    
     #580 MeV
     os.system("ipython calc_theory_Xsec.py 580 1 %s"%(sys_ext))
     os.system("ipython calc_theory_Xsec.py 580 2 %s"%(sys_ext))
@@ -168,7 +172,7 @@ def calc_all_Xsec(sys_ext=''):
     os.system("ipython calc_theory_Xsec.py 750 1 %s"%(sys_ext))
     os.system("ipython calc_theory_Xsec.py 750 2 %s"%(sys_ext))
     os.system("ipython calc_theory_Xsec.py 750 3 %s"%(sys_ext))
-    '''
+    
 
     #----------PART4: EXTRACT AVERAGE DATA/MODEL XSEC FROM SIMC -------------
     dir_name="../average_Xsec/"
@@ -176,7 +180,7 @@ def calc_all_Xsec(sys_ext=''):
      
     #80 MeV
     os.system("python calc_Xsec.py 80 1 %s"%(sys_ext))
-    '''
+    
     #580 MeV
     os.system("python calc_Xsec.py 580 1 %s"%(sys_ext))
     os.system("python calc_Xsec.py 580 2 %s"%(sys_ext))
@@ -184,7 +188,8 @@ def calc_all_Xsec(sys_ext=''):
     os.system("python calc_Xsec.py 750 1 %s"%(sys_ext))
     os.system("python calc_Xsec.py 750 2 %s"%(sys_ext))
     os.system("python calc_Xsec.py 750 3 %s"%(sys_ext))
-    '''
+    
+
     #----------PART5: APPLY BIN-CENTERING CORRECTIONS -------------
     #This part produces a file with all the Xsec and red. Xsec for all kinematics/sets
 
@@ -193,7 +198,7 @@ def calc_all_Xsec(sys_ext=''):
     
     #80 MeV
     os.system("ipython calc_bc_corr.py 80 1 %s"%(sys_ext))
-    '''
+    
     #580 MeV
     os.system("ipython calc_bc_corr.py 580 1 %s"%(sys_ext))
     os.system("ipython calc_bc_corr.py 580 2 %s"%(sys_ext))
@@ -201,17 +206,19 @@ def calc_all_Xsec(sys_ext=''):
     os.system("ipython calc_bc_corr.py 750 1 %s"%(sys_ext))
     os.system("ipython calc_bc_corr.py 750 2 %s"%(sys_ext))
     os.system("ipython calc_bc_corr.py 750 3 %s"%(sys_ext))
-    '''
-   #----------PART6: COMBINE Red. Xsec -------------
-   #Combine reduced cross sections from all kin. / sets (NOT Cross Sections)
-
+    
+    
+    #----------PART6: COMBINE Red. Xsec -------------
+    #Combine reduced cross sections from all kin. / sets (NOT Cross Sections)
+    
+    
     dir_name="../combine_data/"
     os.chdir(dir_name)
-
-    #os.system("python combine_data.py %s"%(sys_ext))  #produces a .txt files with all the combined Xsec from theory and data
-    #os.system("python make_plot.py %s"%(sys_ext))
-
-
+    
+    os.system("python combine_data.py %s"%(sys_ext))  #produces a .txt files with all the combined Xsec from theory and data
+    os.system("python make_plot.py %s"%(sys_ext))
+    
+    
     #-------PART7: CALCULATE SYSTEMATICS EFFECTS (assumes nominal cuts Xsec already exits)---------
     #dir_name="/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/SYSTEMATICS_STUDIES/scripts"
     #os.chdir(dir_name)
@@ -222,7 +229,7 @@ def calc_all_Xsec(sys_ext=''):
 
 def gen_inp(model='', pm_set=0, data_set=0, study='', cut_value=0):
     
-    if(study=="Em_ep1mr_thr"):
+    if(study=="Em_final"):
 
         #Generate the D(e,e'p)n Input File Based on User Input 
         f = open('set_deep_cuts.inp', 'w')                               
@@ -239,8 +246,8 @@ def gen_inp(model='', pm_set=0, data_set=0, study='', cut_value=0):
         f.write('# True (ON) =  1,  False (OFF) = 0                                                                            \n')
         f.write('                                                                                                              \n')
         f.write('RUN_SIMC: 1                                                                                                   \n')
-        f.write('RUN_DATA: 0                                                                                                   \n')
-        f.write('RUN_PSEUDO: 1                                                                                                 \n')
+        f.write('RUN_DATA: 1                                                                                                   \n')
+        f.write('RUN_PSEUDO: 0                                                                                                 \n')
         f.write(';Analyze Radiative(1) or NonRadiative(0) SIMC?                                                                \n')
         f.write(';IMPORTANT: If doing radiative corrections, set to -1                                                         \n')
         f.write('radiate: -1                                                                                                   \n')
@@ -309,8 +316,8 @@ def gen_inp(model='', pm_set=0, data_set=0, study='', cut_value=0):
         f.write('Q2_min: 4.                                                                                                    \n')
         f.write('Q2_max: 5.                                                                                                    \n')
         f.write('                                                                                                              \n')
-        f.write('thnq_min: 35.                                                                                                 \n')
-        f.write('thnq_max: 45.                                                                                                 \n')
+        f.write('thnq_min: 30.                                                                                                 \n')
+        f.write('thnq_max: 40.                                                                                                 \n')
         f.write('                                                                                                              \n')
         f.write('MM_min: 0.9                                                                                                   \n')
         f.write('MM_max: 0.985                                                                                                 \n')

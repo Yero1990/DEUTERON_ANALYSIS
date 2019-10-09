@@ -1,6 +1,0 @@
-/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_pp1mr_rec.data   
-/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_pp1mr_thr.data        
-/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_pp1MeV_rec.data   
-/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_pp1MeV_thr.data        
-/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_pph1mr_rec.data   
-/u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh d2_pm80_lagetfsi_rad_set1_eph1mr_rec.data        

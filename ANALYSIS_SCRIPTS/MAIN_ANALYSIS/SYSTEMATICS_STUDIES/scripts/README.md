@@ -43,3 +43,16 @@ in quadrature to get a final systematic for each data set.
 The individual contributions and final uncertainty will be written
 as additional columns to the cross section data files (the bin-center corr. files)
 Maybe, a copy of the file with the '_syst' extension is better.
+
+
+---------------------
+-norm_systematics.py
+---------------------
+This code is an update version of calc_syst.py, 
+and only has the functions relevant to calculate the
+systemnatics contributions from the Xsec corr. factors,
+a special function that combines these errors and writes
+them to the avg. kin. file. This code can be imported as
+a module by the code to calculate the kinematics systematics
+and therefore, be able to calculate an overall systematic error
+on the cross section.

@@ -3,8 +3,18 @@ t_coin_numTdc = 113
 t_coin_tdcoffset = 300.
 t_coin_adc_tdc_offset = 200.
 t_coin_trig_tdcchanperns = 0.09766
+;Deuteron
 t_coin_trig_tdcrefcut=-2800.   
 t_coin_trig_adcrefcut=-2850.   
+
+;SHMS Heep Singles
+;t_coin_trig_tdcrefcut=-4000.   
+;t_coin_trig_adcrefcut=-4500.
+
+;default
+;t_coin_trig_tdcrefcut=-1000.   
+;t_coin_trig_adcrefcut=-1000.
+
 eHadCoinTime_Offset = 0.
 ;  list of names of the HMS 3/4 trigger and SHMS 3/4 trigger input to the SHMS Trigger Module
 ;  Copies go to ROC1 and ROC2

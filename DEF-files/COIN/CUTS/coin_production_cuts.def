@@ -1,30 +1,30 @@
 Block: RawDecode
 #include "DEUTERON_ANALYSIS/DEF-files/COIN/CUTS/coin_rawdecode_cuts.def"
-RawDecode_master  ALL_events
+RawDecode_master  1
 
 Block: Decode
 #include "DEUTERON_ANALYSIS/DEF-files/COIN/CUTS/coin_decode_cuts.def"
-Decode_master     ALL_events
+Decode_master  1
 
 Block: CoarseTracking
 #include "DEUTERON_ANALYSIS/DEF-files/SHMS/CUTS/pstackana_coarsetracking_cuts.def"
 #include "DEUTERON_ANALYSIS/DEF-files/HMS/CUTS/hstackana_coarsetracking_cuts.def"
-CoarseTracking_master  ALL_events
+CoarseTracking_master  1
 
 Block: CoarseReconstruct
-CoarseReconstruct_master   ALL_events
+CoarseReconstruct_master  1
 
 Block: Tracking
-Tracking_master     ALL_events
+Tracking_master  1
 
 Block: Reconstruct
 #include "DEUTERON_ANALYSIS/DEF-files/SHMS/CUTS/pstackana_reconstruct_cuts.def"
 #include "DEUTERON_ANALYSIS/DEF-files/HMS/CUTS/hstackana_reconstruct_cuts.def"
 #include "DEUTERON_ANALYSIS/DEF-files/COIN/CUTS/coin_reconstruct_cuts.def"
-Reconstruct_master ALL_events
+Reconstruct_master 1
 
 Block: Physics
 #include "DEUTERON_ANALYSIS/DEF-files/HMS/CUTS/hstackana_physics_cuts.def"
 #include "DEUTERON_ANALYSIS/DEF-files/SHMS/CUTS/pstackana_physics_cuts.def"
 #include "DEUTERON_ANALYSIS/DEF-files/COIN/CUTS/coin_physics_cuts.def"
-Physics_master  ALL_events
+Physics_master  1

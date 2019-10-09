@@ -9,44 +9,47 @@ from sys import argv
 import os
 import shutil as SU
 
-dtr = np.pi/180.
+#load module to calculate norm. systematics
+import norm_systematics as ns
 
-#----------------------------------------------------------------------
-def check_dir(current_dir):
-    # create output directory (if necessary)
-    try:
-        os.mkdir(current_dir)
-        print "created : ", current_dir
-    except:
-        msg = sys.exc_info()[1]
-        if msg.errno == 17 :
-            print current_dir, " exists, will use it "
-        else:
-            print "check_dir problem : ", msg
-            sys.exit()
-# done
+dtr = np.pi/180.
 
 #User Input
 pm_set = int(sys.argv[1])
 model = sys.argv[2]
 data_set = int(sys.argv[3])
 
-#Code usage example: ipython run_differ_general_v2.py 80 fsi 1
+#Code usage example: ipython run_differ_general_v2.py 580 fsi 1
+
+
+#--------------CALCULATE NORM. SYSTEMATICS ERROR ON Xsec (Used External Module 'norm_systematics')-----------------
+
+#This code will write the systematic contribution and the quadrature sum of normalization factors as relative error, df/f
+#To get the absolute error to plot, one would have to multiply by the cross section
+ns.combine_norm_systematics(pm_set, model, data_set)
+
+#------------------------------------------------------------------------------------------------------------------
+
+
+#----------------------------CALCULATE KINEMATIC SYSTEMATICS ERRORS ON Xsec-----------------------
 
 #average kinematics directory for avg. kin with the nominal cut settings
-avg_kin_dir = '../../../Deep_CrossSections/average_kinematics/Em_nom40MeV/'   #'./avg_kin_dir/'
+avg_kin_dir = '../../../Deep_CrossSections/average_kinematics/Em_final40MeV/'   #'./avg_kin_dir/'
 results_dir = './kin_syst_results/'
 
 #create input/output filenames for average kinematics to be read/ to write out systematics results
 if pm_set == 80:
    input_fname = 'pm%i_%s_norad_avgkin.txt'%(pm_set, model)              #average kinematics file
-   input_file = avg_kin_dir+input_fname  
+   input_fname_syst = 'pm%i_%s_norad_avgkin_systematics.txt'%(pm_set, model)              #average kinematics file copy (to write systematic results)
+   input_file = avg_kin_dir+input_fname
+   input_file_syst =  avg_kin_dir+input_fname_syst
    output_file = results_dir+'pm%i_%s_results.txt'%(pm_set, model)       #results file where derivatives are written
 else:
    input_fname = 'pm%i_%s_norad_avgkin_set%i.txt'%(pm_set, model, data_set)
+   input_fname_syst = 'pm%i_%s_norad_avgkin_set%i_systematics.txt'%(pm_set, model, data_set)   #average kinematics file copy (to write systematic results)
    input_file = avg_kin_dir+input_fname
+   input_file_syst =  avg_kin_dir+input_fname_syst
    output_file = results_dir+'pm%i_%s_set%i_results.txt'%(pm_set, model, data_set)
-
 
 #Clean summary files (since they open in append mode inside the loop, we do not want to append past data)
 fsumin = open('./summary_files/SummaryInput_pm%i_%s_set%i.txt'%(pm_set, model, data_set), 'w').close()
@@ -61,15 +64,17 @@ ftable_out.write('#with respect to the kinematic variable in units of %/mrad or 
 ftable_out.write('#There are also the relative systematic errors of individual kinematic variables, and the total error added in quadrature\n')
 ftable_out.write('#to see which is the dominant source of the systematics errors\n')
 
-ftable_out.write('#!ib[i,0]/  pm_bin[f,1]/   thnq_bin[f,2]/   ds_dthe[f,3]/   ds_dphe[f,4]/   ds_def[f,5]/   ds_dthp[f,6]/   ds_dphp[f,7]/  ds_dthb[f,8]/   ds_dphb[f,9]/    ds_dE[f,10]/    sig_the[f,11]/   sig_phe[f,12]/   sig_ef[f,13]/   sig_thp[f,14]/   sig_php[f,15]/  sig_thb[f,16]/   sig_phb[f,17]/    sig_E[f,18]/    sig_tot[f,19]/ \n')
+ftable_out.write('#!ib[i,0]/  pm_bin[f,1]/   thnq_bin[f,2]/   ds_dthe[f,3]/   ds_dphe[f,4]/   ds_def[f,5]/   ds_dthp[f,6]/   ds_dphp[f,7]/  ds_dthb[f,8]/   ds_dphb[f,9]/    ds_dE[f,10]/    sig_the[f,11]/   sig_phe[f,12]/   sig_ef[f,13]/   sig_thp[f,14]/   sig_php[f,15]/  sig_thb[f,16]/   sig_phb[f,17]/    sig_E[f,18]/    sig_the_thp[f,19]/    sig_the_Ef[f,20]/     sig_the_Eb[f,21]/      sig_thp_Ef[f,22]/      sig_thp_Eb[f,23]/      sig_Ef_Eb[f,24]/      sig_tot[f,25]/ \n')
 ftable_out.close()
 
+#Open original avg. kin file
+kin_file = dfile(input_file)
 
-#Make a copy of the avg. kin. file
-input_copy = input_fname.replace('.txt', '_systematics.txt')
-print("CMD: cp "+input_file+" ./"+input_copy)
-os.system("cp "+input_file+" ./"+input_copy)
-kin_file = dfile(input_copy)
+#Open systematic file (assumed to exist) 
+syst_file = dfile(input_file_syst)
+syst_file.add_key('dsig_kin_tot', 'f')  #add new header to store total absolute kinematic systematic error per bin:   dsig = (dsig/sig) * sig_exp
+syst_file.add_key('dsig_tot_syst', 'f')  #added total systematic errors
+ 
 
 
 #file to write input specectrometer kinematics for each (Pm, thnq) bin
@@ -77,18 +82,17 @@ kin_file = dfile(input_copy)
 #next bin is read
 differ_file = 'differ.in'
 
-kin_file.add_key('tot_err')  #add new header to store total systematic error per bin
 #get average of cos(phi_pq)
 cont = np.array( kin_file.get_data('cont') )  #2d bin content
 cphi = np.array( kin_file.get_data('cos_phi') )
 cphi_av = np.average(cphi, weights=(cont>0))  #average ONLY over non-zero bin content
-print('cos_phi average=',cphi_av)
+print('cos_phi_average=',cphi_av)
 phi_off = 0.
 if cphi_av >= 0 :
    phi_off = np.pi
 
 #Loop over 2D (Pm, thnq) bins to get avg. kin for each bin
-for ik, ka in enumerate(kin_file.data):
+for ik, ka in enumerate(syst_file.data):
    
    cont = ka['cont']       #2d bin content
    ib = ka['i_b']          #2d bin
@@ -176,21 +180,48 @@ for ik, ka in enumerate(kin_file.data):
    # now analyze differ, output tot_err is in %
    tot_err = ad.get_sig_tot('differ.out',  ftable_name, ftable_bin, print_all = False)
    if np.isnan(tot_err):
-      print 'total_err could not be calculated, it is set to 100% for kinematics : ', kin_file, ' bin ib = ', ib
-      tot_err = 100.      
-   ka['tot_err'] = tot_err
+      print 'total_err could not be calculated, it is set to 0 for kinematics : ', kin_file, ' bin ib = ', ib
+      tot_err = 0.0      
+
+   relative_kin_err = tot_err/100.
+
+   #print(ka)
+   #print('norm_syst=',ka['dsig_norm_tot'])
+   #print('IB>>>>>=',ka['i_b'])
+
+   #print('kin_syst=',relative_kin_err)
+
+   ka['dsig_kin_tot'] = relative_kin_err
+
+   #Add normalization and systematics errors in quadrature
+   tot_syst_err =np.sqrt(relative_kin_err**2 + ka['dsig_norm_tot']*ka['dsig_norm_tot']) 
+
+   ka['dsig_tot_syst'] = tot_syst_err
+
+   #print('tot_syst=',tot_syst_err)
+
 
    fout_differ = open('./differ.out')
    data_summary= fout_differ.read()
    fsumout = open('./summary_files/SummaryOutput_pm%i_%s_set%i.txt'%(pm_set, model, data_set), 'a')
+   fsumout.write('2DBIN #: %i'%(ib))
    fsumout.write(data_summary)
    fsumout.write('----------------------------------------------------------------------------------\n')
    fsumout.close()
 
+syst_file.save(input_file_syst)
+syst_file.add_header_comment(' ------------------------------------------------------ ')
+syst_file.add_header_comment(' All systematic errors are written as fractional relative error in the cross section!, dsig/sig., where sig = differential Xsec of D(e,e\'p)n ')
+syst_file.add_header_comment(' The last three headers are the total 1) normalization, 2) kinematics and 3) normalization+kinematics added in quadrature')
+syst_file.add_header_comment(' To get the absolute error on the cross section, multiply:  dsig_tot_syst * dataXsec')
+syst_file.add_header_comment(' ------------------------------------------------------ ')
+syst_file.save(input_file_syst)
+
+
 #write the new data into a file
-results = open(output_file, 'w')
-kin_file.add_header_comment(' ------------------------- ')
-kin_file.add_header_comment(' tot_err is in % !')
-kin_file.add_header_comment(' ------------------------- ')
-kin_file.write_all(results, complete_header = True)
+#results = open(syst_file, 'w')
+#syst_file.add_header_comment(' ------------------------- ')
+#syst_file.add_header_comment(' systematic errors are in % !')
+#syst_file.add_header_comment(' ------------------------- ')
+#syst_file.write_all(results, complete_header = True)
 

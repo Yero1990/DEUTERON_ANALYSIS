@@ -1,0 +1,16 @@
+This Directory contains the SHMS Heep elastic singles runs taken
+during Fall 2018-Spring2019, and are used to do Heep minimization procedure.
+
+**All reference Time Cuts Set Look OK***
+ They are set to be:
+
+HMS:
+hhod_trefcut = 3000.     
+hdc_trefcut = 15800.      
+hadc_trefcut = 4500.     
+SHMS:
+phod_trefcut = 4000.            
+pdc_trefcut = 14800.
+padc_trefcut = 4500.            
+
+---------------------------------

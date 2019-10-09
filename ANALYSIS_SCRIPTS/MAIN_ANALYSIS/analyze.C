@@ -486,7 +486,7 @@ void analyze::SetFileNames()
     //pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_ep1MeV_rec.root", pm_setting, theory.c_str(), model.c_str(), data_set );
     //pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_ep1MeV_thr.root", pm_setting, theory.c_str(), model.c_str(), data_set );
     //    pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_ep1mr_rec.root", pm_setting, theory.c_str(), model.c_str(), data_set );
-    pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_ep1mr_thr.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+    pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_ep1mr_thr.root", pm_setting, theory.c_str(), model.c_str(), data_set );  //+1 mr offset on thrown quantities
 
     
     //Read single file input 
@@ -666,7 +666,6 @@ void analyze::SetDefinitions()
   //Read Spectrometer Kinematics from REPORT_FILE
   string temp;
 
-  cout << "Line 669" << endl;
   //Read Angles (in deg)
   temp = FindString("hHMS Angle", data_InputReport)[0];          //Find line containing string
   h_th = stod(split(temp, ':')[1]);                              //split string, take the number part, and conver to double
@@ -674,14 +673,6 @@ void analyze::SetDefinitions()
   temp = FindString("pSHMS Angle", data_InputReport)[0];
   e_th = stod(split(temp, ':')[1]);
   
-  // if(analysis=="pseudo") { 
-  //   e_th = 12.251;
-  //  cout << "Offseting e- angle by +1 mr: "<< e_th  << endl;
-
-  //  }
-
-  cout << "Line 683" << endl;
-
   //Read Central Momenta (in GeV)
   temp = FindString("hHMS P Central", data_InputReport)[0]; 
   h_Pcen = stod(split(temp, ':')[1]);
@@ -1967,8 +1958,8 @@ void analyze::EventLoop()
 	  //---------------------Define Cuts---------------------------
 	  
 	  c_noedtm = pEDTM_tdcTimeRaw==0;
-	  c_edtm = pEDTM_tdcTimeRaw>1500&&pEDTM_tdcTimeRaw<2000.;
-	  c_ptrig6 = pTRIG6_tdcTimeRaw>0;
+	  c_edtm = pEDTM_tdcTimeRaw>0.;
+	  c_ptrig6 = pTRIG6_tdcTimeRaw>0.;
 	  c_hgcerNpesum =  pHGCER_npeSum>0.7;
 	  c_ngcerNpesum =  pNGCER_npeSum>0.5;
 	  c_etotnorm = pCAL_etotnorm>0.6;
@@ -1985,10 +1976,10 @@ void analyze::EventLoop()
 	  
 
 	  //Define DATA/SIMC CUTS (BETTER BE THE SAME CUTS as in SIMC!)
-	  if(edelta_cut_flag){c_edelta = e_delta>edel_min&&e_delta<edel_max;} 
+	  if(edelta_cut_flag){c_edelta = e_delta>=edel_min&&e_delta<=edel_max;} 
 	  else{c_edelta=1;} //OFF means NO LIMITS on CUT (ALWAYS TRUE)
 	  
-	  if(hdelta_cut_flag){c_hdelta = h_delta>hdel_min&&h_delta<hdel_max;} 
+	  if(hdelta_cut_flag){c_hdelta = h_delta>=hdel_min&&h_delta<=hdel_max;} 
 	  else{c_hdelta=1;}
 	  
 	  if(W_cut_flag)     {c_W = W>=W_min&&W<=W_max;}                      
@@ -1996,34 +1987,34 @@ void analyze::EventLoop()
 	  
 	  if(Em_cut_flag) {
 	   
-	    if(reaction=="heep") { c_Em = Em>Em_min&&Em<Em_max; }
-	    if(reaction=="deep") { c_Em = Em_nuc>Em_min&&Em_nuc<Em_max; }
+	    if(reaction=="heep") { c_Em = Em>=Em_min&&Em<=Em_max; }
+	    if(reaction=="deep") { c_Em = Em_nuc>=Em_min&&Em_nuc<=Em_max; }
 	  }                   
 	  else{c_Em=1;}
 	  
 	  if(ztar_diff_cut_flag){ 
 	    //cout << "data_zmean = " << ztd_mean << endl;
 
-	    c_ztarDiff = ztar_diff>(ztd_mean + ztarDiff_min)&&ztar_diff<(ztd_mean + ztarDiff_max);
+	    c_ztarDiff = ztar_diff>=(ztd_mean + ztarDiff_min)&&ztar_diff<=(ztd_mean + ztarDiff_max);
 	    //c_ztarDiff = ztar_diff>ztarDiff_min&&ztar_diff<ztarDiff_max;
 	  }
 	  else{c_ztarDiff=1;}
 
-	  if(Q2_cut_flag) {c_Q2 = Q2>Q2_min&&Q2<Q2_max;}
+	  if(Q2_cut_flag) {c_Q2 = Q2>=Q2_min&&Q2<=Q2_max;}
 	  else{c_Q2 = 1;}
 
-	  if(MM_cut_flag) {c_MM = M_recoil>MM_min&&M_recoil<MM_max;}
+	  if(MM_cut_flag) {c_MM = M_recoil>=MM_min&&M_recoil<=MM_max;}
 	  else{c_MM = 1;}
 
-	  if(thnq_cut_flag) {c_th_nq = th_nq>(thnq_min*dtr)&&th_nq<(thnq_max*dtr);}
+	  if(thnq_cut_flag) {c_th_nq = th_nq>=(thnq_min*dtr)&&th_nq<=(thnq_max*dtr);}
 	  else{c_th_nq = 1;}
 	  
 	  
 	  //PID CUTS (SPECIFIC TO DATA)
-	  if(shmsCal_cut_flag)    {c_shms_cal = pCAL_etottracknorm>shms_cal_min&&pCAL_etottracknorm<shms_cal_max;}                   
+	  if(shmsCal_cut_flag)    {c_shms_cal = pCAL_etottracknorm>=shms_cal_min&&pCAL_etottracknorm<=shms_cal_max;}                   
 	  else{c_shms_cal=1;}
 	  
-	  if(coin_cut_flag)    {c_ctime = epCoinTime>ctime_min&&epCoinTime<ctime_max;}                   
+	  if(coin_cut_flag)    {c_ctime = epCoinTime>=ctime_min&&epCoinTime<=ctime_max;}                   
 	  else{c_ctime=1;}
 	  
 	  //Collimator CUTS
@@ -2530,33 +2521,33 @@ void analyze::EventLoop()
 
 
 	  //Define DATA/SIMC CUTS (BETTER BE THE SAME CUTS!)
-	  if(edelta_cut_flag){c_edelta = e_delta>edel_min&&e_delta<edel_max;} 
+	  if(edelta_cut_flag){c_edelta = e_delta>=edel_min&&e_delta<=edel_max;} 
 	  else{c_edelta=1;} //OFF means NO LIMITS on CUT (ALWAYS TRUE)
 	      
-	  if(hdelta_cut_flag){c_hdelta = h_delta>hdel_min&&h_delta<hdel_max;} 
+	  if(hdelta_cut_flag){c_hdelta = h_delta>=hdel_min&&h_delta<=hdel_max;} 
 	  else{c_hdelta=1;}
 	  
 	  if(W_cut_flag)     {c_W = W>=W_min&&W<=W_max;}                      
 	  else{c_W=1;}
 	  
-	  if(Em_cut_flag)    {c_Em = Em>Em_min&&Em<Em_max;}                   
+	  if(Em_cut_flag)    {c_Em = Em>=Em_min&&Em<=Em_max;}                   
 	  else{c_Em=1;}
 
 	  if(ztar_diff_cut_flag){ 
 	    //cout << "simc_zmean = " << ztd_mean << endl;
 	    //ztd_mean = getZtarMean(pm_setting, data_set, model, "simc");  //Get Mean of ZtarDiff 
-	    c_ztarDiff = ztar_diff>(ztd_mean + ztarDiff_min)&&ztar_diff<(ztd_mean + ztarDiff_max);
+	    c_ztarDiff = ztar_diff>=(ztd_mean + ztarDiff_min)&&ztar_diff<=(ztd_mean + ztarDiff_max);
 	    //c_ztarDiff = ztar_diff>ztarDiff_min&&ztar_diff<ztarDiff_max;
 	  }
 	  else{c_ztarDiff=1;}
 
-	  if(Q2_cut_flag) {c_Q2 = Q2>Q2_min&&Q2<Q2_max;}
+	  if(Q2_cut_flag) {c_Q2 = Q2>=Q2_min&&Q2<=Q2_max;}
 	  else{c_Q2 = 1;}
 	  
-	  if(MM_cut_flag) {c_MM = M_recoil>MM_min&&M_recoil<MM_max;}
+	  if(MM_cut_flag) {c_MM = M_recoil>=MM_min&&M_recoil<=MM_max;}
 	  else{c_MM = 1;}
 	
-	  if(thnq_cut_flag) { c_th_nq = th_nq>(thnq_min*dtr)&&th_nq<(thnq_max*dtr);}
+	  if(thnq_cut_flag) { c_th_nq = th_nq>=(thnq_min*dtr)&&th_nq<=(thnq_max*dtr);}
 	  else{c_th_nq = 1;}
 	  
 	
@@ -2908,21 +2899,29 @@ void analyze::CalcEff()
 
   H_charge->SetBinContent(5, total_charge_bcm_cut);
 
-  //COnvert SHMS Rates from Hz to kHz  (Keep EDTM, HMS and coin. rates in units of Hz)
+  //Convert  Rates from Hz to kHz 
   pS1XscalerRate_bcm_cut = pS1XscalerRate_bcm_cut / 1000.;
   pTRIG1scalerRate_bcm_cut = pTRIG1scalerRate_bcm_cut / 1000.;
   pTRIG2scalerRate_bcm_cut = pTRIG2scalerRate_bcm_cut / 1000.;
   pTRIG3scalerRate_bcm_cut = pTRIG3scalerRate_bcm_cut / 1000.;
   pTRIG4scalerRate_bcm_cut = pTRIG4scalerRate_bcm_cut / 1000.;
   pTRIG6scalerRate_bcm_cut = pTRIG6scalerRate_bcm_cut / 1000.;
-
+  pEDTMscalerRate_bcm_cut = pEDTMscalerRate_bcm_cut / 1000.;
 
   coin_scaler = total_ptrig6_scaler_bcm_cut - total_pedtm_scaler_bcm_cut;
 
   //Calculate  Live Time                                                                                                                        
-  cpuLT =  total_ptrig6_accp_bcm_cut / (total_ptrig6_scaler_bcm_cut-total_pedtm_scaler_bcm_cut);                                      
-  cpuLT_err = sqrt(total_ptrig6_accp_bcm_cut) / (total_ptrig6_scaler_bcm_cut-total_pedtm_scaler_bcm_cut);                                 
+  cpuLT =  (total_ptrig6_accp_bcm_cut) / coin_scaler;
+
+  //cpuLT =  total_ptrig6_accp_bcm_cut / (total_ptrig6_scaler_bcm_cut);      
+  cpuLT_err = sqrt(total_ptrig6_accp_bcm_cut) / (total_ptrig6_scaler_bcm_cut- total_pedtm_scaler_bcm_cut);                                 
+  
+  //Correction Factor to total Live Time
+  tLT_corr_factor = 1 - (pTRIG6scalerRate_bcm_cut*1000. + pEDTMscalerRate_bcm_cut*1000.)*250*1e-6 + pTRIG6scalerRate_bcm_cut*1000.*250*1e-6*(1. + pEDTMscalerRate_bcm_cut*1000./(pTRIG6scalerRate_bcm_cut*1000. + pEDTMscalerRate_bcm_cut*1000.));
   tLT =  total_pedtm_accp_bcm_cut / total_pedtm_scaler_bcm_cut;  
+  tLT = tLT*tLT_corr_factor;
+
+
 
   //Calculate Tracking Efficiency                                                                                                
   eTrkEff = e_did / e_should; 
@@ -2949,8 +2948,8 @@ void analyze::ApplyWeight()
   if(analysis=="data"){
 
     //Target Boiling Slopes
-    LH2_slope = 0.0006;
-    LD2_slope = 0.0008;
+    LH2_slope = 0.00063396;
+    LD2_slope = 0.00080029;
     
     if(reaction=="heep"){
       tgtBoil_corr = (1.-LH2_slope * avg_current_bcm_cut);
@@ -3530,8 +3529,9 @@ void analyze::WriteReport()
 	if(hmsCollCut_flag) {out_file <<  Form("#HMS Collimator Scale: %f", hms_scale ) << endl;}
 	if(shmsCollCut_flag) {out_file <<  Form("#SHMS Collimator Scale: %f",shms_scale ) << endl;}
 	out_file << "#--------------------------------------" << endl;
-
-      out_file << "#!Run[i,0]/" << std::setw(25) << "charge[f,1]/" << std::setw(25) << "cpuLT[f,2]/"  << std::setw(25) << "cpuLT_err[f,3]/"  << std::setw(25) << "tLT[f,3]/"  << std::setw(25) <<  "hTrkEff[f,4]/" << std::setw(25) <<  "hTrkEff_err[f,5]/" << std::setw(25) << "eTrkEff[f,5]/" << std::setw(25) << "eTrkEff_err[f,5]/"  << std::setw(25) <<  "tgtBoil_factor[f,6]/" <<  std::setw(25)  << "avg_current[f,6]/"  << std::setw(25) << "pS1X_rate[f,7]/"  << std::setw(25) << "ptrig1_rate[f,8]/" << std::setw(25) << "ptrig2_rate[f,9]/" << std::setw(25) << "ptrig3_rate[f,10]/" << std::setw(25) << "ptrig4_rate[f,11]/" << std::setw(25) << "ptrig6_rate[f,12]/" << std::setw(25) << "coin_scaler[f,13]/"  << std::setw(25) <<  "HMS_Angle[f,13]/"  << std::setw(25) << "HMS_Pcen[f,14]/"  << std::setw(25) << "SHMS_Angle[f,15]/"   << std::setw(25) << "SHMS_Pcen[f,16]/"  << std::setw(25) << "HMS_Xmp[f,17]/" << std::setw(25) << "HMS_Ymp[f,18]/" << std::setw(25) << "SHMS_Xmp[f,19]/" << std::setw(25) << "SHMS_Ymp[f,20]/" << std::setw(25) << "xBPM[f,21]/" << std::setw(25) << "yBPM[f,22]/" << endl;
+	out_file << "# All rates are in [kHz] :: total_time has a bcm current cut and is in seconds (all quantities have bcm cut) :: tLT has been corrected with tLT_corr_factor" << endl;
+	out_file << "# Spectrometer Mispointings and BPMs are in [cm]" << endl;
+	out_file << "#!Run[i,0]/" << std::setw(25) << "charge[f,1]/" << std::setw(25) << "cpuLT[f,2]/"  << std::setw(25) << "cpuLT_err[f,3]/"  << std::setw(25) << "tLT[f,4]/" << std::setw(25) << "tLT_corr_factor[f,5]/" << std::setw(25) <<  "hTrkEff[f,6]/" << std::setw(25) <<  "hTrkEff_err[f,7]/" << std::setw(25) << "eTrkEff[f,8]/" << std::setw(25) << "eTrkEff_err[f,9]/"  << std::setw(25) <<  "tgtBoil_factor[f,10]/" <<  std::setw(25)  << "avg_current[f,11]/"  << std::setw(25) << "pS1X_rate[f,12]/"  << std::setw(25) << "ptrig1_rate[f,13]/" << std::setw(25) << "ptrig2_rate[f,14]/" << std::setw(25) << "ptrig3_rate[f,15]/" << std::setw(25) << "ptrig4_rate[f,16]/" << std::setw(25) << "ptrig6_rate[f,17]/" << std::setw(25) << "pEDTM_rate[f,18]/"  << std::setw(35) << "ptrig6_scl_noedtm[i,19]/" << std::setw(25) << "ptrig6_scl[i,20]/" <<  std::setw(25) << "ptrig6_accp[i,21]/"  << std::setw(25) << "pEDTM_scl[i,22]/" << std::setw(25) << "pEDTM_accp[i,23]/" << "total_time[f,23]/" << std::setw(25)  << "HMS_Angle[f,24]/"  << std::setw(25) << "HMS_Pcen[f,25]/"  << std::setw(25) << "SHMS_Angle[f,26]/"   << std::setw(25) << "SHMS_Pcen[f,27]/"  << std::setw(25) << "HMS_Xmp[f,28]/" << std::setw(25) << "HMS_Ymp[f,29]/" << std::setw(25) << "SHMS_Xmp[f,30]/" << std::setw(25) << "SHMS_Ymp[f,31]/" << std::setw(25) << "xBPM[f,32]/" << std::setw(25) << "yBPM[f,33]/" << endl;
       out_file.close();
       in_file.close();
 
@@ -3540,7 +3540,7 @@ void analyze::WriteReport()
    
     //Open Report FIle in append mode
     out_file.open(report_OutputFileName, ios::out | ios::app);
-    out_file << runNUM << std::setw(25) << total_charge_bcm_cut << std::setw(25) << cpuLT << std::setw(25) << cpuLT_err << std::setw(25) << tLT << std::setw(25) << hTrkEff  << std::setw(25) << hTrkEff_err << std::setw(25) << eTrkEff  << std::setw(25) << eTrkEff_err << std::setw(25) << tgtBoil_corr << std::setw(25) << avg_current_bcm_cut << std::setw(25) << pS1XscalerRate_bcm_cut << std::setw(25) << pTRIG1scalerRate_bcm_cut << std::setw(25) << pTRIG2scalerRate_bcm_cut << std::setw(25) << pTRIG3scalerRate_bcm_cut << std::setw(25) << pTRIG4scalerRate_bcm_cut << std::setw(25) << pTRIG6scalerRate_bcm_cut << std::setw(25) << coin_scaler << std::setw(25) << h_th  << std::setw(25) << h_Pcen << std::setw(25) << e_th << std::setw(25) << e_Pcen << std::setw(25) <<  h_xMisPoint << std::setw(25) <<  h_yMisPoint << std::setw(25) << e_xMisPoint << std::setw(25) << e_yMisPoint << std::setw(25) << xBPM << std::setw(25) << yBPM << endl;
+    out_file << runNUM << std::setw(25) << total_charge_bcm_cut << std::setw(25) << cpuLT << std::setw(25) << cpuLT_err << std::setw(25) << tLT << std::setw(25) << tLT_corr_factor << std::setw(25) << hTrkEff  << std::setw(25) << hTrkEff_err << std::setw(25) << eTrkEff  << std::setw(25) << eTrkEff_err << std::setw(25) << tgtBoil_corr << std::setw(25) << avg_current_bcm_cut << std::setw(25) << pS1XscalerRate_bcm_cut << std::setw(25) << pTRIG1scalerRate_bcm_cut << std::setw(25) << pTRIG2scalerRate_bcm_cut << std::setw(25) << pTRIG3scalerRate_bcm_cut << std::setw(25) << pTRIG4scalerRate_bcm_cut << std::setw(25) << pTRIG6scalerRate_bcm_cut << std::setw(25) << pEDTMscalerRate_bcm_cut << std::setw(25) << coin_scaler << std::setw(25) << total_ptrig6_scaler_bcm_cut << std::setw(25) << total_ptrig6_accp_bcm_cut << std::setw(25) << total_pedtm_scaler_bcm_cut << std::setw(25) << total_pedtm_accp_bcm_cut << std::setw(25) << total_time_bcm_cut << std::setw(25) << h_th  << std::setw(25) << h_Pcen << std::setw(25) << e_th << std::setw(25) << e_Pcen << std::setw(25) <<  h_xMisPoint << std::setw(25) <<  h_yMisPoint << std::setw(25) << e_xMisPoint << std::setw(25) << e_yMisPoint << std::setw(25) << xBPM << std::setw(25) << yBPM << endl;
     out_file.close();
 
     

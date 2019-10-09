@@ -7,7 +7,7 @@
 #workflow_name="SHMS_LH2_boiling_studies"
 #workflow_name="SHMS_boiling_studies"
 #workflow_name="deuteron_3289"
-workflow_name="h2"
+workflow_name="h2_optics"
 
 #runlist_name="current_prot.data"
 
@@ -30,7 +30,7 @@ workflow_name="h2"
 #runlist_name="runlists/d2_full.dat"
 
 #-------------Elastic Data----------
-runlist_name="runlists/h2.dat"
+runlist_name="runlists/shms_elec_singles.dat"
 
 
 #Various optional flags to add to hcswif workflow
@@ -40,21 +40,21 @@ spec=" --spectrometer COIN "
 #spec=" --spectrometer HMS_ALL "
 #spec=" --spectrometer SHMS_ALL "
 events="--events -1"
-range="--run 3289"
+range="--run 3286"
 filelist=" --run file $runlist_name "
 replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C"     
 #replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_shms_coin.C" 
 #replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_coin_hElec_pProt.C "
 #replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/HMS/replay_hms.C " 
 #replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/SHMS/replay_shms.C " 
-disk_usage=" --disk 5000000000 "   #in bytes (or 1 Gb default)
-ram="--ram 2000000000 "
-cpu_cores="--cpu 2"   #number of cpu cores requested 
+disk_usage=" --disk 1000000000 "   #in bytes (or 1 Gb default)
+ram="--ram 3000000000 "
+cpu_cores="--cpu 8"   #number of cpu cores requested 
 project=" --project c-comm2017 "
 workflow=" --name $workflow_name"
 
 #Create A workflow
-create_workflow="python3 hcswif.py $mode $filelist $replay_script $disk_usage $cpu_cores $spec $events $project $workflow"
+create_workflow="python3 hcswif.py $mode $range $replay_script $disk_usage $cpu_cores $spec $events $project $workflow"
 
 #Add job to existing workflow
 #add_job="swif add-job  -workflow $workflow_name -project c-comm2017 -track analysis -name LD2_boiling -script /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/HMS/replay_hms.C -disk 3000000000"

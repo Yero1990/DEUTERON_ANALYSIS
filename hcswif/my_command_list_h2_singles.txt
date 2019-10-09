@@ -1,0 +1,16 @@
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh shms_elec_singles_6621.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh shms_elec_singles_6625.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh shms_elec_singles_6626.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh shms_elec_singles_6629.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh shms_elec_singles_6632.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh shms_elec_singles_6869.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh shms_elec_singles_6873.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh shms_elec_singles_6876.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh shms_elec_singles_7848.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh shms_elec_singles_7853.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh shms_elec_singles_7856.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh shms_elec_singles_7860.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh shms_elec_singles_7962.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh shms_elec_singles_7964.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh shms_elec_singles_7966.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh shms_elec_singles_7970.data

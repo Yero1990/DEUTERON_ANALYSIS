@@ -57,16 +57,16 @@ void setTimeWindows(int run, string trg)
   //REF Time Histos 
   //HMS                           SHMS
   hhod_tref_nbins = 150,          phod_tref_nbins = 100;
-  hhod_tref_xmin = 1000,          phod_tref_xmin = 1500;
-  hhod_tref_xmax = 2500,          phod_tref_xmax = 4200;
+  hhod_tref_xmin = 2000,          phod_tref_xmin = 2000;
+  hhod_tref_xmax = 4000,          phod_tref_xmax = 6000;
   
   hdc_tref_nbins = 200,           pdc_tref_nbins = 200;
-  hdc_tref_xmin = 10600,          pdc_tref_xmin = 13000;
-  hdc_tref_xmax = 16000,          pdc_tref_xmax = 15500;
+  hdc_tref_xmin = 14000,          pdc_tref_xmin = 14000;
+  hdc_tref_xmax = 17000,          pdc_tref_xmax = 17000;
   
   hadc_tref_nbins = 200,          padc_tref_nbins = 100;
-  hadc_tref_xmin = 1000,          padc_tref_xmin = 2000;
-  hadc_tref_xmax = 4300,          padc_tref_xmax = 4500;
+  hadc_tref_xmin = 3500,          padc_tref_xmin = 3000;
+  hadc_tref_xmax = 6000,          padc_tref_xmax = 9000;
   
   //TRG
   ptrg1_roc1_nbins=100, ptrg1_roc1_xmin=500, ptrg1_roc1_xmax=3100;
@@ -123,7 +123,7 @@ void setTimeWindows(int run, string trg)
   //TString filename = "../../../ROOTfiles/pm750_tWinCheck_TimeWinSet.root";
 
   //TString filename = "../../../ROOTfiles/hms_replay_timeWin_check_singles_setTimeWin.root";
-  TString filename = "../../../ROOTfiles/shms_replay_timeWin_check_3206_-1.root";
+  TString filename = Form("../../../ROOTfiles/coin_replay_timeWin_check_%d_100000.root", run);
 
   //TString filename = "../../../ROOTfiles/shms_replay_timeWin_check_1791_-1.root";
   //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3288_-1_refCUTset.root";
@@ -425,7 +425,7 @@ void setTimeWindows(int run, string trg)
   //====== E V E N T    L O O P =======
   //===================================
 
-  Long64_t nentries = T->GetEntries();
+  Long64_t nentries = 100000;//T->GetEntries();
   
   //Define A Boolean for multiplicity CUTS
   Bool_t good_Mult;
@@ -452,7 +452,7 @@ void setTimeWindows(int run, string trg)
 
       for(int iref=0; iref<4; iref++)
 	{
-	  good_Mult =  hDC_tdcMult[iref] == 2;
+	  good_Mult =  hDC_tdcMult[iref] == 1;
 
 	  //HMS DC Ref. Times
 	  H_DC_Tref[iref]->Fill(hDC_ref[iref]);
@@ -461,11 +461,11 @@ void setTimeWindows(int run, string trg)
 	}
 
       //HMS Ref
-      good_Mult = hT1_tdcMult==1;
+      good_Mult = hT1_tdcMult==2;
       H_hodo_Tref->Fill(hT1_ref);
       if(good_Mult){H_hodo_Tref_CUT->Fill(hT1_ref);}
 
-      good_Mult = hFADC_adcMult==1;
+      good_Mult = hFADC_adcMult==2;
       H_FADC_Tref->Fill(hFADC_ref);
       if(good_Mult){H_FADC_Tref_CUT->Fill(hFADC_ref);}
       

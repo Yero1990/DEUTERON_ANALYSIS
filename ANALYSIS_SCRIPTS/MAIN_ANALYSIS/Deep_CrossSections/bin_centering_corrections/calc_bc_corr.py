@@ -4,6 +4,7 @@ import os
 import sys                             
 from sys import argv    
 import getopt       
+from LT.datafile import dfile
 
 '''
 Code that reads averaged Xsec(data and simc) and theory cross sections.  
@@ -33,7 +34,7 @@ header = """
 #xb = th_nq value at bin center                                                                                                   
 #yb = pmiss value at bin center                                                                        
 # current header line:  
-#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ bc_fact_pwia[f,5]/  bc_fact_pwia_err[f,6]/  bc_fact_fsi[f,7]/  bc_fact_fsi_err[f,8]/  pwiaRC_dataXsec[f,9]/  pwiaRC_dataXsec_err[f,10]/  fsiRC_dataXsec[f,11]/   fsiRC_dataXsec_err[f,12]/    fsiRC_dataXsec_pwiabc_corr[f,13]/   fsiRC_dataXsec_pwiabc_corr_err[f,14]/  fsiRC_dataXsec_fsibc_corr[f,15]/  fsiRC_dataXsec_fsibc_corr_err[f,16]/  pwiaXsec_theory[f,17]/   fsiXsec_theory[f,18]/   red_dataXsec[f,19]/   red_dataXsec_err[f,20]/   red_pwiaXsec[f,21]/   red_fsiXsec[f,22]/
+#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ bc_fact_pwia[f,5]/  bc_fact_pwia_err[f,6]/  bc_fact_fsi[f,7]/  bc_fact_fsi_err[f,8]/  pwiaRC_dataXsec[f,9]/  pwiaRC_dataXsec_err[f,10]/  fsiRC_dataXsec[f,11]/   fsiRC_dataXsec_err[f,12]/    fsiRC_dataXsec_pwiabc_corr[f,13]/   fsiRC_dataXsec_pwiabc_corr_err[f,14]/  fsiRC_dataXsec_fsibc_corr[f,15]/  fsiRC_dataXsec_fsibc_corr_err[f,16]/   pwiaXsec_theory[f,17]/   fsiXsec_theory[f,18]/   red_dataXsec[f,19]/   red_dataXsec_err[f,20]/   red_pwiaXsec[f,21]/   red_fsiXsec[f,22]/
 """
 
 #User Input
@@ -49,27 +50,32 @@ print argv
 if not os.path.exists(sys_ext):
     os.makedirs(sys_ext)
 
-#create output file to write avg kin                                                                                      
-if pm_set == 80:                                                                                                       
-    output_file = './%s/pm%i_laget_bc_corr.txt'%(sys_ext, pm_set)                
+if pm_set == 80:     
+    output_file = './%s/pm%i_laget_bc_corr.txt'%(sys_ext, pm_set)                                      #create output file to write avg kin                                   
+    ft = B.get_file('../theory_Xsec/%s/pm%i_laget_theory.txt'%(sys_ext, pm_set))                       #Load Theory Xsec @ Avg. Kin.
+    fa = B.get_file('../average_Xsec/%s/pm%i_laget.txt'%(sys_ext, pm_set))                             #Load Averaged Xsec
 else:
     output_file = './%s/pm%i_laget_bc_corr_set%i.txt'%(sys_ext, pm_set, data_set)
+    ft = B.get_file('../theory_Xsec/%s/pm%i_laget_theory_set%i.txt'%(sys_ext, pm_set, data_set))  #Load Theory Xsec @ Avg. Kin.
+    fa = B.get_file('../average_Xsec/%s/pm%i_laget_set%i.txt'%(sys_ext, pm_set, data_set))        #Load Averaged Xsec
+
 
 o = open(output_file,'w')  
 o.write(header)
 
+'''
 #Load Theory Xsec @ Avg. Kin.
 if pm_set == 80:
     ft = B.get_file('../theory_Xsec/%s/pm%i_laget_theory.txt'%(sys_ext, pm_set))
 else:
     ft = B.get_file('../theory_Xsec/%s/pm%i_laget_theory_set%i.txt'%(sys_ext, pm_set, data_set)) 
 
-#Load Averaged Xsec
+#Load Averaged Xsec 
 if pm_set == 80:                                       
     fa = B.get_file('../average_Xsec/%s/pm%i_laget.txt'%(sys_ext, pm_set))                                   
 else:                                                           
     fa = B.get_file('../average_Xsec/%s/pm%i_laget_set%i.txt'%(sys_ext, pm_set, data_set)) 
-
+'''
 
 #Get Bin Information (Does no matter which file, as they have the same binning scheme)
 ib_t = B.get_data(ft, 'i_b')             #2D Bin NUmber 
@@ -147,7 +153,7 @@ for i, ib in enumerate(ib_t):
             #Apply PWIA Bin Centering Correction Factor to Data Xsec
             fsiRC_dataXsec_pwiabc_corr = fsiRC_dataXsec_avg[i] *  bc_factor_pwia                               #PWIA Bin Centering Correction Applied (for FSI rad. corr data Xsec)
             fsiRC_dataXsec_pwiabc_corr_err = np.sqrt(bc_factor_pwia**2 * (fsiRC_dataXsec_avg_err[i]*fsiRC_dataXsec_avg_err[i])  +   (fsiRC_dataXsec_avg[i]*fsiRC_dataXsec_avg[i]) *bc_factor_pwia_err**2)   
-        
+            
 
 
     #Calculate the Theoretical Reduced Cross Sections (Momentum Distributions in PWIA)
@@ -157,7 +163,7 @@ for i, ib in enumerate(ib_t):
     if pwiaXsec_theory[i]>0. and pwia_Ksig_cc1[i]>0.:
         red_pwiaXsec =  pwiaXsec_theory[i] / pwia_Ksig_cc1[i]
 
-    l= "%i %i %i %f %f %f %f %f %f %.12e %.12e %.12e %.12e %.12e %12e %.12e  %.12e  %.12e  %.12e   %.12e   %.12e   %.12e    %.12e\n"%(ib, ix_t[i], iy_t[i], thnq_t[i], pm_t[i], bc_factor_pwia, bc_factor_pwia_err, bc_factor_fsi, bc_factor_fsi_err, pwiaRC_dataXsec_avg[i], pwiaRC_dataXsec_avg_err[i], fsiRC_dataXsec_avg[i], fsiRC_dataXsec_avg_err[i],  fsiRC_dataXsec_pwiabc_corr,  fsiRC_dataXsec_pwiabc_corr_err,  fsiRC_dataXsec_fsibc_corr,  fsiRC_dataXsec_fsibc_corr_err, pwiaXsec_theory[i],  fsiXsec_theory[i], red_dataXsec, red_dataXsec_err, red_pwiaXsec, red_fsiXsec) 
+    l= "%i %i %i %f %f %f %f %f %f %.12e %.12e %.12e %.12e %.12e %12e %.12e  %.12e  %.12e  %.12e   %.12e   %.12e   %.12e    %.12e\n"%(ib, ix_t[i], iy_t[i], thnq_t[i], pm_t[i], bc_factor_pwia, bc_factor_pwia_err, bc_factor_fsi, bc_factor_fsi_err, pwiaRC_dataXsec_avg[i], pwiaRC_dataXsec_avg_err[i], fsiRC_dataXsec_avg[i], fsiRC_dataXsec_avg_err[i],  fsiRC_dataXsec_pwiabc_corr,  fsiRC_dataXsec_pwiabc_corr_err,  fsiRC_dataXsec_fsibc_corr,  fsiRC_dataXsec_fsibc_corr_err,  pwiaXsec_theory[i],  fsiXsec_theory[i], red_dataXsec, red_dataXsec_err,  red_pwiaXsec, red_fsiXsec) 
     o.write(l)
 
 o.close()

@@ -11,8 +11,8 @@ uncertainty as: dsig**2 = sig_exp**2 * (df/f)**2. I then add the individual syst
 and their sum in quadrature to the to the final data file containing the bin-centerd corrected data cross sections.
 
 For the BCMs, I use dQ/Q = 2% (suggested by D. Mack, as he is currently working on improving this error)
-For the total live time, I assumed the uncertainty is negligible until we understand how to get the uncertainty (talked with D. Mack
-as well)
+For the total live time, I assumed the uncertainty is negligible until we understand how to get the uncertainty 
+(talked with D. Mack as well)
 
 **Questions**
 1) For the radiative and bin-centering corrections, I originally used the FSI model to do the corrections. Could
@@ -32,8 +32,9 @@ I fitted the W peak from data and simc for the elastic hydrogen data taken in ou
 Mark had some ideas to estimate how well do we know the electron scattering angle. His idea was to vary the beam energy by the
 systematic uncertainty we have on it as follows:
 
-Emiss = (Eb - E') + Mp - Ep   : vary the beam enrgy by Eb + dEb and E'-dEb, 
-W(Eb+dEb, E'-dEb, th_e) : determine by how much W changes . . . THis is not clear to me yet. (Mark suggested to wait for the results of X2-Min)
+Emiss = (Eb - E') + Mp - Ep   : vary the beam energy by Eb + dEb and E'-dEb, 
+W(Eb+dEb, E'-dEb, th_e) : determine by how much W changes . . . THis is not clear to me yet. (Mark suggested to wait for 
+the results of X2-Min)
 
 ? ? ?
 Is there any other suggestion to estimate these uncertainties? Maybe offset the reconstructed variable in SIMC and observed
@@ -41,18 +42,21 @@ how much W changed (we should also know from the derivatives), and then compare 
 ? ? ?
 
 **Questions**
-1) For the deuteron, if we know the Eb, E', th_e and (either P or th_p) then everything else is known. Does this mean that we should
-not worry about the systematics on those other quantities?  For example, if we determine the uncertainties on Eb, E', th_e and P, does
-that mean , we do not need the uncertainty on th_p?  
+1) For the deuteron, if we know the Eb, E', th_e and (either P or th_p) then everything else is known. Does this mean that 
+we should not worry about the systematics on those other quantities?  For example, if we determine the uncertainties on Eb, E', 
+th_e and P, does that mean , we do not need the uncertainty on th_p?  
 
 2) How would we determine the uncertainties on the out-of-plane angles, phi_e, phi_p, etc.. from the elastics data? Since the 
-formula from W only uses the in-plane angles.
+formula from W only uses the in-plane angles.  From Ibrahim's thesis, he fits the W, Emiss, and Pmiss components with elastics
+to get kinematics uncertainties and spectrometer offsets. 
+
+------------------------------------------------------
 
 PRL Article:
 
 Ideas of what tables/plots to include in the article:
 
-Table1: Correction Factors Systematics (of dataXsec or momentum distributions):
+Table1: Correction Factors Systematics (of dataXsec or momentum distributions?):
 -----------------------------------------------------------------------
 Pm  |  set  |  dsig2_htrk  |  dsig2_etrk  |   dsig2_tgtBoil   | . . .
 -----------------------------------------------------------------------
@@ -63,7 +67,6 @@ Pm  |  set  |  dsig2_htrk  |  dsig2_etrk  |   dsig2_tgtBoil   | . . .
         .
         . 
         .
-
 
 Table2: Kinematics Systematics (of data Xsec or momentum distributions?):
          

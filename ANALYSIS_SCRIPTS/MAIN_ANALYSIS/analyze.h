@@ -929,6 +929,7 @@ class analyze
   //Live Time 
   Double_t cpuLT;
   Double_t cpuLT_err;
+  Double_t tLT_corr_factor;
   Double_t tLT;
   Double_t tLT_err;
 

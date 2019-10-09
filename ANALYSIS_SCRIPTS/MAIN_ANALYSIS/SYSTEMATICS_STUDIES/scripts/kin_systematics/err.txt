@@ -1,0 +1,74 @@
+('ds_def=', 0.5412)
+('found?', 10)
+('ds_def=', 2.266)
+('found?', 10)
+did not find all data !
+('ds_def=', 0.0)
+('found?', 0)
+---------------------------------------------------------------------------
+UnboundLocalError                         Traceback (most recent call last)
+/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/SYSTEMATICS_STUDIES/scripts/kin_systematics/run_differ_general_v2.py in <module>()
+    177    rc.run_command(run_differ, 'differ.out','differ_err')
+    178    # now analyze differ, output tot_err is in %
+--> 179    tot_err = ad.get_sig_tot('differ.out',  ftable_name, ftable_bin, print_all = False)
+    180    if np.isnan(tot_err):
+    181       print 'total_err could not be calculated, it is set to NaN for kinematics : ', kin_file, ' bin ib = ', ib
+
+/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/SYSTEMATICS_STUDIES/scripts/kin_systematics/analyze_differ.py in get_sig_tot(differ_file, ftable_name, ftable_bin, print_all)
+    101     sigma_phb = ds_dphb*sig_phb*1.e-3
+    102 
+--> 103     sigma_ef = ds_def*sig_ef*ef
+    104     sigma_dE = ds_dE*sig_E*E_inc
+    105 
+
+UnboundLocalError: local variable 'ef' referenced before assignment
+
+
+
+=================================================================
+SNIPPET OF ANALYZE DIFFER:   
+
+# these derivatives are in %/deg or %/MeV ->convert to %/rad
+    for d in data:
+        p = d.split(':')
+        if len(p) >= 2:
+            # there are values separated by colons
+            if p[0].find('incident energy') >= 0:
+                E_inc = float(p[1])
+                found += 1
+            if p[0].find('scattering angle') >= 0:
+                ef = float(p[2])
+                found += 1
+        f = d.split()
+        if len(f) == 0 :
+            continue
+        if f[0].find('dth_e') >= 0:
+            ds_dthe = float(f[1])/dtr
+            found += 1
+        if f[0].find('dph_e') >= 0:
+            ds_dphe = float(f[1])/dtr
+            found += 1
+        if f[0].find('def') >= 0:
+            ds_def = float(f[1])
+            found += 1
+        if f[0].find('dth_p') >= 0:
+            ds_dthp = float(f[1])/dtr
+            found += 1
+        if f[0].find('dph_p') >= 0:
+            ds_dphp = float(f[1])/dtr
+            found += 1
+        if f[0].find('dth_b') >= 0:
+            ds_dthb = float(f[1])/dtr
+            found += 1
+        if f[0].find('dph_b') >= 0:
+            ds_dphb = float(f[1])/dtr
+            found += 1
+        if f[0].find('dE') >= 0:
+            ds_dE = float(f[1])
+            found += 1
+    if found != 10 :
+        print 'did not find all data !'
+    print('ds_def=',ds_def)
+    print('found?',found)
+
+================================================================
