@@ -394,23 +394,24 @@ def combine_norm_systematics(pm_set=0, model='', data_set=0):
         avg_kin.data[i]['dsig_norm_tot'] = relative_err_tot   
     avg_kin.save(avg_kin_file)
 
-    print('=====Relative Errors=====')
-    print('hms_trfEff = ',df_f_htrkEff*100.,' [%]')
-    print('shms_trfEff = ',df_f_etrkEff*100.,' [%]')
-    print('tgt_boil = ',df_f_tgtBoil*100.,' [%]')
-    print('proton_abs = ',df_f_pT*100.,' [%]')
-    print('total_LT= ',df_f_tLT*100.,' [%]')
-    print('Qtot= ',df_f_Qtot*100.,' [%]')
-    print('tot_norm_err= ',relative_err_tot*100,' [%]')
-
+    avg_kin.add_header_comment('=====Relative Systematic Errors (from Normalization Factors)=====')
+    avg_kin.add_header_comment('hms_trkEff = %.4f [%%]' % (df_f_htrkEff*100.))
+    avg_kin.add_header_comment('shms_trkEff = %.4f [%%]' % (df_f_etrkEff*100.))
+    avg_kin.add_header_comment('tgt_boil = %.4f [%%]' % (df_f_tgtBoil*100.))
+    avg_kin.add_header_comment('proton_abs = %.4f [%%]' % (df_f_pT*100.))
+    avg_kin.add_header_comment('total_LT= %.4f [%%]' % (df_f_tLT*100.))
+    avg_kin.add_header_comment('Qtot= %.4f [%%]' % (df_f_Qtot*100.))
+    avg_kin.add_header_comment('tot_norm_err= %.4f [%%]' % (relative_err_tot*100.))
+    avg_kin.add_header_comment('=================================================================')
+    avg_kin.save(avg_kin_file)
 
 
 def main():
 
     #Call method to calculate and combine normalization systematic errors
 
-     combine_norm_systematics(580, 'fsi', 1)
-
+    #combine_norm_systematics(580, 'fsi', 1)
+    print('M')
 
 
     #get_radbc_syst(fname, 80, 1)

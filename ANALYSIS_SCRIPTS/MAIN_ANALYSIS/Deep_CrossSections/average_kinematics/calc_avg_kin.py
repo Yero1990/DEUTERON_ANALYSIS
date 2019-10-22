@@ -51,7 +51,7 @@ header = \
 """
 #------------------------------------------------------------
 #print argv
-#usage: /apps/python/2.7.12/bin/python calc_avg_kin.py 80 fsi 1
+#usage: /apps/python/2.7.12/bin/python calc_avg_kin.py 80 fsi 1 Em_final40MeV
 
 #User INput
 pm_set = int(sys.argv[1])
@@ -216,7 +216,7 @@ for i,acont in enumerate(all.cont):
       sig_Mott =  sigMott(kf, the, Q2_calc)   #ub / sr
       GE_p = GEp(Q2_calc)
       GM_p = GMp(Q2_calc)
-      de_Forest = deForest(Q2_calc, q_calc, Pf, Pm_calc, the, cphi_pq, th_pq_calc, sig_Mott, GE_p, GM_p)
+      de_Forest = deForest(Ef, Q2_calc, q_calc, Pf, Pm_calc, the, thp, cphi_pq, th_pq_calc, sig_Mott, GE_p, GM_p)
 
       # write output file
 
