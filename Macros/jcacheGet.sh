@@ -17,7 +17,7 @@ spec=$1
 
 #for run in {1149..1171}
 #do
-filename='h2.dat'
+filename='shms_abi.dat'
 #filename='shms_elec_singles.dat'
 #filename='target_boiling_study/Al_boiling_hms_Apr_02_2018.dat'
 

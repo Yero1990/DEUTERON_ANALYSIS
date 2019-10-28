@@ -65,7 +65,7 @@ for i, ithnq in enumerate(thnq_arr):
     fout.write('#Xsec Units: ub * MeV^-1 *sr^-2\n')
     fout.write('#Ksigcc1 Units: (ub * MeV^2 * sr^-2\n')
     fout.write('#Red Xsec Units: MeV^-3\n')
-    fout.write("#!xb[i,0]/  yb[i,1]/   thnq_bin[f,2]/   pm_bin[f,3]/  Ksigcc1[f,4]/   pwiaXsec_theory[f,5]/    fsiXsec_theory[f,6]/   red_pwiaXsec_theory[f,7]/    red_fsiXsec_theory[f,8]/   setting[s,9]/\n")
+    fout.write("#!xb[i,0]/  yb[i,1]/   thnq_bin[f,2]/   pm_bin[f,3]/  pm_avg[f,4]/   Ksigcc1[f,5]/   pwiaXsec_theory[f,6]/    fsiXsec_theory[f,7]/   red_pwiaXsec_theory[f,8]/    red_fsiXsec_theory[f,9]/   setting[s,10]/\n")
     fout.close()
 
     print('Analyzing ',updated_theory_fname)
@@ -79,6 +79,7 @@ for i, ithnq in enumerate(thnq_arr):
     kin = dfile(theory_fname)
     pm_setting = kin['kin']
     pm = kin['pm_b']         #central Pmiss value
+    pm_avg = kin['pr']         #averaged Pmiss value
     ix = kin['ix']           #x-bin number
     iy = kin['iy']           #y-bin number
     pwia_theoryXsec = kin['crs0']   #crs0: PWIA,  crs12: PWIA+FSI
@@ -119,6 +120,7 @@ for i, ithnq in enumerate(thnq_arr):
         avg_kin = dfile(avg_kin_fname)
         dklen = len(avg_kin['i_b'])  #get length of array of avgkin file
         pm_k = avg_kin['yb']
+        pm_k_avg = avg_kin['pm'] / 1000.   #conver to GeV/c
         thnq_k = avg_kin['xb']
         ix_k = avg_kin['i_x']
         iy_k = avg_kin['i_y']
@@ -146,6 +148,6 @@ for i, ithnq in enumerate(thnq_arr):
                 fout = open(updated_theory_fname, "a")   #open in append mode
                 
                 #Update Theory Files
-                fout.write("%i   %i   %f   %f   %f  %.12e   %.12e    %.12e   %.12e   %s\n"%(ix_k[k], iy_k[k], thnq_k[k], pm_k[k], Ksig_cc1[k], pwia_theoryXsec[j], fsi_theoryXsec[j], red_pwiaXsec, red_fsiXsec, pm_setting[j]))
+                fout.write("%i   %i   %f   %f   %f   %f  %.12e   %.12e    %.12e   %.12e   %s\n"%(ix_k[k], iy_k[k], thnq_k[k], pm_k[k], pm_k_avg[k],  Ksig_cc1[k], pwia_theoryXsec[j], fsi_theoryXsec[j], red_pwiaXsec, red_fsiXsec, pm_setting[j]))
 
 

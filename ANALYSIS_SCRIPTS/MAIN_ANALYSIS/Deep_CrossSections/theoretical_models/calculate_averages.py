@@ -7,7 +7,7 @@ import averages as av
 
 #----------USER INPUT-------------
 theory = "CD-Bonn"   #V18 or CD-Bonn
-model = "FSI"   #FSI or PWIA
+model = "PWIA"   #FSI or PWIA
 
 thnq_arr = np.array([5, 15, 25, 35, 45, 55, 65, 75, 85, 95, 105])
 
@@ -15,13 +15,16 @@ thnq_arr = np.array([5, 15, 25, 35, 45, 55, 65, 75, 85, 95, 105])
 for i, ithnq in enumerate(thnq_arr):
  
     thnq_f = "%.2f"%(ithnq)  #convert to float
-    
+
+    print('thnq=',thnq_f)
+
     #Set Theory Filename to be read
     fname = './updated_%s_models/theoryXsec_%s%s_thnq%s.data' %(model, theory, model, thnq_f )
     kin = dfile(fname)
 
     #Get arrays to take average
     pm_bin = np.array(kin['pm_bin'])
+    pm_avg = np.array(kin['pm_avg'])
     thnq_bin = np.array(kin['thnq_bin'])
     xb = np.array(kin['xb'])
     yb = np.array(kin['yb'])
@@ -29,17 +32,23 @@ for i, ithnq in enumerate(thnq_arr):
     red_fsiXsec = np.array(kin['red_fsiXsec_theory'])
     Xsec_err = np.ones(len(kin['xb']))   #Set error to 1.0 as this is used for the weight 1/sig**2, which should be 1 (or no preference)
 
-    pm_avg1, red_pwiaXsec_avg, dsig_avg1, dsig1_avg = av.get_matched_array_average(pm_bin, red_pwiaXsec, Xsec_err, same = True, match = None)
-    pm_avg2, red_fsiXsec_avg, dsig_avg2, dsig2_avg = av.get_matched_array_average(pm_bin, red_fsiXsec, Xsec_err, same = True, match = None)
+
+    #pm_avg1, red_pwiaXsec_avg, dsig_avg1, dsig1_avg = av.get_matched_array_average(pm_bin, red_pwiaXsec, Xsec_err, same = True, match = None)
+    #pm_avg2, red_fsiXsec_avg, dsig_avg2, dsig2_avg = av.get_matched_array_average(pm_bin, red_fsiXsec, Xsec_err, same = True, match = None)
+    
+    pm_avg1, red_pwiaXsec_avg, dsig_avg1, dsig1_avg = av.get_matched_array_average(pm_avg, red_pwiaXsec, Xsec_err, same = False, match = pm_bin)
+    pm_avg2, red_fsiXsec_avg, dsig_avg2, dsig2_avg = av.get_matched_array_average(pm_avg, red_fsiXsec, Xsec_err, same = False, match = pm_bin)
+
 
     #Create Output file name
     fout_name = './updated_%s_models/theoryXsec_%s%s_thnq%s_combined.data' %(model, theory, model, thnq_f )
     fout = open(fout_name, "w")
     fout.write('#This file contains combined (averaged) Reduced Xsec\n')
     fout.write('#Red Xsec Units: MeV^-3\n')
-    fout.write("#!thnq_bin[f,2]/   pm_bin[f,3]/   red_pwiaXsec_theory[f,4]/    red_fsiXsec_theory[f,5]/\n")
+    fout.write("#!thnq_bin[f,0]/  pm_avg[f,1]/   red_pwiaXsec_theory[f,2]/    red_fsiXsec_theory[f,3]/\n")
     
-    for i in range(len(pm_avg1)):
-        fout.write('%f   %f   %.12e   %.12e\n' % (thnq_bin[i], pm_avg1[i], red_pwiaXsec_avg[i], red_fsiXsec_avg[i]))
+    for j in range(len(pm_avg1)):
+        fout.write('%f   %f   %.12e   %.12e\n' % (thnq_bin[j], pm_avg1[j], red_pwiaXsec_avg[j], red_fsiXsec_avg[j]))
+    
     
     fout.close()

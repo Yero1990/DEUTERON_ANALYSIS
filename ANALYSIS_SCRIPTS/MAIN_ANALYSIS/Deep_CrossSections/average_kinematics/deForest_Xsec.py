@@ -101,11 +101,11 @@ def deForest(Ef, Q2, q, Pf, Pm, th_e, th_p, c_phi, thpq, sig_Mott, GE_p, GM_p):
     #For a 6-Fold Differential XSec (d6sig/(dE'*dom *dOme* dOmp))   --See Hari's THesis
     Kfact = Pf*Epf     #kinematic factor, final proton momentum, energy  [MeV^2] (THis should also have a 1/(2*pi)^3)
  
-    #For a 5-Fold Differential XSec (d5sig/(dom *dOme* dOmp))  : Missing Energy Integrated  (sig)deytpwia.f --Werner's code)
+    #For a 5-Fold Differential XSec (d5sig/(dom *dOme* dOmp))  : Missing Energy Integrated  (sig)deutpwia.f --Werner's code)
     #Kfact = Pf * Epf *MN / (8.*np.pi**3 * MD)  #from Hari's thesis
     
     pipf = 0.5 * (q**2 - (Pf**2 + Pm**2))
-    rec = (1 -  Epf/(Er * pipf * Pf**2) ) 
+    rec = 1 -  (Epf/Er) * (pipf/Pf**2)  
     f_rec = 1./rec
 
     #Using definitions from William P. Ford, Sabine and J.W. Van Orden  (factor too small. check later on.)
@@ -116,7 +116,7 @@ def deForest(Ef, Q2, q, Pf, Pm, th_e, th_p, c_phi, thpq, sig_Mott, GE_p, GM_p):
 
     print('Kfact=',Kfact)
     print('f_rec=',f_rec)
-    print('K*f_rec=', Kfact*f_rec)
+    #print('K*f_rec=', Kfact*f_rec)
 
     #Define the Response Functions Coefficients
     Vc = q4mu / q**4
@@ -161,7 +161,7 @@ def deForest(Ef, Q2, q, Pf, Pm, th_e, th_p, c_phi, thpq, sig_Mott, GE_p, GM_p):
     #d^5sigma/(dOm_e*dOm_p*dE') = K * sig_eN * S(Pm):  [ub/(sr^2*MeV)] = [MeV^2 * ub/sr^2 * 1/MeV^3]
     deForest = Kfact * f_rec * sig_eN      #this is actually: d^5sigma/(dOm_e*dOm_p*dE') / S(Pm) = K * sig_eN, so the units are: (ub * MeV^2) / sr^2   
     
-    return deForest
+    return Kfact, f_rec, sig_eN, deForest
 
 
 def main():

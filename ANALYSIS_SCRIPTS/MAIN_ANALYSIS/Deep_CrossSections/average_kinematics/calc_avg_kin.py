@@ -2,7 +2,6 @@
 
 # calculate averaged kinematics from SIMC analysis of 2D Histos (Pm vs. th_nq bins)
 
-
 import sys
 from sys import argv
 import getopt
@@ -160,7 +159,7 @@ for i,acont in enumerate(all.cont):
       # calculated missing momentum
       Pm_calc2 = (nu_calc+MD-Ep)**2 - MN**2
       if (Pm_calc2 < 0.):
-         #print 'calculated pm**2 < 0. ', Pm_calc2, ' use Pm_avg : ', Pm
+         print 'calculated pm**2 < 0. ', Pm_calc2, ' use Pm_avg : ', Pm
          Pm_calc = Pm   #set it to the average Pm from 2D histo
       else:
          Pm_calc = np.sqrt ( Pm_calc2 )
@@ -216,8 +215,9 @@ for i,acont in enumerate(all.cont):
       sig_Mott =  sigMott(kf, the, Q2_calc)   #ub / sr
       GE_p = GEp(Q2_calc)
       GM_p = GMp(Q2_calc)
-      de_Forest = deForest(Ef, Q2_calc, q_calc, Pf, Pm_calc, the, thp, cphi_pq, th_pq_calc, sig_Mott, GE_p, GM_p)
-
+      Kfact, f_rec, sig_eN, de_Forest = deForest(Ef, Q2_calc, q_calc, Pf, Pm_calc, the, thp, cphi_pq, th_pq_calc, sig_Mott, GE_p, GM_p)
+      
+      #print('ix=',i_xbin,' iy=',i_ybin,' pm=',Pm_calc,' Kfact=',Kfact,' f_rec=',f_rec,' sig_eN=',sig_eN)
       # write output file
 
 

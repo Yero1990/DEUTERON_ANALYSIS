@@ -37,7 +37,7 @@ header = """
 #xb = th_nq value at bin center                                                                                                   
 #yb = pmiss value at bin center                                                                        
 # current header line:  
-#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ bc_fact_pwia[f,5]/  bc_fact_pwia_err[f,6]/  bc_fact_fsi[f,7]/  bc_fact_fsi_err[f,8]/  pwiaRC_dataXsec[f,9]/  pwiaRC_dataXsec_err[f,10]/  fsiRC_dataXsec[f,11]/   fsiRC_dataXsec_err[f,12]/    fsiRC_dataXsec_pwiabc_corr[f,13]/   fsiRC_dataXsec_pwiabc_corr_err[f,14]/  fsiRC_dataXsec_fsibc_corr[f,15]/  fsiRC_dataXsec_fsibc_corr_err[f,16]/  fsiRC_dataXsec_fsibc_corr_syst_err[f,17]/  fsiRC_dataXsec_fsibc_corr_tot_err[f,18]/  pwiaXsec_theory[f,19]/   fsiXsec_theory[f,20]/   red_dataXsec[f,21]/   red_dataXsec_err[f,22]/   red_dataXsec_syst_err[f,23]/    red_dataXsec_tot_err[f,24]/   red_pwiaXsec[f,25]/   red_fsiXsec[f,26]/
+#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ bc_fact_pwia[f,5]/  bc_fact_pwia_err[f,6]/  bc_fact_fsi[f,7]/  bc_fact_fsi_err[f,8]/  pwiaRC_dataXsec[f,9]/  pwiaRC_dataXsec_err[f,10]/  fsiRC_dataXsec[f,11]/   fsiRC_dataXsec_err[f,12]/    fsiRC_dataXsec_pwiabc_corr[f,13]/   fsiRC_dataXsec_pwiabc_corr_err[f,14]/  fsiRC_dataXsec_fsibc_corr[f,15]/  fsiRC_dataXsec_fsibc_corr_err[f,16]/  fsiRC_dataXsec_fsibc_corr_syst_err[f,17]/  fsiRC_dataXsec_fsibc_corr_tot_err[f,18]/  pwiaXsec_SIMC_avg[f,19]/  pwiaXsec_SIMC_avg_err[f,20]/  fsiXsec_SIMC_avg[f,21]/  fsiXsec_SIMC_avg_err[f,22]/   pwiaXsec_theory[f,23]/   fsiXsec_theory[f,24]/   red_dataXsec[f,25]/   red_dataXsec_err[f,26]/   red_dataXsec_syst_err[f,27]/    red_dataXsec_tot_err[f,28]/   red_pwiaXsec[f,29]/   red_fsiXsec[f,30]/
 """
 
 #User Input
@@ -47,7 +47,7 @@ sys_ext = sys.argv[3]
                                                                                                             
 print argv                                                                                   
          
-#usage: /apps/python/2.7.12/bin/python.py calc_bc_corr.py 580  1           
+#usage: /apps/python/2.7.12/bin/python.py calc_bc_corr_syst.py 580  1  Em_final40MeV         
 
 #check if directory exists, else creates it.
 if not os.path.exists(sys_ext):
@@ -68,21 +68,7 @@ else:
 o = open(output_file,'w')  
 o.write(header)
 
-'''
-#Load Theory Xsec @ Avg. Kin.
-if pm_set == 80:
-    ft = B.get_file('../theory_Xsec/%s/pm%i_laget_theory.txt'%(sys_ext, pm_set))
-else:
-    ft = B.get_file('../theory_Xsec/%s/pm%i_laget_theory_set%i.txt'%(sys_ext, pm_set, data_set)) 
-
-#Load Averaged Xsec 
-if pm_set == 80:                                       
-    fa = B.get_file('../average_Xsec/%s/pm%i_laget.txt'%(sys_ext, pm_set))                                   
-else:                                                           
-    fa = B.get_file('../average_Xsec/%s/pm%i_laget_set%i.txt'%(sys_ext, pm_set, data_set)) 
-'''
-
-#Get Bin Information (Does no matter which file, as they have the same binning scheme)
+#Get Bin Information (Does not matter which file, as they have the same binning scheme)
 ib_t = B.get_data(ft, 'i_b')             #2D Bin NUmber 
 ix_t = B.get_data(ft, 'i_x')             #X-Bin Number (thnq bin number)
 iy_t = B.get_data(ft, 'i_y')             #Y-Bin Number (Pm bin number)
@@ -178,7 +164,7 @@ for i, ib in enumerate(ib_t):
     if pwiaXsec_theory[i]>0. and pwia_Ksig_cc1[i]>0.:
         red_pwiaXsec =  pwiaXsec_theory[i] / pwia_Ksig_cc1[i]
 
-    l= "%i %i %i %f %f %f %f %f %f %.12e %.12e %.12e %.12e %.12e %12e %.12e  %.12e  %.12e  %.12e   %.12e   %.12e    %.12e    %.12e   %.12e   %.12e   %.12e    %.12e\n"%(ib, ix_t[i], iy_t[i], thnq_t[i], pm_t[i], bc_factor_pwia, bc_factor_pwia_err, bc_factor_fsi, bc_factor_fsi_err, pwiaRC_dataXsec_avg[i], pwiaRC_dataXsec_avg_err[i], fsiRC_dataXsec_avg[i], fsiRC_dataXsec_avg_err[i],  fsiRC_dataXsec_pwiabc_corr,  fsiRC_dataXsec_pwiabc_corr_err,  fsiRC_dataXsec_fsibc_corr,  fsiRC_dataXsec_fsibc_corr_err, fsiRC_dataXsec_fsibc_corr_syst_err,  fsiRC_dataXsec_fsibc_corr_total_err,  pwiaXsec_theory[i],  fsiXsec_theory[i], red_dataXsec, red_dataXsec_err, red_dataXsec_syst_err,  red_dataXsec_total_err,  red_pwiaXsec, red_fsiXsec) 
+    l= "%i %i %i %f %f %f %f %f %f %.12e %.12e %.12e %.12e %.12e %12e %.12e  %.12e  %.12e  %.12e  %.12e  %.12e  %.12e  %.12e  %.12e   %.12e   %.12e   %.12e   %.12e  %.12e  %.12e  %.12e\n"%(ib, ix_t[i], iy_t[i], thnq_t[i], pm_t[i], bc_factor_pwia, bc_factor_pwia_err, bc_factor_fsi, bc_factor_fsi_err, pwiaRC_dataXsec_avg[i], pwiaRC_dataXsec_avg_err[i], fsiRC_dataXsec_avg[i], fsiRC_dataXsec_avg_err[i],  fsiRC_dataXsec_pwiabc_corr,  fsiRC_dataXsec_pwiabc_corr_err,  fsiRC_dataXsec_fsibc_corr,  fsiRC_dataXsec_fsibc_corr_err, fsiRC_dataXsec_fsibc_corr_syst_err,  fsiRC_dataXsec_fsibc_corr_total_err,  pwiaXsec_avg[i],  pwiaXsec_avg_err[i],  fsiXsec_avg[i],  fsiXsec_avg_err[i], pwiaXsec_theory[i],  fsiXsec_theory[i], red_dataXsec, red_dataXsec_err, red_dataXsec_syst_err,  red_dataXsec_total_err,  red_pwiaXsec, red_fsiXsec) 
     o.write(l)
 
 o.close()

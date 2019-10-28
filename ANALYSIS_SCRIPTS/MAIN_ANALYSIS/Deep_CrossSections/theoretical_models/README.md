@@ -13,7 +13,7 @@ The models are:
 
 Argonne V18 Potential: Calculation by Misak Sargsian
 CD-Bonn Potential: Calculation by Misak Sargsian
-Paris Potential: 
+Paris Potential: Calculation by J.M. Laget
 
 
 The Units of Cross Sections are as follows:
