@@ -3,6 +3,7 @@ import run_command as rc
 import bin_info2 as BI
 import analyze_differ as ad
 from LT.datafile import dfile
+import LT.box as B
 import argparse as AG
 import sys
 from sys import argv
@@ -10,7 +11,7 @@ import os
 import shutil as SU
 
 #load module to calculate norm. systematics
-import norm_systematics as ns
+import norm_systematics_testing as ns
 
 dtr = np.pi/180.
 
@@ -26,7 +27,7 @@ data_set = int(sys.argv[3])
 
 #This code will write the systematic contribution and the quadrature sum of normalization factors as relative error, df/f
 #To get the absolute error to plot, one would have to multiply by the cross section
-ns.combine_norm_systematics(pm_set, model, data_set)
+ns.get_average_systematics()
 
 #------------------------------------------------------------------------------------------------------------------
 
@@ -67,15 +68,31 @@ ftable_out.write('#to see which is the dominant source of the systematics errors
 ftable_out.write('#!ib[i,0]/  pm_bin[f,1]/   thnq_bin[f,2]/   ds_dthe[f,3]/   ds_dphe[f,4]/   ds_def[f,5]/   ds_dthp[f,6]/   ds_dphp[f,7]/  ds_dthb[f,8]/   ds_dphb[f,9]/    ds_dE[f,10]/    sig_the[f,11]/   sig_phe[f,12]/   sig_ef[f,13]/   sig_thp[f,14]/   sig_php[f,15]/  sig_thb[f,16]/   sig_phb[f,17]/    sig_E[f,18]/    sig_the_thp[f,19]/    sig_the_Ef[f,20]/     sig_the_Eb[f,21]/      sig_thp_Ef[f,22]/      sig_thp_Eb[f,23]/      sig_Ef_Eb[f,24]/      sig_tot[f,25]/ \n')
 ftable_out.close()
 
+#Make a copy of the original avg. kin file (to write additional systematics headers)
+SU.copyfile(input_file, input_file_syst)
+
 #Open original avg. kin file
-kin_file = dfile(input_file)
+#kin_file = dfile(input_file)
 
-#Open systematic file (assumed to exist) 
+#open newly created kin. file to add more keys
 syst_file = dfile(input_file_syst)
-syst_file.add_key('dsig_kin_tot', 'f')  #add new header to store total absolute kinematic systematic error per bin:   dsig = (dsig/sig) * sig_exp
-syst_file.add_key('dsig_tot_syst', 'f')  #added total systematic errors
- 
+syst_file.add_key('sig_the', 'f')
+syst_file.add_key('sig_phe', 'f')
+syst_file.add_key('sig_thp', 'f')
+syst_file.add_key('sig_php', 'f')
+syst_file.add_key('sig_thb', 'f')
+syst_file.add_key('sig_phb', 'f')
+syst_file.add_key('sig_Ef', 'f')
+syst_file.add_key('sig_Eb', 'f')
+syst_file.add_key('sig_the_thp', 'f')
+syst_file.add_key('sig_the_Ef', 'f')
+syst_file.add_key('sig_the_Eb', 'f')
+syst_file.add_key('sig_thp_Ef', 'f')
+syst_file.add_key('sig_thp_Eb', 'f')
+syst_file.add_key('sig_Ef_Eb', 'f')
+syst_file.add_key('sig_kin_tot', 'f')  #add new header to store total absolute kinematic systematic error per bin:   dsig = (dsig/sig) * sig_exp
 
+#syst_file.save(input_file_syst)
 
 #file to write input specectrometer kinematics for each (Pm, thnq) bin
 #Only used temporarily for that bin, as it is overwritten when the
@@ -83,10 +100,10 @@ syst_file.add_key('dsig_tot_syst', 'f')  #added total systematic errors
 differ_file = 'differ.in'
 
 #get average of cos(phi_pq)
-cont = np.array( kin_file.get_data('cont') )  #2d bin content
-cphi = np.array( kin_file.get_data('cos_phi') )
+cont = np.array( syst_file.get_data('cont') )  #2d bin content
+cphi = np.array( syst_file.get_data('cos_phi') )
 cphi_av = np.average(cphi, weights=(cont>0))  #average ONLY over non-zero bin content
-print('cos_phi_average=',cphi_av)
+
 phi_off = 0.
 if cphi_av >= 0 :
    phi_off = np.pi
@@ -101,7 +118,7 @@ for ik, ka in enumerate(syst_file.data):
    pm_bin = ka['yb']     #pm_bin center value (bin center +/- 20 MeV)
    thnq_bin = ka['xb']   #theta_nq bin center value (bin center +/- 5 deg) 
        
-   
+
    ftable_bin = np.array([ib, pm_bin, thnq_bin])   #array with bin info to pass to write_table() function in analyze_differ.py
 
    #create differ input file name
@@ -178,27 +195,40 @@ for ik, ka in enumerate(syst_file.data):
    run_differ = './differ3'
    rc.run_command(run_differ, 'differ.out','differ_err')
    # now analyze differ, output tot_err is in %
-   tot_err = ad.get_sig_tot('differ.out',  ftable_name, ftable_bin, print_all = False)
+   sigma_the, sigma_phe, sigma_thp, sigma_php, sigma_thb, sigma_phb, sigma_ef, sigma_dE, sigma_the_thp, sigma_the_Ef, sigma_the_Eb, sigma_thp_Ef, sigma_thp_Eb,  sigma_Ef_Eb, tot_err = ad.get_sig_tot('differ.out',  ftable_name, ftable_bin, print_all = False)
    if np.isnan(tot_err):
-      print 'total_err could not be calculated, it is set to 0 for kinematics : ', kin_file, ' bin ib = ', ib
+      print 'total_err could not be calculated, it is set to 0 for kinematics : ', syst_file, ' bin ib = ', ib
       tot_err = 0.0      
 
-   relative_kin_err = tot_err/100.
 
-   #print(ka)
+   
    #print('norm_syst=',ka['dsig_norm_tot'])
    #print('IB>>>>>=',ka['i_b'])
 
    #print('kin_syst=',relative_kin_err)
-
-   ka['dsig_kin_tot'] = relative_kin_err
-
+   
+   #Add information to kinematic systematics data file (all errors are in %)
+   ka['sig_the'] = sigma_the
+   ka['sig_phe'] = sigma_phe
+   ka['sig_thp'] = sigma_thp
+   ka['sig_php'] = sigma_php
+   ka['sig_thb'] = sigma_thb
+   ka['sig_phb'] = sigma_phb
+   ka['sig_Ef'] = sigma_ef
+   ka['sig_Eb'] = sigma_dE
+   ka['sig_the_thp'] = sigma_the_thp
+   ka['sig_the_Ef'] =  sigma_the_Ef
+   ka['sig_the_Eb'] = sigma_the_Eb
+   ka['sig_thp_Ef'] = sigma_thp_Ef
+   ka['sig_thp_Eb'] = sigma_thp_Eb
+   ka['sig_Ef_Eb'] = sigma_Ef_Eb
+   ka['sig_kin_tot'] = tot_err
+   
    #Add normalization and systematics errors in quadrature
-   tot_syst_err =np.sqrt(relative_kin_err**2 + ka['dsig_norm_tot']*ka['dsig_norm_tot']) 
+   #tot_syst_err =np.sqrt(relative_kin_err**2 + ka['dsig_norm_tot']*ka['dsig_norm_tot']) 
 
-   ka['dsig_tot_syst'] = tot_syst_err
+   #ka['dsig_tot_syst'] = tot_syst_err
 
-   #print('tot_syst=',tot_syst_err)
 
 
    fout_differ = open('./differ.out')
@@ -211,9 +241,9 @@ for ik, ka in enumerate(syst_file.data):
 
 syst_file.save(input_file_syst)
 syst_file.add_header_comment(' ------------------------------------------------------ ')
-syst_file.add_header_comment(' All systematic errors are written as fractional relative error in the cross section!, dsig/sig., where sig = differential Xsec of D(e,e\'p)n ')
-syst_file.add_header_comment(' The last three headers are the total 1) normalization, 2) kinematics and 3) normalization+kinematics added in quadrature')
-syst_file.add_header_comment(' To get the absolute error on the cross section, multiply:  dsig_tot_syst * dataXsec')
+syst_file.add_header_comment(' All systematic errors are written in percent.')
+syst_file.add_header_comment(' They are the relative error in cross section dsig/sig')
+syst_file.add_header_comment(' To get the absolute error on the cross section, multiply by the cross section value. dsig/sig * sig_exp')
 syst_file.add_header_comment(' ------------------------------------------------------ ')
 syst_file.save(input_file_syst)
 

@@ -159,7 +159,9 @@ def get_sig_tot(differ_file='',  ftable_name='', ftable_bin = np.array([]), prin
         print 'sigma_dE = ', sigma_dE
         
         print 'sigma_tot = ', sigma_tot
-    return sigma_tot
+    #return sigma_tot
+    return [sigma_the, sigma_phe, sigma_thp, sigma_php, sigma_thb, sigma_phb, sigma_ef, sigma_dE, sigma_the_thp, sigma_the_Ef, sigma_the_Eb, sigma_thp_Ef, sigma_thp_Eb,  sigma_Ef_Eb, sigma_tot]
+
 # end of it all
 
 

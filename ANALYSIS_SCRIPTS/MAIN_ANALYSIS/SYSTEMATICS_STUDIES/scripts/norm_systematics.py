@@ -44,22 +44,29 @@ def get_trkEff_syst(pm_set=0, model='', data_set=0):
     etrk_eff_err = r['eTrkEff_err']
 
     #determine corr. factor and its error for each run of the data set
-    f_htrk = 1. / htrk_eff
+    f_htrk = 1. / htrk_eff[htrk_eff_err!=0]
     f_etrk = 1. / etrk_eff
 
-    df_htrk = -(1./ htrk_eff**2 ) *  htrk_eff_err
+    df_htrk = -(1./ htrk_eff[htrk_eff_err!=0]**2 ) *  htrk_eff_err[htrk_eff_err!=0]
     df_etrk = -(1./ etrk_eff**2 ) *  etrk_eff_err
+
+    #-----ALTERNATIVE-----
+    df_f_htrk_syst = np.average(np.abs(df_htrk)/f_htrk)
+    df_f_etrk_syst = np.average(np.abs(df_etrk)/f_etrk)
+
 
     #Determine Weighted Average of correction factor
     
     #define the weights
     w_htrk =  1. / df_htrk**2
     w_etrk =  1. / df_etrk**2
+    
 
     #weighted average of corr. factor
     fw_htrkEff = np.sum(f_htrk * w_htrk)/np.sum(w_htrk)
     fw_etrkEff = np.sum(f_etrk * w_etrk)/np.sum(w_etrk)
-     
+    
+
     dfw_htrkEff = np.sqrt(1./np.sum(w_htrk)) 
     dfw_etrkEff = np.sqrt(1./np.sum(w_etrk)) 
 
@@ -68,7 +75,7 @@ def get_trkEff_syst(pm_set=0, model='', data_set=0):
     #relative error, df / f
     df_f_htrkEff =  dfw_htrkEff / fw_htrkEff
     df_f_etrkEff =  dfw_etrkEff / fw_etrkEff
-
+    
     #----calculate systematic contribution---
 
     sig_exp = fXsec['fsiRC_dataXsec_fsibc_corr']    #data experimental cross section to be plotted
@@ -91,7 +98,7 @@ def get_trkEff_syst(pm_set=0, model='', data_set=0):
         avg_kin.data[i]['dsig_syst_etrk'] =  df_f_etrkEff
     avg_kin.save(avg_kin_file)
 
-    return [df_f_htrkEff, dsig2_htrk, df_f_etrkEff, dsig2_etrk]
+    return [df_f_htrk_syst, dsig2_htrk, df_f_etrk_syst, dsig2_etrk]
 
 def get_tgtboil_syst(pm_set=0, model='', data_set=0):
 
@@ -126,7 +133,9 @@ def get_tgtboil_syst(pm_set=0, model='', data_set=0):
     df2 = (df_dm**2) * sig_m**2 + (df_dI**2) * sig_I**2     #error by quadrature
     df = np.sqrt(df2)    #uncertainty in correction factor
 
-    
+    #----ALTERNATIVE----
+    df_f_syst = np.average( df / f)
+
     #Define the weight
     w = 1 / df**2
 
@@ -156,7 +165,7 @@ def get_tgtboil_syst(pm_set=0, model='', data_set=0):
         avg_kin.data[i]['dsig_syst_tgtBoil'] =  df_f
     avg_kin.save(avg_kin_file)
     
-    return [df_f, dsig2_tgtBoil]
+    return [df_f_syst, dsig2_tgtBoil]
 
 def get_pT_syst(pm_set=0, model='', data_set=0):
     
@@ -183,6 +192,9 @@ def get_pT_syst(pm_set=0, model='', data_set=0):
     #relative error
     df_f = abs(df)/f
     
+    #----ALTERNATIVE----
+    df_f_syst = np.average( np.abs(df) / f )
+
     #----calculate systematic contribution---
     sig_exp = fXsec['fsiRC_dataXsec_fsibc_corr']    #data experimental cross section to be plotted
     sig_exp = convert2NaN(sig_exp, value=-1.0)
@@ -201,7 +213,7 @@ def get_pT_syst(pm_set=0, model='', data_set=0):
         avg_kin.data[i]['dsig_syst_pT'] =  df_f
     avg_kin.save(avg_kin_file)
     
-    return [df_f, dsig2_pT]
+    return [df_f_syst, dsig2_pT]
     
 def get_tLT_syst(pm_set=0, model='', data_set=0):
 
@@ -215,7 +227,14 @@ def get_tLT_syst(pm_set=0, model='', data_set=0):
     avg_kin = dfile(avg_kin_file)          #open avg kin file (assumed to have '_systematics.txt extension'  
 
     tLT = r['tLT']     #total live time [fraction or %/100]
-    d_tLT = 1e-5          #assume uncertainty in total live time contributes to 5 % systematics
+    shms_3of4 = r['ptrig1_rate']    #shms 3/4 trigger tae in kHz.  Used to crudely estimate relative error on Xsec
+
+    df_f_approx = shms_3of4 * 1000. * (100 * 1e-9)   #this is prob. of how many 3/4 triggers would be blocked given 100 ns window.
+    df_f_approx_avg = np.average(df_f_approx)
+
+    print('total_live_time_rel_err=',df_f_approx_avg)
+
+    d_tLT = 0.05 * tLT          #assume uncertainty in total live time contributes to 5 % systematics
     
     f = 1./tLT                #correction factor
     df = -1./tLT**2 * d_tLT   #uncertainty in corr. factor
@@ -228,7 +247,7 @@ def get_tLT_syst(pm_set=0, model='', data_set=0):
     df_w = np.sqrt(1./np.sum(w))    #systematics [fractional, not in %] (uncertainty in weighted average of corr. factor)
 
     #relative error
-    df_f = 0.05 # Assume 5% error for now. df_w / f_w     
+    df_f = df_w / f_w     
     
     #----calculate systematic contribution---
     sig_exp = fXsec['fsiRC_dataXsec_fsibc_corr']    #data experimental cross section to be plotted
@@ -248,7 +267,7 @@ def get_tLT_syst(pm_set=0, model='', data_set=0):
         avg_kin.data[i]['dsig_syst_tLT'] =  df_f    #5% systematics or squared (0.05**2 = 0.0025)
     avg_kin.save(avg_kin_file)
 
-    return [df_f, dsig2_tLT]
+    return [df_f_approx_avg, dsig2_tLT]
     
 def get_Qtot_syst(pm_set=0, model='', data_set=0):
     
@@ -270,6 +289,8 @@ def get_Qtot_syst(pm_set=0, model='', data_set=0):
 
     f =  1./Q             #correction factor
     df = -1/Q**2 * dQ     #uncertainty in corr. factor
+    
+    df_f_syst = np.average( np.abs(df) / f )
 
     #Define the weight
     w = 1 / df**2
@@ -279,14 +300,15 @@ def get_Qtot_syst(pm_set=0, model='', data_set=0):
     df_w = np.sqrt(1./np.sum(w))    #systematics [fractional, not in %] (uncertainty in weighted average of corr. factor)
 
     #relative error
-    df_f = df_w / f_w
-    
+    df_f = 0.02 #for now, assume total relative uncertainty in charge is 2% :: df_w / f_w
+
+
     #----calculate systematic contribution---
     sig_exp = fXsec['fsiRC_dataXsec_fsibc_corr']    #data experimental cross section to be plotted
     sig_exp = convert2NaN(sig_exp, value=-1.0)
 
     #square of the systematic error contribution from total charge
-    dsig2_Qtot = sig_exp**2 * df_f **2
+    dsig2_Qtot = sig_exp**2 * df_f**2
 
     #write contributions to the systematic data file
     avg_kin.add_key('dsig_syst_Qtot', 'f')
@@ -299,7 +321,7 @@ def get_Qtot_syst(pm_set=0, model='', data_set=0):
         avg_kin.data[i]['dsig_syst_Qtot'] =  df_f
     avg_kin.save(avg_kin_file)
     
-    return [df_f, dsig2_Qtot]
+    return [df_f_syst, dsig2_Qtot]
 
 
 def convert2NaN(arr=np.array([]), value=0):
@@ -322,7 +344,7 @@ def get_filenames(pm_set, model, data_set):
     if(pm_set==80):
         init_file= avg_kin_dir+'pm%i_%s_norad_avgkin.txt'%(pm_set, model) 
         avg_kin_file = avg_kin_dir+'pm%i_%s_norad_avgkin_systematics.txt'%(pm_set, model) 
-        final_Xsec_file = final_Xsec_dir+'pm%i_laget_bc_corr.txt'%(pm_set)
+        final_Xsec_file = final_Xsec_dir+'pm%i_laget_bc_corr_systematics.txt'%(pm_set)
         #Check if file to store systematics exists, else create it
         if not os.path.exists(avg_kin_file):
             sh.copyfile(init_file, avg_kin_file)
@@ -331,7 +353,7 @@ def get_filenames(pm_set, model, data_set):
     else:
         init_file= avg_kin_dir+'pm%i_%s_norad_avgkin_set%i.txt'%(pm_set, model, data_set) 
         avg_kin_file = avg_kin_dir+'pm%i_%s_norad_avgkin_set%i_systematics.txt'%(pm_set, model, data_set)
-        final_Xsec_file = final_Xsec_dr+'pm%i_laget_bc_corr_set%i.txt'%(pm_set, data_set)
+        final_Xsec_file = final_Xsec_dir+'pm%i_laget_bc_corr_set%i_systematics.txt'%(pm_set, data_set)
         #Check if file to store systematics exists, else create it
         if not os.path.exists(avg_kin_file):
             sh.copyfile(init_file, avg_kin_file)
@@ -390,7 +412,16 @@ def combine_norm_systematics(pm_set=0, model='', data_set=0):
     print('Qtot= ',df_f_Qtot*100.,' [%]')
     print('tot_norm_err= ',relative_err_tot*100,' [%]')
 
-
+    avg_kin.add_header_comment('=====Relative Systematic Errors (from Normalization Factors)=====')
+    avg_kin.add_header_comment('hms_trkEff = %.4f [%%]' % (df_f_htrkEff*100.))
+    avg_kin.add_header_comment('shms_trkEff = %.4f [%%]' % (df_f_etrkEff*100.))
+    avg_kin.add_header_comment('tgt_boil = %.4f [%%]' % (df_f_tgtBoil*100.))
+    avg_kin.add_header_comment('proton_abs = %.4f [%%]' % (df_f_pT*100.))
+    avg_kin.add_header_comment('total_LT= %.4f [%%]' % (df_f_tLT*100.))
+    avg_kin.add_header_comment('Qtot= %.4f [%%]' % (df_f_Qtot*100.))
+    avg_kin.add_header_comment('tot_norm_err= %.4f [%%]' % (relative_err_tot*100.))
+    avg_kin.add_header_comment('=================================================================')
+    avg_kin.save(avg_kin_file)
 
 def main():
 

@@ -189,16 +189,16 @@ def plot_final():
         B.pl.clf()
         B.pl.figure(i+1)
 
-        y = np.array([0. for i in range(len(pm_avg[thnq==ithnq]))])
+        y = np.array([0. for ii in range(len(pm_avg[thnq==ithnq]))])
 
         dsig_sig_stats = red_dataXsec_avg_err[thnq==ithnq]*MeV2fm / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)
         dsig_sig_syst = red_dataXsec_avg_syst_err[thnq==ithnq]*MeV2fm / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)
         dsig_sig_tot = red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)
 
 
-        for i in range(len(y)):
-            if (np.isnan(dsig_sig_tot[i])):
-                y[i] = np.nan
+        for iii in range(len(y)):
+            if (np.isnan(dsig_sig_tot[iii])):
+                y[iii] = np.nan
 
         B.plot_exp(pm_avg[thnq==ithnq],  y, dsig_sig_stats*100., marker='o', markersize=6, color='b', label='Statistical Error')
         B.plot_exp(pm_avg[thnq==ithnq],  y, dsig_sig_syst*100., marker='o', markersize=6, color='r', label='Systematics Error')
@@ -220,6 +220,9 @@ def plot_final():
         dsig_sig_kin_syst = kin_syst_tot[thnq==ithnq]*100.
         dsig_sig_norm_syst = norm_syst_tot[thnq==ithnq]*100.
         dsig_sig_tot_syst = tot_syst_err[thnq==ithnq]*100.
+        rel_stats_err = tot_stats_err[thnq==ithnq]*100.
+        rel_tot_err = tot_err[thnq==ithnq]*100.
+        pmiss_avg = pm_avg[thnq==ithnq]
 
         for i in range(len(y)):
             if (np.isnan(dsig_sig_tot[i])):
@@ -231,16 +234,20 @@ def plot_final():
 
         B.pl.xlabel(r' $p_{r}$ (GeV/c)')
         B.pl.ylabel(r'Relative Error (\%)')
-        B.pl.ylim(-100, 100)
+        B.pl.ylim(-25, 25)
         B.pl.title(r'Systematic Relative Error, $\theta_{nq} = %i \pm 5$ deg'%(ithnq))
         B.pl.legend()            
         B.pl.savefig(dir_name+'/final_redXsec_SystrelativeError_thnq%i.pdf'%(ithnq))
         
         #Write Relative Errors to file
         #print('====LENGTHS====')
-        #print(len(pm_avg[thnq==ithnq]))
+        print('pm_avg >>>>>> = ',pmiss_avg)
 
-        np.savetxt(fout_name,np.c_[pm_avg[thnq==ithnq], dsig_sig_kin_syst, dsig_sig_norm_syst, dsig_sig_tot_syst,  dsig_sig_stats, dsig_sig_tot], delimiter='  ', fmt='%.4f')
+        #np.savetxt(fout_name,np.c_[pmiss_avg, dsig_sig_kin_syst, dsig_sig_norm_syst, dsig_sig_tot_syst,  dsig_sig_stats, dsig_sig_tot], delimiter='  ', fmt='%.4f')
+        for ith in range(len(pmiss_avg)):
+            print('ith=',ith,' :: pmiss_avg=',pmiss_avg[ith])
+            fout.write('%.5f  %.5f   %.5f   %.5f  %.5f   %.5f\n' % (pmiss_avg[ith], dsig_sig_kin_syst[ith], dsig_sig_norm_syst[ith], dsig_sig_tot_syst[ith], rel_stats_err[ith], rel_tot_err[ith]))
+
         fout.close()
 
 
@@ -290,7 +297,93 @@ def plot_final():
         B.pl.legend()            
         B.pl.savefig(dir_name+'/final_redXsec_relativeErrorModel_thnq%i.pdf'%(ithnq))
         
+        #---------Plot Ratio  sig_data (or other models) / sig_model_CDBonn_FSI, 
+        #-----OR, plot % deviation of data to all models
+        B.pl.clf()
+        B.pl.figure(i+4)
         
+        #Calculate percent deviation from data and all models relative
+
+        '''
+        #Take (Data - Model) / Data  ratio  (a - b) / a,  sig = b/a**2 *sig_a
+        f_red_fsiXsec_CD_arr = f_red_fsiXsec_CD(pm_avg[thnq==ithnq])
+        ref_line = (red_dataXsec_avg_masked[thnq==ithnq] - red_dataXsec_avg_masked[thnq==ithnq]) / red_dataXsec_avg_masked[thnq==ithnq] 
+        
+        fsiCD_ratio = (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm - f_red_fsiXsec_CD_arr) / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)  * 100.
+        fsiCD_ratio_err = f_red_fsiXsec_CD_arr / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)**2  * (red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm) * 100.
+
+        pwiaCD_ratio = (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm - f_red_pwiaXsec_CD(pm_avg[thnq==ithnq]) ) / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm) * 100.                  
+        pwiaCD_ratio_err = f_red_pwiaXsec_CD(pm_avg[thnq==ithnq]) / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)**2  * (red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm) * 100.
+        
+        V18_fsi_ratio = (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm - f_red_fsiXsec_V18(pm_avg[thnq==ithnq])) / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm) * 100.
+        V18_fsi_ratio_err = f_red_fsiXsec_V18(pm_avg[thnq==ithnq]) / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)**2  * (red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm) * 100.
+
+        V18_pwia_ratio = (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm - f_red_pwiaXsec_V18(pm_avg[thnq==ithnq])) / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm) * 100.
+        V18_pwia_ratio_err = f_red_pwiaXsec_V18(pm_avg[thnq==ithnq]) / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)**2  * (red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm) * 100.
+
+        paris_fsi_ratio = (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm - f_red_fsiXsec_avg(pm_avg[thnq==ithnq])) / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm) * 100.
+        paris_fsi_ratio_err = f_red_fsiXsec_avg(pm_avg[thnq==ithnq]) / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)**2  * (red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm) * 100.
+
+        paris_pwia_ratio = (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm - f_red_pwiaXsec_avg(pm_avg[thnq==ithnq])) / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm) * 100.
+        paris_pwia_ratio_err = f_red_pwiaXsec_avg(pm_avg[thnq==ithnq]) / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)**2  * (red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm)* 100. 
+        
+        B.plot_exp(pm_avg[thnq==ithnq],  ref_line, marker='None', linestyle='-', color='k', label='Data (reference)')
+        B.plot_exp(pm_avg[thnq==ithnq],  fsiCD_ratio, fsiCD_ratio_err, marker='o', ms=6, color='magenta', label='CD-Bonn FSI')
+        B.plot_exp(pm_avg[thnq==ithnq],  pwiaCD_ratio,pwiaCD_ratio_err, marker='o', ms=6, ecolor='magenta', mec='magenta', mfc='white', label='CD-Bonn PWIA')
+        
+        B.plot_exp(pm_avg[thnq==ithnq],  V18_fsi_ratio, V18_fsi_ratio_err,  marker='s', ms=6, color='g', label='V18 FSI')
+        B.plot_exp(pm_avg[thnq==ithnq],  V18_pwia_ratio, V18_pwia_ratio_err, marker='s', ms=6, ecolor='g', mec='g', mfc='white', label='V18 PWIA') 
+
+        B.plot_exp(pm_avg[thnq==ithnq],  paris_fsi_ratio, paris_fsi_ratio_err, marker='D', ms=6, color='b', label='Paris FSI')
+        B.plot_exp(pm_avg[thnq==ithnq],  paris_pwia_ratio,paris_pwia_ratio_err, marker='D', ms=6, ecolor='b', mec='b', mfc='white', label='Paris PWIA')
+
+        B.pl.xlabel('Neutron Recoil Momenta [GeV/c]')
+        B.pl.ylabel(r'$(\sigma^{Data}_{red} - \sigma^{Model}_{red}) /\sigma^{Data}_{red} [\%]$')
+        B.pl.ylim(-200, 200)
+        B.pl.title(r'Percent Deviation of Model from Data, $\theta_{nq} = %i \pm 5$ deg'%(ithnq))
+        B.pl.legend(loc='upper right')            
+        B.pl.savefig(dir_name+'/final_redXsec_Data2ModelDev_thnq%i.pdf'%(ithnq))
+        '''
+        '''
+        #Take Data / Model ratio
+        f_red_fsiXsec_CD_arr = f_red_fsiXsec_CD(pm_avg[thnq==ithnq])
+        ref_line = red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm) 
+        
+        fsiCD_ratio = red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm / f_red_fsiXsec_CD_arr
+        fsiCD_ratio_err = red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm / f_red_fsiXsec_CD_arr 
+
+        pwiaCD_ratio = red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm / f_red_pwiaXsec_CD(pm_avg[thnq==ithnq])                   
+        pwiaCD_ratio_err = red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm/f_red_pwiaXsec_CD(pm_avg[thnq==ithnq]) 
+        
+        V18_fsi_ratio = red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm / f_red_fsiXsec_V18(pm_avg[thnq==ithnq])
+        V18_fsi_ratio_err = red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm / f_red_fsiXsec_V18(pm_avg[thnq==ithnq]) 
+
+        V18_pwia_ratio = red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm / f_red_pwiaXsec_V18(pm_avg[thnq==ithnq]) 
+        V18_pwia_ratio_err = red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm / f_red_pwiaXsec_V18(pm_avg[thnq==ithnq])
+
+        paris_fsi_ratio = red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm / f_red_fsiXsec_avg(pm_avg[thnq==ithnq])
+        paris_fsi_ratio_err = red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm / f_red_fsiXsec_avg(pm_avg[thnq==ithnq]) 
+
+        paris_pwia_ratio = red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm / f_red_pwiaXsec_avg(pm_avg[thnq==ithnq])
+        paris_pwia_ratio_err = red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm / f_red_pwiaXsec_avg(pm_avg[thnq==ithnq])  
+
+        B.plot_exp(pm_avg[thnq==ithnq],  ref_line, marker='None', linestyle='-', color='k', label='Data (reference)')
+        B.plot_exp(pm_avg[thnq==ithnq],  fsiCD_ratio, fsiCD_ratio_err, marker='o', ms=4, color='magenta', label='CD-Bonn FSI')
+        B.plot_exp(pm_avg[thnq==ithnq],  pwiaCD_ratio,pwiaCD_ratio_err, marker='o', ms=4, ecolor='magenta', mec='magenta', mfc='white', label='CD-Bonn PWIA')
+        
+        B.plot_exp(pm_avg[thnq==ithnq],  V18_fsi_ratio, V18_fsi_ratio_err,  marker='s', ms=4, color='g', label='V18 FSI')
+        B.plot_exp(pm_avg[thnq==ithnq],  V18_pwia_ratio, V18_pwia_ratio_err, marker='s', ms=4, ecolor='g', mec='g', mfc='white', label='V18 PWIA') 
+
+        B.plot_exp(pm_avg[thnq==ithnq],  paris_fsi_ratio, paris_fsi_ratio_err, marker='^', ms=4, color='b', label='Paris FSI')
+        B.plot_exp(pm_avg[thnq==ithnq],  paris_pwia_ratio,paris_pwia_ratio_err, marker='^', ms=4, ecolor='b', mec='b', mfc='white', label='Paris PWIA')
+
+        B.pl.xlabel('Neutron Recoil Momenta [GeV/c]')
+        B.pl.ylabel(r'Ratio $\sigma^{Data}_{red}/\sigma^{Model}_{red}$')
+        B.pl.ylim(-1.0, 6)
+        B.pl.title(r'Ratio $\sigma^{Data}_{red}/\sigma^{Model}_{red}$, $\theta_{nq} = %i \pm 5$ deg'%(ithnq))
+        B.pl.legend()            
+        B.pl.savefig(dir_name+'/final_redXsec_Data2Model_thnq%i.pdf'%(ithnq))
+        '''
 
         #-------Plot the Ratio  sig_red_exp(pm) / sig_red_exp(p0=0.5 GeV/c) for pm >=0.5 GeV/c (same for models), to compare shapes
         
@@ -542,14 +635,12 @@ def make_prl_plots():
     
     f_red_pwiaXsec_CD_75 = interp1d(pm_avg11, red_pwiaXsec_CD_75,fill_value='extrapolate')                          #CD-Bonn (M. Sargsian calculation)
     f_red_fsiXsec_CD_75 = interp1d(pm_avg12, red_fsiXsec_CD_75,fill_value='extrapolate')
-
-
     
-
+    
     #====THETA_NQ = 35 DEG====
-    B.pl.subplot(131)
-    B.plot_exp(pm_avg[thnq==35], red_dataXsec_avg_masked[thnq==35]*MeV2fm, red_dataXsec_avg_tot_err[thnq==35]*MeV2fm, marker='o', markersize=6, color='k', markerfacecolor='k', label='This Experiment (Hall C)' )[0]
-    la = B.plot_exp(pm_ha35, red_dataXsec_ha35, red_dataXsec_err_ha35, marker='o', markersize=6, color='c', label='Hall A Data')
+    ax1 = B.pl.subplot(131)
+    B.plot_exp(pm_avg[thnq==35], red_dataXsec_avg_masked[thnq==35]*MeV2fm, red_dataXsec_avg_tot_err[thnq==35]*MeV2fm, marker='o', markersize=5, color='k', markerfacecolor='k', logy=True, label='This Experiment (Hall C)' )
+    B.plot_exp(pm_ha35, red_dataXsec_ha35, red_dataXsec_err_ha35, marker='o', markersize=5, color='c', logy=True,  label='Hall A Data')
     
     #Plot theoretical curves
     B.plot_exp(pm_avg[thnq==35], f_red_pwiaXsec_avg_35(pm_avg[thnq==35]), linestyle='--', marker='None', color='blue', logy=True, label='Paris PWIA')
@@ -563,16 +654,18 @@ def make_prl_plots():
 
     #B.pl.xlabel('$p_{r}$ (GeV/c)')
     B.pl.title('')
-    B.pl.ylabel(r'$\sigma_{red} (fm^{3})$')
+    B.pl.xlabel('')
+    B.pl.ylabel(r'$\sigma_{red} (fm^{3})$', fontsize=15)
     B.pl.subplots_adjust(wspace=.001)
     B.pl.xlim(0., 1.2)
-    B.pl.xticks(np.arange(0.1, 1.1, 0.2))
+    B.pl.xticks(np.arange(0.1, 1.3, 0.2))
     B.pl.ylim(0., 50)
     
+
     #====THETA_NQ = 45 DEG====
     B.pl.subplot(132)
-    B.plot_exp(pm_avg[thnq==45], red_dataXsec_avg_masked[thnq==45]*MeV2fm, red_dataXsec_avg_tot_err[thnq==45]*MeV2fm, marker='o', markersize=6, color='k', markerfacecolor='k', label='This Experiment (Hall C)' )
-    B.plot_exp(pm_ha45, red_dataXsec_ha45, red_dataXsec_err_ha45, marker='o', markersize=6, color='c', label='Hall A Data')
+    B.plot_exp(pm_avg[thnq==45], red_dataXsec_avg_masked[thnq==45]*MeV2fm, red_dataXsec_avg_tot_err[thnq==45]*MeV2fm, marker='o', markersize=5, color='k', markerfacecolor='k', logy=True, label='This Experiment (Hall C)' )
+    B.plot_exp(pm_ha45, red_dataXsec_ha45, red_dataXsec_err_ha45, marker='o', markersize=5, color='c', logy=True, label='Hall A Data')
     
     #Plot theoretical curves
     B.plot_exp(pm_avg[thnq==45], f_red_pwiaXsec_avg_45(pm_avg[thnq==45]), linestyle='--', marker='None', color='blue', logy=True, label='Paris PWIA')
@@ -587,16 +680,16 @@ def make_prl_plots():
     B.pl.gca().set_yticklabels([''])
     B.pl.title('')
     B.pl.ylabel('')
-    B.pl.xlabel('$p_{r}$ (GeV/c)')
+    B.pl.xlabel('$p_{r}$ (GeV/c)', fontsize=15)
     B.pl.subplots_adjust(wspace=.001)
     B.pl.xlim(0., 1.2)
-    B.pl.xticks(np.arange(0.1, 1.1, 0.2))
+    B.pl.xticks(np.arange(0.1, 1.3, 0.2))
     B.pl.ylim(0., 50)
     
     #====THETA_NQ = 75 DEG====
     B.pl.subplot(133)
-    B.plot_exp(pm_avg[thnq==75], red_dataXsec_avg_masked[thnq==75]*MeV2fm, red_dataXsec_avg_tot_err[thnq==75]*MeV2fm, marker='o', markersize=6, color='k', markerfacecolor='k', label='This Experiment (Hall C)' )
-    
+    B.plot_exp(pm_avg[thnq==75], red_dataXsec_avg_masked[thnq==75]*MeV2fm, red_dataXsec_avg_tot_err[thnq==75]*MeV2fm, marker='o', markersize=5, color='k', markerfacecolor='k', logy=True, label='This Experiment (Hall C)' )
+    B.plot_exp(0.,0.,0., marker='o', markersize=5, color='c',  label='Hall A Data')
     #Plot theoretical curves
     B.plot_exp(pm_avg[thnq==75], f_red_pwiaXsec_avg_75(pm_avg[thnq==75]), linestyle='--', marker='None', color='blue', logy=True, label='Paris PWIA')
     B.plot_exp(pm_avg[thnq==75], f_red_fsiXsec_avg_75(pm_avg[thnq==75]), linestyle='-', marker='None', color='blue', logy=True, label='Paris FSI')
@@ -611,10 +704,11 @@ def make_prl_plots():
     B.pl.subplots_adjust(wspace=.001)
     B.pl.title('')
     B.pl.ylabel('')
+    B.pl.xlabel('')
     B.pl.xlim(0., 1.2)
     B.pl.xticks(np.arange(0.1, 1.3, 0.2))
     B.pl.ylim(0., 50)
-    B.pl.legend([la], ['Hall A'], loc='upper right')   
+    B.pl.legend(frameon=False, loc='upper right')   
     B.pl.show()
 
 def plot_report():

@@ -63,19 +63,6 @@ else:
 o = open(output_file,'w')  
 o.write(header)
 
-'''
-#Load Theory Xsec @ Avg. Kin.
-if pm_set == 80:
-    ft = B.get_file('../theory_Xsec/%s/pm%i_laget_theory.txt'%(sys_ext, pm_set))
-else:
-    ft = B.get_file('../theory_Xsec/%s/pm%i_laget_theory_set%i.txt'%(sys_ext, pm_set, data_set)) 
-
-#Load Averaged Xsec 
-if pm_set == 80:                                       
-    fa = B.get_file('../average_Xsec/%s/pm%i_laget.txt'%(sys_ext, pm_set))                                   
-else:                                                           
-    fa = B.get_file('../average_Xsec/%s/pm%i_laget_set%i.txt'%(sys_ext, pm_set, data_set)) 
-'''
 
 #Get Bin Information (Does no matter which file, as they have the same binning scheme)
 ib_t = B.get_data(ft, 'i_b')             #2D Bin NUmber 

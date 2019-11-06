@@ -13,7 +13,7 @@ simc_fname: worksim_voli/d2_pm580_lagetfsi_rad_set1.root
 #--------Analyze DATA or SIMC-------
 # True (ON) =  1,  False (OFF) = 0
 
-RUN_SIMC: 0
+RUN_SIMC: 1
 RUN_DATA: 1
 
 ;Analyze Radiative(1) or NonRadiative(0) SIMC?                            
@@ -25,7 +25,7 @@ rad_corr_flag: 0
 
 
 #------Set DATA/SIMC CUTS LIMITS ------
-Em_min : -0.02    
+Em_min : -0.02
 Em_max :  0.04
 
 h_delta_min: -8.   
@@ -37,11 +37,11 @@ e_delta_max:  22.
 W_min: 0.85      
 W_max: 1.05
 
-ztarDiff_min: -2.
-ztarDiff_max: 2.
+ztarDiff_min: -3.
+ztarDiff_max: 3.
 
-Q2_min: 0.
-Q2_max: 14.
+Q2_min: 2.7
+Q2_max: 3.2
 
 thnq_min: 0.
 thnq_max: 180.
@@ -61,11 +61,11 @@ coin_time_max: 15.
 # True (ON) =  1,  False (OFF) = 0
 
 bool Em      = 1
-bool W       = 0
+bool W       = 1
 bool h_delta = 1
 bool e_delta = 1
-bool ztar_diff = 0
-bool Q2 = 0
+bool ztar_diff = 1
+bool Q2 = 1
 bool th_nq = 0
 bool MM = 0
 
@@ -79,6 +79,6 @@ bool hmsCollCut   =  1
 bool shmsCollCut  =  0
 
 #-----Scale Collimator Cuts------
-hms_scale         =  1
+hms_scale         =  1.
 shms_scale        =  1
 
