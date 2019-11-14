@@ -695,9 +695,7 @@ def make_prl_plots():
     ax0 = B.pl.subplot(gs[0])
     B.pl.setp(ax0.get_xticklabels(), visible=False)
     B.pl.setp(ax0.get_yticklabels(), visible=True)
-    B.pl.xlabel('')
-    B.pl.ylabel(r'$\sigma_{red}$ (f$m^{3}$) ')
-    B.pl.title('')
+    
     l1 = B.plot_exp(pm_avg[thnq==35], red_dataXsec_avg_masked[thnq==35]*MeV2fm, red_dataXsec_avg_tot_err[thnq==35]*MeV2fm, marker='o', markersize=5, color='k', markerfacecolor='k', logy=True, label='This Experiment (Hall C)' )
     l2 = B.plot_exp(pm_ha35, red_dataXsec_ha35, red_dataXsec_err_ha35, marker='o', markersize=5, color='c', logy=True,  label='Hall A Data')
 
@@ -711,13 +709,16 @@ def make_prl_plots():
     l7, = B.plot_exp(pm_avg3, f_red_pwiaXsec_CD_35(pm_avg3), linestyle='--', marker='None', color='magenta', logy=True, label='CD-Bonn PWIA')     
     l8, = B.plot_exp(pm_avg4, f_red_fsiXsec_CD_35(pm_avg4), linestyle='-', marker='None', color='magenta', logy=True, label='CD-Bonn FSI') 
 
+    ax0.tick_params(axis='x', bottom='on')
+    B.pl.xticks(np.arange(0, 1.1, step=0.15))
+    B.pl.xlabel('')                                                                                                                                                                                                   
+    B.pl.ylabel(r'$\sigma_{red}$ (f$m^{3}$) ')                                                                                                                                                                        
+    B.pl.title('') 
+
     #THETA_NQ = 45 DEG
     ax1 = plt.subplot(gs[1])
     plt.setp(ax1.get_xticklabels(), visible=False)
     plt.setp(ax1.get_yticklabels(), visible=False)
-    B.pl.xlabel('')                                                                                                                                                            
-    B.pl.ylabel('')                                                                                                                          
-    B.pl.title('') 
 
     B.plot_exp(pm_avg[thnq==45], red_dataXsec_avg_masked[thnq==45]*MeV2fm, red_dataXsec_avg_tot_err[thnq==45]*MeV2fm, marker='o', markersize=5, color='k', markerfacecolor='k', logy=True, label='This Experiment (Hall C)' )
     B.plot_exp(pm_ha45, red_dataXsec_ha45, red_dataXsec_err_ha45, marker='o', markersize=5, color='c', logy=True, label='Hall A Data')
@@ -732,13 +733,16 @@ def make_prl_plots():
     B.plot_exp(pm_avg7, f_red_pwiaXsec_CD_45(pm_avg7), linestyle='--', marker='None', color='magenta', logy=True, label='CD-Bonn PWIA')     
     B.plot_exp(pm_avg8, f_red_fsiXsec_CD_45(pm_avg8), linestyle='-', marker='None', color='magenta', logy=True, label='CD-Bonn FSI') 
 
+    ax0.tick_params(axis='x', bottom='on')                                                                                                                                                                 
+    B.pl.xticks(np.arange(0, 1.1, step=0.15)) 
+    B.pl.xlabel('')                                                                                                                                                                                       
+    B.pl.ylabel('')                                                                                                                                                                                        
+    B.pl.title('')  
+
     #THETA_NQ = 75
     ax2 = plt.subplot(gs[2])
     plt.setp(ax2.get_xticklabels(), visible=False)
     plt.setp(ax2.get_yticklabels(), visible=False)
-    B.pl.xlabel('')                                                                                                                 
-    B.pl.ylabel('')                                                                                                                          
-    B.pl.title('') 
 
     B.plot_exp(pm_avg[thnq==75], red_dataXsec_avg_masked[thnq==75]*MeV2fm, red_dataXsec_avg_tot_err[thnq==75]*MeV2fm, marker='o', markersize=5, color='k', markerfacecolor='k', logy=True, label='This Experiment (Hall C)' )
     #Plot theoretical curves
@@ -750,39 +754,53 @@ def make_prl_plots():
     
     B.plot_exp(pm_avg11, f_red_pwiaXsec_CD_75(pm_avg11), linestyle='--', marker='None', color='magenta', logy=True, label='CD-Bonn PWIA')     
     B.plot_exp(pm_avg12, f_red_fsiXsec_CD_75(pm_avg12), linestyle='-', marker='None', color='magenta', logy=True, label='CD-Bonn FSI') 
-    
+
+    ax0.tick_params(axis='x', bottom='on')                                                                                                                                                
+    B.pl.xticks(np.arange(0, 1.1, step=0.15)) 
+    B.pl.xlabel('')                                                                                                                                                                                    
+    B.pl.ylabel('')                                                                                                                                                               
+    B.pl.title('')      
+
     ax3 = plt.subplot(gs[3], sharex=ax0)
     plt.setp(ax3.get_xticklabels(), visible=True)
     plt.setp(ax3.get_yticklabels(), visible=True)
-    B.pl.xlabel('')                                                                                                                                                                   
-    B.pl.ylabel(r'Relative Error (%%)')                                                                                                                               
-    B.pl.title('') 
+
     e1 = B.plot_exp(pmiss_avg_35,  y35_m, dsig_sig_tot_syst_35_m, marker='o', markersize=4, color='r', label='Systematic Error')
     e2 = B.plot_exp(pmiss_avg_35,  y35_m, rel_stats_err_35_m, marker='o', markersize=4, color='b', label='Statistical Error')
     e3 = B.plot_exp(pmiss_avg_35,  y35_m, rel_tot_err_35, marker='o', markersize=4, color='k', label='Total Error')
-
+    ax3.tick_params(axis='x', top='on') 
+    B.pl.ylim(-50, 50)
+    B.pl.xlabel('')                                                                                                                                                                                    
+    B.pl.ylabel(r'Relative Error (\%)')                                                                                                                                                             
+    B.pl.title('') 
     #ax3.plot(x, y)
     
     ax4 = plt.subplot(gs[4], sharex=ax1)
     plt.setp(ax4.get_xticklabels(), visible=True)
-    plt.setp(ax4.get_yticklabels(), visible=True)
-    B.pl.xlabel(r'$p_{r}$ (GeV/c)')                                                                                                                                                              
-    B.pl.ylabel('')                                                                                                                                                                           
-    B.pl.title('') 
+    plt.setp(ax4.get_yticklabels(), visible=False)
+
+                                                                                                                                                           
     e1 = B.plot_exp(pmiss_avg_45,  y45_m, dsig_sig_tot_syst_45_m, marker='o', markersize=4, color='r', label='Systematic Error')                                           
     e2 = B.plot_exp(pmiss_avg_45,  y45_m, rel_stats_err_45_m, marker='o', markersize=4, color='b', label='Statistical Error')                                            
     e3 = B.plot_exp(pmiss_avg_45,  y45_m, rel_tot_err_45, marker='o', markersize=4, color='k', label='Total Error')  
-    #ax4.plot(y, x)
+    ax4.tick_params(axis='x', top='on') 
+    B.pl.ylim(-50, 50)
+    B.pl.xlabel(r'$p_{r}$ (GeV/c)')                                                                                                                                                                      
+    B.pl.ylabel('')                                                                                                                                                                                         
+    B.pl.title('')  
     
     ax5 = plt.subplot(gs[5], sharex=ax2)
     plt.setp(ax5.get_xticklabels(), visible=True)
-    plt.setp(ax5.get_yticklabels(), visible=True)
-    B.pl.xlabel('') 
-    B.pl.ylabel('')                                                                                                                                                                      
-    B.pl.title('') 
+    plt.setp(ax5.get_yticklabels(), visible=False)
+    
     e1 = B.plot_exp(pmiss_avg_75,  y75_m, dsig_sig_tot_syst_75_m, marker='o', markersize=4, color='r', label='Systematic Error')        
     e2 = B.plot_exp(pmiss_avg_75,  y75_m, rel_stats_err_75_m, marker='o', markersize=4, color='b', label='Statistical Error')                                        
     e3 = B.plot_exp(pmiss_avg_75,  y75_m, rel_tot_err_75, marker='o', markersize=4, color='k', label='Total Error')  
+    ax5.tick_params(axis='x', top='on') 
+    B.pl.ylim(-50, 50)
+    B.pl.xlabel('')                                                                                                                                                                                                   
+    B.pl.ylabel('')                                                                                                                                                                                       
+    B.pl.title('') 
     #ax5.plot(x, y)
     
     plt.subplots_adjust(hspace = 0.001, wspace = 0.001)
@@ -792,7 +810,7 @@ def make_prl_plots():
     ax2.legend([l1, l2, l3, l4, l5, l6, l7, l8], line_labels, loc='upper right', frameon=False)      #subplot to use for common legend
       
     eline_labels=['Systematic Error', 'Statistical Error', 'Total Error']   #define legend labels
-    ax5.legend([e1, e2, e3], eline_labels, loc='upper right', frameon=False)      #subplot to use for common legend
+    ax5.legend([e1, e2, e3], eline_labels, loc='upper right', frameon=False, fontsize=11)      #subplot to use for common legend
    
 
     B.pl.show()
@@ -1118,7 +1136,7 @@ def main():
     #plot_theory_sets('pwia')
     #plot_theory_sets('fsi')
     #plot_Xsec_vs_thnq()
-    plot_final()
+    #plot_final()
     make_prl_plots()
 
 if __name__=="__main__":

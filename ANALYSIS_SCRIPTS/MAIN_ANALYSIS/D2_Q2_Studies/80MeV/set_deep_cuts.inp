@@ -25,7 +25,7 @@ rad_corr_flag: 0
 #Units: Enegy/Momentum/W [GeV], spec_delta [%]                                                                
                                                                                                               
 ;80 MeV, 580 MeV, 750 MeV                                                                                     
-pm_setting : 580                                                                                               
+pm_setting : 80                                                                                               
                                                                                                               
 ;Theoretical Calculation: laget,  misak, . . .                                                                
 theory     : laget                                                                                            

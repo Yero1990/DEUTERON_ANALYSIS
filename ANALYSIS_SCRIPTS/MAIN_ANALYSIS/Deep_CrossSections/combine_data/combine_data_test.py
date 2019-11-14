@@ -47,7 +47,7 @@ header = """
 #\\ yb = pm                                                                        
 #relative errors df/f=dsig/sig: kin_syst_tot (kinematic systematics),  norm_syst_tot (constant, norm. syst.)
 # current header line:  
-#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/  pm_avg[f,5]/  kin_syst_tot[f,6]/  norm_syst_tot[f,7]/  tot_syst_err[f,8]/  tot_stats_err[f,9]/  tot_err[f,10]/   red_dataXsec_avg[f,11]/   red_dataXsec_avg_err[f,12]/  red_dataXsec_avg_syst_err[f,13]/   red_dataXsec_avg_tot_err[f,14]/  red_pwiaXsec_avg[f,15]/ red_fsiXsec_avg[f,16]/  
+#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/  pm_avg[f,5]/  kin_syst_tot[f,6]/  norm_syst_tot[f,7]/  tot_syst_err[f,8]/  tot_stats_err[f,9]/  tot_err[f,10]/   red_dataXsec_avg[f,11]/   red_dataXsec_avg_err[f,12]/  red_dataXsec_avg_syst_err[f,13]/   red_dataXsec_avg_tot_err[f,14]/  red_pwiaXsec_avg[f,15]/ red_fsiXsec_avg[f,16]/ R[f,17]/ R_err[f,18]/ R_v2[f,19]/ R_v2_err[f,20]/  
 """
 fout.write(header)
 
@@ -124,6 +124,32 @@ pm3_b, pm580_set2 = get_pm_avg(580, 2)
 pm4_b, pm750_set1 = get_pm_avg(750, 1)
 pm5_b, pm750_set2 = get_pm_avg(750, 2)
 pm6_b, pm750_set3 = get_pm_avg(750, 3)
+
+#Get Cross Sections
+sig_exp_80 = get_sig_red('fsiRC_dataXsec_fsibc_corr', 80, 1) 
+sig_exp_580_set1 = get_sig_red('fsiRC_dataXsec_fsibc_corr', 580, 1)
+sig_exp_580_set2 = get_sig_red('fsiRC_dataXsec_fsibc_corr', 580, 2)
+sig_exp_750_set1 = get_sig_red('fsiRC_dataXsec_fsibc_corr', 750, 1)
+sig_exp_750_set2 = get_sig_red('fsiRC_dataXsec_fsibc_corr', 750, 2) 
+sig_exp_750_set3 = get_sig_red('fsiRC_dataXsec_fsibc_corr', 750, 3) 
+
+#Get Cross Section error
+sig_exp_80_err = get_sig_red('fsiRC_dataXsec_fsibc_corr_err', 80, 1)                                                                                  
+sig_exp_580_set1_err = get_sig_red('fsiRC_dataXsec_fsibc_corr_err', 580, 1)                                                                                                                        
+sig_exp_580_set2_err = get_sig_red('fsiRC_dataXsec_fsibc_corr_err', 580, 2)                                                                                                    
+sig_exp_750_set1_err = get_sig_red('fsiRC_dataXsec_fsibc_corr_err', 750, 1)                                                                                                           
+sig_exp_750_set2_err = get_sig_red('fsiRC_dataXsec_fsibc_corr_err', 750, 2)                                                                                                                      
+sig_exp_750_set3_err = get_sig_red('fsiRC_dataXsec_fsibc_corr_err', 750, 3) 
+
+#Get JML Paris Theory Xsec
+#Get Cross Sections                                                                                                                                                                        
+sig_pwia_80 = get_sig_red('pwiaXsec_theory', 80, 1)
+sig_pwia_580_set1 = get_sig_red('pwiaXsec_theory', 580, 1)  
+sig_pwia_580_set2 = get_sig_red('pwiaXsec_theory', 580, 2) 
+sig_pwia_750_set1 = get_sig_red('pwiaXsec_theory', 750, 1)
+sig_pwia_750_set2 = get_sig_red('pwiaXsec_theory', 750, 2)
+sig_pwia_750_set3 = get_sig_red('pwiaXsec_theory', 750, 3)
+  
 
 #Get reduced Xsec
 sig_red_80 = get_sig_red('red_dataXsec', 80, 1)
@@ -217,6 +243,34 @@ for ib in range(len(i_b)):
     red_fsiXsec_arr_m = np.ma.masked_values(red_fsiXsec_arr, -1.)
     red_fsiXsec_avg = np.ma.average(red_fsiXsec_arr_m)
 
+
+    #==============================
+    # Calculate sig_reduced ratio
+    #==============================
+    #Version 1: Ratio of averaged reduced cross sections
+    R = red_dataXsec_avg / red_pwiaXsec_avg
+    R_err = R = red_dataXsec_avg_err / red_pwiaXsec_avg 
+
+
+    #Version 2: Ratio (for individual data sets) averaged out
+
+    #----------Calculate the Xsec Ratio for a given (Pm, th_nq) bin of a given kin. set------------                                                                             
+    dataXsec_arr = np.array([sig_exp_80[ib], sig_exp_580_set1[ib], sig_exp_580_set2[ib], sig_exp_750_set1[ib], sig_exp_750_set2[ib], sig_exp_750_set3[ib]])                                         
+    dataXsec_m = ma.masked_values(dataXsec_arr, -1.)  #maske invalid values (-1)                                                                                                                
+                                                                                                                                                                                                        
+    #Define the weights (Use ONLY statistical)                                                                                                                                                          
+    exp_dataXsec_err = np.array([sig_exp_80_err[ib], sig_exp_580_set1_err[ib], sig_exp_580_set2_err[ib], sig_exp_750_set1_err[ib], sig_exp_750_set2_err[ib], sig_exp_750_set3_err[ib]])                                                                                                                                       
+    exp_dataXsec_err_m = ma.masked_values(exp_dataXsec_err, -1.) 
+
+    pwiaXsec_arr = np.array([sig_pwia_80[ib], sig_pwia_580_set1[ib], sig_pwia_580_set2[ib], sig_pwia_750_set1[ib], sig_pwia_750_set2[ib], sig_pwia_750_set3[ib]])                                                                         
+    pwiaXsec_m = ma.masked_values(pwiaXsec_arr, -1.)  #maske invalid values (-1)   
+
+    R_v2 = dataXsec_m / pwiaXsec_m
+    R_v2_err = exp_dataXsec_err_m / pwiaXsec_m
+    R_v2_w = 1./ R_v2_err**2
+    R_v2_avg = np.average(R_v2, weights=R_v2_w)
+    R_v2_avg_err = 1. / np.sqrt(np.sum(R_v2_w)) 
+
     #==================================
     # Get the Average Missing Momentum
     #==================================
@@ -228,7 +282,7 @@ for ib in range(len(i_b)):
 
     print(xb[ib])
 
-    l="%i  %i  %i  %f   %f   %f   %f   %f   %f   %f   %f   %.12e  %.12e  %.12e  %.12e  %.12e  %.12e \n" % (i_b[ib], i_x[ib], i_y[ib], xb[ib], yb[ib], pm_avg, kin_syst_tot, norm_syst_tot, tot_syst_err, tot_stats_err, tot_err, red_dataXsec_avg, red_dataXsec_avg_err, red_dataXsec_avg_syst_err, red_dataXsec_avg_tot_err, red_pwiaXsec_avg, red_fsiXsec_avg )
+    l="%i  %i  %i  %f   %f   %f   %f   %f   %f   %f   %f   %.12e  %.12e  %.12e  %.12e  %.12e  %.12e %.6f %.6f %.6f %.6f\n" % (i_b[ib], i_x[ib], i_y[ib], xb[ib], yb[ib], pm_avg, kin_syst_tot, norm_syst_tot, tot_syst_err, tot_stats_err, tot_err, red_dataXsec_avg, red_dataXsec_avg_err, red_dataXsec_avg_syst_err, red_dataXsec_avg_tot_err, red_pwiaXsec_avg, red_fsiXsec_avg, R, R_err, R_v2_avg, R_v2_avg_err )
     fout.write(l)
     
     

@@ -211,7 +211,10 @@ analyze::analyze(int run=-1000, string e_arm="SHMS", string type="data", string 
 
   H_Em_vs_Pm = NULL;
   H_Em_nuc_vs_Pm = NULL;
-
+  H_Q2_vs_W = NULL;
+  H_Q2_vs_eyptar = NULL;
+  H_Q2_vs_Pm = NULL;
+  
   //2D Pm vs. thnq (used in 2D cross section calculation)
   H_Pm_vs_thnq = NULL;
   H_Pm_vs_thnq_ps = NULL;
@@ -437,9 +440,13 @@ analyze::~analyze()
   //2D Collimator Histos
   delete H_hXColl_vs_hYColl; H_hXColl_vs_hYColl = NULL;
   delete H_eXColl_vs_eYColl; H_eXColl_vs_eYColl = NULL;
+
   delete H_Em_vs_Pm;         H_Em_vs_Pm         = NULL;
   delete H_Em_nuc_vs_Pm;     H_Em_nuc_vs_Pm     = NULL;
-
+  delete H_Q2_vs_W;          H_Q2_vs_W          = NULL;
+  delete H_Q2_vs_eyptar;     H_Q2_vs_eyptar     = NULL;
+  delete H_Q2_vs_Pm;         H_Q2_vs_Pm         = NULL;
+  
   //2D Pm vs thnq
   delete H_Pm_vs_thnq;       H_Pm_vs_thnq    = NULL;
   delete H_Pm_vs_thnq_ps;    H_Pm_vs_thnq_ps = NULL;
@@ -1448,6 +1455,11 @@ void analyze::CreateHist()
   H_Em_vs_Pm = new TH2F("H_Em_vs_Pm", "E_{miss} vs. P_{miss}", Pm_nbins, -0.01, 0.2, Em_nbins, Em_xmin, Em_xmax);
   H_Em_nuc_vs_Pm = new TH2F("H_Em_nuc_vs_Pm", "E_{miss.nuc} vs. P_{miss}", Pm_nbins, -0.01, 0.2, Em_nbins, Em_xmin, Em_xmax);
 
+  H_Q2_vs_W = new TH2F("H_Q2_vs_W", "Q^{2} vs. W", W_nbins, W_xmin, W_xmax, Q2_nbins, Q2_xmin, Q2_xmax);
+  H_Q2_vs_eyptar = new TH2F("H_Q2_vs_eyptar", "Q^{2} vs. eY'_{tar}", eyptar_nbins, eyptar_xmin, eyptar_xmax, Q2_nbins, Q2_xmin, Q2_xmax);
+  H_Q2_vs_Pm = new TH2F("H_Q2_vs_Pm", "Q^{2} vs. P_{miss}", Pm_nbins, Pm_xmin, Pm_xmax, Q2_nbins, Q2_xmin, Q2_xmax);
+
+  
   //2D Pm vs. thnq (for cross section calculation)
   H_Pm_vs_thnq  = new TH2F("H_Pm_vs_thnq", "Pm vs. #theta_{nq}", thnq_nbins, thnq_xmin, thnq_xmax, Pm_nbins, Pm_xmin, Pm_xmax);
   H_Pm_vs_thnq_ps  = new TH2F("H_Pm_vs_thnq_ps", "Pm vs. #theta_{nq}", thnq_nbins, thnq_xmin, thnq_xmax, Pm_nbins, Pm_xmin, Pm_xmax);
@@ -2169,6 +2181,10 @@ void analyze::EventLoop()
 		      H_Em_vs_Pm->Fill(Pm, Em);
 		      H_Em_nuc_vs_Pm->Fill(Pm, Em_nuc);
 
+		      H_Q2_vs_W->Fill(W, Q2);
+		      H_Q2_vs_eyptar->Fill(e_yptar, Q2);
+		      H_Q2_vs_Pm->Fill(Pm, Q2);
+		      
 
 		    } //END CUTS
 		  
@@ -2731,6 +2747,9 @@ void analyze::EventLoop()
 	    
 	    H_Em_vs_Pm->Fill(Pm, Em, FullWeight);
 
+	    H_Q2_vs_W->Fill(W, Q2, FullWeight);
+	    H_Q2_vs_eyptar->Fill(e_yptar, Q2, FullWeight);
+	    H_Q2_vs_Pm->Fill(Pm, Q2, FullWeight);
 	    
 	    
 	    cout << "EventLoop: " << std::setprecision(2) << double(ientry) / nentries * 100. << "  % " << std::flush << "\r";
@@ -3078,7 +3097,12 @@ void analyze::ApplyWeight()
     H_Pm_vs_thnq->Scale(FullWeight);
 
     H_Em_vs_Pm->Scale(FullWeight);
+    
+    H_Q2_vs_W->Scale(FullWeight);
+    H_Q2_vs_eyptar->Scale(FullWeight);
+    H_Q2_vs_Pm->Scale(FullWeight);
 
+    
     //Initialize Scaler Histograms
     H_bcmCurrent->Scale(FullWeight);
     
@@ -3244,7 +3268,9 @@ void analyze::WriteHist(string rad_flag="")
 
       H_Em_vs_Pm->Write();
       H_Em_nuc_vs_Pm->Write();
-
+      H_Q2_vs_W->Write();
+      H_Q2_vs_eyptar->Write();
+      H_Q2_vs_Pm->Write();
 
       H_bcmCurrent->Write();
     
@@ -3455,7 +3481,9 @@ void analyze::WriteHist(string rad_flag="")
       H_Pm_vs_thnq_ps->Write();
 
       H_Em_vs_Pm->Write();
-      
+      H_Q2_vs_W->Write();
+      H_Q2_vs_eyptar->Write();
+      H_Q2_vs_Pm->Write();
       
       //----SYSTEMATIC HISTOS----
       H_Em_nuc_sys->Write();
@@ -3640,7 +3668,10 @@ void analyze::CombineHistos()
     data_file->GetObject("H_eYColl",H_eYColl_i);
     data_file->GetObject("H_hXColl_vs_hYColl",H_hXColl_vs_hYColl_i);
     data_file->GetObject("H_eXColl_vs_eYColl",H_eXColl_vs_eYColl_i);
-    data_file->GetObject("H_Em_vs_Pm",H_Em_vs_Pm_i);
+    data_file->GetObject("H_Em_vs_Pm",H_Em_vs_Pm_i); 
+    data_file->GetObject("H_Q2_vs_W",H_Q2_vs_W_i);
+    data_file->GetObject("H_Q2_vs_eyptar",H_Q2_vs_eyptar_i);
+    data_file->GetObject("H_Q2_vs_Pm",H_Q2_vs_Pm_i);
     data_file->GetObject("H_Pm_vs_thnq",H_Pm_vs_thnq_i);
     data_file->GetObject("H_Em_nuc_vs_Pm",H_Em_nuc_vs_Pm_i);
     data_file->GetObject("H_bcmCurrent",H_bcmCurrent_i);
@@ -3765,6 +3796,9 @@ void analyze::CombineHistos()
       H_hXColl_vs_hYColl_i->Write();		  
       H_eXColl_vs_eYColl_i->Write();		  
       H_Em_vs_Pm_i->Write();			  
+      H_Q2_vs_W_i->Write();			  
+      H_Q2_vs_eyptar_i->Write();			  
+      H_Q2_vs_Pm_i->Write();			  
       H_Em_nuc_vs_Pm_i->Write();
       H_Pm_vs_thnq_i->Write();
       H_bcmCurrent_i->Write();   
@@ -3893,6 +3927,9 @@ void analyze::CombineHistos()
       outROOT->GetObject("H_hXColl_vs_hYColl",H_hXColl_vs_hYColl_total);
       outROOT->GetObject("H_eXColl_vs_eYColl",H_eXColl_vs_eYColl_total);
       outROOT->GetObject("H_Em_vs_Pm",H_Em_vs_Pm_total);
+      outROOT->GetObject("H_Q2_vs_W",H_Q2_vs_W_total);
+      outROOT->GetObject("H_Q2_vs_eyptar",H_Q2_vs_eyptar_total);
+      outROOT->GetObject("H_Q2_vs_Pm",H_Q2_vs_Pm_total);
       outROOT->GetObject("H_Em_nuc_vs_Pm",H_Em_nuc_vs_Pm_total);
       outROOT->GetObject("H_Pm_vs_thnq",H_Pm_vs_thnq_total);
       outROOT->GetObject("H_bcmCurrent",H_bcmCurrent_total);
@@ -4007,7 +4044,11 @@ void analyze::CombineHistos()
       H_eYColl_total->Add(			       H_eYColl_i);			  
       H_hXColl_vs_hYColl_total->Add(		       H_hXColl_vs_hYColl_i);		  
       H_eXColl_vs_eYColl_total->Add(		       H_eXColl_vs_eYColl_i);		  
-      H_Em_vs_Pm_total->Add(			       H_Em_vs_Pm_i);			  
+      H_Em_vs_Pm_total->Add(			       H_Em_vs_Pm_i);
+      H_Q2_vs_W_total->Add(			       H_Q2_vs_W_i);
+      H_Q2_vs_eyptar_total->Add(		       H_Q2_vs_eyptar_i);
+      H_Q2_vs_Pm_total->Add(			       H_Q2_vs_Pm_i);
+      
       H_Em_nuc_vs_Pm_total->Add(		       H_Em_nuc_vs_Pm_i);		  
       H_Pm_vs_thnq_total->Add(		               H_Pm_vs_thnq_i);		  
       H_bcmCurrent_total->Add(			       H_bcmCurrent_i);                    
@@ -4123,7 +4164,10 @@ void analyze::CombineHistos()
       H_eYColl_total->Write("", TObject::kOverwrite);		
       H_hXColl_vs_hYColl_total->Write("", TObject::kOverwrite);	
       H_eXColl_vs_eYColl_total->Write("", TObject::kOverwrite);	
-      H_Em_vs_Pm_total->Write("", TObject::kOverwrite);		
+      H_Em_vs_Pm_total->Write("", TObject::kOverwrite);
+      H_Q2_vs_W_total->Write("", TObject::kOverwrite);
+      H_Q2_vs_eyptar_total->Write("", TObject::kOverwrite);
+      H_Q2_vs_Pm_total->Write("", TObject::kOverwrite);
       H_Em_nuc_vs_Pm_total->Write("", TObject::kOverwrite);	
       H_Pm_vs_thnq_total->Write("", TObject::kOverwrite);	
       H_bcmCurrent_total->Write("", TObject::kOverwrite);		
@@ -4270,6 +4314,9 @@ void analyze::ChargeNorm()
    outROOT->GetObject("H_hXColl_vs_hYColl",H_hXColl_vs_hYColl_total);
    outROOT->GetObject("H_eXColl_vs_eYColl",H_eXColl_vs_eYColl_total);
    outROOT->GetObject("H_Em_vs_Pm",H_Em_vs_Pm_total);
+   outROOT->GetObject("H_Q2_vs_W",H_Q2_vs_W_total);
+   outROOT->GetObject("H_Q2_vs_eyptar",H_Q2_vs_eyptar_total);
+   outROOT->GetObject("H_Q2_vs_Pm",H_Q2_vs_Pm_total);
    outROOT->GetObject("H_Em_nuc_vs_Pm",H_Em_nuc_vs_Pm_total);
    outROOT->GetObject("H_Pm_vs_thnq",H_Pm_vs_thnq_total);
    outROOT->GetObject("H_bcmCurrent",H_bcmCurrent_total);
@@ -4384,6 +4431,9 @@ void analyze::ChargeNorm()
    H_hXColl_vs_hYColl_total->Scale(charge_norm);
    H_eXColl_vs_eYColl_total->Scale(charge_norm);
    H_Em_vs_Pm_total->Scale(charge_norm);
+   H_Q2_vs_W_total->Scale(charge_norm);
+   H_Q2_vs_eyptar_total->Scale(charge_norm);
+   H_Q2_vs_Pm_total->Scale(charge_norm);
    H_Em_nuc_vs_Pm_total->Scale(charge_norm);
    H_Pm_vs_thnq_total->Scale(charge_norm);
    H_bcmCurrent_total->Scale(charge_norm);
@@ -4500,6 +4550,9 @@ void analyze::ChargeNorm()
    H_hXColl_vs_hYColl_total->Write("", TObject::kOverwrite);	
    H_eXColl_vs_eYColl_total->Write("", TObject::kOverwrite);	
    H_Em_vs_Pm_total->Write("", TObject::kOverwrite);		
+   H_Q2_vs_W_total->Write("", TObject::kOverwrite);
+   H_Q2_vs_eyptar_total->Write("", TObject::kOverwrite);
+   H_Q2_vs_Pm_total->Write("", TObject::kOverwrite);
    H_Em_nuc_vs_Pm_total->Write("", TObject::kOverwrite);	
    H_Pm_vs_thnq_total->Write("", TObject::kOverwrite);
    H_bcmCurrent_total->Write("", TObject::kOverwrite);

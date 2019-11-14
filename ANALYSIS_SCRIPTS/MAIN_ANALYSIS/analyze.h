@@ -523,6 +523,11 @@ class analyze
   //2D Kinematics Check
   TH2F *H_Em_vs_Pm;
   TH2F *H_Em_nuc_vs_Pm;
+  
+  TH2F *H_Q2_vs_W;
+  TH2F *H_Q2_vs_eyptar;
+  TH2F *H_Q2_vs_Pm;
+
 
   //2D Pmiss vs. Theta_nq (Used for 2D cross sections, binned in theta_nq)
   TH2F *H_Pm_vs_thnq;
@@ -669,6 +674,11 @@ class analyze
   TH2F *H_eXColl_vs_eYColl_total = 0;				     TH2F *H_eXColl_vs_eYColl_i = 0;				  
   TH2F *H_Em_vs_Pm_total = 0;					     TH2F *H_Em_vs_Pm_i = 0;					  
   TH2F *H_Em_nuc_vs_Pm_total = 0;				     TH2F *H_Em_nuc_vs_Pm_i = 0;					  
+  TH2F *H_Q2_vs_W_total = 0;					     TH2F *H_Q2_vs_W_i = 0;					  
+  TH2F *H_Q2_vs_eyptar_total = 0;				     TH2F *H_Q2_vs_eyptar_i = 0;					  
+  TH2F *H_Q2_vs_Pm_total = 0;					     TH2F *H_Q2_vs_Pm_i = 0;					  
+
+  
   TH2F *H_Pm_vs_thnq_total = 0;                                      TH2F *H_Pm_vs_thnq_i = 0; 
   TH1F *H_bcmCurrent_total = 0;					     TH1F *H_bcmCurrent_i = 0;                                       
 
