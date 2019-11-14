@@ -1,4 +1,4 @@
-void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const char* ftype="heep_check") {
+void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const char* ftype="timeWin_check") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -33,7 +33,7 @@ void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const
   gHcParms->Load(gHcParms->GetString("g_ctp_calib_filename"));
   gHcParms->Load(gHcParms->GetString("g_ctp_kinematics_filename"), RunNumber);
   // Load parameters for SHMS trigger configuration
-  gHcParms->Load("PARAM/TRIG/tshms.param");
+  gHcParms->Load("DEUTERON_ANALYSIS/PARAM/TRIG/tshms.param");
 
   //----------------------------------------
   //------------BCM Current Module----------

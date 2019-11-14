@@ -387,12 +387,15 @@ void get_boiling(Int_t runNum, Double_t &set_current, Double_t &avg_current_bcm4
   Int_t scal_read = 0; //scaler read counter
 
   Long64_t data_entries = tdata->GetEntries();
-    for (int i = 0; i < data_entries; i++) {
+  //for (int i = 0; i < data_entries; i++) {
+  for (int i = 0; i < 5; i++) {
 
       
       tdata->GetEntry(i);
-
-     
+      
+      cout << "ientry = " << i << endl;
+      cout << "evNum = " << gevnum << endl;
+      cout << "scal_ev_num = " << scal_evt_num[scal_read] << endl;
 
       //Define Cuts
       Bool_t c_noedtm = hEDTM_tdcTimeRaw==0;
@@ -645,13 +648,17 @@ void run_boiling(string target)
   string line;
 
   //Read FileName
-  TString filename = Form("hms_%s.dat", target.c_str());
+  //  TString filename = Form("hms_%s.dat", target.c_str());
+  TString filename = "hms_test.dat";
   ifstream ifs;
   ifs.open(filename);
 
   //Create Output File to write results
   ofstream ofs;
-  ofs.open(Form("hms_%s_yield.data", target.c_str()));
+  
+  //ofs.open(Form("hms_%s_yield.data", target.c_str()));
+  ofs.open("hms_test_yield.data");
+
   ofs << "#!Run[i,0]/    set_current[f,1]/   avg_current_bcm4a[f,2]/     sclY4a[f,3]/     sclY_err4a[f,4]/    ntrkY4a[f,5]/    ntrkY_err4a[f,6]/    trkY4a[f,7]/    trkY_err4a[f,8]/    cpuLT_bcm4a[f,9]/     tLT_bcm4a[f,10]/    Qtot_bcm4a[f,11]/    hs1x_rate_bcm4a[f,12]/    htrig1_rate_bcm4a[f,13]/     htrig2_rate_bcm4a[f,14]/     htrig3_rate_bcm4a[f,15]/    hedtm_rate_bcm4a[f,16]/   h_eTrkEff_bcm4a[f,17]/      avg_current_bcm4b[f,18]/     sclY4b[f,19]/     sclY_err4b[f,20]/    ntrkY4b[f,21]/    ntrkY_err4b[f,22]/    trkY4b[f,23]/    trkY_err4b[f,24]/    cpuLT_bcm4b[f,25]/     tLT_bcm4b[f,26]/    Qtot_bcm4b[f,27]/     hs1x_rate_bcm4b[f,28]/      htrig1_rate_bcm4b[f,29]/     htrig2_rate_bcm4b[f,30]/     htrig3_rate_bcm4b[f,31]/    hedtm_rate_bcm4b[f,32]/   h_eTrkEff_bcm4b[f,33]/" << endl;
     
   

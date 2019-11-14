@@ -1,3 +1,4 @@
 Calorimeter Energy: 30.
-
 HGC NPE = 4.
+;Emiss = 0.4
+Emiss = 0.1

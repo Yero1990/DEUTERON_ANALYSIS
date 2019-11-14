@@ -105,7 +105,7 @@ gtargmass_amu = 2.014101
 hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -38.896
-ptheta_lab = 12.194
+ptheta_lab = 12.194              ;original 12.194,  -2mr: 12.1825
 hpcentral = 2.840                ;FINAL 2.840, 2.8454097  original: 2.8438
 ppcentral = 8.5342488            ;original: 8.7  FINAL: 8.5342488
 
@@ -128,7 +128,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -54.992
 ptheta_lab =  12.194
-hpcentral = 2.1925 ;  original: 2.194 
+hpcentral = 2.1925     ;original: 2.194 
 ppcentral = 8.5342488  ;original: 8.7
 
 #Pm = 750 MeV (set1)
@@ -150,8 +150,8 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -55.0
 ptheta_lab = 12.194 
-hpcentral = 2.1925 ;original: 2.194 
-ppcentral = 8.5342488 ;original: 8.7
+hpcentral = 2.1925     ;original: 2.194 
+ppcentral = 8.5342488  ;original: 8.7
 
 #Pm = 750 MeV (Additional. Set 2)
 3357-3367
@@ -202,7 +202,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -42.9
 ptheta_lab =  9.928  
-hpcentral = 2.310387   ;original: 2.31,  FINAL: 2.310387
+hpcentral = 2.310387     ;original: 2.31,  FINAL: 2.310387
 ppcentral = 8.5342488    ;original: 8.7,  FINAL: 8.5342488
 
 3375
@@ -232,7 +232,7 @@ hpartmass = 0.938272
 ppartmass = 0.00051099
 htheta_lab = -47.605
 ptheta_lab = 8.495   
-hpcentral = 1.891227  ;original: 1.8899, FINAL: 1.891227
+hpcentral = 1.891227      ;original: 1.8899, FINAL: 1.891227
 ppcentral = 8.5342488     ;original: 8.7,    FINAL: 8.5342488
 
 3379
@@ -257,3 +257,170 @@ hpcentral = 2.0915    ;original: 2.091
 ppcentral = 8.5342488 ;original: 8.7
 
 
+#-----------------------------------------------------------
+
+#Fall 2018 (Nov. 29, 2018) - SPRING 2019 (March 2019) SHMS Heep e- Singles in COIN DAQ
+#These runs will be used in H(e,e'p) Minimization Procedure
+
+6621
+gpbeam = 3.8757      ;original = 3.8334
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+htheta_lab = -58.391
+hpcentral = 2.0915 
+ppartmass = 0.00051099
+ptheta_lab = 20.9928         ;original 21.13
+ppcentral = 3.0340         ;original 3.007 
+
+6625
+gpbeam = 3.8334
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+htheta_lab = -58.391
+hpcentral = 2.0915 
+ppartmass = 0.00051099
+ptheta_lab = 23.999
+ppcentral = 2.834
+
+6626
+gpbeam = 3.8334
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+htheta_lab = -58.391
+hpcentral = 2.0915 
+ppartmass = 0.00051099
+ptheta_lab = 25.995
+ppcentral = 2.713
+
+6629
+gpbeam = 3.8334
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+htheta_lab = -58.391
+hpcentral = 2.0915 
+ppartmass = 0.00051099
+ptheta_lab = 28.19
+ppcentral = 2.583
+
+6632
+gpbeam = 3.8334
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+htheta_lab = -58.391
+hpcentral = 2.0915 
+ppartmass = 0.00051099
+ptheta_lab = 29.999
+ppcentral = 2.478
+
+#Pass Change
+6869
+gpbeam = 4.9309
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+htheta_lab = -58.391
+hpcentral = 2.0915 
+ppartmass = 0.00051099
+ptheta_lab = 8.86
+ppcentral = 4.642
+
+6873
+gpbeam = 4.9309
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+htheta_lab = -58.391
+hpcentral = 2.0915 
+ppartmass = 0.00051099
+ptheta_lab = 11.86
+ppcentral = 4.436
+
+6876
+gpbeam = 4.9309
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+htheta_lab = -58.391
+hpcentral = 2.0915 
+ppartmass = 0.00051099
+ptheta_lab = 15.00
+ppcentral = 4.184
+
+#Pass Change (and new Year, March 2019)
+7848
+gpbeam = 6.1909
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+htheta_lab = -58.391
+hpcentral = 2.0915 
+ppartmass = 0.00051099
+ptheta_lab = 24.001
+ppcentral = 3.939
+
+7853
+gpbeam = 6.1909
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+htheta_lab = -58.391
+hpcentral = 2.0915 
+ppartmass = 0.00051099
+ptheta_lab = 26.001
+ppcentral = 3.709
+
+7856
+gpbeam = 6.1909
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+htheta_lab = -58.391
+hpcentral = 2.0915 
+ppartmass = 0.00051099
+ptheta_lab = 28.001
+ppcentral = 3.491
+
+7860
+gpbeam = 6.1909
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+htheta_lab = -58.391
+hpcentral = 2.0915 
+ppartmass = 0.00051099
+ptheta_lab = 30.001
+ppcentral = 3.284
+
+#Pass Change
+7962
+gpbeam = 8.20883
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+htheta_lab = -58.391
+hpcentral = 2.0915 
+ppartmass = 0.00051099
+ptheta_lab = 17.999
+ppcentral = 5.745
+
+7964
+gpbeam = 8.20883
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+htheta_lab = -58.391
+hpcentral = 2.0915 
+ppartmass = 0.00051099
+ptheta_lab = 19.995
+ppcentral = 5.372
+
+7966
+gpbeam = 8.20883
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+htheta_lab = -58.391
+hpcentral = 2.0915 
+ppartmass = 0.00051099
+ptheta_lab = 21.999
+ppcentral = 5.013
+
+7970
+gpbeam = 8.20883
+gtargmass_amu = 1.00794
+hpartmass = 0.938272
+htheta_lab = -58.391
+hpcentral = 2.0915 
+ppartmass = 0.00051099
+ptheta_lab = 25.999
+ppcentral = 4.352

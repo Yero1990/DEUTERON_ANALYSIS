@@ -1,4 +1,4 @@
-void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="heep_check") {
+void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="deep_check") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -25,7 +25,7 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
 
   //const char* RunFileNamePattern = "raw/coin_all_%05d.dat";
   const char* ROOTFileNamePattern = "ROOTfiles/coin_replay_%s_%d_%d.root";
-  
+
   // Load global parameters
   gHcParms->Define("gen_run_number", "Run Number", RunNumber);
   gHcParms->AddString("g_ctp_database_filename", "DEUTERON_ANALYSIS/DBASE/COIN/STD/standard.database");
@@ -36,6 +36,7 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
 
   // Load params for COIN trigger configuration
   gHcParms->Load("DEUTERON_ANALYSIS/PARAM/TRIG/tcoin.param");
+
   //gHcParms->Load("PARAM/TRIG/tcoin.param");
 
 
@@ -301,7 +302,7 @@ void replay_production_coin_pElec_hProt (Int_t RunNumber = 0, Int_t MaxEvent = 0
   TString DefTreeFile=Form("DEUTERON_ANALYSIS/DEF-files/COIN/%s.def",ftype);
   analyzer->SetOdefFile(DefTreeFile);
   // Define cuts file
-    DefTreeFile="DEUTERON_ANALYSIS/DEF-files/COIN/CUTS/coin_production_cuts.def";
+  DefTreeFile="DEUTERON_ANALYSIS/DEF-files/COIN/CUTS/coin_production_cuts.def";
   analyzer->SetCutFile(DefTreeFile);  // optional
   // File to record accounting information for cuts
   analyzer->SetSummaryFile(Form("REPORT_OUTPUT/COIN/PRODUCTION/summary_production_%s_%d_%d.report", ftype, RunNumber, MaxEvent));  // optional

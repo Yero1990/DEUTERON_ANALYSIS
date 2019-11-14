@@ -1,5 +1,6 @@
 #Code to extract the average DATA and SIMC cross sections from the 2D Pm vs. theta_nq Histos
 
+import os
 import sys
 from sys import argv
 import getopt
@@ -44,32 +45,40 @@ header = \
 # averaged kinematic varibles used as input to calculate the averaged 
 # kinematics: Ei, omega, th_e, pf
 #
-# variables with _mc attached are from histograms not calculated
-# alpha is the spectatror (neutron) alpha
 #\\ xb = th_nq
 #\\ yb = pm
 # current header line:
-#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ pwiaXsec[f,5]/  pwiaXsec_err[f,6]/  fsiXsec[f,7]/   fsiXsec_err[f,8]/  dataXsec[f,9]/  dataXsec_err[f,10]/  
+#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ pwiaXsec[f,5]/  pwiaXsec_err[f,6]/  fsiXsec[f,7]/   fsiXsec_err[f,8]/  pwiaRC_dataXsec[f,9]/  pwiaRC_dataXsec_err[f,10]/  fsiRC_dataXsec[f,11]/  fsiRC_dataXsec_err[f,12]/ 
 """
 #------------------------------------------------------------
 
-#create output file to write avg kin
+
+#CODE USAGE: /apps/python/2.7.12/bin/python.py calc_Xsec.py 580  1
+
+#User Input
 pm_set = int(sys.argv[1])
 data_set = int(sys.argv[2])
+sys_ext = sys.argv[3]
+
+dir_name = "./%s"%(sys_ext)
+#check if output directory exists, else creates it.
+if not os.path.exists(dir_name):
+   os.makedirs(dir_name)
 
 print argv
-#usage: /apps/python/2.7.12/bin/python.py calc_Xsec.py 580  1
+
+#create output file to write Xsec avg over kin. bin
 if pm_set == 80:
-   output_file = 'pm%i_laget.txt'%(pm_set)
+   output_file = './%s/pm%i_laget.txt'%(sys_ext, pm_set)
 else:
-   output_file = 'pm%i_laget_set%i.txt'%(pm_set, data_set)
+   output_file = './%s/pm%i_laget_set%i.txt'%(sys_ext, pm_set, data_set)
 
 
 o = open(output_file,'w')
 
 #----------------------------------Open root file that sets histo binning---------------------------------------
 
-bin_file = '../../root_files/average_kinematics/deep_simc_histos_pm%i_lagetpwia_norad_set%i.root'%(pm_set, data_set) 
+bin_file = '../../root_files/average_kinematics/%s/deep_simc_histos_pm%i_lagetpwia_norad_set%i.root'%(sys_ext, pm_set, data_set) 
 
 bf = R.TFile(bin_file)
 bf.cd()
@@ -78,12 +87,8 @@ bf.Close()
 #----------------------------------------------------------------------------------------------------------------
 
 #Open root file to read cross sections from 2D Pm vs. thnq
-if pm_set == 80:
-   root_file_pwia = '../../root_files/pm%i_Xsec/Xsec_pm%i_lagetpwia_dataset%i.root'%(pm_set, pm_set, data_set)
-   root_file_fsi = '../../root_files/pm%i_Xsec/Xsec_pm%i_lagetfsi_dataset%i.root'%(pm_set, pm_set, data_set)
-else:
-   root_file_pwia = '../../root_files/pm%i_Xsec/set%i/Xsec_pm%i_lagetpwia_dataset%i.root'%(pm_set, data_set, pm_set, data_set)  
-   root_file_fsi = '../../root_files/pm%i_Xsec/set%i/Xsec_pm%i_lagetfsi_dataset%i.root'%(pm_set, data_set, pm_set, data_set)   
+root_file_pwia = '../../root_files/pm%i_pwiaXsec_set%i_%s/Xsec_pm%i_lagetpwia_dataset%i.root'%(pm_set, data_set, sys_ext, pm_set, data_set)  
+root_file_fsi = '../../root_files/pm%i_fsiXsec_set%i_%s/Xsec_pm%i_lagetfsi_dataset%i.root'%(pm_set, data_set, sys_ext, pm_set, data_set)   
 
 # open PWIA file
 rf_pwia = R.TFile(root_file_pwia)
@@ -106,47 +111,67 @@ o.write(header)
 
 
 #Get 2D Histogram Bin Info (Pm, thnq) Cross Section 
-bin_info_dataXsec        = BI.get_histo_data_arrays(rf_fsi.H_data2DXsec)         
+#bin_info_dataXsec        = BI.get_histo_data_arrays(rf_fsi.H_data2DXsec)         
+bin_info_fsiRC_dataXsec  = BI.get_histo_data_arrays(rf_fsi.H_data2DXsec)         #FSI radiative corrected data Xsec
 bin_info_fsiXsec         = BI.get_histo_data_arrays(rf_fsi.H_simc2DXsec)         
 
 rf_fsi.Close()
 
 #change to PWIA file and get simc histo
 rf_pwia.cd()
+bin_info_pwiaRC_dataXsec  = BI.get_histo_data_arrays(rf_pwia.H_data2DXsec)         #PWIA radiative corrected data Xsec
 bin_info_pwiaXsec        = BI.get_histo_data_arrays(rf_pwia.H_simc2DXsec) 
 
 rf_pwia.Close()
 
+
+#Retrieve the 2D bin content for each of the files
+cont1        = bin_info_fsiRC_dataXsec.cont
+cont2        = bin_info_fsiXsec.cont
+cont3        = bin_info_pwiaRC_dataXsec.cont
+cont4        = bin_info_pwiaXsec.cont
+
+ibin                   = bin_info_fsiRC_dataXsec.i  #Get 2D bin number (should be the same regardless of ROOTfile, given that the binning is the same)
+i_xbin                 = bin_info_fsiRC_dataXsec.ix
+i_ybin                 = bin_info_fsiRC_dataXsec.iy
+thnq_b                 = bin_info_fsiRC_dataXsec.xb
+pm_b                   = bin_info_fsiRC_dataXsec.yb
+
 #Loop over bin number (xbin, ybin)->(th_nq_bin, Pm_bin)
-for i,acont in enumerate(all.cont):
+for i,ib in enumerate(ibin):
 
-   # get bin values
-   i_bin = all.i[i]
-   i_xbin = all.ix[i]
-   i_ybin = all.iy[i]
-   thnq_b = all.xb[i]
-   pm_b = all.yb[i]
    
-   #skip bin if SIMC content is zero (MUST BE SAME BINNIG AS Avg. Kin, so skip over same bins)
-   if (acont == 0.):
-      continue
-      
+   #Check Bin Content
+   if(cont1[i] == 0.):
+      fsiRC_dataXsec        = -1.        #data Xsec radiatively corrected using the Laget FSI model    
+      fsiRC_dataXsec_err    = -1.        #statistical error on data Xsec (radiatively corrected using the Laget FSI model)
    else:
-      
-      #Get data, model cross sections from 2D Hists
-      dataXsec        = bin_info_dataXsec.cont[i]      
-      dataXsec_err    = bin_info_dataXsec.dcont[i]      
-      fsiXsec        = bin_info_fsiXsec.cont[i]      
-      fsiXsec_err    = bin_info_fsiXsec.dcont[i] 
-      pwiaXsec        = bin_info_pwiaXsec.cont[i]      
-      pwiaXsec_err    = bin_info_pwiaXsec.dcont[i] 
-      
-      #print(dataXsec)
+      fsiRC_dataXsec        = bin_info_fsiRC_dataXsec.cont[i]
+      fsiRC_dataXsec_err    = bin_info_fsiRC_dataXsec.dcont[i]
+
+   if(cont2[i] == 0.):
+      fsiXsec               = -1.
+      fsiXsec_err           = -1.
+   else:
+      fsiXsec               = bin_info_fsiXsec.cont[i]
+      fsiXsec_err           = bin_info_fsiXsec.dcont[i]
+
+   if(cont3[i] == 0.):
+      pwiaRC_dataXsec       = -1.        #data Xsec radiatively corrected using the Laget PWIA model    
+      pwiaRC_dataXsec_err   = -1.        #statistical error on data Xsec (radiatively corrected using the Laget PWIA model)
+   else:
+      pwiaRC_dataXsec       = bin_info_pwiaRC_dataXsec.cont[i]
+      pwiaRC_dataXsec_err   = bin_info_pwiaRC_dataXsec.dcont[i]
+
+   if(cont4[i] == 0.):
+      pwiaXsec               = -1.
+      pwiaXsec_err           = -1.
+   else:
+      pwiaXsec               = bin_info_pwiaXsec.cont[i]
+      pwiaXsec_err           = bin_info_pwiaXsec.dcont[i]
       
 
-
-      l = "%i %i %i %f %f %.12e %.12e %.12e %.12e %.12e %.12e\n"%(i_bin, i_xbin, i_ybin, thnq_b, pm_b,  pwiaXsec, pwiaXsec_err, fsiXsec, fsiXsec_err, dataXsec, dataXsec_err)
-             
+   l = "%i %i %i %f %f %.12e %.12e %.12e %.12e %.12e %.12e %.12e %.12e\n"%(ib, i_xbin[i], i_ybin[i], thnq_b[i], pm_b[i],  pwiaXsec, pwiaXsec_err, fsiXsec, fsiXsec_err, pwiaRC_dataXsec, pwiaRC_dataXsec_err, fsiRC_dataXsec, fsiRC_dataXsec_err)
                                                                           
    o.write(l)
 o.close()

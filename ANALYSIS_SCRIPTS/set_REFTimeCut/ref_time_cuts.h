@@ -38,14 +38,14 @@ static const Int_t pmaxPMT[hod_PLANES] = {13, 13, 14, 21};
 //NOTE: These Values must be entered with a "minus(-)" sign in the para file
 
 //(See /PARAM/HMS/GEN/h_reftime_cut.param, units in Channel)
-static const Double_t hhod_trefcut = 1600.;      //hodo tdc ref cut
-static const Double_t hdc_trefcut = 13400.;      //dc tdc ref cut
-static const Double_t hadc_trefcut = 2900.;      //hodo/cer/cal adc ref cut
+static const Double_t hhod_trefcut = 3000.;      //hodo tdc ref cut
+static const Double_t hdc_trefcut = 15800.;      //dc tdc ref cut
+static const Double_t hadc_trefcut = 4500.;      //hodo/cer/cal adc ref cut
 
 //(See /PARAM/SHMS/GEN/p_reftime_cut.param, units in Channel)
-static const Double_t phod_trefcut = 2800.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
-static const Double_t pdc_trefcut = 13700.;
-static const Double_t padc_trefcut = 2850.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
+static const Double_t phod_trefcut = 4000.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
+static const Double_t pdc_trefcut = 14800.;
+static const Double_t padc_trefcut = 4500.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
 
 //=======================================================
 

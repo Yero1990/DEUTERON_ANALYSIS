@@ -182,3 +182,4 @@ The FullWeight can then be expressed as:
 *
 *    PhaseSpace = FullWeight / sig = [(min(Emax,gen%sumEgen%max) - max(Emin,gen%sumEgen%min) )] * main%jacobian_corr * main%coul_corr * (luminosity/ntried) * domega_e * domega_p 
 ***************************************************************************************************************************************************************************************
+

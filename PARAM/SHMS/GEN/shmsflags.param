@@ -15,7 +15,7 @@
 pdelta_offset = 0.0; (%)   hdelta_tar = hdelta_tar + hdelta_offset
 
  
-ptheta_offset = 0.  ; (rad) hyp_tar = hyp_tar + htheta_offses                              
+ptheta_offset = 0.0  ; (rad) hyp_tar = hyp_tar + htheta_offses                              
 
 
 pphi_offset = 0; (rad) hxp_tar = hxp_tar + hphi_offset

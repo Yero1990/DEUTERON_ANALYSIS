@@ -1,0 +1,8 @@
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh D2_heep_3288_rad.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh D2_heep_3371_rad.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh D2_heep_3374_rad.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh D2_heep_3377_rad.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh D2_heep_3288_norad.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh D2_heep_3371_norad.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh D2_heep_3374_norad.data
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh D2_heep_3377_norad.data

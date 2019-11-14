@@ -6,9 +6,9 @@
 #workflow_name="d2_highPmiss_FULL"
 #workflow_name="SHMS_LH2_boiling_studies"
 #workflow_name="SHMS_boiling_studies"
-workflow_name="deuteron_3289"
+#workflow_name="deuteron_3289"
+workflow_name="h2_optics"
 
-#runlist_name="runlists/h2.dat"
 #runlist_name="current_prot.data"
 
 #runlist_name="h2_Pabs_shms.dat"
@@ -29,7 +29,8 @@ workflow_name="deuteron_3289"
 #runlist_name="runlists/d2750_set3.dat"
 #runlist_name="runlists/d2_full.dat"
 
-runlist_name="runlists/h2.dat"
+#-------------Elastic Data----------
+runlist_name="runlists/shms_elec_singles.dat"
 
 
 #Various optional flags to add to hcswif workflow
@@ -39,16 +40,16 @@ spec=" --spectrometer COIN "
 #spec=" --spectrometer HMS_ALL "
 #spec=" --spectrometer SHMS_ALL "
 events="--events -1"
-range="--run 3289"
+range="--run 3286"
 filelist=" --run file $runlist_name "
 replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C"     
 #replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_shms_coin.C" 
 #replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_coin_hElec_pProt.C "
 #replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/HMS/replay_hms.C " 
 #replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/SHMS/replay_shms.C " 
-disk_usage=" --disk 3000000000 "   #in bytes (or 1 Gb default)
-ram="--ram 1000000000 "
-cpu_cores="--cpu 1"   #number of cpu cores requested 
+disk_usage=" --disk 1000000000 "   #in bytes (or 1 Gb default)
+ram="--ram 3000000000 "
+cpu_cores="--cpu 8"   #number of cpu cores requested 
 project=" --project c-comm2017 "
 workflow=" --name $workflow_name"
 

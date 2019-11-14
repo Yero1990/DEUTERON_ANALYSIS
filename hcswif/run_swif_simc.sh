@@ -4,7 +4,7 @@
 #where [options] ---> status,  delete
 
 #workflow_name="heep_coin_elec"
-workflow_name="D2_750_MeV_set3"
+workflow_name="heep_SIM"
 
 #runlist_name="current_elec.data"
 #runlist_name="current_prot.data"
@@ -16,11 +16,12 @@ workflow_name="D2_750_MeV_set3"
 mode=" --mode command "
 shell_type="--shell bash"
 #shell_script=" --command /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/hcswif/run_simc_deep.sh"
-shell_script=" --command /u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh"
-time="--time 40000"   #max run time per job in seconds allowed before killing jobs
-disk_usage=" --disk 8000000000 "   #in bytes (or 1 Gb default)
-ram="--ram 2000000000 "
-cpu_cores="--cpu 8"   #number of cpu cores requested 
+#shell_script=" --command /u/group/E12-10-003/cyero/simc_deep/run_simc_deep.sh"
+shell_script=" --command file /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/hcswif/my_command_list_h2_singles.txt"  #created multiple jobs (as opposed to one giant job) for each simc file inside .txt
+time="--time 172800"   #max run time per job in seconds allowed before killing jobs (at most 24 hours per job, as each is 5 million events)
+disk_usage=" --disk 3000000000 "   #in bytes (or 1 Gb default). (1 Gb per job currently used.)
+ram=" --ram 3000000000 "
+cpu_cores=" --cpu 8"   #number of cpu cores requested 
 project=" --project c-comm2017 "
 workflow=" --name $workflow_name"
 

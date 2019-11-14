@@ -2,11 +2,10 @@
 
 # calculate averaged kinematics from SIMC analysis of 2D Histos (Pm vs. th_nq bins)
 
-
 import sys
 from sys import argv
 import getopt
-
+import os
 from LT import datafile
 import bin_info2 as BI
 
@@ -50,25 +49,33 @@ header = \
 #! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ Ei[f,5]/ kf[f,6]/ th_e[f,7]/ omega_mc[f,8]/ omega[f,9]/ Q2[f,10]/ Q2_calc[f,11]/ q_mc[f,12]/ q_lab[f,13]/ Ep_calc[f,14]/ pf[f,15]/ pm_mc[f,16]/ pm[f,17]/ En_calc[f,18]/ beta_cm[f,19]/ gamma_cm[f,20]/ PfPar_q[f,21]/ PfPerp_q[f,22]/ theta_pq[f,23]/ theta_pq_calc[f,24]/ PfPar_cm[f,25]/ th_pq_cm[f,26]/ th_nq_mc[f,27]/ th_nq_calc[f,28]/  cos_phi[f,29]/  sin_phi[f,30]/  alpha_c[f,31]/  GEp[f,32]/   GMp[f,33]/   sigMott[f,34]/   Ksig_cc1[f,35]/  nx[i,36]/ ny[i,37]/ cont[f,38]/        
 """
 #------------------------------------------------------------
+#print argv
+#usage: /apps/python/2.7.12/bin/python calc_avg_kin.py 80 fsi 1 Em_final40MeV
 
-
-#create output file to write avg kin
+#User INput
 pm_set = int(sys.argv[1])
 model = sys.argv[2]
 data_set = int(sys.argv[3])
+sys_ext = sys.argv[4]   #systematics directory name extension  
 
-print argv
-#usage: /apps/python/2.7.12/bin/python calc_avg_kin.py 80 fsi 1
+#Create Directory to put output if it does not exist
+dir_name="./%s" % (sys_ext)
+
+#check if directory exists, else creates it.
+if not os.path.exists(dir_name):
+   os.makedirs(dir_name)
+
+#create output file to write avg kin
 if pm_set == 80:
-   output_file = 'pm%i_%s_norad_avgkin.txt'%(pm_set, model)
+   output_file = '%s/pm%i_%s_norad_avgkin.txt'%(sys_ext, pm_set, model)
 else:
-   output_file = 'pm%i_%s_norad_avgkin_set%i.txt'%(pm_set, model, data_set)
+   output_file = '%s/pm%i_%s_norad_avgkin_set%i.txt'%(sys_ext, pm_set, model, data_set)
 
 
 o = open(output_file,'w')
 
 #Open root file to read avg kin histos
-root_file = '../../root_files/average_kinematics/deep_simc_histos_pm%i_laget%s_norad_set%i.root'%(pm_set,  model, data_set)
+root_file = '../../root_files/average_kinematics/%s/deep_simc_histos_pm%i_laget%s_norad_set%i.root'%(sys_ext, pm_set,  model, data_set)
 
 
 # open ROOTfile
@@ -114,10 +121,10 @@ for i,acont in enumerate(all.cont):
    i_ybin = all.iy[i]
    thnq_b = all.xb[i]
    pm_b = all.yb[i]
-   if (acont == 0.):
+   if (acont == -1):
       # skip zero content bins
-      continue
-      #   print('acont = ',acont)
+      #continue
+      print('acont = ',acont)
    else:
       
       # convert rad to deg and GeV to MeV 
@@ -166,8 +173,8 @@ for i,acont in enumerate(all.cont):
       Pf_par = ( Pf**2 + q_calc**2 - Pm_calc**2)/ (2.*q_calc)
       Pf_perp2 = Pf**2 - Pf_par**2
       if (Pf_perp2 < 0.):
-         print 'calculated Pf_perp**2<0. : ', Pf_perp2,' --->   estimate it using theta_pq :', thpq
-         print 'Pf_par = ', Pf_par, ', Pf_perp(pf) = ', Pf*np.sin(dtr*thpq), ', Pf_perp(pm) = ', Pm*np.sin(dtr*thnq)   
+         #print 'calculated Pf_perp**2<0. : ', Pf_perp2,' --->   estimate it using theta_pq :', thpq
+         #print 'Pf_par = ', Pf_par, ', Pf_perp(pf) = ', Pf*np.sin(dtr*thpq), ', Pf_perp(pm) = ', Pm*np.sin(dtr*thnq)   
          Pf_perp = Pf*np.sin(dtr*thpq)
          th_pq_calc = thpq
       else:
@@ -193,6 +200,7 @@ for i,acont in enumerate(all.cont):
       num = (2.*q_calc*Pm_calc)
 
       cth_nq = -2.    #Cos(theta_nq)
+      theta_nq_calc = -1.
       if num > 0. : 
          cth_nq = denom/num
          theta_nq_calc = 0.
@@ -207,8 +215,9 @@ for i,acont in enumerate(all.cont):
       sig_Mott =  sigMott(kf, the, Q2_calc)   #ub / sr
       GE_p = GEp(Q2_calc)
       GM_p = GMp(Q2_calc)
-      de_Forest = deForest(Q2_calc, q_calc, Pf, Pm_calc, the, cphi_pq, th_pq_calc, sig_Mott, GE_p, GM_p)
-
+      Kfact, f_rec, sig_eN, de_Forest = deForest(Ef, Q2_calc, q_calc, Pf, Pm_calc, the, thp, cphi_pq, th_pq_calc, sig_Mott, GE_p, GM_p)
+      
+      #print('ix=',i_xbin,' iy=',i_ybin,' pm=',Pm_calc,' Kfact=',Kfact,' f_rec=',f_rec,' sig_eN=',sig_eN)
       # write output file
 
 

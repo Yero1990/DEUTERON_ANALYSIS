@@ -12,6 +12,7 @@ else:
 import LT.box as B
 import numpy as np
 import sys
+import os
 from sys import argv
 
 #------------------------------------------------------------
@@ -29,15 +30,23 @@ header = \
 """
 #------------------------------------------------------------
 #create output file to write cross section @ avg kinematics
+
+#usage: ipython calc_cross.py 580 1 sys_ext
+
+#User Input
 pm_set = int(sys.argv[1])
 data_set = int(sys.argv[2])
+sys_ext = sys.argv[3]
+
+#check if directory exists, else creates it.
+if not os.path.exists(sys_ext):
+    os.makedirs(sys_ext)
 
 print argv
-#usage: ipython calc_cross.py 580 1
 if pm_set == 80:
-   output_file = 'pm%i_laget_theory.txt'%(pm_set)
+   output_file = './%s/pm%i_laget_theory.txt'%(sys_ext, pm_set)
 else:
-   output_file = 'pm%i_laget_theory_set%i.txt'%(pm_set, data_set)
+   output_file = './%s/pm%i_laget_theory_set%i.txt'%(sys_ext, pm_set, data_set)
 
 o = open(output_file,'w')
 # write header
@@ -71,18 +80,18 @@ save_grid = 0
 
 # read the averaged kinematics file
 if pm_set == 80:
-    f = B.get_file('../average_kinematics/pm%i_pwia_norad_avgkin.txt'%(pm_set))
+    f = B.get_file('../average_kinematics/%s/pm%i_pwia_norad_avgkin.txt'%(sys_ext,pm_set))
 else: 
-    f = B.get_file('../average_kinematics/pm%i_pwia_norad_avgkin_set%i.txt'%(pm_set, data_set))
+    f = B.get_file('../average_kinematics/%s/pm%i_pwia_norad_avgkin_set%i.txt'%(sys_ext, pm_set, data_set))
 
 
 #Read Headers to be written to the output Xsec file
 i_b = B.get_data(f, 'i_b')      #ith (Pm, th_nq) bin number
 i_x = B.get_data(f, 'i_x')      #ith th_nq bin number
 i_y = B.get_data(f, 'i_y')      #ith Pm bin number
-xb  = B.get_data(f, 'xb')   #theta_nq central bin value [deg]
-yb  = B.get_data(f, 'yb')     #Pmiss cental bin value [GeV]
-
+xb  = B.get_data(f, 'xb')       #theta_nq central bin value [deg]
+yb  = B.get_data(f, 'yb')       #Pmiss cental bin value [GeV]
+cont = B.get_data(f, 'cont')    #2D bin content
 
 #===============================================================================
 #=========  Laget_Xsec_fp_1.f,  get_sigma_laget() Input Parameters =============
@@ -99,7 +108,7 @@ Ei = B.get_data(f, 'Ei')                  #Incident Beam Energy [MeV]
 GEp = B.get_data(f, 'GEp')                #Proton Electric Form Factor at the avg. kinematics
 GMp = B.get_data(f, 'GMp')                #Proton Magnetic Form Factor at the avg. kinematics
 sigMott = B.get_data(f, 'sigMott')        #Mott cross section at the avg. kinematics
-Ksig_cc1 = B.get_data(f, 'Ksig_cc1')      #deForest cc1 cross section at the avg. kinematics
+Ksig_cc1 = B.get_data(f, 'Ksig_cc1')      #Kinematic Factor K * deForest cc1 cross section at the avg. kinematics
 
 
 # DO PWIA
@@ -111,13 +120,22 @@ else:
 sigma = []
 for i, e0_i in enumerate(Ei):
     # check kinematics
-    print("i = ",i," e0_i= ",e0_i, " Q2= ",Q2[i]," nu= ", omega[i]," th_cm=",th_cm[i], " phi=",phi[i])
-    print "p_rec = ", LX.p_recoil(Q2[i], omega[i], th_cm[i])
-    # calculate cross sections (fm^2 sr^-2 mev^-1)
-    sig = LX.get_sigma_laget(e0_i,Q2[i],omega[i],th_cm[i],phi[i]) * fm2ub    #convert to (ub sr^-2 MeV^-1)
-    sigma.append(sig)
-    print('sig = ',sig)
-    # Write to File
+    #print("i = ",i," e0_i= ",e0_i, " Q2= ",Q2[i]," nu= ", omega[i]," th_cm=",th_cm[i], " phi=",phi[i])
+    #print "p_rec = ", LX.p_recoil(Q2[i], omega[i], th_cm[i])
+    
+    if cont[i]==0.0:
+        sig         = -1.
+        GEp[i]      = -1.
+        GMp[i]      = -1.
+        sigMott[i]  = -1.
+        Ksig_cc1[i] = -1.
+        #sigma.append(sig)
+    else:
+        # calculate cross sections (fm^2 sr^-2 mev^-1)
+        sig = LX.get_sigma_laget(e0_i,Q2[i],omega[i],th_cm[i],phi[i]) * fm2ub    #convert to (ub sr^-2 MeV^-1)
+        #sigma.append(sig)
+        #print('sig = ',sig)
+        # Write to File
     l = '%i %i %i %.6f %.6f %.12e  %.6f  %.6f  %.6f  %.6f\n'%(i_b[i], i_x[i], i_y[i], xb[i], yb[i], sig, GEp[i], GMp[i], sigMott[i], Ksig_cc1[i])
     o.write(l)
 o.close()
@@ -126,12 +144,12 @@ o.close()
 
 # read the averaged kinematics file, and output file to write cross sections
 if pm_set == 80:
-    f = B.get_file('../average_kinematics/pm%i_fsi_norad_avgkin.txt'%(pm_set))
-    fname = 'pm%i_laget_theory.txt'%(pm_set)
+    f = B.get_file('../average_kinematics/%s/pm%i_fsi_norad_avgkin.txt'%(sys_ext, pm_set))
+    fname = './%s/pm%i_laget_theory.txt'%(sys_ext, pm_set)
     output_file = B.get_file(fname)
 else: 
-    f = B.get_file('../average_kinematics/pm%i_fsi_norad_avgkin_set%i.txt'%(pm_set, data_set))
-    fname = 'pm%i_laget_theory_set%i.txt'%(pm_set, data_set)
+    f = B.get_file('../average_kinematics/%s/pm%i_fsi_norad_avgkin_set%i.txt'%(sys_ext, pm_set, data_set))
+    fname = './%s/pm%i_laget_theory_set%i.txt'%(sys_ext, pm_set, data_set)
     output_file = B.get_file(fname)
 
 #Add Key to the output_file header
@@ -141,7 +159,8 @@ output_file.add_key('fsiGMp', 'f')
 output_file.add_key('fsi_sigMott', 'f')
 output_file.add_key('fsi_Ksig_cc1', 'f')
 
-#NOTE: The PWIA and FSI avg. kin. files bin-numbering must be EXACTLY the same. THerefore, there is no need to read them a second time.
+#NOTE: The PWIA and FSI avg. kin. files bin-numbering must be EXACTLY the same. Therefore, there is no need to read them a second time.
+cont = B.get_data(f, 'cont')   #the bin content, however, might be different so it is read
 
 #===============================================================================
 #=========  Laget_Xsec_fp_1.f,  get_sigma_laget() Input Parameters =============
@@ -151,9 +170,9 @@ output_file.add_key('fsi_Ksig_cc1', 'f')
 th_cm = B.get_data(f, 'th_pq_cm')*dtr     #center of mass in-plane angle between proton and q-vector [rad]
 omega = B.get_data(f,  'omega')           #energy transfer [MeV]
 q = B.get_data(f, 'q_lab')                #magnitude of 3-momentum transfer [MeV]
-Q2 = B.get_data(f, 'Q2_calc')                #4-Momentum Transfer [MeV^2]
+Q2 = B.get_data(f, 'Q2_calc')             #4-Momentum Transfer [MeV^2]
 cphi = B.get_data(f, 'cos_phi')           #Cos(phi) 
-phi = np.arccos(cphi)                      #phi, out-of-plane angle between the proton and q-vector (angle between reaction-scattering plane) [rad]
+phi = np.arccos(cphi)                     #phi, out-of-plane angle between the proton and q-vector (angle between reaction-scattering plane) [rad]
 Ei = B.get_data(f, 'Ei')                  #Incident Beam Energy [MeV]
 GEp = B.get_data(f, 'GEp')                #Proton Electric Form Factor at the avg. kinematics
 GMp = B.get_data(f, 'GMp')                #Proton Magnetic Form Factor at the avg. kinematics
@@ -170,18 +189,24 @@ else:
 #sigma = []
 for i, e0_i in enumerate(Ei):
     # check kinematics
-    print("i = ",i," e0_i= ",e0_i, " Q2= ",Q2[i]," nu= ", omega[i]," th_cm=",th_cm[i], " phi=",phi[i])
-    print "p_rec = ", LX.p_recoil(Q2[i], omega[i], th_cm[i])
-    # calculate cross sections (returns Xsec in fm^2 sr^-2 MeV^-1 (SIMC is in microbarn.  1 ub = 1e-4 fm^2)
-    sig = LX.get_sigma_laget(e0_i,Q2[i],omega[i],th_cm[i],phi[i]) * fm2ub    #convert to (ub sr^-2 MeV^-1)
-    #sigma.append(sig)
+    #print("i = ",i," e0_i= ",e0_i, " Q2= ",Q2[i]," nu= ", omega[i]," th_cm=",th_cm[i], " phi=",phi[i])
+    #print "p_rec = ", LX.p_recoil(Q2[i], omega[i], th_cm[i])
+    
+    if cont[i]==0.0:
+        sig = -1.   
+        output_file.data[i]['fsiXsec']      = -1.
+        output_file.data[i]['fsiGEp']       = -1.
+        output_file.data[i]['fsiGMp']       = -1.
+        output_file.data[i]['fsi_sigMott']  = -1.
+        output_file.data[i]['fsi_Ksig_cc1'] = -1.
+    else:
+        # calculate cross sections (returns Xsec in fm^2 sr^-2 MeV^-1 (SIMC is in microbarn.  1 ub = 1e-4 fm^2)
+        sig = LX.get_sigma_laget(e0_i,Q2[i],omega[i],th_cm[i],phi[i]) * fm2ub    #convert to (ub sr^-2 MeV^-1)
+        output_file.data[i]['fsiXsec'] = float("%.12e"%(sig))
+        output_file.data[i]['fsiGEp'] = float("%.6f"%(GEp[i]))
+        output_file.data[i]['fsiGMp'] = float("%.6f"%(GMp[i]))
+        output_file.data[i]['fsi_sigMott'] = float("%.6f"%(sigMott[i]))
+        output_file.data[i]['fsi_Ksig_cc1'] = float("%.6f"%(Ksig_cc1[i]))
 
-    output_file.data[i]['fsiXsec'] = float("%.12e"%(sig))
-    output_file.data[i]['fsiGEp'] = float("%.6f"%(GEp[i]))
-    output_file.data[i]['fsiGMp'] = float("%.6f"%(GMp[i]))
-    output_file.data[i]['fsi_sigMott'] = float("%.6f"%(sigMott[i]))
-    output_file.data[i]['fsi_Ksig_cc1'] = float("%.6f"%(Ksig_cc1[i]))
-
-    print('sig = ',sig)
-    # Write to File
+# Write to File
 output_file.save(fname)

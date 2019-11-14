@@ -1,3 +1,10 @@
+/*
+Author: Carlos Yero
+email: cyero002@fiu.edu, cyero@jlab.org
+Date: August 22, 2019 
+*/
+
+
 #include<iostream>
 #include "analyze.h"
 
@@ -204,14 +211,59 @@ analyze::analyze(int run=-1000, string e_arm="SHMS", string type="data", string 
 
   H_Em_vs_Pm = NULL;
   H_Em_nuc_vs_Pm = NULL;
-
+  H_Q2_vs_W = NULL;
+  H_Q2_vs_eyptar = NULL;
+  H_Q2_vs_Pm = NULL;
+  
   //2D Pm vs. thnq (used in 2D cross section calculation)
   H_Pm_vs_thnq = NULL;
   H_Pm_vs_thnq_ps = NULL;
 
   //Initialize Scaler Histograms
   H_bcmCurrent = NULL;
+
   
+  //Initialize SYSTEMATICS Histograms
+  H_Em_nuc_sys = NULL;
+  H_hdelta_sys = NULL;
+  H_edelta_sys = NULL;
+  H_ztar_diff_sys = NULL;
+  H_Q2_sys = NULL;
+  H_theta_nq_sys = NULL;
+  H_pcal_etotTrkNorm_sys = NULL;
+  H_ctime_sys = NULL;
+  H_hXColl_vs_hYColl_sys = NULL;
+  /*
+  //Emiss Systematics
+  H_Pm_sysEm_nominal = NULL;
+  H_Pm_sysEm_loose = NULL;
+  H_Pm_sysEm_tight = NULL;
+ //HMS Delta Systematics
+  H_Pm_syshdelta_nominal = NULL;
+  H_Pm_syshdelta_loose = NULL;
+  H_Pm_syshdelta_tight = NULL;
+  //SHMS Delta Systematics
+  H_Pm_sysedelta_nominal = NULL;
+  H_Pm_sysedelta_loose = NULL;
+  H_Pm_sysedelta_tight = NULL;
+  //Ztar Difference Systematics
+  H_Pm_sysZtarDiff_nominal = NULL;
+  H_Pm_sysZtarDiff_loose = NULL;
+  H_Pm_sysZtarDiff_tight = NULL;
+  //SHMS Cal EtotTrackNorm Systematics
+  H_Pm_sysEtotTrkNorm_nominal = NULL;
+  H_Pm_sysEtotTrkNorm_loose = NULL;
+  H_Pm_sysEtotTrkNorm_tight = NULL;
+  //Coincidence Time Systematics
+  H_Pm_sysCtime_nominal = NULL;
+  H_Pm_sysCtime_loose = NULL;
+  H_Pm_sysCtime_tight = NULL;
+  //HMS Collimator Cut Systematics
+  H_Pm_syshColl_nominal = NULL;
+  H_Pm_syshColl_loose = NULL;
+  H_Pm_syshColl_tight = NULL;
+  */
+
 }
 
 //____________________________________________
@@ -388,15 +440,22 @@ analyze::~analyze()
   //2D Collimator Histos
   delete H_hXColl_vs_hYColl; H_hXColl_vs_hYColl = NULL;
   delete H_eXColl_vs_eYColl; H_eXColl_vs_eYColl = NULL;
+
   delete H_Em_vs_Pm;         H_Em_vs_Pm         = NULL;
   delete H_Em_nuc_vs_Pm;     H_Em_nuc_vs_Pm     = NULL;
-
+  delete H_Q2_vs_W;          H_Q2_vs_W          = NULL;
+  delete H_Q2_vs_eyptar;     H_Q2_vs_eyptar     = NULL;
+  delete H_Q2_vs_Pm;         H_Q2_vs_Pm         = NULL;
+  
   //2D Pm vs thnq
   delete H_Pm_vs_thnq;       H_Pm_vs_thnq    = NULL;
   delete H_Pm_vs_thnq_ps;    H_Pm_vs_thnq_ps = NULL;
 
   //Delete Scaler Histograms
   delete H_bcmCurrent; H_bcmCurrent = NULL;
+
+  //Delete SYSTEMATICS Histograms
+  // . . . Yet To be done . . . 
 
   cout << "End CallingDestructor() . . " << endl;
 }
@@ -421,12 +480,21 @@ void analyze::SetFileNames()
     data_set = stoi(split(FindString("data_set", input_CutFileName)[0], ':')[1]);
   
     //Set Input Names
-
     data_InputFileName = Form("ROOTfiles/coin_replay_%s_check_%d_-1.root", reaction.c_str(), runNUM);
     data_InputReport = Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_%s_check_%d_-1.report", reaction.c_str(), runNUM); 
 
-    simc_InputFileName_rad = Form("worksim_voli/d2_pm%d_%s%s_rad_set%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
-    simc_InputFileName_norad = Form("worksim_voli/d2_pm%d_%s%s_norad_set%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+ 
+    //NEW SIMC ROOTfile PATHs (THese have 5 Million Events Generated, and the seed used has been changed to be random in deut_simc)
+    simc_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_nom.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+    simc_InputFileName_norad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_norad_set%d_nom.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+
+    //PSEUDO-DATA (Radiative SIMC with some small kin. offstes or at nominal setting)
+    //pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_nom.root",  pm_setting, theory.c_str(), model.c_str(), data_set);
+    //pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_ep1MeV_rec.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+    //pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_ep1MeV_thr.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+    //    pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_ep1mr_rec.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+    pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_ep1mr_thr.root", pm_setting, theory.c_str(), model.c_str(), data_set );  //+1 mr offset on thrown quantities
+
     
     //Read single file input 
     if(runNUM==-1){
@@ -444,6 +512,10 @@ void analyze::SetFileNames()
 
     simc_OutputFileName_rad = Form("%s_simc_histos_pm%d_%s%s_rad_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
     simc_OutputFileName_norad = Form("%s_simc_histos_pm%d_%s%s_norad_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
+
+    pseudo_OutputFileName = Form("%s_pseudo_histos_pm%d_%s%s_rad_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
+    pseudo_OutputFileName_radCorr = Form("%s_pseudo_histos_pm%d_%s%s_rad_set%d_radCorr.root",reaction.c_str(), pm_setting, theory.c_str(), model.c_str(), data_set);
+
     
     //SIMC radiative corr. ratio for PWIA and FSI (It is reccommended to use fsi to radiatively correct data, as FSI better represent data)
     simc_OutputFileName_radCorr_pwia = Form("%s_simc_histos_pm%d_%spwia_RadCorrRatio_set%d.root",reaction.c_str(), pm_setting, theory.c_str(), data_set);
@@ -451,6 +523,7 @@ void analyze::SetFileNames()
 
 
     Xsec_OutputFileName = Form("Xsec_pm%d_%s%s_dataset%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
+    pseudoXsec_OutputFileName = Form("Xsec_pm%d_%s%s_dataset%d.root", pm_setting, theory.c_str(), model.c_str(), data_set );
 
   }
   
@@ -463,8 +536,8 @@ void analyze::SetFileNames()
     data_InputFileName = Form("ROOTfiles/coin_replay_%s_check_%d_-1.root", reaction.c_str(), runNUM);
     data_InputReport = Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_%s_check_%d_-1.report", reaction.c_str(), runNUM); 
 
-    simc_InputFileName_rad = Form("worksim_voli/D2_heep_%d_rad.root", runNUM);
-    simc_InputFileName_norad = Form("worksim_voli/D2_heep_%d_norad.root", runNUM);
+    simc_InputFileName_rad = Form("ROOTfiles/SIMC/D2_heep_%d_rad.root", runNUM);
+    simc_InputFileName_norad = Form("ROOTfiles/SIMC/D2_heep_%d_norad.root", runNUM);
     
 
     //Set Output Names
@@ -517,8 +590,6 @@ void analyze::SetCuts()
   hms_scale =  stod(split(FindString("hms_scale", input_CutFileName)[0], '=')[1]);
   shms_scale =  stod(split(FindString("shms_scale", input_CutFileName)[0], '=')[1]);
 
-
-
   //Read Cut Limits from set_heep(deep)_cuts.input file 
   Em_min = stod(split(FindString("Em_min", input_CutFileName)[0], ':')[1]);
   Em_max = stod(split(FindString("Em_max", input_CutFileName)[0], ':')[1]);
@@ -534,7 +605,10 @@ void analyze::SetCuts()
 
   ztarDiff_min = stod(split(FindString("ztarDiff_min", input_CutFileName)[0], ':')[1]); 
   ztarDiff_max = stod(split(FindString("ztarDiff_max", input_CutFileName)[0], ':')[1]);
- 
+
+
+  if(reaction=="deep"){ztd_mean = getZtarMean(pm_setting, data_set, model, analysis); } //Get Mean of ZtarDiff 
+
   Q2_min = stod(split(FindString("Q2_min", input_CutFileName)[0], ':')[1]); 
   Q2_max = stod(split(FindString("Q2_max", input_CutFileName)[0], ':')[1]);
   
@@ -550,6 +624,23 @@ void analyze::SetCuts()
   ctime_min = stod(split(FindString("coin_time_min", input_CutFileName)[0], ':')[1]);
   ctime_max = stod(split(FindString("coin_time_max", input_CutFileName)[0], ':')[1]);
 
+
+  cout << "-------------------------------------" << endl;
+  cout << "Cut Limits Set" << endl;
+  if(Em_cut_flag) {cout << Form("Missin Energy:(%f, %f) GeV", Em_min, Em_max ) << endl;}
+  if(W_cut_flag) {cout << Form("Invariant Mass:(%f,%f) GeV", W_min, W_max ) << endl;}
+  if(hdelta_cut_flag) {cout << Form("HMS Delta:(%f, %f) %s ", hdel_min, hdel_max, "%" ) << endl;}
+  if(edelta_cut_flag) {cout << Form("SHMS Delta:(%f, %f) %s ",edel_min, edel_max, "%" ) << endl;}
+  if(ztar_diff_cut_flag) {cout << Form("ZtarDiff:(%f,%f) cm", ztarDiff_min, ztarDiff_max ) << endl;}
+  if(Q2_cut_flag) {cout <<  Form("Q2: (%f,%f) GeV2",Q2_min, Q2_max ) << endl;}
+  if(MM_cut_flag) {cout <<  Form("Missing Mass:(%f,%f) GeV", MM_min, MM_max ) << endl;}
+  if(shmsCal_cut_flag) {cout <<  Form("SHMS EcalTotTrackNorm: (%f,%f)",shms_cal_min, shms_cal_max) << endl;}
+  if(coin_cut_flag) {cout <<  Form("Coincidence  Time: (%f,%f) ns", ctime_min, ctime_max) << endl;}
+  if(hmsCollCut_flag) {cout <<  Form("HMS Collimator Scale: %f", hms_scale ) << endl;}
+  if(shmsCollCut_flag) {cout <<  Form("SHMS Collimator Scale: %f",shms_scale ) << endl;}
+  cout << "--------------------------------------" << endl;
+
+  
 
 
   cout << "Ending SetCuts() . . ." << endl;
@@ -581,11 +672,10 @@ void analyze::SetDefinitions()
    
   //Read Spectrometer Kinematics from REPORT_FILE
   string temp;
-  
-  //Read Angles (in deg)
-  temp = FindString("hHMS Angle", data_InputReport)[0];    //Find line containing string
-  h_th = stod(split(temp, ':')[1]);                              //split string, take the number part, and conver to double
 
+  //Read Angles (in deg)
+  temp = FindString("hHMS Angle", data_InputReport)[0];          //Find line containing string
+  h_th = stod(split(temp, ':')[1]);                              //split string, take the number part, and conver to double
 
   temp = FindString("pSHMS Angle", data_InputReport)[0];
   e_th = stod(split(temp, ':')[1]);
@@ -1365,6 +1455,11 @@ void analyze::CreateHist()
   H_Em_vs_Pm = new TH2F("H_Em_vs_Pm", "E_{miss} vs. P_{miss}", Pm_nbins, -0.01, 0.2, Em_nbins, Em_xmin, Em_xmax);
   H_Em_nuc_vs_Pm = new TH2F("H_Em_nuc_vs_Pm", "E_{miss.nuc} vs. P_{miss}", Pm_nbins, -0.01, 0.2, Em_nbins, Em_xmin, Em_xmax);
 
+  H_Q2_vs_W = new TH2F("H_Q2_vs_W", "Q^{2} vs. W", W_nbins, W_xmin, W_xmax, Q2_nbins, Q2_xmin, Q2_xmax);
+  H_Q2_vs_eyptar = new TH2F("H_Q2_vs_eyptar", "Q^{2} vs. eY'_{tar}", eyptar_nbins, eyptar_xmin, eyptar_xmax, Q2_nbins, Q2_xmin, Q2_xmax);
+  H_Q2_vs_Pm = new TH2F("H_Q2_vs_Pm", "Q^{2} vs. P_{miss}", Pm_nbins, Pm_xmin, Pm_xmax, Q2_nbins, Q2_xmin, Q2_xmax);
+
+  
   //2D Pm vs. thnq (for cross section calculation)
   H_Pm_vs_thnq  = new TH2F("H_Pm_vs_thnq", "Pm vs. #theta_{nq}", thnq_nbins, thnq_xmin, thnq_xmax, Pm_nbins, Pm_xmin, Pm_xmax);
   H_Pm_vs_thnq_ps  = new TH2F("H_Pm_vs_thnq_ps", "Pm vs. #theta_{nq}", thnq_nbins, thnq_xmin, thnq_xmax, Pm_nbins, Pm_xmin, Pm_xmax);
@@ -1373,6 +1468,49 @@ void analyze::CreateHist()
   //Scaler Histograms
   H_bcmCurrent = new TH1F("H_bcmCurrent", "BCM Current", 100, 0, 100);
     
+
+  
+  //======SYSTEMATICS Histograms======
+  H_Em_nuc_sys = new TH1F("H_Em_nuc_sys","Nuclear Missing Energy", Em_nbins, Em_xmin, Em_xmax); 
+  H_hdelta_sys = new TH1F("H_hdelta_sys", Form("%s  Momentum Acceptance, #delta", h_arm_name.c_str()), hdelta_nbins, hdelta_xmin, hdelta_xmax);
+  H_edelta_sys = new TH1F("H_edelta_sys", Form("%s Momentum Acceptance, #delta", e_arm_name.c_str()), edelta_nbins, edelta_xmin, edelta_xmax);
+  H_ztar_diff_sys = new TH1F("H_ztar_diff_sys", "Ztar Difference", ztar_nbins, ztar_xmin, ztar_xmax);
+  H_Q2_sys = new TH1F("H_Q2_sys","Q2", Q2_nbins, Q2_xmin, Q2_xmax); 
+  H_theta_nq_sys = new TH1F("H_theta_nq_sys", "#theta_{nq}", thnq_nbins, thnq_xmin, thnq_xmax);
+  
+  H_pcal_etotTrkNorm_sys = new TH1F("H_pcal_etotTrkNorm_sys", "SHMS Cal. EtotTrackNorm", pcal_nbins, pcal_xmin, pcal_xmax);
+  H_ctime_sys = new TH1F("H_ctime_sys", "ep Coincidence Time", coin_nbins, coin_xmin, coin_xmax);
+  H_hXColl_vs_hYColl_sys = new TH2F("H_hXColl_vs_hYColl_sys", Form("%s  Collimator", h_arm_name.c_str()), hYColl_nbins, hYColl_xmin, hYColl_xmax,  hXColl_nbins, hXColl_xmin, hXColl_xmax);
+  /*
+  //Emiss Systematics
+  H_Pm_sysEm_nominal = new TH1F("H_Pm_sysEm_nominal","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  H_Pm_sysEm_loose = new TH1F("H_Pm_sysEm_loose","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  H_Pm_sysEm_tight = new TH1F("H_Pm_sysEm_tight","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  //HMS Delta Systematics
+  H_Pm_syshdelta_nominal = new TH1F("H_Pm_syshdelta_nominal","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  H_Pm_syshdelta_loose = new TH1F("H_Pm_syshdelta_loose","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  H_Pm_syshdelta_tight = new TH1F("H_Pm_syshdelta_tight","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  //SHMS Delta Systematics
+  H_Pm_sysedelta_nominal = new TH1F("H_Pm_sysedelta_nominal","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  H_Pm_sysedelta_loose = new TH1F("H_Pm_sysedelta_loose","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  H_Pm_sysedelta_tight = new TH1F("H_Pm_sysedelta_tight","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  //Ztar Difference Systematics
+  H_Pm_sysZtarDiff_nominal = new TH1F("H_Pm_sysZtarDiff_nominal","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  H_Pm_sysZtarDiff_loose = new TH1F("H_Pm_sysZtarDiff_loose","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  H_Pm_sysZtarDiff_tight = new TH1F("H_Pm_sysZtarDiff_tight","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  //SHMS Cal EtotTrackNorm Systematics
+  H_Pm_sysEtotTrkNorm_nominal = new TH1F("H_Pm_sysEtotTrkNorm_nominal","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  H_Pm_sysEtotTrkNorm_loose = new TH1F("H_Pm_sysEtotTrkNorm_loose","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  H_Pm_sysEtotTrkNorm_tight = new TH1F("H_Pm_sysEtotTrkNorm_tight","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  //Coincidence Time Systematics
+  H_Pm_sysCtime_nominal = new TH1F("H_Pm_sysCtime_nominal","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  H_Pm_sysCtime_loose = new TH1F("H_Pm_sysCtime_loose","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  H_Pm_sysCtime_tight = new TH1F("H_Pm_sysCtime_tight","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  //HMS Collimator Cut Systematics
+  H_Pm_syshColl_nominal = new TH1F("H_Pm_syshColl_nominal","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  H_Pm_syshColl_loose = new TH1F("H_Pm_syshColl_loose","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  H_Pm_syshColl_tight = new TH1F("H_Pm_syshColl_tight","Missing Momentum", Pm_nbins, Pm_xmin, Pm_xmax); 
+  */
 
   cout << "Ending CreateHist() . . . " << endl;
 
@@ -1645,10 +1783,14 @@ void analyze::ReadTree(string rad_flag="")
 
   //-----------------------------------------------------------------
 
-  else if(analysis=="simc")
+  else if(analysis=="simc" || analysis=="pseudo")
     {
+      if(analysis=="simc"){
       cout << "Analyzing SIMC . . . " << endl;
-
+      }
+      else if (analysis=="pseudo"){
+	cout << "Analyzing Pseudo-Data . . . " << endl;
+      }
       //Read ROOTfile
   
       //If Doing Radiative Corrections, Read NON-RAD ROOTfile
@@ -1658,8 +1800,13 @@ void analyze::ReadTree(string rad_flag="")
 	  inROOT = new TFile(simc_InputFileName_norad, "READ");
 
 	}
+      //Read Pseudo-data Radiative if doing radiation (1) or radiative_corrections OFF (-1)
+      else if((radiate_flag==1 || radiate_flag==-1) && analysis=="pseudo"){
+	cout << "Analyzing Pseudo-Data (SIMC) with Radiation ON " << endl;
+	inROOT = new TFile(pseudo_InputFileName_rad, "READ");
+      }
       //Read Radiative if doing radiation (1) or radiative_corrections OFF (-1)
-      else if(radiate_flag==1 || radiate_flag==-1){
+      else if((radiate_flag==1 || radiate_flag==-1) && analysis=="simc"){
 	cout << "Analyzing SIMC with Radiation ON " << endl;
 	inROOT = new TFile(simc_InputFileName_rad, "READ");
       }
@@ -1789,7 +1936,7 @@ void analyze::EventLoop()
 
   cout << "Calling EventLoop() . . . " << endl;
 
-  //Call Methods to Set Collimator Graphical Cuts (In case it is used)
+  //Call Method to Set Collimator Graphical Cuts (In case it is used)
   CollimatorStudy();
   
     /*Loop over Events*/
@@ -1823,8 +1970,8 @@ void analyze::EventLoop()
 	  //---------------------Define Cuts---------------------------
 	  
 	  c_noedtm = pEDTM_tdcTimeRaw==0;
-	  c_edtm = pEDTM_tdcTimeRaw>1500&&pEDTM_tdcTimeRaw<2000.;
-	  c_ptrig6 = pTRIG6_tdcTimeRaw>0;
+	  c_edtm = pEDTM_tdcTimeRaw>0.;
+	  c_ptrig6 = pTRIG6_tdcTimeRaw>0.;
 	  c_hgcerNpesum =  pHGCER_npeSum>0.7;
 	  c_ngcerNpesum =  pNGCER_npeSum>0.5;
 	  c_etotnorm = pCAL_etotnorm>0.6;
@@ -1841,10 +1988,10 @@ void analyze::EventLoop()
 	  
 
 	  //Define DATA/SIMC CUTS (BETTER BE THE SAME CUTS as in SIMC!)
-	  if(edelta_cut_flag){c_edelta = e_delta>edel_min&&e_delta<edel_max;} 
+	  if(edelta_cut_flag){c_edelta = e_delta>=edel_min&&e_delta<=edel_max;} 
 	  else{c_edelta=1;} //OFF means NO LIMITS on CUT (ALWAYS TRUE)
 	  
-	  if(hdelta_cut_flag){c_hdelta = h_delta>hdel_min&&h_delta<hdel_max;} 
+	  if(hdelta_cut_flag){c_hdelta = h_delta>=hdel_min&&h_delta<=hdel_max;} 
 	  else{c_hdelta=1;}
 	  
 	  if(W_cut_flag)     {c_W = W>=W_min&&W<=W_max;}                      
@@ -1852,29 +1999,34 @@ void analyze::EventLoop()
 	  
 	  if(Em_cut_flag) {
 	   
-	    if(reaction=="heep") { c_Em = Em>Em_min&&Em<Em_max; }
-	    if(reaction=="deep") { c_Em = Em_nuc>Em_min&&Em_nuc<Em_max; }
+	    if(reaction=="heep") { c_Em = Em>=Em_min&&Em<=Em_max; }
+	    if(reaction=="deep") { c_Em = Em_nuc>=Em_min&&Em_nuc<=Em_max; }
 	  }                   
 	  else{c_Em=1;}
 	  
-	  if(ztar_diff_cut_flag){ c_ztarDiff = ztar_diff>ztarDiff_min&&ztar_diff<ztarDiff_max;}
+	  if(ztar_diff_cut_flag){ 
+	    //cout << "data_zmean = " << ztd_mean << endl;
+
+	    c_ztarDiff = ztar_diff>=(ztd_mean + ztarDiff_min)&&ztar_diff<=(ztd_mean + ztarDiff_max);
+	    //c_ztarDiff = ztar_diff>ztarDiff_min&&ztar_diff<ztarDiff_max;
+	  }
 	  else{c_ztarDiff=1;}
 
-	  if(Q2_cut_flag) {c_Q2 = Q2>Q2_min&&Q2<Q2_max;}
+	  if(Q2_cut_flag) {c_Q2 = Q2>=Q2_min&&Q2<=Q2_max;}
 	  else{c_Q2 = 1;}
 
-	  if(MM_cut_flag) {c_MM = M_recoil>MM_min&&M_recoil<MM_max;}
+	  if(MM_cut_flag) {c_MM = M_recoil>=MM_min&&M_recoil<=MM_max;}
 	  else{c_MM = 1;}
 
-	  if(thnq_cut_flag) {c_th_nq = th_nq>(thnq_min*dtr)&&th_nq<(thnq_max*dtr);}
+	  if(thnq_cut_flag) {c_th_nq = th_nq>=(thnq_min*dtr)&&th_nq<=(thnq_max*dtr);}
 	  else{c_th_nq = 1;}
 	  
 	  
 	  //PID CUTS (SPECIFIC TO DATA)
-	  if(shmsCal_cut_flag)    {c_shms_cal = pCAL_etottracknorm>shms_cal_min&&pCAL_etottracknorm<shms_cal_max;}                   
+	  if(shmsCal_cut_flag)    {c_shms_cal = pCAL_etottracknorm>=shms_cal_min&&pCAL_etottracknorm<=shms_cal_max;}                   
 	  else{c_shms_cal=1;}
 	  
-	  if(coin_cut_flag)    {c_ctime = epCoinTime>ctime_min&&epCoinTime<ctime_max;}                   
+	  if(coin_cut_flag)    {c_ctime = epCoinTime>=ctime_min&&epCoinTime<=ctime_max;}                   
 	  else{c_ctime=1;}
 	  
 	  //Collimator CUTS
@@ -2029,9 +2181,135 @@ void analyze::EventLoop()
 		      H_Em_vs_Pm->Fill(Pm, Em);
 		      H_Em_nuc_vs_Pm->Fill(Pm, Em_nuc);
 
+		      H_Q2_vs_W->Fill(W, Q2);
+		      H_Q2_vs_eyptar->Fill(e_yptar, Q2);
+		      H_Q2_vs_Pm->Fill(Pm, Q2);
+		      
 
 		    } //END CUTS
 		  
+		  
+		  //--------------------SYSTEMATICS STUDIES--------------------
+		  //PART I
+		  //NOTE: This study consists of filling each histogram with all nominal cuts except on itself
+
+		  if(c_hdelta&&c_edelta&&c_ztarDiff&&c_Q2&&c_th_nq&&c_shms_cal&&c_ctime&&hmsColl_Cut)
+		    {
+		      H_Em_nuc_sys->Fill(Em_nuc);
+		      /*
+		      //PART II Systematics on Missing Momentum Yield: Vary Emiss Cut
+		      //nominal
+		      if(Em_nuc>-0.02&&Em_nuc<0.04){ H_Pm_sysEm_nominal->Fill(Pm); }
+		      //tight
+		      if(Em_nuc>-0.01&&Em_nuc<0.03){ H_Pm_sysEm_tight->Fill(Pm); }
+		      //loose
+		      if(Em_nuc>-0.04&&Em_nuc<0.06){ H_Pm_sysEm_loose->Fill(Pm); }
+		      */
+		    }
+		  if(c_Em&&c_edelta&&c_ztarDiff&&c_Q2&&c_th_nq&&c_shms_cal&&c_ctime&&hmsColl_Cut)
+		    {
+		      H_hdelta_sys->Fill(h_delta);
+		      /*
+		      //PART II Systematics on Missing Momentum Yield: Vary HMS Delta Cut
+		      //nominal
+		      if(h_delta>-8.&&h_delta<8.){ H_Pm_syshdelta_nominal->Fill(Pm); }
+		      //tight
+		      if(h_delta>-5.&&h_delta<5.){ H_Pm_syshdelta_tight->Fill(Pm); }
+		      //loose
+		      if(h_delta>-10.&&h_delta<10.){ H_Pm_syshdelta_loose->Fill(Pm); }
+		      */
+		    }
+		  if(c_Em&&c_hdelta&&c_ztarDiff&&c_Q2&&c_th_nq&&c_shms_cal&&c_ctime&&hmsColl_Cut)
+		    {
+		      H_edelta_sys->Fill(e_delta);
+		      /*
+		      //PART II Systematics on Missing Momentum Yield: Vary SHMS Delta Cut
+		      //nominal
+		      if(e_delta>-10.&&e_delta<22.){ H_Pm_sysedelta_nominal->Fill(Pm); }
+		      //tight
+		      if(e_delta>-1.5&&e_delta<1.){ H_Pm_sysedelta_tight->Fill(Pm); }
+		      //loose
+		      if(e_delta>-3.&&e_delta<2.){ H_Pm_sysedelta_loose->Fill(Pm); }
+		      */
+		    }
+		  if(c_Em&&c_hdelta&&c_edelta&&c_Q2&&c_th_nq&&c_shms_cal&&c_ctime&&hmsColl_Cut)
+		    {
+		      H_ztar_diff_sys->Fill(ztar_diff);
+		      /*
+		      //PART II Systematics on Missing Momentum Yield: Vary Ztar Diff Cut
+		      //nominal
+		      if(ztar_diff>-2.&&ztar_diff<2.){ H_Pm_sysZtarDiff_nominal->Fill(Pm); }
+		      //tight
+		      if(ztar_diff>-1.&&ztar_diff<1.){ H_Pm_sysZtarDiff_tight->Fill(Pm); }
+		      //loose
+		      if(ztar_diff>-4.&&ztar_diff<4.){ H_Pm_sysZtarDiff_loose->Fill(Pm); }
+		      */
+
+		    }
+		  if(c_Em&&c_hdelta&&c_edelta&&c_ztarDiff&&c_th_nq&&c_shms_cal&&c_ctime&&hmsColl_Cut)
+		    {
+		      H_Q2_sys->Fill(Q2);
+
+		      //The cross section is determined in a specific Q2 region, therefore, it does not contribute to systematics
+		      
+		    }
+		  if(c_Em&&c_hdelta&&c_edelta&&c_ztarDiff&&c_Q2&&c_shms_cal&&c_ctime&&hmsColl_Cut)
+		    {
+		      H_theta_nq_sys->Fill(th_nq/dtr);
+
+		      //The cross section is determined on various thnq bins, therefore, it does not contribute to systematics
+
+		    }
+		  if(c_Em&&c_hdelta&&c_edelta&&c_ztarDiff&&c_Q2&&c_th_nq&&c_ctime&&hmsColl_Cut)
+		    {
+		      H_pcal_etotTrkNorm_sys->Fill(pCAL_etottracknorm);
+		      
+		      /*
+		      //PART II Systematics on Missing Momentum Yield: SHMS eCal Cut
+		      //nominal
+		      if(pCAL_etottracknorm>0.7&&pCAL_etottracknorm<5.){ H_Pm_sysEtotTrkNorm_nominal->Fill(Pm); }
+		      //tight
+		      if(pCAL_etottracknorm>0.9&&pCAL_etottracknorm<5.){ H_Pm_sysEtotTrkNorm_tight->Fill(Pm); }
+		      //loose
+		      if(pCAL_etottracknorm>0.8&&pCAL_etottracknorm<5.){ H_Pm_sysEtotTrkNorm_loose->Fill(Pm); }
+		      */
+
+		    }
+		  if(c_Em&&c_hdelta&&c_edelta&&c_ztarDiff&&c_Q2&&c_th_nq&&c_shms_cal&&hmsColl_Cut)
+		    {
+		      H_ctime_sys->Fill(epCoinTime);
+		      
+		      /*
+		      //PART II Systematics on Missing Momentum Yield: Coin. Time Cut
+		      //nominal
+		      if(epCoinTime>10.5&&epCoinTime<14.5){ H_Pm_sysCtime_nominal->Fill(Pm); }
+		      //tight
+		      if(epCoinTime>12.&&epCoinTime<14.){ H_Pm_sysCtime_tight->Fill(Pm); }
+		      //loose
+		      if(epCoinTime>5.&&epCoinTime<20.){ H_Pm_sysCtime_loose->Fill(Pm); }
+		      */
+
+
+		    }
+		  if(c_Em&&c_hdelta&&c_edelta&&c_ztarDiff&&c_Q2&&c_th_nq&&c_shms_cal&&c_ctime)
+		    {
+		      H_hXColl_vs_hYColl_sys->Fill(hYColl, hXColl);
+
+		      //PART II Systematics on Missing Momentum Yield: HMS Coll Cut
+		      //NOTE: This cut will have to be done on three separate replays, each with a different
+		      //HMS Coll. CUt Scale, as we cannot put different scale cuts simultaneously.
+		      //if(hmsColl_Cut){ H_Pm_syshColl_nominal->Fill(Pm); }
+
+		    }
+		  
+        
+
+
+
+		  //----------------------------------------------------------------------------------
+
+
+
 		  //-------------------End Fill DATA Histograms----------------------
 		  
 		  
@@ -2051,7 +2329,7 @@ void analyze::EventLoop()
       
     }
   
-  else if(analysis=="simc")
+  else if(analysis=="simc" || analysis=="pseudo")
     {
 
       for(int ientry=0; ientry<nentries; ientry++)
@@ -2132,7 +2410,7 @@ void analyze::EventLoop()
 	  Pmy_lab = fB.Y(); 
 	  Pmz_lab = fB.Z(); 
 	  
-	  Pm = sqrt(Pmx_lab*Pmx_lab + Pmy_lab*Pmy_lab + Pmz_lab*Pmz_lab);
+	  //Pm = sqrt(Pmx_lab*Pmx_lab + Pmy_lab*Pmy_lab + Pmz_lab*Pmz_lab);
 	  
 	  //--------Rotate the recoil system from +z to +q-------
 	  qvec = fQ.Vect();
@@ -2259,28 +2537,33 @@ void analyze::EventLoop()
 
 
 	  //Define DATA/SIMC CUTS (BETTER BE THE SAME CUTS!)
-	  if(edelta_cut_flag){c_edelta = e_delta>edel_min&&e_delta<edel_max;} 
+	  if(edelta_cut_flag){c_edelta = e_delta>=edel_min&&e_delta<=edel_max;} 
 	  else{c_edelta=1;} //OFF means NO LIMITS on CUT (ALWAYS TRUE)
 	      
-	  if(hdelta_cut_flag){c_hdelta = h_delta>hdel_min&&h_delta<hdel_max;} 
+	  if(hdelta_cut_flag){c_hdelta = h_delta>=hdel_min&&h_delta<=hdel_max;} 
 	  else{c_hdelta=1;}
 	  
 	  if(W_cut_flag)     {c_W = W>=W_min&&W<=W_max;}                      
 	  else{c_W=1;}
 	  
-	  if(Em_cut_flag)    {c_Em = Em>Em_min&&Em<Em_max;}                   
+	  if(Em_cut_flag)    {c_Em = Em>=Em_min&&Em<=Em_max;}                   
 	  else{c_Em=1;}
 
-	  if(ztar_diff_cut_flag){ c_ztarDiff = ztar_diff>ztarDiff_min&&ztar_diff<ztarDiff_max;}
+	  if(ztar_diff_cut_flag){ 
+	    //cout << "simc_zmean = " << ztd_mean << endl;
+	    //ztd_mean = getZtarMean(pm_setting, data_set, model, "simc");  //Get Mean of ZtarDiff 
+	    c_ztarDiff = ztar_diff>=(ztd_mean + ztarDiff_min)&&ztar_diff<=(ztd_mean + ztarDiff_max);
+	    //c_ztarDiff = ztar_diff>ztarDiff_min&&ztar_diff<ztarDiff_max;
+	  }
 	  else{c_ztarDiff=1;}
 
-	  if(Q2_cut_flag) {c_Q2 = Q2>Q2_min&&Q2<Q2_max;}
+	  if(Q2_cut_flag) {c_Q2 = Q2>=Q2_min&&Q2<=Q2_max;}
 	  else{c_Q2 = 1;}
 	  
-	  if(MM_cut_flag) {c_MM = M_recoil>MM_min&&M_recoil<MM_max;}
+	  if(MM_cut_flag) {c_MM = M_recoil>=MM_min&&M_recoil<=MM_max;}
 	  else{c_MM = 1;}
 	
-	  if(thnq_cut_flag) { c_th_nq = th_nq>(thnq_min*dtr)&&th_nq<(thnq_max*dtr);}
+	  if(thnq_cut_flag) { c_th_nq = th_nq>=(thnq_min*dtr)&&th_nq<=(thnq_max*dtr);}
 	  else{c_th_nq = 1;}
 	  
 	
@@ -2464,12 +2747,110 @@ void analyze::EventLoop()
 	    
 	    H_Em_vs_Pm->Fill(Pm, Em, FullWeight);
 
+	    H_Q2_vs_W->Fill(W, Q2, FullWeight);
+	    H_Q2_vs_eyptar->Fill(e_yptar, Q2, FullWeight);
+	    H_Q2_vs_Pm->Fill(Pm, Q2, FullWeight);
 	    
 	    
 	    cout << "EventLoop: " << std::setprecision(2) << double(ientry) / nentries * 100. << "  % " << std::flush << "\r";
 	    
 	  } //END CUTS
 	  
+	  
+	  //--------------------SYSTEMATICS STUDIES--------------------
+	  //PART I
+	  //NOTE: This study consists of filling each histogram with all cuts except on itself
+	  
+	  if(c_hdelta&&c_edelta&&c_ztarDiff&&c_Q2&&c_th_nq&&hmsColl_Cut)
+	    {
+	      H_Em_nuc_sys->Fill(Em, FullWeight);
+
+	      /*
+	      //PART II: Systematics on Missing Momentum Yield
+	      //nominal
+	      if(Em>-0.02&&Em<0.04){ H_Pm_sysEm_nominal->Fill(Pm,FullWeight); }
+	      //tight
+	      if(Em>-0.01&&Em<0.03){ H_Pm_sysEm_tight->Fill(Pm,FullWeight); }
+	      //loose
+	      if(Em>-0.04&&Em<0.06){ H_Pm_sysEm_loose->Fill(Pm,FullWeight); }
+	      */
+
+	    }
+	  if(c_Em&&c_edelta&&c_ztarDiff&&c_Q2&&c_th_nq&&hmsColl_Cut)
+	    {
+	      H_hdelta_sys->Fill(h_delta, FullWeight);
+	      
+	      /*
+	      //PART II Systematics on Missing Momentum Yield: Vary HMS Delta Cut
+	      //nominal
+	      if(h_delta>-8.&&h_delta<8.){ H_Pm_syshdelta_nominal->Fill(Pm,FullWeight); }
+	      //tight
+	      if(h_delta>-5.&&h_delta<5.){ H_Pm_syshdelta_tight->Fill(Pm,FullWeight); }
+	      //loose
+	      if(h_delta>-10.&&h_delta<10.){ H_Pm_syshdelta_loose->Fill(Pm,FullWeight); }
+	      */
+
+	    }
+	  if(c_Em&&c_hdelta&&c_ztarDiff&&c_Q2&&c_th_nq&&hmsColl_Cut)
+	    {
+	      H_edelta_sys->Fill(e_delta, FullWeight);
+	      
+	      /*
+	      //PART II Systematics on Missing Momentum Yield: Vary SHMS Delta Cut
+	      //nominal
+	      if(e_delta>-10.&&e_delta<22.){ H_Pm_sysedelta_nominal->Fill(Pm,FullWeight); }
+	      //tight
+	      if(e_delta>-1.5&&e_delta<1.){ H_Pm_sysedelta_tight->Fill(Pm,FullWeight); }
+	      //loose
+	      if(e_delta>-3.&&e_delta<2.){ H_Pm_sysedelta_loose->Fill(Pm,FullWeight); }
+	      */
+	    }
+	  if(c_Em&&c_hdelta&&c_edelta&&c_Q2&&c_th_nq&&hmsColl_Cut)
+	    {
+	      H_ztar_diff_sys->Fill(ztar_diff, FullWeight);
+	      /*
+	      //PART II Systematics on Missing Momentum Yield: Vary Ztar Diff Cut
+	      //nominal
+	      if(ztar_diff>-2.&&ztar_diff<2.){ H_Pm_sysZtarDiff_nominal->Fill(Pm,FullWeight); }
+	      //tight
+	      if(ztar_diff>-1.&&ztar_diff<1.){ H_Pm_sysZtarDiff_tight->Fill(Pm,FullWeight); }
+	      //loose
+	      if(ztar_diff>-4.&&ztar_diff<4.){ H_Pm_sysZtarDiff_loose->Fill(Pm,FullWeight); }
+	      */
+	    }
+	  if(c_Em&&c_hdelta&&c_edelta&&c_ztarDiff&&c_th_nq&&hmsColl_Cut)
+	    {
+	      H_Q2_sys->Fill(Q2, FullWeight);
+
+	      //The cross section is determined in a specific Q2 region, therefore, it does not contribute to systematics
+
+	    }
+	  if(c_Em&&c_hdelta&&c_edelta&&c_ztarDiff&&c_Q2&&hmsColl_Cut)
+	    {
+	      H_theta_nq_sys->Fill(th_nq/dtr, FullWeight);
+	      	
+	      //The cross section is determined on various thnq bins, therefore, it does not contribute to systematics
+
+	    }
+	  if(c_Em&&c_hdelta&&c_edelta&&c_ztarDiff&&c_Q2&&c_th_nq)
+	    {
+	      H_hXColl_vs_hYColl_sys->Fill(hYColl, hXColl, FullWeight);
+
+	      //PART II Systematics on Missing Momentum Yield: HMS Coll Cut
+	      //NOTE: This cut will have to be done on three separate replays, each with a different
+	      //HMS Coll. CUt Scale, as we cannot put different scale cuts simultaneously.
+	      //if(hmsColl_Cut){ H_Pm_syshColl_nominal->Fill(Pm,FullWeight); }
+
+	    }
+	  
+	
+
+
+	  //----------------------------------------------------------------------------------
+
+
+
+
 	  //-----------------------------END Fill SIMC Histograms------------------------
 	  
 	} //End SIMC Event Loop
@@ -2537,27 +2918,35 @@ void analyze::CalcEff()
 
   H_charge->SetBinContent(5, total_charge_bcm_cut);
 
-  //COnvert SHMS Rates from Hz to kHz  (Keep EDTM, HMS and coin. rates in units of Hz)
+  //Convert  Rates from Hz to kHz 
   pS1XscalerRate_bcm_cut = pS1XscalerRate_bcm_cut / 1000.;
   pTRIG1scalerRate_bcm_cut = pTRIG1scalerRate_bcm_cut / 1000.;
   pTRIG2scalerRate_bcm_cut = pTRIG2scalerRate_bcm_cut / 1000.;
   pTRIG3scalerRate_bcm_cut = pTRIG3scalerRate_bcm_cut / 1000.;
   pTRIG4scalerRate_bcm_cut = pTRIG4scalerRate_bcm_cut / 1000.;
   pTRIG6scalerRate_bcm_cut = pTRIG6scalerRate_bcm_cut / 1000.;
-
+  pEDTMscalerRate_bcm_cut = pEDTMscalerRate_bcm_cut / 1000.;
 
   coin_scaler = total_ptrig6_scaler_bcm_cut - total_pedtm_scaler_bcm_cut;
 
   //Calculate  Live Time                                                                                                                        
-  cpuLT =  total_ptrig6_accp_bcm_cut / (total_ptrig6_scaler_bcm_cut-total_pedtm_scaler_bcm_cut);                                      
-  cpuLT_err = sqrt(total_ptrig6_accp_bcm_cut) / (total_ptrig6_scaler_bcm_cut-total_pedtm_scaler_bcm_cut);                                 
+  cpuLT =  (total_ptrig6_accp_bcm_cut) / coin_scaler;
+
+  //cpuLT =  total_ptrig6_accp_bcm_cut / (total_ptrig6_scaler_bcm_cut);      
+  cpuLT_err = sqrt(total_ptrig6_accp_bcm_cut) / (total_ptrig6_scaler_bcm_cut- total_pedtm_scaler_bcm_cut);                                 
+  
+  //Correction Factor to total Live Time
+  tLT_corr_factor = 1 - (pTRIG6scalerRate_bcm_cut*1000. + pEDTMscalerRate_bcm_cut*1000.)*250*1e-6 + pTRIG6scalerRate_bcm_cut*1000.*250*1e-6*(1. + pEDTMscalerRate_bcm_cut*1000./(pTRIG6scalerRate_bcm_cut*1000. + pEDTMscalerRate_bcm_cut*1000.));
   tLT =  total_pedtm_accp_bcm_cut / total_pedtm_scaler_bcm_cut;  
+  tLT = tLT*tLT_corr_factor;
+
+
 
   //Calculate Tracking Efficiency                                                                                                
   eTrkEff = e_did / e_should; 
   eTrkEff_err = sqrt(e_should-e_did) / e_should;                                                            
                                                                                     
-  //Hadron TRacking Efficiency                                                                                                                 
+  //Hadron Tracking Efficiency                                                                                                                 
   hTrkEff = h_did / h_should;                                                                                                                  
   hTrkEff_err = sqrt(h_should-h_did) / h_should;      
 
@@ -2578,11 +2967,11 @@ void analyze::ApplyWeight()
   if(analysis=="data"){
 
     //Target Boiling Slopes
-    LH2_slope = 0.0006;
-    LD2_slope = 0.0008;
+    LH2_slope = 0.00063396;
+    LD2_slope = 0.00080029;
     
     if(reaction=="heep"){
-      tgtBoil_corr = 1.;//(1.-LH2_slope * avg_current_bcm_cut);
+      tgtBoil_corr = (1.-LH2_slope * avg_current_bcm_cut);
     }
     
     if(reaction=="deep"){
@@ -2708,10 +3097,57 @@ void analyze::ApplyWeight()
     H_Pm_vs_thnq->Scale(FullWeight);
 
     H_Em_vs_Pm->Scale(FullWeight);
+    
+    H_Q2_vs_W->Scale(FullWeight);
+    H_Q2_vs_eyptar->Scale(FullWeight);
+    H_Q2_vs_Pm->Scale(FullWeight);
 
+    
     //Initialize Scaler Histograms
     H_bcmCurrent->Scale(FullWeight);
     
+    
+    //----SYSTEMATIC HISTOS----
+    H_Em_nuc_sys->Scale(FullWeight);
+    H_hdelta_sys->Scale(FullWeight);
+    H_edelta_sys->Scale(FullWeight);
+    H_ztar_diff_sys->Scale(FullWeight);
+    H_Q2_sys->Scale(FullWeight);
+    H_theta_nq_sys->Scale(FullWeight);
+    H_pcal_etotTrkNorm_sys->Scale(FullWeight);
+    H_ctime_sys->Scale(FullWeight);
+    H_hXColl_vs_hYColl_sys->Scale(FullWeight);
+    /*
+    //Emiss Systematics on Pm
+    H_Pm_sysEm_nominal->Scale(FullWeight);
+    H_Pm_sysEm_tight->Scale(FullWeight);
+    H_Pm_sysEm_loose->Scale(FullWeight);
+    //HMS Delta Systematics
+    H_Pm_syshdelta_nominal->Scale(FullWeight);
+    H_Pm_syshdelta_tight->Scale(FullWeight);
+    H_Pm_syshdelta_loose->Scale(FullWeight);
+    //SHMS Delta Systematics
+    H_Pm_sysedelta_nominal->Scale(FullWeight);
+    H_Pm_sysedelta_tight->Scale(FullWeight);
+    H_Pm_sysedelta_loose->Scale(FullWeight);
+    //Ztar Difference Systematics
+    H_Pm_sysZtarDiff_nominal->Scale(FullWeight);
+    H_Pm_sysZtarDiff_tight->Scale(FullWeight);
+    H_Pm_sysZtarDiff_loose->Scale(FullWeight);
+    //SHMS EtotTrkNorm Systematics
+    H_Pm_sysEtotTrkNorm_nominal->Scale(FullWeight);
+    H_Pm_sysEtotTrkNorm_tight->Scale(FullWeight);
+    H_Pm_sysEtotTrkNorm_loose->Scale(FullWeight);
+    //Coin. Time
+    H_Pm_sysCtime_nominal->Scale(FullWeight);
+    H_Pm_sysCtime_tight->Scale(FullWeight);
+    H_Pm_sysCtime_loose->Scale(FullWeight);
+
+    //HMS Collimator Cut Systematics
+    H_Pm_syshColl_nominal->Scale(FullWeight);
+    */
+
+
   } //end DATA
 
   cout << "Ending ApplyWeight() . . . " << endl; 
@@ -2832,13 +3268,56 @@ void analyze::WriteHist(string rad_flag="")
 
       H_Em_vs_Pm->Write();
       H_Em_nuc_vs_Pm->Write();
-
+      H_Q2_vs_W->Write();
+      H_Q2_vs_eyptar->Write();
+      H_Q2_vs_Pm->Write();
 
       H_bcmCurrent->Write();
     
+      
+      //----SYSTEMATIC HISTOS----
+      H_Em_nuc_sys->Write();
+      H_hdelta_sys->Write();
+      H_edelta_sys->Write();
+      H_ztar_diff_sys->Write();
+      H_Q2_sys->Write();
+      H_theta_nq_sys->Write();
+      H_pcal_etotTrkNorm_sys->Write();
+      H_ctime_sys->Write();
+      H_hXColl_vs_hYColl_sys->Write();
+      /*
+      //Emiss Systematics
+      H_Pm_sysEm_nominal->Write();
+      H_Pm_sysEm_tight->Write();
+      H_Pm_sysEm_loose->Write();
+      //HMS Delta Systematics
+      H_Pm_syshdelta_nominal->Write();
+      H_Pm_syshdelta_loose->Write();
+      H_Pm_syshdelta_tight->Write();
+      //SHMS Delta Systematics
+      H_Pm_sysedelta_nominal->Write();
+      H_Pm_sysedelta_loose->Write();
+      H_Pm_sysedelta_tight->Write();
+      //Ztar Difference Systematics
+      H_Pm_sysZtarDiff_nominal->Write();
+      H_Pm_sysZtarDiff_loose->Write();
+      H_Pm_sysZtarDiff_tight->Write();
+      //SHMS Cal EtotTrackNorm Systematics
+      H_Pm_sysEtotTrkNorm_nominal->Write();
+      H_Pm_sysEtotTrkNorm_loose->Write();
+      H_Pm_sysEtotTrkNorm_tight->Write();
+      //Coincidence Time Systematics
+      H_Pm_sysCtime_nominal->Write();
+      H_Pm_sysCtime_loose->Write();
+      H_Pm_sysCtime_tight->Write();
+      //HMS Collimator Cut Systematics
+      H_Pm_syshColl_nominal->Write();
+      */
+
+
     }
   
-  else if(analysis=="simc")
+  else if(analysis=="simc" || analysis=="pseudo")
     {
       //Create output ROOTfile
      
@@ -2846,8 +3325,12 @@ void analyze::WriteHist(string rad_flag="")
       if(rad_flag=="do_rad_corr"){
 	outROOT = new TFile(simc_OutputFileName_norad, "RECREATE");
       }
+      //Write Pseudo-Data (SIMC) Radiative if doing radiation (1) or radiative_corrections for which radiate_flag=-1 (must be off)
+      else if((radiate_flag==1 || radiate_flag==-1) && analysis=="pseudo"){
+	outROOT = new TFile(pseudo_OutputFileName, "RECREATE");
+      }
       //Write Radiative if doing radiation (1) or radiative_corrections for which radiate_flag=-1 (must be off)
-      else if(radiate_flag==1 || radiate_flag==-1){
+      else if((radiate_flag==1 || radiate_flag==-1) && analysis=="simc"){
 	outROOT = new TFile(simc_OutputFileName_rad, "RECREATE");
       }
       //Write Non-Radiative 
@@ -2998,8 +3481,40 @@ void analyze::WriteHist(string rad_flag="")
       H_Pm_vs_thnq_ps->Write();
 
       H_Em_vs_Pm->Write();
-
+      H_Q2_vs_W->Write();
+      H_Q2_vs_eyptar->Write();
+      H_Q2_vs_Pm->Write();
+      
+      //----SYSTEMATIC HISTOS----
+      H_Em_nuc_sys->Write();
+      H_hdelta_sys->Write();
+      H_edelta_sys->Write();
+      H_ztar_diff_sys->Write();
+      H_Q2_sys->Write();
+      H_theta_nq_sys->Write();
+      H_hXColl_vs_hYColl_sys->Write();
+      /*
+      //Emiss Systematics on Pm
+      H_Pm_sysEm_nominal->Write();
+      H_Pm_sysEm_tight->Write();
+      H_Pm_sysEm_loose->Write();
+      //HMS Delta Systematics
+      H_Pm_syshdelta_nominal->Write();
+      H_Pm_syshdelta_loose->Write();
+      H_Pm_syshdelta_tight->Write();
+      //SHMS Delta Systematics
+      H_Pm_sysedelta_nominal->Write();
+      H_Pm_sysedelta_loose->Write();
+      H_Pm_sysedelta_tight->Write();
+      //Ztar Difference Systematics
+      H_Pm_sysZtarDiff_nominal->Write();
+      H_Pm_sysZtarDiff_loose->Write();
+      H_Pm_sysZtarDiff_tight->Write();
+      //HMS Collimator Cut Systematics
+      H_Pm_syshColl_nominal->Write();
+      */
     }
+      
   
   outROOT->Close();
   cout << "Ending WriteHist() . . . " << endl;
@@ -3027,7 +3542,24 @@ void analyze::WriteReport()
       cout << "Report File does NOT exist, will create one . . . " << endl;
       
       out_file.open(report_OutputFileName);
-      out_file << "#!Run[i,0]/" << std::setw(25) << "charge[f,1]/" << std::setw(25) << "cpuLT[f,2]/"  << std::setw(25) << "cpuLT_err[f,3]/"  << std::setw(25) << "tLT[f,3]/"  << std::setw(25) <<  "hTrkEff[f,4]/" << std::setw(25) <<  "hTrkEff_err[f,5]/" << std::setw(25) << "eTrkEff[f,5]/" << std::setw(25) << "eTrkEff_err[f,5]/"  << std::setw(25) <<  "tgtBoil_factor[f,6]/" <<  std::setw(25)  << "avg_current[f,6]/"  << std::setw(25) << "pS1X_rate[f,7]/"  << std::setw(25) << "ptrig1_rate[f,8]/" << std::setw(25) << "ptrig2_rate[f,9]/" << std::setw(25) << "ptrig3_rate[f,10]/" << std::setw(25) << "ptrig4_rate[f,11]/" << std::setw(25) << "ptrig6_rate[f,12]/" << std::setw(25) << "coin_scaler[f,13]/"  << std::setw(25) <<  "HMS_Angle[f,13]/"  << std::setw(25) << "HMS_Pcen[f,14]/"  << std::setw(25) << "SHMS_Angle[f,15]/"   << std::setw(25) << "SHMS_Pcen[f,16]/"  << std::setw(25) << "HMS_Xmp[f,17]/" << std::setw(25) << "HMS_Ymp[f,18]/" << std::setw(25) << "SHMS_Xmp[f,19]/" << std::setw(25) << "SHMS_Ymp[f,20]/" << std::setw(25) << "xBPM[f,21]/" << std::setw(25) << "yBPM[f,22]/" << endl;
+        out_file << "#-------------------------------------" << endl;
+	out_file << "         #Cut Limits Set             " << endl;
+	out_file << "#-------------------------------------" << endl;
+	if(Em_cut_flag) {out_file << Form("#Missing Energy:(%f, %f) GeV", Em_min, Em_max ) << endl;}
+	if(W_cut_flag) {out_file << Form("#Invariant Mass:(%f,%f) GeV", W_min, W_max ) << endl;}
+	if(hdelta_cut_flag) {out_file << Form("#HMS Delta:(%f, %f) ", hdel_min, hdel_max ) << endl;}
+	if(edelta_cut_flag) {out_file << Form("#SHMS Delta:(%f, %f) ",edel_min, edel_max ) << endl;}
+	if(ztar_diff_cut_flag) {out_file << Form("#ZtarDiff:(%f,%f) cm", ztarDiff_min, ztarDiff_max ) << endl;}
+	if(Q2_cut_flag) {out_file <<  Form("#Q2: (%f,%f) GeV2",Q2_min, Q2_max ) << endl;}
+	if(MM_cut_flag) {out_file <<  Form("#Missing Mass:(%f,%f) GeV", MM_min, MM_max ) << endl;}
+	if(shmsCal_cut_flag) {out_file <<  Form("#SHMS EcalTotTrackNorm: (%f,%f)",shms_cal_min, shms_cal_max) << endl;}
+	if(coin_cut_flag) {out_file <<  Form("#Coincidence  Time: (%f,%f) ns", ctime_min, ctime_max) << endl;}
+	if(hmsCollCut_flag) {out_file <<  Form("#HMS Collimator Scale: %f", hms_scale ) << endl;}
+	if(shmsCollCut_flag) {out_file <<  Form("#SHMS Collimator Scale: %f",shms_scale ) << endl;}
+	out_file << "#--------------------------------------" << endl;
+	out_file << "# All rates are in [kHz] :: total_time has a bcm current cut and is in seconds (all quantities have bcm cut) :: tLT has been corrected with tLT_corr_factor" << endl;
+	out_file << "# Spectrometer Mispointings and BPMs are in [cm]" << endl;
+	out_file << "#!Run[i,0]/" << std::setw(25) << "charge[f,1]/" << std::setw(25) << "cpuLT[f,2]/"  << std::setw(25) << "cpuLT_err[f,3]/"  << std::setw(25) << "tLT[f,4]/" << std::setw(25) << "tLT_corr_factor[f,5]/" << std::setw(25) <<  "hTrkEff[f,6]/" << std::setw(25) <<  "hTrkEff_err[f,7]/" << std::setw(25) << "eTrkEff[f,8]/" << std::setw(25) << "eTrkEff_err[f,9]/"  << std::setw(25) <<  "tgtBoil_factor[f,10]/" <<  std::setw(25)  << "avg_current[f,11]/"  << std::setw(25) << "pS1X_rate[f,12]/"  << std::setw(25) << "ptrig1_rate[f,13]/" << std::setw(25) << "ptrig2_rate[f,14]/" << std::setw(25) << "ptrig3_rate[f,15]/" << std::setw(25) << "ptrig4_rate[f,16]/" << std::setw(25) << "ptrig6_rate[f,17]/" << std::setw(25) << "pEDTM_rate[f,18]/"  << std::setw(35) << "ptrig6_scl_noedtm[i,19]/" << std::setw(25) << "ptrig6_scl[i,20]/" <<  std::setw(25) << "ptrig6_accp[i,21]/"  << std::setw(25) << "pEDTM_scl[i,22]/" << std::setw(25) << "pEDTM_accp[i,23]/" << "total_time[f,23]/" << std::setw(25)  << "HMS_Angle[f,24]/"  << std::setw(25) << "HMS_Pcen[f,25]/"  << std::setw(25) << "SHMS_Angle[f,26]/"   << std::setw(25) << "SHMS_Pcen[f,27]/"  << std::setw(25) << "HMS_Xmp[f,28]/" << std::setw(25) << "HMS_Ymp[f,29]/" << std::setw(25) << "SHMS_Xmp[f,30]/" << std::setw(25) << "SHMS_Ymp[f,31]/" << std::setw(25) << "xBPM[f,32]/" << std::setw(25) << "yBPM[f,33]/" << endl;
       out_file.close();
       in_file.close();
 
@@ -3036,7 +3568,7 @@ void analyze::WriteReport()
    
     //Open Report FIle in append mode
     out_file.open(report_OutputFileName, ios::out | ios::app);
-    out_file << runNUM << std::setw(25) << total_charge_bcm_cut << std::setw(25) << cpuLT << std::setw(25) << cpuLT_err << std::setw(25) << tLT << std::setw(25) << hTrkEff  << std::setw(25) << hTrkEff_err << std::setw(25) << eTrkEff  << std::setw(25) << eTrkEff_err << std::setw(25) << tgtBoil_corr << std::setw(25) << avg_current_bcm_cut << std::setw(25) << pS1XscalerRate_bcm_cut << std::setw(25) << pTRIG1scalerRate_bcm_cut << std::setw(25) << pTRIG2scalerRate_bcm_cut << std::setw(25) << pTRIG3scalerRate_bcm_cut << std::setw(25) << pTRIG4scalerRate_bcm_cut << std::setw(25) << pTRIG6scalerRate_bcm_cut << std::setw(25) << coin_scaler << std::setw(25) << h_th  << std::setw(25) << h_Pcen << std::setw(25) << e_th << std::setw(25) << e_Pcen << std::setw(25) <<  h_xMisPoint << std::setw(25) <<  h_yMisPoint << std::setw(25) << e_xMisPoint << std::setw(25) << e_yMisPoint << std::setw(25) << xBPM << std::setw(25) << yBPM << endl;
+    out_file << runNUM << std::setw(25) << total_charge_bcm_cut << std::setw(25) << cpuLT << std::setw(25) << cpuLT_err << std::setw(25) << tLT << std::setw(25) << tLT_corr_factor << std::setw(25) << hTrkEff  << std::setw(25) << hTrkEff_err << std::setw(25) << eTrkEff  << std::setw(25) << eTrkEff_err << std::setw(25) << tgtBoil_corr << std::setw(25) << avg_current_bcm_cut << std::setw(25) << pS1XscalerRate_bcm_cut << std::setw(25) << pTRIG1scalerRate_bcm_cut << std::setw(25) << pTRIG2scalerRate_bcm_cut << std::setw(25) << pTRIG3scalerRate_bcm_cut << std::setw(25) << pTRIG4scalerRate_bcm_cut << std::setw(25) << pTRIG6scalerRate_bcm_cut << std::setw(25) << pEDTMscalerRate_bcm_cut << std::setw(25) << coin_scaler << std::setw(25) << total_ptrig6_scaler_bcm_cut << std::setw(25) << total_ptrig6_accp_bcm_cut << std::setw(25) << total_pedtm_scaler_bcm_cut << std::setw(25) << total_pedtm_accp_bcm_cut << std::setw(25) << total_time_bcm_cut << std::setw(25) << h_th  << std::setw(25) << h_Pcen << std::setw(25) << e_th << std::setw(25) << e_Pcen << std::setw(25) <<  h_xMisPoint << std::setw(25) <<  h_yMisPoint << std::setw(25) << e_xMisPoint << std::setw(25) << e_yMisPoint << std::setw(25) << xBPM << std::setw(25) << yBPM << endl;
     out_file.close();
 
     
@@ -3136,12 +3668,54 @@ void analyze::CombineHistos()
     data_file->GetObject("H_eYColl",H_eYColl_i);
     data_file->GetObject("H_hXColl_vs_hYColl",H_hXColl_vs_hYColl_i);
     data_file->GetObject("H_eXColl_vs_eYColl",H_eXColl_vs_eYColl_i);
-    data_file->GetObject("H_Em_vs_Pm",H_Em_vs_Pm_i);
+    data_file->GetObject("H_Em_vs_Pm",H_Em_vs_Pm_i); 
+    data_file->GetObject("H_Q2_vs_W",H_Q2_vs_W_i);
+    data_file->GetObject("H_Q2_vs_eyptar",H_Q2_vs_eyptar_i);
+    data_file->GetObject("H_Q2_vs_Pm",H_Q2_vs_Pm_i);
     data_file->GetObject("H_Pm_vs_thnq",H_Pm_vs_thnq_i);
     data_file->GetObject("H_Em_nuc_vs_Pm",H_Em_nuc_vs_Pm_i);
     data_file->GetObject("H_bcmCurrent",H_bcmCurrent_i);
     
-    
+    //----SYSTEMATIC HISTOS----
+    data_file->GetObject("H_Em_nuc_sys",H_Em_nuc_sys_i);
+    data_file->GetObject("H_hdelta_sys",H_hdelta_sys_i);
+    data_file->GetObject("H_edelta_sys",H_edelta_sys_i);
+    data_file->GetObject("H_ztar_diff_sys",H_ztar_diff_sys_i);
+    data_file->GetObject("H_Q2_sys",H_Q2_sys_i);
+    data_file->GetObject("H_theta_nq_sys",H_theta_nq_sys_i);
+    data_file->GetObject("H_pcal_etotTrkNorm_sys",H_pcal_etotTrkNorm_sys_i);
+    data_file->GetObject("H_ctime_sys",H_ctime_sys_i);
+    data_file->GetObject("H_hXColl_vs_hYColl_sys",H_hXColl_vs_hYColl_sys_i);
+    /*
+    //Em Systematics
+    data_file->GetObject("H_Pm_sysEm_nominal", H_Pm_sysEm_nominal_i);
+    data_file->GetObject("H_Pm_sysEm_loose", H_Pm_sysEm_loose_i);
+    data_file->GetObject("H_Pm_sysEm_tight", H_Pm_sysEm_tight_i);
+    //HMS Delta Systematics
+    data_file->GetObject("H_Pm_syshdelta_nominal", H_Pm_syshdelta_nominal_i);
+    data_file->GetObject("H_Pm_syshdelta_loose", H_Pm_syshdelta_loose_i);
+    data_file->GetObject("H_Pm_syshdelta_tight", H_Pm_syshdelta_tight_i);
+    //SHMS Delta Systematics
+    data_file->GetObject("H_Pm_sysedelta_nominal", H_Pm_sysedelta_nominal_i);
+    data_file->GetObject("H_Pm_sysedelta_loose", H_Pm_sysedelta_loose_i);
+    data_file->GetObject("H_Pm_sysedelta_tight", H_Pm_sysedelta_tight_i);
+    //Ztar Difference Systematics
+    data_file->GetObject("H_Pm_sysZtarDiff_nominal", H_Pm_sysZtarDiff_nominal_i);
+    data_file->GetObject("H_Pm_sysZtarDiff_loose", H_Pm_sysZtarDiff_loose_i);
+    data_file->GetObject("H_Pm_sysZtarDiff_tight", H_Pm_sysZtarDiff_tight_i);
+    //SHMS Cal EtotTrackNorm Systematics
+    data_file->GetObject("H_Pm_sysEtotTrkNorm_nominal", H_Pm_sysEtotTrkNorm_nominal_i);
+    data_file->GetObject("H_Pm_sysEtotTrkNorm_loose", H_Pm_sysEtotTrkNorm_loose_i);
+    data_file->GetObject("H_Pm_sysEtotTrkNorm_tight", H_Pm_sysEtotTrkNorm_tight_i);
+    //Coincidence Time Systematics
+    data_file->GetObject("H_Pm_sysCtime_nominal", H_Pm_sysCtime_nominal_i);
+    data_file->GetObject("H_Pm_sysCtime_loose", H_Pm_sysCtime_loose_i);
+    data_file->GetObject("H_Pm_sysCtime_tight", H_Pm_sysCtime_tight_i);
+    //HMS Collimator Cut Systematics
+    data_file->GetObject("H_Pm_syshColl_nominal", H_Pm_syshColl_nominal_i);
+    */
+
+
     Bool_t file_not_exist = gSystem->AccessPathName(data_OutputFileName_combined);
 
     //If Combined ROOTfile does NOT exist, Create One
@@ -3222,9 +3796,53 @@ void analyze::CombineHistos()
       H_hXColl_vs_hYColl_i->Write();		  
       H_eXColl_vs_eYColl_i->Write();		  
       H_Em_vs_Pm_i->Write();			  
+      H_Q2_vs_W_i->Write();			  
+      H_Q2_vs_eyptar_i->Write();			  
+      H_Q2_vs_Pm_i->Write();			  
       H_Em_nuc_vs_Pm_i->Write();
       H_Pm_vs_thnq_i->Write();
-      H_bcmCurrent_i->Write();                  
+      H_bcmCurrent_i->Write();   
+
+      
+      //----SYSTEMATIC HISTOS----
+      H_Em_nuc_sys_i->Write();
+      H_hdelta_sys_i->Write();
+      H_edelta_sys_i->Write();
+      H_ztar_diff_sys_i->Write();
+      H_Q2_sys_i->Write();
+      H_theta_nq_sys_i->Write();
+      H_pcal_etotTrkNorm_sys_i->Write();
+      H_ctime_sys_i->Write();
+      H_hXColl_vs_hYColl_sys_i->Write();
+      /*
+      //Em Systematics on Pm
+      H_Pm_sysEm_nominal_i->Write();
+      H_Pm_sysEm_loose_i->Write();
+      H_Pm_sysEm_tight_i->Write();
+      //HMS Delta Systematics
+      H_Pm_syshdelta_nominal_i->Write();
+      H_Pm_syshdelta_loose_i->Write();
+      H_Pm_syshdelta_tight_i->Write();
+      //SHMS Delta Systematics
+      H_Pm_sysedelta_nominal_i->Write();
+      H_Pm_sysedelta_loose_i->Write();
+      H_Pm_sysedelta_tight_i->Write();
+      //Ztar Difference Systematics
+      H_Pm_sysZtarDiff_nominal_i->Write();
+      H_Pm_sysZtarDiff_loose_i->Write();
+      H_Pm_sysZtarDiff_tight_i->Write();
+      //SHMS Cal EtotTrackNorm Systematics
+      H_Pm_sysEtotTrkNorm_nominal_i->Write();
+      H_Pm_sysEtotTrkNorm_loose_i->Write();
+      H_Pm_sysEtotTrkNorm_tight_i->Write();
+      //Coincidence Time Systematics
+      H_Pm_sysCtime_nominal_i->Write();
+      H_Pm_sysCtime_loose_i->Write();
+      H_Pm_sysCtime_tight_i->Write();
+      //HMS Collimator Cut Systematics
+      H_Pm_syshColl_nominal_i->Write();
+      */
+
       outROOT->Close();
     
     }
@@ -3309,10 +3927,51 @@ void analyze::CombineHistos()
       outROOT->GetObject("H_hXColl_vs_hYColl",H_hXColl_vs_hYColl_total);
       outROOT->GetObject("H_eXColl_vs_eYColl",H_eXColl_vs_eYColl_total);
       outROOT->GetObject("H_Em_vs_Pm",H_Em_vs_Pm_total);
+      outROOT->GetObject("H_Q2_vs_W",H_Q2_vs_W_total);
+      outROOT->GetObject("H_Q2_vs_eyptar",H_Q2_vs_eyptar_total);
+      outROOT->GetObject("H_Q2_vs_Pm",H_Q2_vs_Pm_total);
       outROOT->GetObject("H_Em_nuc_vs_Pm",H_Em_nuc_vs_Pm_total);
       outROOT->GetObject("H_Pm_vs_thnq",H_Pm_vs_thnq_total);
       outROOT->GetObject("H_bcmCurrent",H_bcmCurrent_total);
-     
+      
+      //----SYSTEMATIC HISTOS----
+      outROOT->GetObject("H_Em_nuc_sys",H_Em_nuc_sys_total);
+      outROOT->GetObject("H_hdelta_sys",H_hdelta_sys_total);
+      outROOT->GetObject("H_edelta_sys",H_edelta_sys_total);
+      outROOT->GetObject("H_ztar_diff_sys",H_ztar_diff_sys_total);
+      outROOT->GetObject("H_Q2_sys",H_Q2_sys_total);
+      outROOT->GetObject("H_theta_nq_sys",H_theta_nq_sys_total);
+      outROOT->GetObject("H_pcal_etotTrkNorm_sys",H_pcal_etotTrkNorm_sys_total);
+      outROOT->GetObject("H_ctime_sys",H_ctime_sys_total);
+      outROOT->GetObject("H_hXColl_vs_hYColl_sys",H_hXColl_vs_hYColl_sys_total);
+      /*
+      //Em Systematics
+      outROOT->GetObject("H_Pm_sysEm_nominal", H_Pm_sysEm_nominal_total);
+      outROOT->GetObject("H_Pm_sysEm_loose", H_Pm_sysEm_loose_total);
+      outROOT->GetObject("H_Pm_sysEm_tight", H_Pm_sysEm_tight_total);
+      //HMS Delta Systematics
+      outROOT->GetObject("H_Pm_syshdelta_nominal", H_Pm_syshdelta_nominal_total);
+      outROOT->GetObject("H_Pm_syshdelta_loose", H_Pm_syshdelta_loose_total);
+      outROOT->GetObject("H_Pm_syshdelta_tight", H_Pm_syshdelta_tight_total);
+      //SHMS Delta Systematics
+      outROOT->GetObject("H_Pm_sysedelta_nominal", H_Pm_sysedelta_nominal_total);
+      outROOT->GetObject("H_Pm_sysedelta_loose", H_Pm_sysedelta_loose_total);
+      outROOT->GetObject("H_Pm_sysedelta_tight", H_Pm_sysedelta_tight_total);
+      //Ztar Difference Systematics
+      outROOT->GetObject("H_Pm_sysZtarDiff_nominal", H_Pm_sysZtarDiff_nominal_total);
+      outROOT->GetObject("H_Pm_sysZtarDiff_loose", H_Pm_sysZtarDiff_loose_total);
+      outROOT->GetObject("H_Pm_sysZtarDiff_tight", H_Pm_sysZtarDiff_tight_total);
+      //SHMS Cal EtotTrackNorm Systematics
+      outROOT->GetObject("H_Pm_sysEtotTrkNorm_nominal", H_Pm_sysEtotTrkNorm_nominal_total);
+      outROOT->GetObject("H_Pm_sysEtotTrkNorm_loose", H_Pm_sysEtotTrkNorm_loose_total);
+      outROOT->GetObject("H_Pm_sysEtotTrkNorm_tight", H_Pm_sysEtotTrkNorm_tight_total);
+      //Coincidence Time Systematics
+      outROOT->GetObject("H_Pm_sysCtime_nominal", H_Pm_sysCtime_nominal_total);
+      outROOT->GetObject("H_Pm_sysCtime_loose", H_Pm_sysCtime_loose_total);
+      outROOT->GetObject("H_Pm_sysCtime_tight", H_Pm_sysCtime_tight_total);
+      //HMS Collimator Cut Systematics
+      outROOT->GetObject("H_Pm_syshColl_nominal", H_Pm_syshColl_nominal_total);
+      */
       
       //Add Current Histogram to Running Sum      
       H_charge_total->Add(                             H_charge_i);			          
@@ -3385,12 +4044,54 @@ void analyze::CombineHistos()
       H_eYColl_total->Add(			       H_eYColl_i);			  
       H_hXColl_vs_hYColl_total->Add(		       H_hXColl_vs_hYColl_i);		  
       H_eXColl_vs_eYColl_total->Add(		       H_eXColl_vs_eYColl_i);		  
-      H_Em_vs_Pm_total->Add(			       H_Em_vs_Pm_i);			  
+      H_Em_vs_Pm_total->Add(			       H_Em_vs_Pm_i);
+      H_Q2_vs_W_total->Add(			       H_Q2_vs_W_i);
+      H_Q2_vs_eyptar_total->Add(		       H_Q2_vs_eyptar_i);
+      H_Q2_vs_Pm_total->Add(			       H_Q2_vs_Pm_i);
+      
       H_Em_nuc_vs_Pm_total->Add(		       H_Em_nuc_vs_Pm_i);		  
       H_Pm_vs_thnq_total->Add(		               H_Pm_vs_thnq_i);		  
       H_bcmCurrent_total->Add(			       H_bcmCurrent_i);                    
-    
       
+      //----SYSTEMATIC HISTOS----
+      H_Em_nuc_sys_total->Add(                         H_Em_nuc_sys_i);
+      H_hdelta_sys_total->Add(                         H_hdelta_sys_i);
+      H_edelta_sys_total->Add(                         H_edelta_sys_i);
+      H_ztar_diff_sys_total->Add(                      H_ztar_diff_sys_i);
+      H_Q2_sys_total->Add(                             H_Q2_sys_i);
+      H_theta_nq_sys_total->Add(                       H_theta_nq_sys_i);
+      H_pcal_etotTrkNorm_sys_total->Add(               H_pcal_etotTrkNorm_sys_i);
+      H_ctime_sys_total->Add(                          H_ctime_sys_i);
+      H_hXColl_vs_hYColl_sys_total->Add(               H_hXColl_vs_hYColl_sys_i);
+      /*
+      //Em Systematics on Pm
+      H_Pm_sysEm_nominal_total->Add(                   H_Pm_sysEm_nominal_i);
+      H_Pm_sysEm_loose_total->Add(                     H_Pm_sysEm_loose_i);
+      H_Pm_sysEm_tight_total->Add(                     H_Pm_sysEm_tight_i);
+      //HMS Delta Systematics
+      H_Pm_syshdelta_nominal_total->Add(               H_Pm_syshdelta_nominal_i);
+      H_Pm_syshdelta_loose_total->Add(                 H_Pm_syshdelta_loose_i);
+      H_Pm_syshdelta_tight_total->Add(                 H_Pm_syshdelta_tight_i);
+      //SHMS Delta Systematics
+      H_Pm_sysedelta_nominal_total->Add(               H_Pm_sysedelta_nominal_i);
+      H_Pm_sysedelta_loose_total->Add(                 H_Pm_sysedelta_loose_i);
+      H_Pm_sysedelta_tight_total->Add(                 H_Pm_sysedelta_tight_i);
+      //Ztar Difference Systematics
+      H_Pm_sysZtarDiff_nominal_total->Add(             H_Pm_sysZtarDiff_nominal_i);
+      H_Pm_sysZtarDiff_loose_total->Add(               H_Pm_sysZtarDiff_loose_i);
+      H_Pm_sysZtarDiff_tight_total->Add(               H_Pm_sysZtarDiff_tight_i);
+      //SHMS Cal EtotTrackNorm Systematics
+      H_Pm_sysEtotTrkNorm_nominal_total->Add(          H_Pm_sysEtotTrkNorm_nominal_i);
+      H_Pm_sysEtotTrkNorm_loose_total->Add(            H_Pm_sysEtotTrkNorm_loose_i);
+      H_Pm_sysEtotTrkNorm_tight_total->Add(            H_Pm_sysEtotTrkNorm_tight_i);
+      //Coincidence Time Systematics
+      H_Pm_sysCtime_nominal_total->Add(                H_Pm_sysCtime_nominal_i);
+      H_Pm_sysCtime_loose_total->Add(                  H_Pm_sysCtime_loose_i);
+      H_Pm_sysCtime_tight_total->Add(                  H_Pm_sysCtime_tight_i);
+      //HMS Collimator Cut Systematics
+      H_Pm_syshColl_nominal_total->Add(                H_Pm_syshColl_nominal_i);
+      */
+
       outROOT->ReOpen("UPDATE");
    
       H_charge_total->Write("", TObject::kOverwrite);              
@@ -3463,10 +4164,52 @@ void analyze::CombineHistos()
       H_eYColl_total->Write("", TObject::kOverwrite);		
       H_hXColl_vs_hYColl_total->Write("", TObject::kOverwrite);	
       H_eXColl_vs_eYColl_total->Write("", TObject::kOverwrite);	
-      H_Em_vs_Pm_total->Write("", TObject::kOverwrite);		
+      H_Em_vs_Pm_total->Write("", TObject::kOverwrite);
+      H_Q2_vs_W_total->Write("", TObject::kOverwrite);
+      H_Q2_vs_eyptar_total->Write("", TObject::kOverwrite);
+      H_Q2_vs_Pm_total->Write("", TObject::kOverwrite);
       H_Em_nuc_vs_Pm_total->Write("", TObject::kOverwrite);	
       H_Pm_vs_thnq_total->Write("", TObject::kOverwrite);	
       H_bcmCurrent_total->Write("", TObject::kOverwrite);		
+      
+      //----SYSTEMATIC HISTOS----
+      H_Em_nuc_sys_total->Write("", TObject::kOverwrite);
+      H_hdelta_sys_total->Write("", TObject::kOverwrite);
+      H_edelta_sys_total->Write("", TObject::kOverwrite);
+      H_ztar_diff_sys_total->Write("", TObject::kOverwrite);
+      H_Q2_sys_total->Write("", TObject::kOverwrite);
+      H_theta_nq_sys_total->Write("", TObject::kOverwrite);
+      H_pcal_etotTrkNorm_sys_total->Write("", TObject::kOverwrite);
+      H_ctime_sys_total->Write("", TObject::kOverwrite);
+      H_hXColl_vs_hYColl_sys_total->Write("", TObject::kOverwrite);
+      /*
+      //Em Systematics on Pm
+      H_Pm_sysEm_nominal_total->Write("", TObject::kOverwrite);
+      H_Pm_sysEm_loose_total->Write("", TObject::kOverwrite);
+      H_Pm_sysEm_tight_total->Write("", TObject::kOverwrite);
+      //HMS Delta Systematics
+      H_Pm_syshdelta_nominal_total->Write("", TObject::kOverwrite);
+      H_Pm_syshdelta_loose_total->Write("", TObject::kOverwrite);
+      H_Pm_syshdelta_tight_total->Write("", TObject::kOverwrite);
+      //SHMS Delta Systematics
+      H_Pm_sysedelta_nominal_total->Write("", TObject::kOverwrite);
+      H_Pm_sysedelta_loose_total->Write("", TObject::kOverwrite);
+      H_Pm_sysedelta_tight_total->Write("", TObject::kOverwrite);
+      //Ztar Difference Systematics
+      H_Pm_sysZtarDiff_nominal_total->Write("", TObject::kOverwrite);
+      H_Pm_sysZtarDiff_loose_total->Write("", TObject::kOverwrite);
+      H_Pm_sysZtarDiff_tight_total->Write("", TObject::kOverwrite);
+      //SHMS Cal EtotTrackNorm Systematics
+      H_Pm_sysEtotTrkNorm_nominal_total->Write("", TObject::kOverwrite);
+      H_Pm_sysEtotTrkNorm_loose_total->Write("", TObject::kOverwrite);
+      H_Pm_sysEtotTrkNorm_tight_total->Write("", TObject::kOverwrite);
+      //Coincidence Time Systematics
+      H_Pm_sysCtime_nominal_total->Write("", TObject::kOverwrite);
+      H_Pm_sysCtime_loose_total->Write("", TObject::kOverwrite);
+      H_Pm_sysCtime_tight_total->Write("", TObject::kOverwrite);
+      //HMS Collimator Cut Systematics
+      H_Pm_syshColl_nominal_total->Write("", TObject::kOverwrite);
+      */
 
       cout << "***TOTAL RUNNING CHARGE: " <<  H_charge_total->Integral(0, 10) << endl;   
      
@@ -3476,7 +4219,7 @@ void analyze::CombineHistos()
     }
     
     
-    //}
+    
       
 }
 
@@ -3571,13 +4314,53 @@ void analyze::ChargeNorm()
    outROOT->GetObject("H_hXColl_vs_hYColl",H_hXColl_vs_hYColl_total);
    outROOT->GetObject("H_eXColl_vs_eYColl",H_eXColl_vs_eYColl_total);
    outROOT->GetObject("H_Em_vs_Pm",H_Em_vs_Pm_total);
+   outROOT->GetObject("H_Q2_vs_W",H_Q2_vs_W_total);
+   outROOT->GetObject("H_Q2_vs_eyptar",H_Q2_vs_eyptar_total);
+   outROOT->GetObject("H_Q2_vs_Pm",H_Q2_vs_Pm_total);
    outROOT->GetObject("H_Em_nuc_vs_Pm",H_Em_nuc_vs_Pm_total);
    outROOT->GetObject("H_Pm_vs_thnq",H_Pm_vs_thnq_total);
    outROOT->GetObject("H_bcmCurrent",H_bcmCurrent_total);
    
-   
+   //----SYSTEMATIC HISTOS----
+   outROOT->GetObject("H_Em_nuc_sys",H_Em_nuc_sys_total);
+   outROOT->GetObject("H_hdelta_sys",H_hdelta_sys_total);
+   outROOT->GetObject("H_edelta_sys",H_edelta_sys_total);
+   outROOT->GetObject("H_ztar_diff_sys",H_ztar_diff_sys_total);
+   outROOT->GetObject("H_Q2_sys",H_Q2_sys_total);
+   outROOT->GetObject("H_theta_nq_sys",H_theta_nq_sys_total);
+   outROOT->GetObject("H_pcal_etotTrkNorm_sys",H_pcal_etotTrkNorm_sys_total);
+   outROOT->GetObject("H_ctime_sys",H_ctime_sys_total);
+   outROOT->GetObject("H_hXColl_vs_hYColl_sys",H_hXColl_vs_hYColl_sys_total);
+   /*
+   //Em Systematics on Pm
+   outROOT->GetObject("H_Pm_sysEm_nominal", H_Pm_sysEm_nominal_total);
+   outROOT->GetObject("H_Pm_sysEm_loose", H_Pm_sysEm_loose_total);
+   outROOT->GetObject("H_Pm_sysEm_tight", H_Pm_sysEm_tight_total);
+   //HMS Delta Systematics
+   outROOT->GetObject("H_Pm_syshdelta_nominal", H_Pm_syshdelta_nominal_total);
+   outROOT->GetObject("H_Pm_syshdelta_loose", H_Pm_syshdelta_loose_total);
+   outROOT->GetObject("H_Pm_syshdelta_tight", H_Pm_syshdelta_tight_total);
+   //SHMS Delta Systematics
+   outROOT->GetObject("H_Pm_sysedelta_nominal", H_Pm_sysedelta_nominal_total);
+   outROOT->GetObject("H_Pm_sysedelta_loose", H_Pm_sysedelta_loose_total);
+   outROOT->GetObject("H_Pm_sysedelta_tight", H_Pm_sysedelta_tight_total);
+   //Ztar Difference Systematics
+   outROOT->GetObject("H_Pm_sysZtarDiff_nominal", H_Pm_sysZtarDiff_nominal_total);
+   outROOT->GetObject("H_Pm_sysZtarDiff_loose", H_Pm_sysZtarDiff_loose_total);
+   outROOT->GetObject("H_Pm_sysZtarDiff_tight", H_Pm_sysZtarDiff_tight_total);
+   //SHMS Cal EtotTrackNorm Systematics
+   outROOT->GetObject("H_Pm_sysEtotTrkNorm_nominal", H_Pm_sysEtotTrkNorm_nominal_total);
+   outROOT->GetObject("H_Pm_sysEtotTrkNorm_loose", H_Pm_sysEtotTrkNorm_loose_total);
+   outROOT->GetObject("H_Pm_sysEtotTrkNorm_tight", H_Pm_sysEtotTrkNorm_tight_total);
+   //Coincidence Time Systematics
+   outROOT->GetObject("H_Pm_sysCtime_nominal", H_Pm_sysCtime_nominal_total);
+   outROOT->GetObject("H_Pm_sysCtime_loose", H_Pm_sysCtime_loose_total);
+   outROOT->GetObject("H_Pm_sysCtime_tight", H_Pm_sysCtime_tight_total);
+   //HMS Collimator Cut Systematics
+   outROOT->GetObject("H_Pm_syshColl_nominal", H_Pm_syshColl_nominal_total);
+   */
+
    //Scale By total charge
- 
    H_ctime_total->Scale(charge_norm);
    H_hbeta_total->Scale(charge_norm);
    H_hcer_total->Scale(charge_norm);
@@ -3648,10 +4431,52 @@ void analyze::ChargeNorm()
    H_hXColl_vs_hYColl_total->Scale(charge_norm);
    H_eXColl_vs_eYColl_total->Scale(charge_norm);
    H_Em_vs_Pm_total->Scale(charge_norm);
+   H_Q2_vs_W_total->Scale(charge_norm);
+   H_Q2_vs_eyptar_total->Scale(charge_norm);
+   H_Q2_vs_Pm_total->Scale(charge_norm);
    H_Em_nuc_vs_Pm_total->Scale(charge_norm);
    H_Pm_vs_thnq_total->Scale(charge_norm);
    H_bcmCurrent_total->Scale(charge_norm);
    
+   //----SYSTEMATIC HISTOS----
+   H_Em_nuc_sys_total->Scale(charge_norm);
+   H_hdelta_sys_total->Scale(charge_norm);
+   H_edelta_sys_total->Scale(charge_norm);
+   H_ztar_diff_sys_total->Scale(charge_norm);
+   H_Q2_sys_total->Scale(charge_norm);
+   H_theta_nq_sys_total->Scale(charge_norm);
+   H_pcal_etotTrkNorm_sys_total->Scale(charge_norm);
+   H_ctime_sys_total->Scale(charge_norm);
+   H_hXColl_vs_hYColl_sys_total->Scale(charge_norm);
+   /*
+   //Em Systematics on Pm
+   H_Pm_sysEm_nominal_total->Scale(charge_norm);
+   H_Pm_sysEm_loose_total->Scale(charge_norm);
+   H_Pm_sysEm_tight_total->Scale(charge_norm);
+   //HMS Delta Systematics
+   H_Pm_syshdelta_nominal_total->Scale(charge_norm);
+   H_Pm_syshdelta_loose_total->Scale(charge_norm);
+   H_Pm_syshdelta_tight_total->Scale(charge_norm);
+   //SHMS Delta Systematics
+   H_Pm_sysedelta_nominal_total->Scale(charge_norm);
+   H_Pm_sysedelta_loose_total->Scale(charge_norm);
+   H_Pm_sysedelta_tight_total->Scale(charge_norm);
+   //Ztar Difference Systematics
+   H_Pm_sysZtarDiff_nominal_total->Scale(charge_norm);
+   H_Pm_sysZtarDiff_loose_total->Scale(charge_norm);
+   H_Pm_sysZtarDiff_tight_total->Scale(charge_norm);
+   //SHMS Cal EtotTrackNorm Systematics
+   H_Pm_sysEtotTrkNorm_nominal_total->Scale(charge_norm);
+   H_Pm_sysEtotTrkNorm_loose_total->Scale(charge_norm);
+   H_Pm_sysEtotTrkNorm_tight_total->Scale(charge_norm);
+   //Coincidence Time Systematics
+   H_Pm_sysCtime_nominal_total->Scale(charge_norm);
+   H_Pm_sysCtime_loose_total->Scale(charge_norm);
+   H_Pm_sysCtime_tight_total->Scale(charge_norm);
+   //HMS Collimator Cut Systematics
+   H_Pm_syshColl_nominal_total->Scale(charge_norm);
+   */
+
    outROOT->ReOpen("UPDATE");
    
    H_charge_total->Write("", TObject::kOverwrite);              
@@ -3725,9 +4550,51 @@ void analyze::ChargeNorm()
    H_hXColl_vs_hYColl_total->Write("", TObject::kOverwrite);	
    H_eXColl_vs_eYColl_total->Write("", TObject::kOverwrite);	
    H_Em_vs_Pm_total->Write("", TObject::kOverwrite);		
+   H_Q2_vs_W_total->Write("", TObject::kOverwrite);
+   H_Q2_vs_eyptar_total->Write("", TObject::kOverwrite);
+   H_Q2_vs_Pm_total->Write("", TObject::kOverwrite);
    H_Em_nuc_vs_Pm_total->Write("", TObject::kOverwrite);	
    H_Pm_vs_thnq_total->Write("", TObject::kOverwrite);
    H_bcmCurrent_total->Write("", TObject::kOverwrite);
+   
+   //----SYSTEMATIC HISTOS----
+   H_Em_nuc_sys_total->Write("", TObject::kOverwrite);
+   H_hdelta_sys_total->Write("", TObject::kOverwrite);
+   H_edelta_sys_total->Write("", TObject::kOverwrite);
+   H_ztar_diff_sys_total->Write("", TObject::kOverwrite);
+   H_Q2_sys_total->Write("", TObject::kOverwrite);
+   H_theta_nq_sys_total->Write("", TObject::kOverwrite);
+   H_pcal_etotTrkNorm_sys_total->Write("", TObject::kOverwrite);
+   H_ctime_sys_total->Write("", TObject::kOverwrite);
+   H_hXColl_vs_hYColl_sys_total->Write("", TObject::kOverwrite);
+   /*
+   //Em Systematics on Pm
+   H_Pm_sysEm_nominal_total->Write("", TObject::kOverwrite);
+   H_Pm_sysEm_loose_total->Write("", TObject::kOverwrite);
+   H_Pm_sysEm_tight_total->Write("", TObject::kOverwrite);
+   //HMS Delta Systematics
+   H_Pm_syshdelta_nominal_total->Write("", TObject::kOverwrite);
+   H_Pm_syshdelta_loose_total->Write("", TObject::kOverwrite);
+   H_Pm_syshdelta_tight_total->Write("", TObject::kOverwrite);
+   //SHMS Delta Systematics
+   H_Pm_sysedelta_nominal_total->Write("", TObject::kOverwrite);
+   H_Pm_sysedelta_loose_total->Write("", TObject::kOverwrite);
+   H_Pm_sysedelta_tight_total->Write("", TObject::kOverwrite);
+   //Ztar Difference Systematics
+   H_Pm_sysZtarDiff_nominal_total->Write("", TObject::kOverwrite);
+   H_Pm_sysZtarDiff_loose_total->Write("", TObject::kOverwrite);
+   H_Pm_sysZtarDiff_tight_total->Write("", TObject::kOverwrite);
+   //SHMS Cal EtotTrackNorm Systematics
+   H_Pm_sysEtotTrkNorm_nominal_total->Write("", TObject::kOverwrite);
+   H_Pm_sysEtotTrkNorm_loose_total->Write("", TObject::kOverwrite);
+   H_Pm_sysEtotTrkNorm_tight_total->Write("", TObject::kOverwrite);
+   //Coincidence Time Systematics
+   H_Pm_sysCtime_nominal_total->Write("", TObject::kOverwrite);
+   H_Pm_sysCtime_loose_total->Write("", TObject::kOverwrite);
+   H_Pm_sysCtime_tight_total->Write("", TObject::kOverwrite);
+   //HMS Collimator Cut Systematics
+   H_Pm_syshColl_nominal_total->Write("", TObject::kOverwrite);
+   */
 
   outROOT->Close();
   
@@ -3850,13 +4717,29 @@ void analyze::ApplyRadCorr()
 
    */
   cout << "Calling ApplyRadCorr() . . . " << endl;
-  
-  //Read Data Un-RadCorr and SIMC RadCorr ROOTfiles
-  TFile *data_file = new TFile(data_OutputFileName_combined, "READ");
 
-  //explicitly use FSI rad. corrections. (FIXME: This assumes that fsi radCorr simc file
-  // exists. This means that FSI must be run first, or must exits in the current directory)
-  TFile *radCorr_file = new TFile(simc_OutputFileName_radCorr_fsi, "READ"); 
+  //Check if filename exits
+  bool not_exist_data = gSystem->AccessPathName(data_OutputFileName_combined);  //true means it does not exist, false means it exits--> !not_exist
+  bool not_exist_pseudo = gSystem->AccessPathName(pseudo_OutputFileName); 
+  
+  TFile *data_file =NULL;
+
+  if(!not_exist_data){
+    //Read Data Un-RadCorr 
+    data_file = new TFile(data_OutputFileName_combined, "READ");
+  }
+  
+  if(!not_exist_pseudo){
+    //Read Pseudo-Data Un-RadCorr 
+    data_file = new TFile(pseudo_OutputFileName, "READ");
+  }
+
+  //Read SIMC Radiative Correction Ratios (Either PWIA or FSI models)
+  //This is useful later on to compare data cross sections using different rad. corr. models
+  if(model=="pwia"){simc_OutputFileName_radCorr =  simc_OutputFileName_radCorr_pwia;}
+  else if(model=="fsi"){simc_OutputFileName_radCorr =  simc_OutputFileName_radCorr_fsi;}
+
+  TFile *radCorr_file = new TFile(simc_OutputFileName_radCorr, "READ"); 
 
   data_file->cd();	
   data_file->GetObject("H_Q2", data_Q2);
@@ -3876,10 +4759,22 @@ void analyze::ApplyRadCorr()
   data_th_nq->Multiply(ratio_th_nq);
   data_Pm_vs_thnq->Multiply(ratio_Pm_vs_thnq);
 
+  //Testing Systematic Studies Dependence on Rad. COrr Ratio
+  //Do not apply rad. corr, and study systematic effects
 
-  //Write Radiative Corrected Data to ROOTfile
-  TFile *data_radcorr = new TFile(data_OutputFileName_radCorr, "RECREATE");
+  TFile *data_radcorr = NULL;
 
+
+  //Check wheter the input data or pseudo data file existed, to determine if we are analyzing data or pseudo-data
+  if(!not_exist_data){
+    //Write Radiative Corrected Data to ROOTfile
+    data_radcorr = new TFile(data_OutputFileName_radCorr, "RECREATE");
+  }
+  if(!not_exist_pseudo){
+    //Write Pseudo-Radiative Corrected Data to ROOTfile
+    data_radcorr = new TFile(pseudo_OutputFileName_radCorr, "RECREATE");
+  }
+  
   data_radcorr->cd();
 
   data_Q2->Write();
@@ -3898,18 +4793,29 @@ void analyze::GetXsec()
   /*
     Brief: This method reads in the radiative corrected data file and the SIMC un-radiated file. Get the
     Data Pmiss,  SIMC Pmiss,  and SIMC Phase Space.  Then, Divide out the phase space in dataPm and simcPm 
-    to get the data and simc cross sections.
+    to get the data and simc averaged cross sections.
    */
   Bool_t file_not_exist = gSystem->AccessPathName(data_OutputFileName_radCorr) || gSystem->AccessPathName(simc_OutputFileName_norad); 
+  Bool_t pseudo_file_not_exist = gSystem->AccessPathName(pseudo_OutputFileName_radCorr) || gSystem->AccessPathName(simc_OutputFileName_norad); 
 
-  if (file_not_exist) {
-    cout << "Not all files were found to calculate the cross section. " << endl;
-    exit(1);
-      }
+  TFile *data_file = NULL;
+  TFile *simc_file = NULL;
+  
+  if (!file_not_exist) {
+    cout << "Found Rad. Corr Data . . . Calculating Data Xsec" << endl;
 
-  //Read Data RadCorr and SIMC norad ROOTfiles
-  TFile *data_file = new TFile(data_OutputFileName_radCorr, "READ");
-  TFile *simc_file = new TFile(simc_OutputFileName_norad, "READ");
+    //Read Data RadCorr and SIMC norad ROOTfiles
+    data_file = new TFile(data_OutputFileName_radCorr, "READ");
+    simc_file = new TFile(simc_OutputFileName_norad, "READ");
+  }
+
+  if (!pseudo_file_not_exist) {
+    cout << "Found Rad. Corr Pseudo-Data . . . Calculating Pseudo-Data Xsec" << endl;
+
+    //Read Data RadCorr and SIMC norad ROOTfiles
+    data_file = new TFile(pseudo_OutputFileName_radCorr, "READ");
+    simc_file = new TFile(simc_OutputFileName_norad, "READ");
+  }
 
   data_file->cd();
   data_file->GetObject("H_Pm", dataPm); 
@@ -3926,7 +4832,7 @@ void analyze::GetXsec()
   simcPm->Divide(simcPm_ps);
 
   dataPm_v_thnq->Divide(simcPm_v_thnq_ps);
-  simcPm_v_thnq->Divide(simcPm_v_thnq, simcPm_v_thnq_ps);
+  simcPm_v_thnq->Divide(simcPm_v_thnq_ps);
 
   //Set Histo Names/Title
   dataPm->SetNameTitle("H_dataXsec", "Data Cross Sections");
@@ -3934,8 +4840,18 @@ void analyze::GetXsec()
   dataPm_v_thnq->SetNameTitle("H_data2DXsec", "2D Pm vs #theta_{nq} Data Cross Sections");
   simcPm_v_thnq->SetNameTitle("H_simc2DXsec", "2D Pm vs #theta_{nq} SIMC Cross Sections");
 
-  //Create new TFile to write cross sections
-  TFile *file_Xsec = new TFile(Xsec_OutputFileName, "RECREATE");
+  TFile *file_Xsec = NULL;
+
+  if (!file_not_exist) {
+    //Create new TFile to write cross sections
+    file_Xsec = new TFile(Xsec_OutputFileName, "RECREATE");
+  }
+  if (!pseudo_file_not_exist) {
+    //Create new TFile to write pseudo-data  cross sections
+    file_Xsec = new TFile(pseudoXsec_OutputFileName, "RECREATE");
+  }
+
+  
   file_Xsec->cd();
 
   dataPm->Write();
@@ -3946,6 +4862,59 @@ void analyze::GetXsec()
   file_Xsec->Close();
   data_file->Close();
   simc_file->Close();
+
+}
+
+
+//___________________________________________________________
+Double_t analyze::getZtarMean(int pm_set=0, int dataset=0, string model="", string analysis="")
+{
+  //Method to get the mean value of the Ztar Diff. Histogram, and be able to set the ZTar cut relative to that value
+  //rather than the assuming the mean is around zero. This method assumes there are already existing histograms from
+  //the Emiss study at 40 MeV cut.  THese histos are read (they alreay have a +/-2 cm cut relative to zero.) and the
+  //mean value is obtained.
+
+
+  //Assumes the ROOTfiles already exist
+  TString simc_filename = Form("root_files/pm%i_%sXsec_set%i_Em40MeV/deep_simc_histos_pm%i_laget%s_rad_set%i.root", pm_set, model.c_str(), dataset, pm_set, model.c_str(), dataset);
+  TString data_filename = Form("root_files/pm%i_%sXsec_set%i_Em40MeV/deep_data_histos_pm%i_set%i_combined.root", pm_set, model.c_str(), dataset, pm_set, dataset);
+  
+  TFile *simc_file = new TFile(simc_filename);
+  TFile *data_file = new TFile(data_filename);
+
+  
+  simc_file->cd();
+  simc_file->GetObject("H_ztar_diff", simc_ztarDiff);
+  
+  data_file->cd();
+  data_file->GetObject("H_ztar_diff", data_ztarDiff);
+
+
+  //Get Max Bin Content as the Mean (Approach 1)
+  //Int_t simc_maxbin = simc_ztarDiff->GetMaximumBin();
+  //Int_t data_maxbin = data_ztarDiff->GetMaximumBin();
+
+  //Double_t simc_mean =  simc_ztarDiff->GetXaxis()->GetBinCenter(simc_maxbin);
+  //Double_t data_mean =  data_ztarDiff->GetXaxis()->GetBinCenter(data_maxbin);
+
+  //Get The Mean Value of the histogram itself 
+  Double_t simc_mean = simc_ztarDiff->GetMean();
+  Double_t data_mean = data_ztarDiff->GetMean();
+  
+
+  simc_file->Close();
+  data_file->Close();
+
+
+  //Return SIMC Ztar Mean Value
+  if(analysis=="simc" || analysis=="pseudo"){
+    return simc_mean;
+  }
+  //Return DATA Ztar Mean Value
+  if(analysis=="data"){
+    return data_mean;
+  }
+
 
 }
 
@@ -4066,10 +5035,13 @@ vector <string> analyze::FindString(string keyword, string fname)
 
   while(getline(ifile, line))
     {
-        
+      //Check 1st character of found string
+      TString cmt = line[0];
+      
       found = line.find(keyword);
       
       if(found<0||found>1000){found=-1;} //not found
+      if(cmt==";" || cmt=="#" || cmt=="!") {found=-1;}  //Found commented line. So Skip
 
       if(found!=-1){
 	
@@ -4171,7 +5143,29 @@ void analyze::run_data_analysis(Bool_t Qnorm_flag=0)
   CombineHistos();
   if(Qnorm_flag)
     {
-      cout << "*****QNORM_FLAG IS TRUE*****" << endl;
+      cout << "==Reached Final Run On List==" << endl;
+      cout << "Normalizing by Total Accumulated Charge . . ." << endl;
       ChargeNorm();
     }
+}
+
+//________________________________________________________
+void analyze::run_pseudo_analysis(Bool_t rad_corr_flag=0)
+{
+
+  //Run SIMC analysis. By default, it reads the radiative ROOTfile
+  //This ROOTfile will be treated as 'pseudo-data', in which SIMC kin. are varied a little bit
+  //and treated as data which means it need to read the radiative SIMC ROOTfile
+  
+  SetFileNames();
+  SetCuts();
+  SetDefinitions();
+  SetHistBins();
+  CreateHist();
+  ReadTree();
+  EventLoop();
+  WriteHist();
+  
+  
+
 }

@@ -101,10 +101,14 @@ vector <string> FindString(string keyword, string fname)
 
   while(getline(ifile, line))
     {
-        
+      
+      //Check 1st character of found string
+      TString cmt = line[0];
+
       found = line.find(keyword);
       
-      if(found<0||found>1000){found=-1;} //not found
+      if(found<0 || found>1000){found=-1;} //not found
+      if(cmt==";" || cmt=="!") {found=-1;}  //Found commented line. So Skip
 
       if(found!=-1){
 	

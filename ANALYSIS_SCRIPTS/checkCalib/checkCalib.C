@@ -6,7 +6,7 @@ void checkCalib(string spec, int run)
 {
   
   //spec --> "hms" or "shms" or "all"
-  //detec ---> "dc", "hod", "cal", "cer" or "all"
+  //run ---> 3289  or if it is combined, then, 580MeV or 750MeV (for deuteron runs combined)
   
   //Prevent plot 
   gROOT->SetBatch(kTRUE);
@@ -87,7 +87,7 @@ void checkCalib(string spec, int run)
   //TString filename = Form("../../../ROOTfiles/good_Heep_hmsProt/hprot_kg%d.root", run);
   //TString filename = Form("../../../ROOTfiles/coin_replay_trkStudy_%d_-1.root", run);
   
-  TString filename = "../../../ROOTfiles/pm580_set1.root";
+  TString filename = "../../../ROOTfiles/pm580.root";
   // TString filename = "../../../ROOTfiles/pm580_total.root";
 
 

@@ -18,7 +18,7 @@ me = 0.51099;
 #define the proton magnetic form factor (See physics_proton.f)
 #Assumes Q2 is in MeV2
 def GMp(Q2):
-    print ('Calculating Magnetic Form factor')
+    #print ('Calculating Magnetic Form factor')
 
     Q2 = Q2*1e-6    #convert from MeV2 to GeV2
 
@@ -38,7 +38,7 @@ def GMp(Q2):
 #define the proton electric form factor
 #Assumes Q2 input is in MeV2
 def GEp(Q2):
-    print ('Calculating Electric Form factor')
+    #print ('Calculating Electric Form factor')
 
     Q2 = Q2*1e-6    #convert from MeV2 to GeV2
 
@@ -60,20 +60,27 @@ def sigMott(kf, th_e, Q2):
     #Units: kf ~ Ef [MeV]   electron momentum  
     #th_e[deg] electron angle  
     #Q2[MeV2]   4-momentum transfer
-    
-    th_e = th_e * dtr    # convert degree to radians
-    sig = (2.*alpha*hbarc*kf*np.cos(th_e/2.)/Q2 )**2   #MeV^2 * fm^2 *MeV^2/MeV^4--> fm2
-    sigMott = sig * 1e4    #convert fm^2 -> microbarn
+    if Q2<=0.:
+        the_e = -1.
+        sig = -1.
+        sigMott = -1.
+    else:
+        th_e = th_e * dtr    # convert degree to radians
+        sig = (2.*alpha*hbarc*kf*np.cos(th_e/2.)/Q2 )**2   #MeV^2 * fm^2 *MeV^2/MeV^4--> fm2
+        sigMott = sig * 1e4    #convert fm^2 -> microbarn
 
     return sigMott
 
 
 #deForest eN off-shell cross section (Refer to deForest 1983 paper)
 #Input units: energy: MeV  angle: deg
-def deForest(Q2, q, Pf, Pm, th_e, c_phi, thpq, sig_Mott, GE_p, GM_p):
+#Use the average kinematics as inpu
+def deForest(Ef, Q2, q, Pf, Pm, th_e, th_p, c_phi, thpq, sig_Mott, GE_p, GM_p):
 
-    #Input Parameters: Q2, |q|(3-vector q magnitude), Pf, Ef, theta_e, cos_phi, 
+    #Input Parameters: Q2, |q_lab|(3-vector q magnitude), Pf, Ef, theta_e, cos_phi, 
 
+    #Ef: final e- energy, Pf: final proton energy, 
+    #Er: recoil energy (neutron)
     #d5sig = k * sig_eN * S(Pm)
     # sig_eN = sigMott * { Vc * Wc + Vt * Wt + Vi * Wi  + Vs * Ws }, where the V's are the coefficients and W's are the respose functions
 
@@ -88,8 +95,28 @@ def deForest(Q2, q, Pf, Pm, th_e, c_phi, thpq, sig_Mott, GE_p, GM_p):
     th_e = th_e * dtr   #electron angle 
     gamma = thpq * dtr   #in-plane angle between struck proton in q-vector
 
-    Ef = np.sqrt(MP*MP + Pf*Pf)  #final proton energy
-    Kfact = Pf*Ef     #kinematic factor, final proton momentum, energy  [MeV^2]
+    Epf = np.sqrt(MP*MP + Pf*Pf)  #final proton energy
+    Er = np.sqrt(MN*MN + Pm*Pm)  #final neutron (recoil) energy
+
+    #For a 6-Fold Differential XSec (d6sig/(dE'*dom *dOme* dOmp))   --See Hari's THesis
+    Kfact = Pf*Epf     #kinematic factor, final proton momentum, energy  [MeV^2] (THis should also have a 1/(2*pi)^3)
+ 
+    #For a 5-Fold Differential XSec (d5sig/(dom *dOme* dOmp))  : Missing Energy Integrated  (sig)deutpwia.f --Werner's code)
+    #Kfact = Pf * Epf *MN / (8.*np.pi**3 * MD)  #from Hari's thesis
+    
+    pipf = 0.5 * (q**2 - (Pf**2 + Pm**2))
+    rec = 1 -  (Epf/Er) * (pipf/Pf**2)  
+    f_rec = 1./rec
+
+    #Using definitions from William P. Ford, Sabine and J.W. Van Orden  (factor too small. check later on.)
+    #om = np.sqrt(q*q - Q2)  #energy transfer
+    #Kfact = MP*MN*Pf/(8.* np.pi**3 * MD)
+    #rec = np.abs(1 + (om*Pf - Epf*q*np.cos(th_p)/(MP*Pf)))
+    #f_rec=1. / rec
+
+    print('Kfact=',Kfact)
+    print('f_rec=',f_rec)
+    #print('K*f_rec=', Kfact*f_rec)
 
     #Define the Response Functions Coefficients
     Vc = q4mu / q**4
@@ -99,9 +126,9 @@ def deForest(Q2, q, Pf, Pm, th_e, c_phi, thpq, sig_Mott, GE_p, GM_p):
 
     #Define bar quantities
     Ebar_f = np.sqrt(Pm*Pm + MP*MP)   #struck proton energy
-    om_bar = Ef - Ebar_f              #bar energy transfer (deForest calls omega bar)
+    om_bar = Epf - Ebar_f              #bar energy transfer (deForest calls omega bar)
     q2mu_bar = q**2 - om_bar**2
-    EbarE = Ebar_f*Ef
+    EbarE = Ebar_f*Epf
 
     #Defing the Sachs Form Factors 
     #From: GEp = F1 - tau * F2,  GMp = F1 + F2,  where Tau = Q2 / 4Mp**2
@@ -112,10 +139,10 @@ def deForest(Q2, q, Pf, Pm, th_e, c_phi, thpq, sig_Mott, GE_p, GM_p):
     sumFF1 = (F1 + kF2)**2
     sumFF2 = F1**2 + (q2mu_bar/(4.*MP**2))*kF2**2   
 
-    Wc = 1./(4.*EbarE) * ( (Ebar_f + Ef)**2 * (F1**2 + (q2mu_bar/(4.*MP**2))*kF2**2) - q**2*(F1 + kF2)**2 )
+    Wc = 1./(4.*EbarE) * ( (Ebar_f + Epf)**2 * (F1**2 + (q2mu_bar/(4.*MP**2))*kF2**2) - q**2*(F1 + kF2)**2 )
     Wt = q2mu_bar/(2.*EbarE) * (F1 + kF2)**2
     Ws = Pf**2 * np.sin(gamma)**2 / (EbarE) * (F1**2 + (q2mu_bar/(4.*MP**2))*kF2**2)
-    Wi = -Pf * np.sin(gamma) * (Ebar_f + Ef) / (EbarE) * (F1**2 + q2mu_bar/(4.*MP**2)*kF2**2)
+    Wi = -Pf * np.sin(gamma) * (Ebar_f + Epf) / (EbarE) * (F1**2 + q2mu_bar/(4.*MP**2)*kF2**2)
 
     #Calculate eN offshell cross section (sig_cc1)
     sig_eN = sig_Mott * ( Vc*Wc + Vt*Wt + Vs*Ws + Vi*Wi ) 
@@ -132,9 +159,9 @@ def deForest(Q2, q, Pf, Pm, th_e, c_phi, thpq, sig_Mott, GE_p, GM_p):
 
     #Calculate the deForest Cross Section
     #d^5sigma/(dOm_e*dOm_p*dE') = K * sig_eN * S(Pm):  [ub/(sr^2*MeV)] = [MeV^2 * ub/sr^2 * 1/MeV^3]
-    deForest = Kfact * sig_eN      #this is actually: d^5sigma/(dOm_e*dOm_p*dE') / S(Pm) = K * sig_eN, so the units are: (ub * MeV^2) / sr^2   
+    deForest = Kfact * f_rec * sig_eN      #this is actually: d^5sigma/(dOm_e*dOm_p*dE') / S(Pm) = K * sig_eN, so the units are: (ub * MeV^2) / sr^2   
     
-    return deForest
+    return Kfact, f_rec, sig_eN, deForest
 
 
 def main():
@@ -154,7 +181,7 @@ def main():
     thpq = np.arcsin(sin_gamma) / dtr
     de_Forest = deForest(Q2, q, Pf, Pm, th_e, c_phi, thpq, sig_Mott, GE_p, GM_p)
 
-    print('GEp=',GE_p,':GMp=',GM_p,':sigMott=',sig_Mott,':deForest=',de_Forest)
+    #print('GEp=',GE_p,':GMp=',GM_p,':sigMott=',sig_Mott,':deForest=',de_Forest)
 
 if __name__ == "__main__":
     main()

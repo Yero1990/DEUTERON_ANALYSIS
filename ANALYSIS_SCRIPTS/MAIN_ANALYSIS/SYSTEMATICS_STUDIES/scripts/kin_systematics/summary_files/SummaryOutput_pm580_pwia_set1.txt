@@ -1,0 +1,594 @@
+2DBIN #: 22
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 43
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 64
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 85
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 106
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 127
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 148
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 169
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 190
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 211
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 232
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 253
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 274
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 295
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 316
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 337
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 358
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 379
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 400
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 421
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 442
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------
+2DBIN #: 463
+-------------------------------------------------------------
+central cross section :        NaN
+incident energy :  0.000E+00
+scattering angle :   0.000E+00  omega :  -5.110E-01
+initial momentum :         NaN  final momentum :         NaN
+Theta CMS :         NaN  Phi CMS :         NaN
+q_lab :   5.110E-01  theta_q :   1.800E+02
+pr :         NaN  theta_prq :         NaN
+
+ all derivatives are in %
+ all angle derives  are in 1/degree 
+
+           dsig        dpi         dpf          dq         dth_q        dth_prq
+
+
+dth_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_e         NaN         NaN         NaN   0.000E+00         NaN         NaN
+def           NaN         NaN         NaN   1.957E+02         NaN         NaN
+   
+dth_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_p         NaN         NaN         NaN   0.000E+00         NaN         NaN
+   
+dth_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dph_b         NaN         NaN         NaN   0.000E+00         NaN         NaN
+dE            NaN         NaN         NaN   0.000E+00         NaN         NaN
+----------------------------------------------------------------------------------

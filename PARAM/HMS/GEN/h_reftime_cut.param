@@ -16,4 +16,16 @@ hhodo_adcrefcut=-2300.
 hcer_adcrefcut=-2300.
 hcal_adcrefcut=-2300.
 
+;HMS e- Heep Singles 6621-7970 (Fall 2018 - Spring 2019) --for Heep Minimization
+;hdc_tdcrefcut=-15800.
+;hhodo_tdcrefcut=-3000.
+;hhodo_adcrefcut=-4500.
+;hcer_adcrefcut=-4500.
+;hcal_adcrefcut=-4500.
 
+;Default
+;hdc_tdcrefcut=-10000.
+;hhodo_tdcrefcut=-1000.
+;hhodo_adcrefcut=-1000.
+;hcer_adcrefcut=-1000.
+;hcal_adcrefcut=-1000.
