@@ -17,40 +17,62 @@ me = 0.51099;
 
 #define the proton magnetic form factor (See physics_proton.f)
 #Assumes Q2 is in MeV2
-def GMp(Q2):
-    #print ('Calculating Magnetic Form factor')
+def GMp(Q2, param=''):
 
     Q2 = Q2*1e-6    #convert from MeV2 to GeV2
-
     #Four momentum transfer to various powers (units GeV^{power})
     Q = np.sqrt(Q2)
-    Q3 = Q**3
-    Q4 = Q**4
-    Q5 = Q**5
-    
-    #Peter Bosted Parametrization
     mu_p = 2.793      #proton magnetic moment
 
-    denom =  1. + 0.35*Q + 2.44*Q2 + 0.5*Q3 + 1.04*Q4 + 0.34*Q5
-    GMp = mu_p / denom
+    #Peter Bosted Parametrization
+    if param=='bosted':
+        Q3 = Q**3
+        Q4 = Q**4
+        Q5 = Q**5    
+        denom =  1. + 0.35*Q + 2.44*Q2 + 0.5*Q3 + 1.04*Q4 + 0.34*Q5
+        GMp = mu_p / denom
+
+    #John R. Arrington Parametrization
+    if param=='JRA':
+        Q22 = Q2**2 
+	Q23 = Q2**3 
+	Q24 = Q2**4 
+	Q25 = Q2**5 
+	Q26 = Q2**6 
+
+	GMp = mu_p/(1. + Q2 * (3.19) + Q22 * (1.355) + Q23 * (0.151) + Q24 * (-0.114E-01) + Q25 * (0.533E-03) + Q26 * (-0.900E-05) )
+
     return GMp
 
 #define the proton electric form factor
 #Assumes Q2 input is in MeV2
-def GEp(Q2):
+def GEp(Q2, param=''):
     #print ('Calculating Electric Form factor')
 
     Q2 = Q2*1e-6    #convert from MeV2 to GeV2
 
     #Four momentum transfer to various powers (units GeV^{power})
     Q = np.sqrt(Q2)
-    Q3 = Q**3
-    Q4 = Q**4
-    Q5 = Q**5
     
     #Peter Bosted Parametrization
-    denom =  1. + 0.62*Q + 0.68*Q2 + 2.8*Q3 + 0.83*Q4
-    GEp = 1. / denom
+    if param=='bosted':
+        Q3 = Q**3
+        Q4 = Q**4
+        Q5 = Q**5
+        
+        denom =  1. + 0.62*Q + 0.68*Q2 + 2.8*Q3 + 0.83*Q4
+        GEp = 1. / denom
+
+    #John R. Arrington Parametrization
+    if param=='JRA':
+        Q22 = Q2**2 
+	Q23 = Q2**3 
+	Q24 = Q2**4 
+	Q25 = Q2**5 
+	Q26 = Q2**6 
+
+	GEp=1./(1. + Q2 * (3.226) + Q22 * (1.508) + Q23 * (-0.3773) + Q24 * (0.611) + Q25 * (-0.1853) + Q26 * (0.1596E-01)  )
+
     return GEp
 
 

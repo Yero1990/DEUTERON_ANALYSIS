@@ -213,8 +213,8 @@ for i,acont in enumerate(all.cont):
 
       #Calculate the deForest Cross Section Factor  K * sig_cc1,  where K = Pf * Ep , units: ub * MeV^2 / sr^2
       sig_Mott =  sigMott(kf, the, Q2_calc)   #ub / sr
-      GE_p = GEp(Q2_calc)
-      GM_p = GMp(Q2_calc)
+      GE_p = GEp(Q2_calc, 'JRA')
+      GM_p = GMp(Q2_calc, 'JRA')
       Kfact, f_rec, sig_eN, de_Forest = deForest(Ef, Q2_calc, q_calc, Pf, Pm_calc, the, thp, cphi_pq, th_pq_calc, sig_Mott, GE_p, GM_p)
       
       #print('ix=',i_xbin,' iy=',i_ybin,' pm=',Pm_calc,' Kfact=',Kfact,' f_rec=',f_rec,' sig_eN=',sig_eN)

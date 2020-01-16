@@ -208,7 +208,8 @@ analyze::analyze(int run=-1000, string e_arm="SHMS", string type="data", string 
   //2D Collimator Histos
   H_hXColl_vs_hYColl = NULL;
   H_eXColl_vs_eYColl = NULL;
-
+  H_hxfp_vs_hyfp     = NULL;
+  H_exfp_vs_eyfp     = NULL;
   H_Em_vs_Pm = NULL;
   H_Em_nuc_vs_Pm = NULL;
   H_Q2_vs_W = NULL;
@@ -440,7 +441,8 @@ analyze::~analyze()
   //2D Collimator Histos
   delete H_hXColl_vs_hYColl; H_hXColl_vs_hYColl = NULL;
   delete H_eXColl_vs_eYColl; H_eXColl_vs_eYColl = NULL;
-
+  delete H_hxfp_vs_hyfp;     H_hxfp_vs_hyfp     = NULL;
+  delete H_exfp_vs_eyfp;     H_exfp_vs_eyfp     = NULL;
   delete H_Em_vs_Pm;         H_Em_vs_Pm         = NULL;
   delete H_Em_nuc_vs_Pm;     H_Em_nuc_vs_Pm     = NULL;
   delete H_Q2_vs_W;          H_Q2_vs_W          = NULL;
@@ -536,8 +538,8 @@ void analyze::SetFileNames()
     data_InputFileName = Form("ROOTfiles/coin_replay_%s_check_%d_-1.root", reaction.c_str(), runNUM);
     data_InputReport = Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_%s_check_%d_-1.report", reaction.c_str(), runNUM); 
 
-    simc_InputFileName_rad = Form("ROOTfiles/SIMC/D2_heep_%d_rad.root", runNUM);
-    simc_InputFileName_norad = Form("ROOTfiles/SIMC/D2_heep_%d_norad.root", runNUM);
+    simc_InputFileName_rad = Form("ROOTfiles/SIMC/D2_heep_bostedFOFA/D2_heep_%d_rad.root", runNUM);
+    simc_InputFileName_norad = Form("ROOTfiles/SIMC/D2_heep_bostedFOFA/D2_heep_%d_norad.root", runNUM);
     
 
     //Set Output Names
@@ -1451,6 +1453,10 @@ void analyze::CreateHist()
   //2D Collimator Histos
   H_hXColl_vs_hYColl = new TH2F("H_hXColl_vs_hYColl", Form("%s  Collimator", h_arm_name.c_str()), hYColl_nbins, hYColl_xmin, hYColl_xmax,  hXColl_nbins, hXColl_xmin, hXColl_xmax);
   H_eXColl_vs_eYColl = new TH2F("H_eXColl_vs_eYColl", Form("%s Collimator", e_arm_name.c_str()), eYColl_nbins, eYColl_xmin, eYColl_xmax, eXColl_nbins, eXColl_xmin, eXColl_xmax); 
+  
+  //2D Hour Glass Histos
+  H_hxfp_vs_hyfp  = new TH2F("H_hxfp_vs_hyfp", Form("%s  X_{fp} vs. Y_{fp}", h_arm_name.c_str()),  hyfp_nbins, hyfp_xmin, hyfp_xmax, hxfp_nbins, hxfp_xmin, hxfp_xmax);
+  H_exfp_vs_eyfp  = new TH2F("H_exfp_vs_eyfp", Form("%s  X_{fp} vs. Y_{fp}", e_arm_name.c_str()),  eyfp_nbins, eyfp_xmin, eyfp_xmax, exfp_nbins, exfp_xmin, exfp_xmax);
 
   H_Em_vs_Pm = new TH2F("H_Em_vs_Pm", "E_{miss} vs. P_{miss}", Pm_nbins, -0.01, 0.2, Em_nbins, Em_xmin, Em_xmax);
   H_Em_nuc_vs_Pm = new TH2F("H_Em_nuc_vs_Pm", "E_{miss.nuc} vs. P_{miss}", Pm_nbins, -0.01, 0.2, Em_nbins, Em_xmin, Em_xmax);
@@ -1967,6 +1973,13 @@ void analyze::EventLoop()
 	 
 	  ztar_diff = htar_z - etar_z;
 
+	  //Define Dipole Exit
+	  xdip_hms = h_xfp - 147.48*h_xpfp;
+	  ydip_hms = h_yfp - 147.48*h_ypfp;
+	  
+	  xdip_shms = e_xfp - 307.*e_xpfp;
+	  ydip_shms = e_yfp - 307.*e_ypfp;
+	  
 	  //---------------------Define Cuts---------------------------
 	  
 	  c_noedtm = pEDTM_tdcTimeRaw==0;
@@ -2081,7 +2094,7 @@ void analyze::EventLoop()
 		    
 		    }
 
-		  if(base_cuts&&pid_cuts&&hmsColl_Cut&&shmsColl_Cut)
+		  if(base_cuts&&pid_cuts&&hmsColl_Cut&&shmsColl_Cut) //CHECK
 		    {
 		      //Trigger Detector
 		      H_ctime->Fill(epCoinTime);
@@ -2177,6 +2190,14 @@ void analyze::EventLoop()
 		      //2D Collimator Histos
 		      H_hXColl_vs_hYColl->Fill(hYColl, hXColl);
 		      H_eXColl_vs_eYColl->Fill(eYColl, eXColl);
+		      
+		      //Xfp vs Yfp
+		      //H_hxfp_vs_hyfp->Fill(h_yfp, h_xfp);
+		      //H_exfp_vs_eyfp->Fill(e_yfp, e_xfp);
+
+		      //Xfp vs Yfp Projected at the Dipole Exit
+		      H_hxfp_vs_hyfp->Fill(ydip_hms, xdip_hms);
+		      H_exfp_vs_eyfp->Fill(ydip_shms, xdip_shms);
 
 		      H_Em_vs_Pm->Fill(Pm, Em);
 		      H_Em_nuc_vs_Pm->Fill(Pm, Em_nuc);
@@ -2384,7 +2405,14 @@ void analyze::EventLoop()
 
 	  X = Q2 / (2.*MP*nu);                           
 	  th_q = acos( (ki - kf*cos(theta_e))/q );       
-      	  
+
+	  //Define Dipole Exit
+	  xdip_hms = h_xfp - 147.48*h_xpfp;
+	  ydip_hms = h_yfp - 147.48*h_ypfp;
+	  
+	  xdip_shms = e_xfp - 307.*e_xpfp;
+	  ydip_shms = e_yfp - 307.*e_ypfp;
+
 	  //---------------------------------------------------
 	  
 	  //---------Calculate Pmx, Pmy, Pmz in the Lab, and in the q-system----------------
@@ -2745,6 +2773,14 @@ void analyze::EventLoop()
 	    H_hXColl_vs_hYColl->Fill(hYColl, hXColl, FullWeight);
 	    H_eXColl_vs_eYColl->Fill(eYColl, eXColl, FullWeight);
 	    
+	    //Xfp vs Yfp
+	    //H_hxfp_vs_hyfp->Fill(h_yfp, h_xfp, FullWeight);
+	    //H_exfp_vs_eyfp->Fill(e_yfp, e_xfp, FullWeight);
+	    
+	    //Xfp vs Yfp Projected at the Dipole Exit
+	    H_hxfp_vs_hyfp->Fill(ydip_hms, xdip_hms, FullWeight);
+	    H_exfp_vs_eyfp->Fill(ydip_shms, xdip_shms, FullWeight);
+
 	    H_Em_vs_Pm->Fill(Pm, Em, FullWeight);
 
 	    H_Q2_vs_W->Fill(W, Q2, FullWeight);
@@ -3093,6 +3129,10 @@ void analyze::ApplyWeight()
     H_hXColl_vs_hYColl->Scale(FullWeight);
     H_eXColl_vs_eYColl->Scale(FullWeight);
 
+    //2D Xfp vs. Yfp
+    H_hxfp_vs_hyfp->Scale(FullWeight);
+    H_exfp_vs_eyfp->Scale(FullWeight);
+
     //2D Pm vs. theta_nq
     H_Pm_vs_thnq->Scale(FullWeight);
 
@@ -3263,6 +3303,9 @@ void analyze::WriteHist(string rad_flag="")
       //2D Collimator Histos
       H_hXColl_vs_hYColl->Write();
       H_eXColl_vs_eYColl->Write();
+
+      H_hxfp_vs_hyfp->Write();
+      H_exfp_vs_eyfp->Write();
 
       H_Pm_vs_thnq->Write();
 
@@ -3477,6 +3520,10 @@ void analyze::WriteHist(string rad_flag="")
       H_hXColl_vs_hYColl->Write();
       H_eXColl_vs_eYColl->Write();
 
+      //2D Xfp vs. Yfp
+      H_hxfp_vs_hyfp->Write();
+      H_exfp_vs_eyfp->Write();
+
       H_Pm_vs_thnq->Write();
       H_Pm_vs_thnq_ps->Write();
 
@@ -3668,6 +3715,8 @@ void analyze::CombineHistos()
     data_file->GetObject("H_eYColl",H_eYColl_i);
     data_file->GetObject("H_hXColl_vs_hYColl",H_hXColl_vs_hYColl_i);
     data_file->GetObject("H_eXColl_vs_eYColl",H_eXColl_vs_eYColl_i);
+    data_file->GetObject("H_hxfp_vs_hyfp",H_hxfp_vs_hyfp_i);
+    data_file->GetObject("H_exfp_vs_eyfp",H_exfp_vs_eyfp_i);
     data_file->GetObject("H_Em_vs_Pm",H_Em_vs_Pm_i); 
     data_file->GetObject("H_Q2_vs_W",H_Q2_vs_W_i);
     data_file->GetObject("H_Q2_vs_eyptar",H_Q2_vs_eyptar_i);
@@ -3795,6 +3844,8 @@ void analyze::CombineHistos()
       H_eYColl_i->Write();			  
       H_hXColl_vs_hYColl_i->Write();		  
       H_eXColl_vs_eYColl_i->Write();		  
+      H_hxfp_vs_hyfp_i->Write();
+      H_exfp_vs_eyfp_i->Write();
       H_Em_vs_Pm_i->Write();			  
       H_Q2_vs_W_i->Write();			  
       H_Q2_vs_eyptar_i->Write();			  
@@ -3926,6 +3977,8 @@ void analyze::CombineHistos()
       outROOT->GetObject("H_eYColl",H_eYColl_total);
       outROOT->GetObject("H_hXColl_vs_hYColl",H_hXColl_vs_hYColl_total);
       outROOT->GetObject("H_eXColl_vs_eYColl",H_eXColl_vs_eYColl_total);
+      outROOT->GetObject("H_hxfp_vs_hyfp",H_hxfp_vs_hyfp_total);
+      outROOT->GetObject("H_exfp_vs_eyfp",H_exfp_vs_eyfp_total);
       outROOT->GetObject("H_Em_vs_Pm",H_Em_vs_Pm_total);
       outROOT->GetObject("H_Q2_vs_W",H_Q2_vs_W_total);
       outROOT->GetObject("H_Q2_vs_eyptar",H_Q2_vs_eyptar_total);
@@ -4043,12 +4096,13 @@ void analyze::CombineHistos()
       H_eXColl_total->Add(			       H_eXColl_i);			  
       H_eYColl_total->Add(			       H_eYColl_i);			  
       H_hXColl_vs_hYColl_total->Add(		       H_hXColl_vs_hYColl_i);		  
-      H_eXColl_vs_eYColl_total->Add(		       H_eXColl_vs_eYColl_i);		  
+      H_eXColl_vs_eYColl_total->Add(		       H_eXColl_vs_eYColl_i);	
+      H_hxfp_vs_hyfp_total->Add(		       H_hxfp_vs_hyfp_i);		  
+      H_exfp_vs_eyfp_total->Add(		       H_exfp_vs_eyfp_i);
       H_Em_vs_Pm_total->Add(			       H_Em_vs_Pm_i);
       H_Q2_vs_W_total->Add(			       H_Q2_vs_W_i);
       H_Q2_vs_eyptar_total->Add(		       H_Q2_vs_eyptar_i);
       H_Q2_vs_Pm_total->Add(			       H_Q2_vs_Pm_i);
-      
       H_Em_nuc_vs_Pm_total->Add(		       H_Em_nuc_vs_Pm_i);		  
       H_Pm_vs_thnq_total->Add(		               H_Pm_vs_thnq_i);		  
       H_bcmCurrent_total->Add(			       H_bcmCurrent_i);                    
@@ -4164,6 +4218,8 @@ void analyze::CombineHistos()
       H_eYColl_total->Write("", TObject::kOverwrite);		
       H_hXColl_vs_hYColl_total->Write("", TObject::kOverwrite);	
       H_eXColl_vs_eYColl_total->Write("", TObject::kOverwrite);	
+      H_hxfp_vs_hyfp_total->Write("", TObject::kOverwrite);	
+      H_exfp_vs_eyfp_total->Write("", TObject::kOverwrite);
       H_Em_vs_Pm_total->Write("", TObject::kOverwrite);
       H_Q2_vs_W_total->Write("", TObject::kOverwrite);
       H_Q2_vs_eyptar_total->Write("", TObject::kOverwrite);
@@ -4313,6 +4369,8 @@ void analyze::ChargeNorm()
    outROOT->GetObject("H_eYColl",H_eYColl_total);
    outROOT->GetObject("H_hXColl_vs_hYColl",H_hXColl_vs_hYColl_total);
    outROOT->GetObject("H_eXColl_vs_eYColl",H_eXColl_vs_eYColl_total);
+   outROOT->GetObject("H_hxfp_vs_hyfp",H_hxfp_vs_hyfp_total);
+   outROOT->GetObject("H_exfp_vs_eyfp",H_exfp_vs_eyfp_total);
    outROOT->GetObject("H_Em_vs_Pm",H_Em_vs_Pm_total);
    outROOT->GetObject("H_Q2_vs_W",H_Q2_vs_W_total);
    outROOT->GetObject("H_Q2_vs_eyptar",H_Q2_vs_eyptar_total);
@@ -4430,6 +4488,8 @@ void analyze::ChargeNorm()
    H_eYColl_total->Scale(charge_norm);
    H_hXColl_vs_hYColl_total->Scale(charge_norm);
    H_eXColl_vs_eYColl_total->Scale(charge_norm);
+   H_hxfp_vs_hyfp_total->Scale(charge_norm);
+   H_exfp_vs_eyfp_total->Scale(charge_norm);
    H_Em_vs_Pm_total->Scale(charge_norm);
    H_Q2_vs_W_total->Scale(charge_norm);
    H_Q2_vs_eyptar_total->Scale(charge_norm);
@@ -4548,7 +4608,9 @@ void analyze::ChargeNorm()
    H_eXColl_total->Write("", TObject::kOverwrite);		
    H_eYColl_total->Write("", TObject::kOverwrite);		
    H_hXColl_vs_hYColl_total->Write("", TObject::kOverwrite);	
-   H_eXColl_vs_eYColl_total->Write("", TObject::kOverwrite);	
+   H_eXColl_vs_eYColl_total->Write("", TObject::kOverwrite);
+   H_hxfp_vs_hyfp_total->Write("", TObject::kOverwrite);	
+   H_exfp_vs_eyfp_total->Write("", TObject::kOverwrite);
    H_Em_vs_Pm_total->Write("", TObject::kOverwrite);		
    H_Q2_vs_W_total->Write("", TObject::kOverwrite);
    H_Q2_vs_eyptar_total->Write("", TObject::kOverwrite);

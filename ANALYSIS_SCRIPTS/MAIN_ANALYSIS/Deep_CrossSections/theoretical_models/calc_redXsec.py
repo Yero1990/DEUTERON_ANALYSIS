@@ -82,10 +82,8 @@ for i, ithnq in enumerate(thnq_arr):
     pm_avg = kin['pr']         #averaged Pmiss value
     ix = kin['ix']           #x-bin number
     iy = kin['iy']           #y-bin number
-    pwia_theoryXsec = kin['crs0']   #crs0: PWIA,  crs12: PWIA+FSI
-    fsi_theoryXsec = kin['crs12']   #crs0: PWIA,  crs12: PWIA+FSI
-
-    
+    pwia_theoryXsec = kin['crs0']   #crs0: PWIA
+    fsi_theoryXsec = kin['crs12']   #crs12: PWIA+FSI
     
     #Loop over all bins of theory datafile
     dlen = len(kin)
@@ -120,7 +118,7 @@ for i, ithnq in enumerate(thnq_arr):
         avg_kin = dfile(avg_kin_fname)
         dklen = len(avg_kin['i_b'])  #get length of array of avgkin file
         pm_k = avg_kin['yb']
-        pm_k_avg = avg_kin['pm'] / 1000.   #conver to GeV/c
+        pm_k_avg = avg_kin['pm'] / 1000.   #convert to GeV/c
         thnq_k = avg_kin['xb']
         ix_k = avg_kin['i_x']
         iy_k = avg_kin['i_y']

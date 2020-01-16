@@ -411,6 +411,12 @@ class analyze
   Double_t eYColl_xmin = -15.;                                                                      
   Double_t eYColl_xmax = 15.;
 
+  //X,Y Projection to Dipole Exit in HMS/SHMS
+  Double_t xdip_hms, ydip_hms;
+  Double_t xdip_shms, ydip_shms;
+
+
+
   //---------------------END SET DEFAULT HISTOGRAM BINNING-----------------------
 
   //Detector Histograms (DATA ONLY)
@@ -519,6 +525,10 @@ class analyze
   //2D Collimator Histos
   TH2F *H_hXColl_vs_hYColl;
   TH2F *H_eXColl_vs_eYColl;
+
+  //2D Hour Glass Shape
+  TH2F *H_hxfp_vs_hyfp;
+  TH2F *H_exfp_vs_eyfp;
 
   //2D Kinematics Check
   TH2F *H_Em_vs_Pm;
@@ -671,7 +681,9 @@ class analyze
   TH1F *H_eXColl_total = 0;					     TH1F *H_eXColl_i = 0;						  
   TH1F *H_eYColl_total = 0;					     TH1F *H_eYColl_i = 0;						  
   TH2F *H_hXColl_vs_hYColl_total = 0;				     TH2F *H_hXColl_vs_hYColl_i = 0;				  
-  TH2F *H_eXColl_vs_eYColl_total = 0;				     TH2F *H_eXColl_vs_eYColl_i = 0;				  
+  TH2F *H_eXColl_vs_eYColl_total = 0;				     TH2F *H_eXColl_vs_eYColl_i = 0;	
+  TH2F *H_hxfp_vs_hyfp_total = 0;                                    TH2F *H_hxfp_vs_hyfp_i = 0;
+  TH2F *H_exfp_vs_eyfp_total = 0;                                    TH2F *H_exfp_vs_eyfp_i = 0;
   TH2F *H_Em_vs_Pm_total = 0;					     TH2F *H_Em_vs_Pm_i = 0;					  
   TH2F *H_Em_nuc_vs_Pm_total = 0;				     TH2F *H_Em_nuc_vs_Pm_i = 0;					  
   TH2F *H_Q2_vs_W_total = 0;					     TH2F *H_Q2_vs_W_i = 0;					  
@@ -692,6 +704,7 @@ class analyze
   TH1F *H_pcal_etotTrkNorm_sys_total = 0;			      TH1F *H_pcal_etotTrkNorm_sys_i = 0;
   TH1F *H_ctime_sys_total = 0;	     				      TH1F *H_ctime_sys_i = 0;	       	          				    
   TH2F *H_hXColl_vs_hYColl_sys_total = 0;			      TH2F *H_hXColl_vs_hYColl_sys_i = 0;
+
   //Emiss Systematics
   TH1F *H_Pm_sysEm_nominal_total = 0;                                 TH1F *H_Pm_sysEm_nominal_i = 0;
   TH1F *H_Pm_sysEm_loose_total = 0;                                   TH1F *H_Pm_sysEm_loose_i = 0;

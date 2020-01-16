@@ -17,7 +17,7 @@ def main():
     print('Entering Main . . .')
 
     #Emiss Systematic Study
-    if(study=="Em_final"):
+    if(study=="Q2_3to4"):
         cut_arr = np.array([40])  #Missing Energy in MeV
     #Ztar Difference Systematic Study
     if(study=="Ztar"):
@@ -34,9 +34,9 @@ def main():
 
     for i in range(len(cut_arr)):
 
-        if(study=="Em_final"):
+        if(study=="Q2_3to4"):
             cut_value = cut_arr[i] / 1000.   #convert to GeV
-            sys_ext = study+"%sMeV"%(cut_arr[i])  #descriptive name of systematic study
+            sys_ext = study+"%sGeV"%(cut_arr[i])  #descriptive name of systematic study
         if(study=="Ztar"):
             cut_value = cut_arr[i]
             sys_ext = study+"%scm"%(cut_arr[i])  #descriptive name of systematic study
@@ -63,8 +63,7 @@ def main():
         
         #Analyze Calibrated ROOTfiles to get Charge Norm. Corrected Yield
         analyze_ROOTfiles('pwia', 80, 1, sys_ext, study, cut_value)
-        analyze_ROOTfiles('fsi', 80, 1, sys_ext, study, cut_value)
-        
+        analyze_ROOTfiles('fsi', 80, 1, sys_ext, study, cut_value)        
         
         analyze_ROOTfiles('pwia', 580, 1, sys_ext, study, cut_value)
         analyze_ROOTfiles('fsi', 580, 1, sys_ext, study, cut_value)
@@ -157,7 +156,7 @@ def calc_all_Xsec(sys_ext=''):
     os.system("python calc_avg_kin.py 750 pwia 3 %s"%(sys_ext))
     os.system("python calc_avg_kin.py 750 fsi 3 %s"%(sys_ext))
     
-    
+    '''
     #----------PART3: EXTRACT THEORY XSEC FROM AVERAGE KINEMATICS-------------
     dir_name="../theory_Xsec/"
     os.chdir(dir_name)
@@ -226,10 +225,11 @@ def calc_all_Xsec(sys_ext=''):
     #os.system("python systematics.py %s %f"%(sys_ext, 0.2))  #the 2nd argument represents the statistcal uncertainty (ex. we want < 20% uncertainty in Xsec)
     #os.system("python systematics.py %s %f"%(sys_ext, 0.5))
     #os.system("python systematics.py %s %f"%(sys_ext, 0.9))
+    '''
 
 def gen_inp(model='', pm_set=0, data_set=0, study='', cut_value=0):
     
-    if(study=="Em_final"):
+    if(study=="Q2_3to4"):
 
         #Generate the D(e,e'p)n Input File Based on User Input 
         f = open('set_deep_cuts.inp', 'w')                               
@@ -313,8 +313,8 @@ def gen_inp(model='', pm_set=0, data_set=0, study='', cut_value=0):
         f.write('ztarDiff_min: -2.                                                                                             \n')
         f.write('ztarDiff_max: 2.                                                                                              \n')
         f.write('                                                                                                              \n')
-        f.write('Q2_min: 4.                                                                                                    \n')
-        f.write('Q2_max: 5.                                                                                                    \n')
+        f.write('Q2_min: 3.                                                                                                    \n')
+        f.write('Q2_max: 4.                                                                                                    \n')
         f.write('                                                                                                              \n')
         f.write('thnq_min: 30.                                                                                                 \n')
         f.write('thnq_max: 40.                                                                                                 \n')

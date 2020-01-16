@@ -26,10 +26,12 @@ def convert2NaN(arr=np.array([]), value=0):
             arr[i[0]] = np.nan
     return arr
 
-MeV2fm = 197**3    #convert MeV^-3 to fm^3
+MeV2fm = 197.3**3    #convert MeV^-3 to fm^3
 
-#User Input (Dir. Name to store output)
+#===========User Input (Dir. Name to store output)==================
+#ipython combine_data.py Em_final40MeV
 sys_ext = sys.argv[1]   
+#===================================================================
 
 #check if directory exists, else creates it.
 if not os.path.exists(sys_ext):

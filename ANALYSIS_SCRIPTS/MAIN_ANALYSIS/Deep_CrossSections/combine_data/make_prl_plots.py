@@ -85,14 +85,17 @@ def read_halla_data(thnq=0):
     #The code read data files containing momentum distributions from Hall A
 
     #Conversion factor: 1 fm = 1 / (0.1973 GeV)  or  1 fm^-1 = 0.1973 GeV
-    fminv2GeV = 1./(1./0.1973)
+    #fminv2GeV = 1./(1./0.1973)
     ifm2GeV = 0.1973  #inverse fermi to GeV
 
     thnq_f = '%.1f' % (thnq)
-    fname = '../HallA_data/theta_%s_th_corr.data' % (thnq_f)
+
+    #fname = '../HallA_data/theta_%s_th_corr.data' % (thnq_f)  #older version Hall A data
+    fname = '../HallA_data/pm_distribution_results_q3_1_%s.data' % (thnq_f)  #Hall A data
+
 
     kin = dfile(fname)
-    p_miss = kin['p_miss'] * ifm2GeV    #Pm here is not the central bin value, but an average over that bin
+    p_miss = kin['p_miss_av'] * ifm2GeV    #Pm here is not the central bin value, but an average over that bin
     red_dataXsec = kin['rho']             #units fm^3
     red_dataXsec_err = kin['delta_rho']
 
@@ -226,8 +229,9 @@ def make_prl_plots():
     B.pl.text(0.25, 1e-7, r'$\theta_{nq}=35\pm5^{o}$', fontsize=19)
     B.pl.text(1.0, 1e0, r'(a)', fontsize=19)
 
-    l1 = B.plot_exp(pm_avg[thnq==35], red_dataXsec_avg_masked[thnq==35]*MeV2fm, red_dataXsec_avg_tot_err[thnq==35]*MeV2fm, marker='o', markersize=5, color='k', markerfacecolor='k', logy=True, label='This Experiment (Hall C)' )
-    l2 = B.plot_exp(pm_ha35, red_dataXsec_ha35, red_dataXsec_err_ha35, marker='o', markersize=5, color='c', logy=True,  label='Hall A Data')
+    l2 = B.plot_exp(pm_ha35, red_dataXsec_ha35, red_dataXsec_err_ha35, marker='o', markersize=5, color='c', capsize=0, logy=True,  label='Hall A Data')
+    l1 = B.plot_exp(pm_avg[thnq==35], red_dataXsec_avg_masked[thnq==35]*MeV2fm, red_dataXsec_avg_tot_err[thnq==35]*MeV2fm, marker='o', markersize=5, color='k', capsize=0, markerfacecolor='k', logy=True, label='This Experiment (Hall C)' )
+
 
     #Plot theoretical curves
     l3, = B.plot_exp(pm_avg[thnq==35], f_red_pwiaXsec_avg_35(pm_avg[thnq==35]), linestyle='--', marker='None', color='blue', logy=True, label='Paris PWIA')
@@ -238,6 +242,7 @@ def make_prl_plots():
     
     l7, = B.plot_exp(pm_avg3, f_red_pwiaXsec_CD_35(pm_avg3), linestyle='--', marker='None', color='magenta', logy=True, label='CD-Bonn PWIA')     
     l8, = B.plot_exp(pm_avg4, f_red_fsiXsec_CD_35(pm_avg4), linestyle='-', marker='None', color='magenta', logy=True, label='CD-Bonn FSI') 
+
 
     #Set axis limits
     B.pl.xlim(0.0, 1.18)
@@ -259,9 +264,9 @@ def make_prl_plots():
     #Remove un-necessary Y tick labels from subplot
     B.pl.setp(ax1.get_yticklabels(), visible=False)
 
-    B.plot_exp(pm_avg[thnq==45], red_dataXsec_avg_masked[thnq==45]*MeV2fm, red_dataXsec_avg_tot_err[thnq==45]*MeV2fm, marker='o', markersize=5, color='k', markerfacecolor='k', logy=True, label='This Experiment (Hall C)' )
-    B.plot_exp(pm_ha45, red_dataXsec_ha45, red_dataXsec_err_ha45, marker='o', markersize=5, color='c', logy=True, label='Hall A Data')
-    
+    B.plot_exp(pm_ha45, red_dataXsec_ha45, red_dataXsec_err_ha45, marker='o', markersize=5, capsize=0, color='c', logy=True, label='Hall A Data')
+    B.plot_exp(pm_avg[thnq==45], red_dataXsec_avg_masked[thnq==45]*MeV2fm, red_dataXsec_avg_tot_err[thnq==45]*MeV2fm, marker='o', markersize=5, capsize=0, color='k', markerfacecolor='k', logy=True, label='This Experiment (Hall C)' )
+
     #Plot theoretical curves
     B.plot_exp(pm_avg[thnq==45], f_red_pwiaXsec_avg_45(pm_avg[thnq==45]), linestyle='--', marker='None', color='blue', logy=True, label='Paris PWIA')
     B.plot_exp(pm_avg[thnq==45], f_red_fsiXsec_avg_45(pm_avg[thnq==45]), linestyle='-', marker='None', color='blue', logy=True, label='Paris FSI')
@@ -292,8 +297,8 @@ def make_prl_plots():
     #Remove un-necessary Y tick labels from subplot
     B.pl.setp(ax2.get_yticklabels(), visible=False)
 
-    B.plot_exp(pm_avg[thnq==75], red_dataXsec_avg_masked[thnq==75]*MeV2fm, red_dataXsec_avg_tot_err[thnq==75]*MeV2fm, marker='o', markersize=5, color='k', markerfacecolor='k', logy=True, label='This Experiment (Hall C)' )
-    B.plot_exp(pm_ha75, red_dataXsec_ha75, red_dataXsec_err_ha75, marker='o', markersize=5, color='c', logy=True, label='Hall A Data')
+    B.plot_exp(pm_ha75, red_dataXsec_ha75, red_dataXsec_err_ha75, marker='o', markersize=5, capsize=0, color='c', logy=True, label='Hall A Data')
+    B.plot_exp(pm_avg[thnq==75], red_dataXsec_avg_masked[thnq==75]*MeV2fm, red_dataXsec_avg_tot_err[thnq==75]*MeV2fm, marker='o', markersize=5, capsize=0, color='k', markerfacecolor='k', logy=True, label='This Experiment (Hall C)' )
 
     #Plot theoretical curves
     B.plot_exp(pm_avg[thnq==75], f_red_pwiaXsec_avg_75(pm_avg[thnq==75]), linestyle='--', marker='None', color='blue', logy=True, label='Paris PWIA')
@@ -325,40 +330,91 @@ def make_prl_plots():
       
 
     B.pl.show()
+    #B.pl.savefig('./PRL_plot1.pdf')
+
+
+    #==========TESTING(pLOT Werners' CD-Bonn PWIA)=======
+    #GeV2fm = 0.197**3    #convert GeV^-3 to fm^3
+
+    #kin = dfile('../HallA_data/new_halla/mom_dist_cdbonn_mevc.data')
+
+    #pm_ha = kin['pm'] / 1000.   #Conver to GeV/c
+    #rho = kin['rho'] * GeV2fm  #convert to fm^3
+    #f_rho =  interp1d(pm_ha, rho, fill_value='extrapolate') 
     
+    #R_35 = red_dataXsec_ha35 / f_rho(pm_ha35)   #Hall A data (Q2=3.5) ratio to CD-Bonn PWIA (Q2=4.5)
+    #R_45 = red_dataXsec_ha45 / f_rho(pm_ha45)   #Hall A data (Q2=3.5) ratio to CD-Bonn PWIA (Q2=4.5)
+
+
+    #B.plot_exp(pm_ha,  rho, marker='s', color='r', label='Hall A CD-Bonn PWIA', logy=True)
+    #B.plot_exp(pm_avg3, f_red_pwiaXsec_CD_35(pm_avg3), linestyle='--', marker='None', color='blue', logy=True, label='CD-Bonn PWIA, 35 deg')     
+    #B.plot_exp(pm_avg7, f_red_pwiaXsec_CD_45(pm_avg7), linestyle='--', marker='None', color='green', logy=True, label='CD-Bonn PWIA, 45 deg')     
+    #B.plot_exp(pm_ha, R_35, linestyle='--', marker='None', color='blue', label='CD-Bonn PWIA, 35 deg')     
+    #B.plot_exp(pm_ha, R_45, linestyle='--', marker='None', color='green', label='CD-Bonn PWIA, 45 deg')     
+    
+    #B.pl.legend()
+    #B.pl.show()
+
     #===========================================================================================================================
 
 
     #====================================================PRL PLOT 2=============================================================
-    '''
+    
     #Define the Data (and all models) to CD-Bonn PWIA Ratio
     #theta_nq = 35 deg
     R_ref35 = f_red_pwiaXsec_CD_35(pmiss_avg_35) / f_red_pwiaXsec_CD_35(pmiss_avg_35)
     R_data35 = red_dataXsec_avg_masked[thnq==35]*MeV2fm / f_red_pwiaXsec_CD_35(pmiss_avg_35)
     R_data_err35 = red_dataXsec_avg_tot_err[thnq==35]*MeV2fm / f_red_pwiaXsec_CD_35(pmiss_avg_35)
+
+    R_HAdata35 = red_dataXsec_ha35 / f_red_pwiaXsec_CD_35(pm_ha35)   #Hall A data (Q2=3.5) ratio to CD-Bonn PWIA (Q2=4.5)
+    R_HAdata_err35 =  red_dataXsec_err_ha35 / f_red_pwiaXsec_CD_35(pm_ha35)
+
     R_CDBonn_fsi35 = f_red_fsiXsec_CD_35(pmiss_avg_35) / f_red_pwiaXsec_CD_35(pmiss_avg_35)
-    R_Paris_pwia35 = f_red_pwiaXsec_avg_35(pm_avg[thnq==35]) / f_red_pwiaXsec_CD_35(pmiss_avg_35)
-    R_Paris_fsi35 = f_red_fsiXsec_avg_35(pm_avg[thnq==35]) / f_red_pwiaXsec_CD_35(pmiss_avg_35)
+    R_Paris_pwia35 = f_red_pwiaXsec_avg_35(pmiss_avg_35) / f_red_pwiaXsec_CD_35(pmiss_avg_35)
+    R_Paris_fsi35 = f_red_fsiXsec_avg_35(pmiss_avg_35) / f_red_pwiaXsec_CD_35(pmiss_avg_35)
     R_AV18_pwia35 = f_red_pwiaXsec_V18_35(pmiss_avg_35) / f_red_pwiaXsec_CD_35(pmiss_avg_35)
     R_AV18_fsi35 = f_red_fsiXsec_V18_35(pmiss_avg_35) / f_red_pwiaXsec_CD_35(pmiss_avg_35)
     #theta_nq = 45 deg    
     R_ref45 = f_red_pwiaXsec_CD_45(pmiss_avg_45) / f_red_pwiaXsec_CD_45(pmiss_avg_45)
     R_data45 = red_dataXsec_avg_masked[thnq==45]*MeV2fm / f_red_pwiaXsec_CD_45(pmiss_avg_45)
     R_data_err45 = red_dataXsec_avg_tot_err[thnq==45]*MeV2fm / f_red_pwiaXsec_CD_45(pmiss_avg_45)
+
+    R_HAdata45 = red_dataXsec_ha45 / f_red_pwiaXsec_CD_45(pm_ha45)   #Hall A data (Q2=3.5) ratio to CD-Bonn PWIA (Q2=4.5)
+    R_HAdata_err45 =  red_dataXsec_err_ha45 / f_red_pwiaXsec_CD_45(pm_ha45)
+
     R_CDBonn_fsi45 = f_red_fsiXsec_CD_45(pmiss_avg_45) / f_red_pwiaXsec_CD_45(pmiss_avg_45)
     R_Paris_pwia45 = f_red_pwiaXsec_avg_45(pm_avg[thnq==45]) / f_red_pwiaXsec_CD_45(pmiss_avg_45)
     R_Paris_fsi45 = f_red_fsiXsec_avg_45(pm_avg[thnq==45]) / f_red_pwiaXsec_CD_45(pmiss_avg_45)
     R_AV18_pwia45 = f_red_pwiaXsec_V18_45(pmiss_avg_45) / f_red_pwiaXsec_CD_45(pmiss_avg_45)
     R_AV18_fsi45 = f_red_fsiXsec_V18_45(pmiss_avg_45) / f_red_pwiaXsec_CD_45(pmiss_avg_45)
+
+    print('pm=',pm_ha45)
+    print('sigRed_HallA(fm^3)=',red_dataXsec_ha45)
+    print('sigRed_CD_PWIA(fm^3)=',f_red_pwiaXsec_CD_45(pm_ha45))
+    print('R=', R_HAdata45 )
+
     #theta_nq = 75 deg    
     R_ref75 = f_red_pwiaXsec_CD_75(pmiss_avg_75) / f_red_pwiaXsec_CD_75(pmiss_avg_75)
     R_data75 = red_dataXsec_avg_masked[thnq==75]*MeV2fm / f_red_pwiaXsec_CD_75(pmiss_avg_75)
     R_data_err75 = red_dataXsec_avg_tot_err[thnq==75]*MeV2fm / f_red_pwiaXsec_CD_75(pmiss_avg_75)
+
+    R_HAdata75 = red_dataXsec_ha75 / f_red_pwiaXsec_CD_75(pm_ha75)   #Hall A data (Q2=3.5) ratio to CD-Bonn PWIA (Q2=4.5)
+    R_HAdata_err75 =  red_dataXsec_err_ha75 / f_red_pwiaXsec_CD_75(pm_ha75)
+
     R_CDBonn_fsi75 = f_red_fsiXsec_CD_75(pmiss_avg_75) / f_red_pwiaXsec_CD_75(pmiss_avg_75)
     R_Paris_pwia75 = f_red_pwiaXsec_avg_75(pmiss_avg_75) / f_red_pwiaXsec_CD_75(pmiss_avg_75)
     R_Paris_fsi75 = f_red_fsiXsec_avg_75(pmiss_avg_75) / f_red_pwiaXsec_CD_75(pmiss_avg_75)
     R_AV18_pwia75 = f_red_pwiaXsec_V18_75(pmiss_avg_75) / f_red_pwiaXsec_CD_75(pmiss_avg_75)
     R_AV18_fsi75 = f_red_fsiXsec_V18_75(pmiss_avg_75) / f_red_pwiaXsec_CD_75(pmiss_avg_75)
+
+
+    B.plot_exp(pm_ha35, R_HAdata35, R_HAdata_err35, marker='o', color='r', label='Hall A Data, 35 deg', capsize=0)
+    B.plot_exp(pm_ha45, R_HAdata45, R_HAdata_err45, marker='^', color='g', label='Hall A Data, 45 deg', capsize=0)
+    B.plot_exp(pm_ha75, R_HAdata75, R_HAdata_err75, marker='s', color='b', label='Hall A Data, 75 deg', capsize=0)
+    B.pl.ylabel('Ratio')
+    B.pl.xlabel('GeV/c')
+    B.pl.title('Hall A / CD-Bonn PWIA red. Xsec (Updated Hall A data)')
+    B.pl.legend()
 
     #-----Create Subplots-----
     fig = B.pl.subplots(3, sharex=True, sharey=True, figsize=(6.7, 10)) 
@@ -373,11 +429,12 @@ def make_prl_plots():
     B.pl.setp(ax0.get_xticklabels(), visible=False)
 
     #Plot the Data (and all models) to CD-Bonn PWIA model
-    B.plot_exp(pm_avg[thnq==35], R_ref35,  marker='None', linestyle='--', color='magenta', label='CD-Bonn PWIA (reference)')
-    B.plot_exp(pm_avg[thnq==35], R_data35, R_data_err35, marker='o', color='k', label='Data')
-    
-    B.plot_exp(pm_avg[thnq==35], R_CDBonn_fsi35, marker='None', linestyle='-', color='magenta', label='CD-Bon FSI')
+    B.plot_exp(pm_avg[thnq==35], R_ref35,  marker='None', linestyle='--', color='magenta', label='CD-Bonn PWIA')
+       
+    B.plot_exp(pm_ha35, R_HAdata35, R_HAdata_err35, marker='o', color='cyan', label='Hall A Data', capsize=0)
+    B.plot_exp(pm_avg[thnq==35], R_data35, R_data_err35, marker='o', color='k', label='Hall C Data', capsize=0)
 
+    B.plot_exp(pm_avg[thnq==35], R_CDBonn_fsi35, marker='None', linestyle='-', color='magenta', label='CD-Bonn FSI')
     B.plot_exp(pm_avg[thnq==35], R_Paris_pwia35, marker='None', linestyle='--', color='blue', label='Paris PWIA')
     B.plot_exp(pm_avg[thnq==35], R_Paris_fsi35, marker='None', linestyle='-', color='blue', label='Paris FSI')
     
@@ -385,8 +442,12 @@ def make_prl_plots():
     B.plot_exp(pm_avg[thnq==35], R_AV18_fsi35, marker='None', linestyle='-', color='green', label='AV18 FSI')
  
     #Set axis limits
-    B.pl.xlim(0.0, 1.18)
+    B.pl.xlim(0.0, 1.2)
     B.pl.ylim(-0.5, 10.9)
+
+    #log settings
+    B.pl.ylim(0.1, 30)
+    B.pl.yscale('log')
 
     #Set Tick Marks
     ax0.tick_params(axis='both', which='both', direction='in', top=True, bottom=True, left=True, right=True, labelsize=19)    
@@ -405,10 +466,12 @@ def make_prl_plots():
     B.pl.setp(ax1.get_xticklabels(), visible=False)
     
     #Plot the Data (and all models) to CD-Bonn PWIA model
-    B.plot_exp(pm_avg[thnq==45], R_ref45,  marker='None', linestyle='--', color='magenta', label='CD-Bonn PWIA (reference)')
-    B.plot_exp(pm_avg[thnq==45], R_data45, R_data_err45, marker='o', color='k', label='Data')
+    B.plot_exp(pm_avg[thnq==45], R_ref45,  marker='None', linestyle='--', color='magenta', label='CD-Bonn PWIA')
     
-    B.plot_exp(pm_avg[thnq==45], R_CDBonn_fsi45, marker='None', linestyle='-', color='magenta', label='CD-Bon FSI')
+    B.plot_exp(pm_ha45, R_HAdata45, R_HAdata_err45, marker='o', color='cyan', label='Hall A Data', capsize=0)
+    B.plot_exp(pm_avg[thnq==45], R_data45, R_data_err45, marker='o', color='k', label='Hall C Data)', capsize=0)
+
+    B.plot_exp(pm_avg[thnq==45], R_CDBonn_fsi45, marker='None', linestyle='-', color='magenta', label='CD-Bonn FSI')
 
     B.plot_exp(pm_avg[thnq==45], R_Paris_pwia45, marker='None', linestyle='--', color='blue', label='Paris PWIA')
     B.plot_exp(pm_avg[thnq==45], R_Paris_fsi45, marker='None', linestyle='-', color='blue', label='Paris FSI')
@@ -416,16 +479,23 @@ def make_prl_plots():
     B.plot_exp(pm_avg[thnq==45], R_AV18_pwia45, marker='None', linestyle='--', color='green', label='AV18 PWIA')
     B.plot_exp(pm_avg[thnq==45], R_AV18_fsi45, marker='None', linestyle='-', color='green', label='AV18 FSI')
  
+
     #Set axis limits
-    B.pl.xlim(0.0, 1.18)
-    B.pl.ylim(-0.5, 10.9)
+    B.pl.xlim(0.0, 1.2)
+    #B.pl.ylim(-0.5, 10.9)
+    
+    B.pl.ylim(-0.5, 24.3)
+
+    #log settings
+    B.pl.ylim(0.1, 30)
+    B.pl.yscale('log')
 
     #Set Tick Marks
     ax1.tick_params(axis='both', which='both', direction='in', top=True, bottom=True, left=True, right=True, labelsize=19)
 
     #Set Axes Labels for subplot 0
     B.pl.xlabel('')                                                                                                                                                                                                   
-    B.pl.ylabel(r'R = $\sigma_{red}$ / n($p_{r}$)', fontsize=22,  labelpad=10)                                                                                                                                                                        
+    B.pl.ylabel(r'R = $\sigma_{red} / \sigma^{\textrm{\large CD-Bonn PWIA}}_{red}$', fontsize=22,  labelpad=10)                                                                                                                                                                        
     B.pl.title('') 
 
     #THETA_NQ = 75 DEG
@@ -434,10 +504,12 @@ def make_prl_plots():
     B.pl.text(0.1, 8, r'(c)', fontsize=19)
 
     #Plot the Data (and all models) to CD-Bonn PWIA model
-    B.plot_exp(pm_avg[thnq==35], R_ref35,  marker='None', linestyle='--', color='magenta', label='(reference)')
-    B.plot_exp(pm_avg[thnq==75], R_data75, R_data_err75, marker='o', color='k', label='Data')
+    B.plot_exp(pm_avg[thnq==35], R_ref35,  marker='None', linestyle='--', color='magenta', label='CD-Bonn PWIA')
     
-    B.plot_exp(pm_avg[thnq==75], R_CDBonn_fsi75, marker='None', linestyle='-', color='magenta', label='CD-Bon FSI')
+    B.plot_exp(pm_ha75, R_HAdata75, R_HAdata_err75, marker='o', color='cyan', label='Hall A Data', capsize=0)
+    B.plot_exp(pm_avg[thnq==75], R_data75, R_data_err75, marker='o', color='k', label='Hall C Data', capsize=0)
+
+    B.plot_exp(pm_avg[thnq==75], R_CDBonn_fsi75, marker='None', linestyle='-', color='magenta', label='CD-Bonn FSI')
 
     B.plot_exp(pm_avg[thnq==75], R_Paris_pwia75, marker='None', linestyle='--', color='blue', label='Paris PWIA')
     B.plot_exp(pm_avg[thnq==75], R_Paris_fsi75, marker='None', linestyle='-', color='blue', label='Paris FSI')
@@ -446,8 +518,12 @@ def make_prl_plots():
     B.plot_exp(pm_avg[thnq==75], R_AV18_fsi75, marker='None', linestyle='-', color='green', label='AV18 FSI')
  
     #Set axis limits
-    B.pl.xlim(0.0, 1.18)
+    B.pl.xlim(0.0, 1.2)
     B.pl.ylim(-0.5, 10.9)
+
+    #log settings
+    B.pl.ylim(0.1, 30)
+    B.pl.yscale('log')
 
     #Set Tick Marks
     ax2.tick_params(axis='both', which='both', direction='in', top=True, bottom=True, left=True, right=True, labelsize=19)
@@ -460,10 +536,28 @@ def make_prl_plots():
     #Remove spacing between subplots
     plt.subplots_adjust(hspace = 0.00000001, bottom=0.09, top=0.98, right=0.95, left=0.18) #, hspace = 0.001, wspace = 0.001)
     
-    B.pl.legend(loc='upper right', fontsize=14, frameon=False)
-    #B.pl.show()
-    B.pl.savefig('./PRL_plot2.pdf')
-    '''
+    B.pl.legend(loc='upper right', fontsize=12, frameon=False)
+    B.pl.show()
+    #B.pl.savefig('./PRL_plot2.pdf')
+    
+
+    #Write to file
+    fout_name = 'redXsec_file.txt'
+    fout = open(fout_name, 'w')
+    comment='pm_avg in GeV/c :: redXsec in fm^3 :: R = redXsec_HallA / redXsec_CD-Bonn_PWIA\n'
+    comment2='Conv. factor: 1 fm^-1 = 0.1973 GeV\n'
+    header='#!pm_avg[f,0]/   redXsec_HallA[f,1]/   redXsec_CD-Bonn_PWIA[f,2]/   R[f,3]/\n'
+    fout.write(comment)
+    fout.write(comment2)
+    fout.write(header)
+
+    for i in range(len(pm_ha45)):
+        print('ith=',i,' :: pmiss_avg=',pm_ha45[i])
+        fout.write('%.5f  %.10f   %.10f   %.10f\n' % (pm_ha45[i], red_dataXsec_ha45[i], f_red_pwiaXsec_CD_45(pm_ha45)[i], R_HAdata45[i]))
+
+    fout.close()
+
+
     #===========================================================================================================================
 
     

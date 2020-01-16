@@ -1,0 +1,27 @@
+********************
+   Q2 Cut Study
+********************
+
+The SHMS/SHMS reco. quantities DATA/SIMC were compared for three different
+regions in Q2.
+
+===Settings===
+1) Q2: (3.6, 3.8)
+
+2) Q2: (3.8, 4.3)
+
+3) Q2: (4.3, 4.6)
+
+**It was found that at the edges of Q2 (settings 1 and 3), there were some
+disagreements, related to the HMS Collimator in the data being cut before
+the HMS collimator in SIMC.
+ 
+To investigate further, need to put additional cut on HMS xptar variable
+in the region where DATA/SIMC disagree.
+
+1) Q2: (4.3, 4.6), HMS Xptar:  < -0.04
+
+Mark's email: Nov 26, 2019
+** If you could plot xfp versus yfp  and project to the dipole exit ( xfp-147*xpfp versus yfp -147ypfp) 
+   for these events with the xptar < -.04 and for the events with xptar > -.04 for SIMC and data. Maybe we iwll
+   get lucky and see something at the dipole exit.

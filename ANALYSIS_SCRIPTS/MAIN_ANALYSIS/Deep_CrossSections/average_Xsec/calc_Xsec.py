@@ -53,7 +53,7 @@ header = \
 #------------------------------------------------------------
 
 
-#CODE USAGE: /apps/python/2.7.12/bin/python.py calc_Xsec.py 580  1
+#CODE USAGE: /apps/python/2.7.12/bin/python.py calc_Xsec.py 580  1 syst_ext
 
 #User Input
 pm_set = int(sys.argv[1])

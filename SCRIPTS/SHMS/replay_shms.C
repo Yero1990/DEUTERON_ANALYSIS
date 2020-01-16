@@ -1,4 +1,4 @@
-void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="heep_check") {
+void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="timeWin_check") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {

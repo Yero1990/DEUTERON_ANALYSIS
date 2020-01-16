@@ -53,7 +53,7 @@ if not os.path.exists(dir_name_misc):
     os.makedirs(dir_name_misc)
      
 
-#Get Reduced Xsec Data File
+#Get Reduced Xsec Data File (for Q2: (4,5) GeV2)
 fname = './%s/redXsec_combined.txt'%(sys_ext)
 f = B.get_file(fname)
 
@@ -80,18 +80,50 @@ tot_syst_err = dfile(fname)['tot_syst_err']    #total systematics
 tot_stats_err = dfile(fname)['tot_stats_err']  #total statistical
 tot_err = dfile(fname)['tot_err']              #overall error
 
+'''
+#----READ Q2 = (3,4) GeV2-----
+fname2 = './Q2_3to4GeV/redXsec_combined.txt'
+f2 = B.get_file(fname2)
+
+#Get Bin Information (Same info for all files)                                                                                                  
+i_b0 = B.get_data(f2, 'i_b')    #2D bin number                                                                    
+i_x0 = B.get_data(f2, 'i_x')    #x (th_nq) bin number                                                                                    
+i_y0 = B.get_data(f2, 'i_y')    #y (pmiss) bin number                                        
+thnq0 = B.get_data(f2, 'xb')      #th_nq value at bin center                                                          
+pm0 =  B.get_data(f2, 'yb')      #pmiss value at bin center   
+pm_avg0 = B.get_data(f2, 'pm_avg')
+
+#Get Combined Final Red Xsec for all kinematics
+red_dataXsec_avg0     = B.get_data(f2,'red_dataXsec_avg')
+red_dataXsec_avg_err0 = B.get_data(f2,'red_dataXsec_avg_err')
+red_dataXsec_avg_syst_err0 = B.get_data(f2,'red_dataXsec_avg_syst_err')
+red_dataXsec_avg_tot_err0 = B.get_data(f2,'red_dataXsec_avg_tot_err')
+red_pwiaXsec_avg0     = B.get_data(f2,'red_pwiaXsec_avg')
+red_fsiXsec_avg0      = B.get_data(f2,'red_fsiXsec_avg')
+
+#Get total relative errors / (Pm, thnq) bin for plotting (probably also write to table)
+kin_syst_tot0 = dfile(fname2)['kin_syst_tot']    #kinematic systematics
+norm_syst_tot0 = dfile(fname2)['norm_syst_tot']  #normalization systematics
+tot_syst_err0 = dfile(fname2)['tot_syst_err']    #total systematics
+tot_stats_err0 = dfile(fname2)['tot_stats_err']  #total statistical
+tot_err0 = dfile(fname2)['tot_err']              #overall error
+'''
+
 def plot_final():
 
     #----MASKING ARRAYS TO CHOOSE ERRORS BELOW 50 %-------
     #The Limit on the red. Xsec error should be placed at the very end, when the combined data is plotted (all data sets and overlapping bins have been combined)
     red_dataXsec_avg_masked = np.ma.array(red_dataXsec_avg, mask=(red_dataXsec_avg_err>0.5*red_dataXsec_avg))
     red_dataXsec_avg_masked = np.ma.filled(red_dataXsec_avg_masked.astype(float), np.nan)
-    #red_dataXsec_avg_err = red_dataXsec_avg_err*MeV2fm
-    #red_dataXsec_avg_tot_err = red_dataXsec_avg_tot_err*MeV2fm
-
+    
+    #DATA Q2: (3,4) GeV2
+    #red_dataXsec_avg_masked0 = np.ma.array(red_dataXsec_avg0, mask=(red_dataXsec_avg_err0>0.5*red_dataXsec_avg0))
+    #red_dataXsec_avg_masked0 = np.ma.filled(red_dataXsec_avg_masked0.astype(float), np.nan)
+    
     #Read Hall A data (reduced Xsec already in fm^3 units, and Precoil in GeV)
     pm_ha35, red_dataXsec_ha35, red_dataXsec_err_ha35 = read_halla_data(35)
     pm_ha45, red_dataXsec_ha45, red_dataXsec_err_ha45 = read_halla_data(45)  
+    pm_ha75, red_dataXsec_ha75, red_dataXsec_err_ha75 = read_halla_data(75)  
 
 
     #Plot momentum distribution vs. Pmiss for different theta_nq
@@ -117,7 +149,7 @@ def plot_final():
         pm_avg4, red_fsiXsec_CD = read_theoretical_models("CD-Bonn", "FSI", ithnq)    
 
     
-        if(ithnq==35 or ithnq==45):
+        if(ithnq==35 or ithnq==45 or ithnq==75):
             #Read Hall A Data
             pm_ha, red_dataXsec_ha, red_dataXsec_err_ha = read_halla_data(ithnq)
 
@@ -127,6 +159,11 @@ def plot_final():
         #THEORY
         red_pwiaXsec_avg[thnq==ithnq] = red_pwiaXsec_avg[thnq==ithnq]*MeV2fm    #Laget PWIA
         red_fsiXsec_avg[thnq==ithnq] = red_fsiXsec_avg[thnq==ithnq]*MeV2fm    #Laget FSI
+        
+        #Q2: (3,4) GeV2
+        #red_pwiaXsec_avg0[thnq==ithnq] = red_pwiaXsec_avg0[thnq==ithnq]*MeV2fm    #Laget PWIA
+        #red_fsiXsec_avg0[thnq==ithnq] = red_fsiXsec_avg0[thnq==ithnq]*MeV2fm    #Laget FSI
+
         red_pwiaXsec_V18 = red_pwiaXsec_V18*MeV2fm
         red_fsiXsec_V18 = red_fsiXsec_V18*MeV2fm
         red_pwiaXsec_CD = red_pwiaXsec_CD*MeV2fm
@@ -136,6 +173,10 @@ def plot_final():
         #Do Interpolation to make theory curves smooth
         f_red_pwiaXsec_avg = interp1d(pm_avg[thnq==ithnq], red_pwiaXsec_avg[thnq==ithnq],fill_value='extrapolate')   #Paris (J.M. Laget Calculation)
         f_red_fsiXsec_avg = interp1d(pm_avg[thnq==ithnq], red_fsiXsec_avg[thnq==ithnq],fill_value='extrapolate')    
+        
+        #Paris Potential for Q2 = (3,4) GeV2
+        #f_red_pwiaXsec_avg0 = interp1d(pm_avg0[thnq==ithnq], red_pwiaXsec_avg0[thnq==ithnq],fill_value='extrapolate')   #Paris (J.M. Laget Calculation)
+        #f_red_fsiXsec_avg0 = interp1d(pm_avg0[thnq==ithnq], red_fsiXsec_avg0[thnq==ithnq],fill_value='extrapolate')    
 
         f_red_pwiaXsec_V18 = interp1d(pm_avg1, red_pwiaXsec_V18,fill_value='extrapolate')                        #AV18 (M. Sargsian calculation)
         f_red_fsiXsec_V18 = interp1d(pm_avg2, red_fsiXsec_V18,fill_value='extrapolate')
@@ -153,7 +194,9 @@ def plot_final():
         #B.plot_exp(pm[thnq==ithnq], red_dataXsec_avg[thnq==ithnq]*MeV2fm, red_dataXsec_avg_err[thnq==ithnq]*MeV2fm, marker='o', color='black', logy=True, label='Data' )
         #B.plot_exp(pm[thnq==ithnq], red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm, red_dataXsec_avg_err[thnq==ithnq]*MeV2fm, marker='o', color='r', markerfacecolor='none', label='Statistical Error' )
         B.plot_exp(pm_avg[thnq==ithnq], red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm, red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm, marker='o', markersize=6, color='k', markerfacecolor='k', label='This Experiment (Hall C)' )
-        
+                
+        #B.plot_exp(pm_avg0[thnq==ithnq], red_dataXsec_avg_masked0[thnq==ithnq]*MeV2fm, red_dataXsec_avg_tot_err0[thnq==ithnq]*MeV2fm, marker='o', markersize=6, color='r', markerfacecolor='r', label=r'Hall C, $Q^{2}=3.5\pm0.5$ GeV$^{2}$' )
+
         #--------------HALL A DATA---------------
         if(ithnq==35):
             #Plot Hall A Data for thnq==35 or 45 deg
@@ -161,11 +204,19 @@ def plot_final():
         if(ithnq==45):                                                                                                             
             #Plot Hall A Data for thnq==35 or 45 deg                                                                                                                                                    
             B.plot_exp(pm_ha45, red_dataXsec_ha45, red_dataXsec_err_ha45, marker='o', markersize=6, color='c', label='Hall A Data')
+        if(ithnq==75):                                                                                                             
+            #Plot Hall A Data for thnq==35 or 45 deg                                                                                                                                                    
+            B.plot_exp(pm_ha75, red_dataXsec_ha75, red_dataXsec_err_ha75, marker='o', markersize=6, color='c', label='Hall A Data')
         #----------------------------------------
 
         #Plot theoretical curves
         B.plot_exp(pm_avg[thnq==ithnq], f_red_pwiaXsec_avg(pm_avg[thnq==ithnq]), linestyle='--', marker='None', color='blue', logy=True, label='Paris PWIA')
         B.plot_exp(pm_avg[thnq==ithnq], f_red_fsiXsec_avg(pm_avg[thnq==ithnq]), linestyle='-', marker='None', color='blue', logy=True, label='Paris FSI')
+       
+        #Q2 = (3,4) GeV2
+        #B.plot_exp(pm_avg0[thnq==ithnq], f_red_pwiaXsec_avg0(pm_avg0[thnq==ithnq]), linestyle='--', marker='None', color='red', logy=True, label=r'Paris PWIA ($Q^{2}=3.5\pm0.5$ GeV$^{2}$)')
+        #B.plot_exp(pm_avg0[thnq==ithnq], f_red_fsiXsec_avg0(pm_avg0[thnq==ithnq]), linestyle='-', marker='None', color='red', logy=True, label=r'Paris FSI ($Q^{2}=3.5\pm0.5$ GeV$^{2}$)')
+
 
         B.plot_exp(pm_avg1, f_red_pwiaXsec_V18(pm_avg1), linestyle='--', marker='None', color='green', logy=True, label='AV18 PWIA')   
         B.plot_exp(pm_avg2, f_red_fsiXsec_V18(pm_avg2), linestyle='-', marker='None', color='green', logy=True, label='AV18 FSI') 
@@ -180,7 +231,7 @@ def plot_final():
         B.pl.xlim(0., 1.2)
         B.pl.title(r'Reduced Cross Section, $\theta_{nq} = %i \pm 5$ deg '%(ithnq))
         #B.pl.yscale('linear')
-        B.pl.legend()            
+        B.pl.legend(frameon=False, fontsize='x-small')            
         B.pl.savefig(dir_name+'/final_redXsec_thnq%i.pdf'%(ithnq))
 
 
@@ -194,6 +245,11 @@ def plot_final():
         dsig_sig_stats = red_dataXsec_avg_err[thnq==ithnq]*MeV2fm / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)
         dsig_sig_syst = red_dataXsec_avg_syst_err[thnq==ithnq]*MeV2fm / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)
         dsig_sig_tot = red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)
+        
+        #Q2:(3,4)
+        #dsig_sig_stats = red_dataXsec_avg_err0[thnq==ithnq]*MeV2fm / (red_dataXsec_avg_masked0[thnq==ithnq]*MeV2fm)
+        #dsig_sig_syst = red_dataXsec_avg_syst_err0[thnq==ithnq]*MeV2fm / (red_dataXsec_avg_masked0[thnq==ithnq]*MeV2fm)
+        #dsig_sig_tot = red_dataXsec_avg_tot_err0[thnq==ithnq]*MeV2fm / (red_dataXsec_avg_masked0[thnq==ithnq]*MeV2fm)
 
 
         for iii in range(len(y)):
@@ -203,6 +259,7 @@ def plot_final():
         B.plot_exp(pm_avg[thnq==ithnq],  y, dsig_sig_stats*100., marker='o', markersize=6, color='b', label='Statistical Error')
         B.plot_exp(pm_avg[thnq==ithnq],  y, dsig_sig_syst*100., marker='o', markersize=6, color='r', label='Systematics Error')
         B.plot_exp(pm_avg[thnq==ithnq],  y, dsig_sig_tot*100., marker='o', markersize=6, color='k', label='Total Error')
+
         B.pl.xlabel(r' $p_{r}$ (GeV/c)')
         B.pl.ylabel(r'Relative Error (\%)')
         B.pl.ylim(-100, 100)
@@ -223,6 +280,14 @@ def plot_final():
         rel_stats_err = tot_stats_err[thnq==ithnq]*100.
         rel_tot_err = tot_err[thnq==ithnq]*100.
         pmiss_avg = pm_avg[thnq==ithnq]
+        
+        #Q2;(3,4) GeV2
+        #dsig_sig_kin_syst = kin_syst_tot0[thnq==ithnq]*100.
+        #dsig_sig_norm_syst = norm_syst_tot0[thnq==ithnq]*100.
+        #dsig_sig_tot_syst = tot_syst_err0[thnq==ithnq]*100.
+        #rel_stats_err = tot_stats_err0[thnq==ithnq]*100.
+        #rel_tot_err = tot_err0[thnq==ithnq]*100.
+        #pmiss_avg = pm_avg0[thnq==ithnq]
 
         for i in range(len(y)):
             if (np.isnan(dsig_sig_tot[i])):
@@ -250,8 +315,8 @@ def plot_final():
 
         fout.close()
 
-
-        #--------------Plot the % Deviation of data and all models relative to the CD-Bonn FSI model------------------------
+        '''
+        #--------------Plot the % Deviation of data and all models relative to the CD-Bonn PWIA model------------------------
         
         B.pl.clf()
         B.pl.figure(i+3)
@@ -260,26 +325,26 @@ def plot_final():
 
         #print('red_dataXsec=',(red_dataXsec_avg_masked[thnq==ithnq]))
 
-        f_red_fsiXsec_CD_arr = f_red_fsiXsec_CD(pm_avg[thnq==ithnq])
-        ref_line = (f_red_fsiXsec_CD_arr - f_red_fsiXsec_CD_arr)/f_red_fsiXsec_CD_arr * 100.
+        f_red_pwiaXsec_CD_arr = f_red_pwiaXsec_CD(pm_avg[thnq==ithnq])
+        ref_line = (f_red_pwiaXsec_CD_arr - f_red_pwiaXsec_CD_arr)/f_red_fsiXsec_CD_arr * 100.
 
         #print('f_red_CD=',(f_red_fsiXsec_CD_arr))
         
-        data_dev = (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm - f_red_fsiXsec_CD_arr) / (f_red_fsiXsec_CD_arr) * 100.
-        data_dev_err = np.sqrt((red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm/f_red_fsiXsec_CD_arr )**2) * 100.
-        print('red_dataXsec=',red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)
-        print('f_red_fsiXsec=',f_red_fsiXsec_CD_arr)
-        print('data_dev=',data_dev)
-        print('data_dev_err=',data_dev_err)
+        data_dev = (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm - f_red_pwiaXsec_CD_arr) / (f_red_pwiaXsec_CD_arr) * 100.
+        data_dev_err = np.sqrt((red_dataXsec_avg_tot_err[thnq==ithnq]*MeV2fm/f_red_pwiaXsec_CD_arr )**2) * 100.
+        #print('red_dataXsec=',red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm)
+        #print('f_red_pwiaXsec=',f_red_pwiaXsec_CD_arr)
+        #print('data_dev=',data_dev)
+        #print('data_dev_err=',data_dev_err)
         #print('len of pm=',len(pm[thnq==ithnq]))
         #print('len of pm_avg=',len(pm_avg[thnq==ithnq]))
-        CD_pwia_dev = (f_red_pwiaXsec_CD(pm_avg[thnq==ithnq]) - f_red_fsiXsec_CD_arr)/f_red_fsiXsec_CD_arr * 100.
+        CD_fsi_dev = (f_red_fsiXsec_CD(pm_avg[thnq==ithnq]) - f_red_pwiaXsec_CD_arr)/f_red_pwiaXsec_CD_arr * 100.
         
-        V18_fsi_dev = (f_red_fsiXsec_V18(pm_avg[thnq==ithnq]) - f_red_fsiXsec_CD_arr)/f_red_fsiXsec_CD_arr * 100.
-        V18_pwia_dev = (f_red_pwiaXsec_V18(pm_avg[thnq==ithnq]) - f_red_fsiXsec_CD_arr)/f_red_fsiXsec_CD_arr * 100.
+        V18_fsi_dev = (f_red_fsiXsec_V18(pm_avg[thnq==ithnq]) - f_red_pwiaXsec_CD_arr)/f_red_pwiaXsec_CD_arr * 100.
+        V18_pwia_dev = (f_red_pwiaXsec_V18(pm_avg[thnq==ithnq]) - f_red_pwiaXsec_CD_arr)/f_red_pwiaXsec_CD_arr * 100.
         
-        paris_fsi_dev = (f_red_fsiXsec_avg(pm_avg[thnq==ithnq]) - f_red_fsiXsec_CD_arr)/f_red_fsiXsec_CD_arr * 100.
-        paris_pwia_dev = (f_red_pwiaXsec_avg(pm_avg[thnq==ithnq]) - f_red_fsiXsec_CD_arr)/f_red_fsiXsec_CD_arr * 100.
+        paris_fsi_dev = (f_red_fsiXsec_avg(pm_avg[thnq==ithnq]) - f_red_pwiaXsec_CD_arr)/f_red_pwiaXsec_CD_arr * 100.
+        paris_pwia_dev = (f_red_pwiaXsec_avg(pm_avg[thnq==ithnq]) - f_red_pwiaXsec_CD_arr)/f_red_pwiaXsec_CD_arr * 100.
 
         B.plot_exp(pm_avg[thnq==ithnq],  ref_line, marker='None', linestyle='-', color='magenta', label='CD-Bonn FSI (reference)')
         B.plot_exp(pm_avg[thnq==ithnq],  data_dev, data_dev_err, marker='o', color='k', label='Data')
@@ -304,7 +369,7 @@ def plot_final():
         
         #Calculate percent deviation from data and all models relative
 
-        '''
+      
         #Take (Data - Model) / Data  ratio  (a - b) / a,  sig = b/a**2 *sig_a
         f_red_fsiXsec_CD_arr = f_red_fsiXsec_CD(pm_avg[thnq==ithnq])
         ref_line = (red_dataXsec_avg_masked[thnq==ithnq] - red_dataXsec_avg_masked[thnq==ithnq]) / red_dataXsec_avg_masked[thnq==ithnq] 
@@ -343,8 +408,8 @@ def plot_final():
         B.pl.title(r'Percent Deviation of Model from Data, $\theta_{nq} = %i \pm 5$ deg'%(ithnq))
         B.pl.legend(loc='upper right')            
         B.pl.savefig(dir_name+'/final_redXsec_Data2ModelDev_thnq%i.pdf'%(ithnq))
-        '''
-        '''
+        
+        
         #Take Data / Model ratio
         f_red_fsiXsec_CD_arr = f_red_fsiXsec_CD(pm_avg[thnq==ithnq])
         ref_line = red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm / (red_dataXsec_avg_masked[thnq==ithnq]*MeV2fm) 
@@ -383,11 +448,11 @@ def plot_final():
         B.pl.title(r'Ratio $\sigma^{Data}_{red}/\sigma^{Model}_{red}$, $\theta_{nq} = %i \pm 5$ deg'%(ithnq))
         B.pl.legend()            
         B.pl.savefig(dir_name+'/final_redXsec_Data2Model_thnq%i.pdf'%(ithnq))
-        '''
+       
 
         #-------Plot the Ratio  sig_red_exp(pm) / sig_red_exp(p0=0.5 GeV/c) for pm >=0.5 GeV/c (same for models), to compare shapes
         
-        
+                
         #Require ONLY thnq = 35, 45 deg (FOCUS POINT: pm= 0.5 GeV)
 
         if (ithnq==35 or ithnq==45):
@@ -504,7 +569,7 @@ def plot_final():
                 B.pl.title(r'Cross Section Ratio, $\theta_{nq} = %i \pm 5$ deg'%(ithnq))                                                                                                                             
                 B.pl.legend(loc='upper right', fontsize='small')                                                                                                                                                                                            
                 B.pl.savefig(dir_name+'/ratio_test_fp%f_thnq%i.pdf'%(fp[j], ithnq))   
-        
+        '''
         
         
         
@@ -755,15 +820,27 @@ def plot_report():
     #-------------------------------------------------------
     
     #---------------Plot Run vs Total Live Time---------------
-    B.plot_exp(get_var(80,1,'Run'),  get_var(80,1,'tLT'), get_var(80,1,'tLT')*0.05,  marker='s', color='k', label='80 (set1)' )
-    B.plot_exp(get_var(580,1,'Run'),  get_var(580,1,'tLT'), get_var(580,1,'tLT')*0.05,  marker='s', color='b', label='580 (set1)' )
-    B.plot_exp(get_var(580,2,'Run'),  get_var(580,2,'tLT'), get_var(580,2,'tLT')*0.05,  marker='s', color='g', label='580 (set2)' )
-  
-    B.plot_exp(get_var(750,1,'Run'),  get_var(750,1,'tLT'), get_var(750,1,'tLT')*0.05,  marker='s', color='r', label='750 (set1)' )
-    B.plot_exp(get_var(750,2,'Run'),  get_var(750,2,'tLT'), get_var(750,2,'tLT')*0.05,  marker='s', color='m', label='750 (set2)' )
-    B.plot_exp(get_var(750,3,'Run'),  get_var(750,3,'tLT'), get_var(750,3,'tLT')*0.05,  marker='s', color='c', label='750 (set3)' )
+    #Get the average
+    #w80 = 1. / (get_var(80,1,'tLT')*0.05)**2
+    #w580_1 = 1. / (get_var(580,1,'tLT')*0.05)**2
+    #w580_2 = 1. / (get_var(580,2,'tLT')*0.05)**2
+    #w750_1 = 1. / (get_var(750,1,'tLT')*0.05)**2
+    #w750_2 = 1. / (get_var(750,2,'tLT')*0.05)**2
+    #w750_3 = 1. / (get_var(750,3,'tLT')*0.05)**2
+    #x80 = np.average(get_var(80,1,'tLT')) + np.average(get_var(580,1,'tLT')) +  np.average(get_var(580,2,'tLT')) +  np.average(get_var(750,1,'tLT')) +  np.average(get_var(750,2,'tLT')) + np.average(get_var(750,3,'tLT'))) / 6.
+
+    avgLT = ( np.average(get_var(80,1,'tLT')) + np.average(get_var(580,1,'tLT')) +  np.average(get_var(580,2,'tLT')) +  np.average(get_var(750,1,'tLT')) +  np.average(get_var(750,2,'tLT')) + np.average(get_var(750,3,'tLT'))) / 6.
+
+    B.plot_exp(get_var(80,1,'Run'),  get_var(80,1,'tLT'), get_var(80,1,'tLT')*0.05,  marker='s', color='k', label='80 (set1)', zorder=2 )
+    B.plot_exp(get_var(580,1,'Run'),  get_var(580,1,'tLT'), get_var(580,1,'tLT')*0.05,  marker='s', color='b', label='580 (set1)', zorder=2 )
+    B.plot_exp(get_var(580,2,'Run'),  get_var(580,2,'tLT'), get_var(580,2,'tLT')*0.05,  marker='s', color='g', label='580 (set2)', zorder=2 )  
+    B.plot_exp(get_var(750,1,'Run'),  get_var(750,1,'tLT'), get_var(750,1,'tLT')*0.05,  marker='s', color='r', label='750 (set1)', zorder=2 )
+    B.plot_exp(get_var(750,2,'Run'),  get_var(750,2,'tLT'), get_var(750,2,'tLT')*0.05,  marker='s', color='m', label='750 (set2)', zorder=2 )
+    B.plot_exp(get_var(750,3,'Run'),  get_var(750,3,'tLT'), get_var(750,3,'tLT')*0.05,  marker='s', color='c', label='750 (set3)', zorder=2 )
     B.pl.xlim(3288, 3410)
     B.pl.ylim(0.80, 1.05)
+    B.pl.axhline(y=avgLT, color='k', linestyle='--', label='avg=%f'%(avgLT), zorder=10)
+
     B.pl.xlabel('Run Number')
     B.pl.ylabel('Total Live Time')
     B.pl.title('Total EDMT Live Time vs. Run Number')
@@ -776,6 +853,13 @@ def plot_report():
     
     
     #---------------Plot Run vs Tracking Efficiencies---------------
+
+    avg_htrk = ( np.average(get_var(80,1,'hTrkEff')) + np.average(get_var(580,1,'hTrkEff')) + np.average(get_var(580,2,'hTrkEff')) + np.average(get_var(750,1,'hTrkEff')) + np.average(get_var(750,2,'hTrkEff')) + np.average(get_var(750,3,'hTrkEff')) ) / 6.
+    avg_etrk = ( np.average(get_var(80,1,'eTrkEff')) + np.average(get_var(580,1,'eTrkEff')) + np.average(get_var(580,2,'eTrkEff')) + np.average(get_var(750,1,'eTrkEff')) + np.average(get_var(750,2,'eTrkEff')) + np.average(get_var(750,3,'eTrkEff')) ) / 6.
+
+    print('avg_htrk=',avg_htrk)
+    print('avg_etrk=',avg_etrk)
+
     B.plot_exp(get_var(80,1,'Run'),  get_var(80,1,'hTrkEff'), get_var(80,1,'hTrkEff_err'),  marker='s', color='k', label='HMS' )
     B.plot_exp(get_var(580,1,'Run'),  get_var(580,1,'hTrkEff'), get_var(580,1,'hTrkEff_err'),  marker='s', color='b', label='HMS ' )
     B.plot_exp(get_var(580,2,'Run'),  get_var(580,2,'hTrkEff'), get_var(580,2,'hTrkEff_err'),  marker='s', color='g', label='HMS  ' )
@@ -789,7 +873,10 @@ def plot_report():
     B.plot_exp(get_var(750,1,'Run'),  get_var(750,1,'eTrkEff'), get_var(750,1,'eTrkEff_err'),  marker='s', mec='r', mfc='white', ecolor='r', label='SHMS ---- 750 (set1)' )
     B.plot_exp(get_var(750,2,'Run'),  get_var(750,2,'eTrkEff'), get_var(750,2,'eTrkEff_err'),  marker='s', mec='m', mfc='white', ecolor='m', label='SHMS ---- 750 (set2)' )
     B.plot_exp(get_var(750,3,'Run'),  get_var(750,3,'eTrkEff'), get_var(750,3,'eTrkEff_err'),  marker='s', mec='c', mfc='white', ecolor='c', label='SHMS ---- 750 (set3)' )
-    
+        
+    #B.pl.axhline(y=avg_htrk, color='k', linestyle='--', label='avg_htrk=%f'%(avg_htrk), zorder=10)
+    #B.pl.axhline(y=avg_etrk, color='k', linestyle='--', label='avg_etrk=%f'%(avg_etrk), zorder=10)
+
     B.pl.xlabel('Run Number')
     B.pl.ylabel('Tracking Efficiency')
     B.pl.title('Tracking Efficiency vs. Run Number')
@@ -817,6 +904,7 @@ def plot_report():
     tb_750set2_err = np.sqrt(  get_var(750,2,'avg_current')**2 * sig_m**2 + m**2 * sig_I_750set2**2  ) 
     tb_750set3_err = np.sqrt(  get_var(750,3,'avg_current')**2 * sig_m**2 + m**2 * sig_I_750set3**2  ) 
 
+    avg_boil = (np.average(get_var(80,1,'tgtBoil_factor')) + np.average(get_var(580,1,'tgtBoil_factor')) + np.average(get_var(580,2,'tgtBoil_factor')) + np.average(get_var(750,1,'tgtBoil_factor')) + np.average(get_var(750,2,'tgtBoil_factor')) + np.average(get_var(750,3,'tgtBoil_factor'))) / 6.
 
     B.plot_exp(get_var(80,1,'Run'),  get_var(80,1,'tgtBoil_factor'), tb_80_err,  marker='s', ecolor = 'k', mec='k', mfc='white', label='80 (set1)' )
     B.plot_exp(get_var(580,1,'Run'),  get_var(580,1,'tgtBoil_factor'), tb_580set1_err,  marker='s',  ecolor = 'b', mec='b', mfc='white',label='580 (set1)' )
@@ -825,6 +913,8 @@ def plot_report():
     B.plot_exp(get_var(750,1,'Run'),  get_var(750,1,'tgtBoil_factor'), tb_750set1_err,  marker='s',  ecolor = 'r', mec='r', mfc='white',label='750 (set1)' )
     B.plot_exp(get_var(750,2,'Run'),  get_var(750,2,'tgtBoil_factor'), tb_750set2_err,  marker='s',  ecolor = 'm', mec='m', mfc='white',label='750 (set2)' )
     B.plot_exp(get_var(750,3,'Run'),  get_var(750,3,'tgtBoil_factor'), tb_750set3_err,  marker='s',  ecolor = 'c', mec='c', mfc='white',label='750 (set3)' )
+    
+    B.pl.axhline(y=avg_boil, color='k', linestyle='--', label='avg_boil=%f'%(avg_boil), zorder=10)
 
     B.pl.xlabel('Run Number')
     B.pl.ylabel('Target Boiling Factor')
@@ -956,8 +1046,8 @@ def main():
     #plot_theory_sets('fsi')
     #plot_Xsec_vs_thnq()
     #plot_final()
-    make_prl_plots()
-
+    #make_prl_plots()
+    plot_report()
 if __name__=="__main__":
     main()
 

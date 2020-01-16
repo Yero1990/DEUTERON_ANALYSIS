@@ -37,3 +37,10 @@ Use calc_redXsec.py code
 
 Use calculate_averages.py
 3) Use average.py (mehtod get_average_array(), to combine the reduced Xsec data)
+
+**NOTE**
+The *fofaPBosted* directories contain the reduced cross sections where Ksig_cc1 uses P. Bosted
+Form Factor Parametrizations
+
+Otherwise, the (updated_FSI_models, updated_PWIA_models) directories used the JRA parametrization
+

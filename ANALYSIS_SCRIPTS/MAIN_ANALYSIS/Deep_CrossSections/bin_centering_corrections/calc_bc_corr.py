@@ -28,8 +28,8 @@ header = """
 #fsiRC_dataXsec_pwiabc_corr: data Xsec radiative corrected using FSI model and Bin-Center corrected using PWIA model  | these can be used to study bin-centering corr. systematics from model dependency
 #fsiRC_dataXsec_fsibc_corr: data Xsec radiative corrected using FSI model and Bin-Center corrected using FSI model  __|  
 #red_dataXsec: reduced data Xsec radiative corrected and bin-center corrected using FSI model (K_sig_cc1 evaluated at FSI avg. kin is used)
-#red_pwiaXsec: reduced theoretical Xsec (K_sig_cc1 evaluated at FSI avg. kin is used)
-#red_fsiXsec: reduced theoretical Xsec (K_sig_cc1 evaluated at PWIA avg. kin is used)                    
+#red_pwiaXsec: reduced theoretical Xsec (K_sig_cc1 evaluated at PWIA avg. kin is used)
+#red_fsiXsec: reduced theoretical Xsec (K_sig_cc1 evaluated at FSI avg. kin is used)                    
 #i_b = 2D bin id number
 #xb = th_nq value at bin center                                                                                                   
 #yb = pmiss value at bin center                                                                        
@@ -44,7 +44,7 @@ sys_ext = sys.argv[3]
                                                                                                             
 print argv                                                                                   
          
-#usage: /apps/python/2.7.12/bin/python.py calc_bc_corr.py 580  1           
+#usage: /apps/python/2.7.12/bin/python.py calc_bc_corr.py 580  1  syst_ext          
 
 #check if directory exists, else creates it.
 if not os.path.exists(sys_ext):
