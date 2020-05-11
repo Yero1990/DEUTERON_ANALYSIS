@@ -11,14 +11,15 @@ import numpy as np
 #Usage: ipython run_full_analysis nominal (or Em30MeV, Em50MeV, Em60MeV, Em80MeV)
 
 study = sys.argv[1]   
+#sys_ext="all_thnq_Q2_4to5"
 
 
 def main():
     print('Entering Main . . .')
 
     #Emiss Systematic Study
-    if(study=="Q2_3to4"):
-        cut_arr = np.array([40])  #Missing Energy in MeV
+    if(study=="Em"):
+        cut_arr = np.array([30, 40, 50, 60, 70, 80])  #Missing Energy in MeV
     #Ztar Difference Systematic Study
     if(study=="Ztar"):
         cut_arr = np.array([3.0, 2.5])
@@ -34,9 +35,10 @@ def main():
 
     for i in range(len(cut_arr)):
 
-        if(study=="Q2_3to4"):
+        if(study=="Em"):
             cut_value = cut_arr[i] / 1000.   #convert to GeV
-            sys_ext = study+"%sGeV"%(cut_arr[i])  #descriptive name of systematic study
+            sys_ext = study+"_%sMeV"%(cut_arr[i])  #descriptive name of systematic study
+            #sys_ext = study  #descriptive name of systematic study
         if(study=="Ztar"):
             cut_value = cut_arr[i]
             sys_ext = study+"%scm"%(cut_arr[i])  #descriptive name of systematic study
@@ -156,7 +158,7 @@ def calc_all_Xsec(sys_ext=''):
     os.system("python calc_avg_kin.py 750 pwia 3 %s"%(sys_ext))
     os.system("python calc_avg_kin.py 750 fsi 3 %s"%(sys_ext))
     
-    '''
+    
     #----------PART3: EXTRACT THEORY XSEC FROM AVERAGE KINEMATICS-------------
     dir_name="../theory_Xsec/"
     os.chdir(dir_name)
@@ -206,7 +208,7 @@ def calc_all_Xsec(sys_ext=''):
     os.system("ipython calc_bc_corr.py 750 2 %s"%(sys_ext))
     os.system("ipython calc_bc_corr.py 750 3 %s"%(sys_ext))
     
-    
+    '''
     #----------PART6: COMBINE Red. Xsec -------------
     #Combine reduced cross sections from all kin. / sets (NOT Cross Sections)
     
@@ -218,18 +220,27 @@ def calc_all_Xsec(sys_ext=''):
     os.system("python make_plot.py %s"%(sys_ext))
     
     
-    #-------PART7: CALCULATE SYSTEMATICS EFFECTS (assumes nominal cuts Xsec already exits)---------
-    #dir_name="/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/SYSTEMATICS_STUDIES/scripts"
-    #os.chdir(dir_name)
+    #-------PART6: CALCULATE SYSTEMATICS EFFECTS (assumes nominal cuts Xsec already exits)---------
+    dir_name="/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/SYSTEMATICS_STUDIES/scripts/kin_systematics"
+    os.chdir(dir_name)
 
-    #os.system("python systematics.py %s %f"%(sys_ext, 0.2))  #the 2nd argument represents the statistcal uncertainty (ex. we want < 20% uncertainty in Xsec)
-    #os.system("python systematics.py %s %f"%(sys_ext, 0.5))
-    #os.system("python systematics.py %s %f"%(sys_ext, 0.9))
+    os.system("ipython run_differ_general_v2.py 80 fsi 1 %s"%(sys_ext))
+    os.system("ipython run_differ_general_v2.py 580 fsi 1 %s"%(sys_ext))
+    os.system("ipython run_differ_general_v2.py 580 fsi 2 %s"%(sys_ext))
+    os.system("ipython run_differ_general_v2.py 750 fsi 1 %s"%(sys_ext))
+    os.system("ipython run_differ_general_v2.py 750 fsi 2 %s"%(sys_ext))
+    os.system("ipython run_differ_general_v2.py 750 fsi 3 %s"%(sys_ext))
+    
+    #----------PART7: COMBINE Red. Xsec ------------- 
+    #Combine reduced cross sections from all kin. / sets (NOT Cross Sections) 
+    dir_name="/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/Deep_CrossSections/combine_data"
+    os.chdir(dir_name)
+    os.system("ipython combine_data.py %s"%(sys_ext))
     '''
 
 def gen_inp(model='', pm_set=0, data_set=0, study='', cut_value=0):
     
-    if(study=="Q2_3to4"):
+    if(study=="Em"):
 
         #Generate the D(e,e'p)n Input File Based on User Input 
         f = open('set_deep_cuts.inp', 'w')                               
@@ -281,7 +292,7 @@ def gen_inp(model='', pm_set=0, data_set=0, study='', cut_value=0):
         f.write('bool e_delta = 1                                                                                              \n')
         f.write('bool ztar_diff = 1                                                                                            \n')
         f.write('bool Q2 = 1                                                                                                   \n')
-        f.write('bool th_nq = 1                                                                                                \n')
+        f.write('bool th_nq = 0                                                                                                \n')
         f.write('bool MM = 0                                                                                                   \n')
         f.write('                                                                                                              \n')
         f.write(';PID Cuts                                                                                                     \n')
@@ -298,8 +309,8 @@ def gen_inp(model='', pm_set=0, data_set=0, study='', cut_value=0):
         f.write('                                                                                                              \n')
         f.write('                                                                                                              \n')
         f.write('#------Set DATA/SIMC CUTS LIMITS ------                                                                       \n')
-        f.write('Em_min : -0.02                                                                                                \n')  
-        f.write('Em_max : %f                                                                                                   \n'%(cut_value))  
+        f.write('Em_min: -0.02                                                                                                \n')  
+        f.write('Em_max: %f                                                                                                   \n'%(cut_value))  
         f.write('                                                                                                              \n')
         f.write('h_delta_min: -8.                                                                                              \n')
         f.write('h_delta_max:  8.                                                                                              \n')
@@ -313,11 +324,11 @@ def gen_inp(model='', pm_set=0, data_set=0, study='', cut_value=0):
         f.write('ztarDiff_min: -2.                                                                                             \n')
         f.write('ztarDiff_max: 2.                                                                                              \n')
         f.write('                                                                                                              \n')
-        f.write('Q2_min: 3.                                                                                                    \n')
-        f.write('Q2_max: 4.                                                                                                    \n')
+        f.write('Q2_min: 4.                                                                                                    \n')
+        f.write('Q2_max: 5.                                                                                                    \n')
         f.write('                                                                                                              \n')
-        f.write('thnq_min: 30.                                                                                                 \n')
-        f.write('thnq_max: 40.                                                                                                 \n')
+        f.write('thnq_min: 70.                                                                                                 \n')
+        f.write('thnq_max: 80.                                                                                                 \n')
         f.write('                                                                                                              \n')
         f.write('MM_min: 0.9                                                                                                   \n')
         f.write('MM_max: 0.985                                                                                                 \n')

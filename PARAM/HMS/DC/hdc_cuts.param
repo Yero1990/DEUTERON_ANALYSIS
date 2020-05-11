@@ -1,5 +1,5 @@
 ;Utilize per wire tzero offsets, 1 means true
-h_using_tzero_per_wire = 1
+h_using_tzero_per_wire = 0
 
 
 hdc_fix_lr = 1 ; Let hit have different L/R assignment for different space point

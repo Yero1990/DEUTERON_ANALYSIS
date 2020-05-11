@@ -816,7 +816,7 @@ def plot_report():
 
     B.pl.legend(loc='upper right')
     B.pl.show()
-    #B.pl.savefig(dir_name_misc+'/counts_per_charge.pdf')
+    B.pl.savefig(dir_name_misc+'/counts_per_charge.pdf')
     #-------------------------------------------------------
     
     #---------------Plot Run vs Total Live Time---------------
@@ -847,7 +847,7 @@ def plot_report():
 
     B.pl.legend(loc='upper right')
     B.pl.show()
-    #B.pl.savefig(dir_name_misc+'/total_livetime.pdf')
+    B.pl.savefig(dir_name_misc+'/total_livetime.pdf')
 
     #-------------------------------------------------------
     
@@ -885,7 +885,7 @@ def plot_report():
 
     B.pl.legend(ncol=2, loc='upper right')
     B.pl.show()
-    #B.pl.savefig(dir_name_misc+'/tracking_eff.pdf')
+    B.pl.savefig(dir_name_misc+'/tracking_eff.pdf')
 
     
     #---------------Plot Run vs Target Boiling Factor---------------
@@ -924,7 +924,7 @@ def plot_report():
 
     B.pl.legend(loc='upper right')
     B.pl.show()
-    #B.pl.savefig(dir_name_misc+'/target_boil.pdf')
+    B.pl.savefig(dir_name_misc+'/target_boil.pdf')
 
     #---------------------------------------------------------------
     
@@ -946,7 +946,7 @@ def plot_report():
 
     B.pl.legend(loc='upper right')
     B.pl.show()
-    #B.pl.savefig(dir_name_misc+'/beam_current.pdf')
+    B.pl.savefig(dir_name_misc+'/beam_current.pdf')
 
     #-------------------------------------------------------
     
@@ -994,7 +994,7 @@ def plot_report():
     #B.pl.ylabel(r'Trigger Rate [kHz]')
     B.pl.xlim(3285, 3410)
     B.pl.show()
-    #B.pl.savefig(dir_name_misc+'/trigger_rates.pdf')
+    B.pl.savefig(dir_name_misc+'/trigger_rates.pdf')
 
     #-------------------------------------------------------
 

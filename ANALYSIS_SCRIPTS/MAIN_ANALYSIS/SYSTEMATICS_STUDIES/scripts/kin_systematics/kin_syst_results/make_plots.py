@@ -5,7 +5,17 @@ import os
 import sys
 from sys import argv
 import numpy.ma as ma
+import matplotlib.pyplot as plt
+from matplotlib import rc
 
+#Use latex commands (e.g. \textit ot \textbf)                                                                                                                 
+rc('text', usetex=True)                                                                                                                                       
+#Set default font to times new roman                                                                                                                          
+font = {'family' : 'Times New Roman',                                                                                                                         
+        'weight' : 'normal',                                                                                                                                  
+        'size'   : 12                                                                                                                                       
+}                                                                                                                                                           
+plt.rc('font', **font) 
 
 
 def plot_kin_syst():
@@ -53,7 +63,8 @@ def plot_derivative(pm_set=0, model='', data_set=0):
     fname = '../summary_files/DervTable_pm%i_%s_set%i.txt'%(pm_set, model, data_set)
     derv_file = dfile(fname)
 
-    pm = derv_file['pm_bin']
+    pm = (derv_file['pm_bin'])
+    
     thnq = derv_file['thnq_bin']
     #Get Xsec derivative w.r.to kin. variables (%/mrad or %/MeV)
     ds_dthe = derv_file['ds_dthe']
@@ -83,8 +94,8 @@ def plot_derivative(pm_set=0, model='', data_set=0):
 
     sig_tot = derv_file['sig_tot']    #total systematics (added in quadrature)
 
-    thnq_arr = [5, 15, 25, 35, 45, 55, 65, 75, 85, 95, 105]
-
+    #thnq_arr = [5, 15, 25, 35, 45, 55, 65, 75, 85, 95, 105]
+    thnq_arr = [35]
     #Loop over theta_nq angle bins
     for i, ithnq in enumerate(thnq_arr):
         print('theta_nq:',ithnq,' deg')
@@ -97,7 +108,7 @@ def plot_derivative(pm_set=0, model='', data_set=0):
 
         #============Plot Xsec Derivatives==================
         
-        fig1 = B.pl.figure(i)
+        fig1 = B.pl.figure(i, figsize=(7,6))
         B.pl.clf()
 
         B.plot_exp(pm[thnq==ithnq], ds_dthe[thnq==ithnq], marker='o', color='red', label=r'$\frac{d\sigma}{d\theta_{e}}$')
@@ -112,13 +123,15 @@ def plot_derivative(pm_set=0, model='', data_set=0):
        
 
         if(pm_set==80):
-            B.pl.xlim(0, 0.4)
+            B.pl.xlim(0, 0.5)
         else:
-            B.pl.xlim(0.4, 1.1)
-        B.pl.xlabel('Neutron Recoil Momenta [GeV]')
-        B.pl.ylabel(r'Cross Section Variations [%/mrad or %/MeV]')
-        B.pl.title(r'Xsec Derivatives $P_{m}$=%i (set%i) MeV, $\theta_{nq}:(%i, %i)$'%(pm_set, data_set, th_nq_min, th_nq_max))
-        B.pl.legend(loc='upper right', fontsize='x-small', markerscale=1.0)
+            B.pl.xlim(0.4, 1.2)
+        B.pl.xlabel(r'$p_{\mathrm{r}}$ [GeV]', fontsize=16)
+        B.pl.ylabel(r'$\delta\sigma_{\mathrm{Laget,fsi}}$ [\%/mrad or \%/MeV]', fontsize=16)
+        B.pl.title(r'Cross Section Derivatives: %i MeV (set%i), $\theta_{nq}=%i\pm5^{\circ}$'%(pm_set, data_set, ithnq), fontsize=15)
+        B.pl.xticks(fontsize=14)
+        B.pl.yticks(fontsize=14)
+        B.pl.legend(loc='lower right', prop={'size':15}, fontsize=16, markerscale=1.5, frameon=True, framealpha=1.0)
         if(pm_set==80):
             B.pl.savefig('./kin_derv_pm%i_thnq%i.pdf'%(pm_set, ithnq))
         else:
@@ -127,39 +140,43 @@ def plot_derivative(pm_set=0, model='', data_set=0):
        
         #============Plot Individual Systematic Relative Errors==================
         
-        fig2 = B.pl.figure(i+1)
+        fig2 = B.pl.figure(i+1, figsize=(8,6))
         B.pl.clf()
 
         B.plot_exp(pm[thnq==ithnq], y, sig_the[thnq==ithnq], marker='o', color='black', label=r'$d\sigma_{\theta_{e}}$')
         #B.plot_exp(pm[thnq==ithnq], y, sig_phe[thnq==ithnq], marker='s', color='red', label=r'$d\sigma_{\phi_{e}}$')
-        B.plot_exp(pm[thnq==ithnq], y, sig_thp[thnq==ithnq], marker='^', color='blue', label=r'$d\sigma_{\theta_{p}}$')
+        B.plot_exp(pm[thnq==ithnq], y, sig_thp[thnq==ithnq], marker='o', color='blue', label=r'$d\sigma_{\theta_{p}}$')
         #B.plot_exp(pm[thnq==ithnq], y, sig_php[thnq==ithnq], marker='<', color='green', label=r'$d\sigma_{\phi_{p}}$')
         #B.plot_exp(pm[thnq==ithnq], y, sig_thb[thnq==ithnq], marker='v', color='cyan', label=r'$d\sigma_{\theta_{b}}$')
         #B.plot_exp(pm[thnq==ithnq], y, sig_phb[thnq==ithnq], marker='>', color='magenta', label=r'$d\sigma_{\phi_{b}}$')
         
-        B.plot_exp(pm[thnq==ithnq], y, sig_ef[thnq==ithnq], marker='d', color='blueviolet', label=r'$d\sigma_{E_{f}}$')
-        B.plot_exp(pm[thnq==ithnq], y, sig_E[thnq==ithnq], marker='h', color='orange', label=r'$d\sigma_{E_{b}}$')
+        B.plot_exp(pm[thnq==ithnq], y, sig_ef[thnq==ithnq], marker='o', color='blueviolet', label=r'$d\sigma_{E_{f}}$')
+        B.plot_exp(pm[thnq==ithnq], y, sig_E[thnq==ithnq], marker='o', color='orange', label=r'$d\sigma_{E_{b}}$')
 
         #Plot COrrelated Errors
-        B.plot_exp(pm[thnq==ithnq], y, sig_the_thp[thnq==ithnq], marker='s', color='red', label=r'$[d\sigma_{\theta_{e}},d\sigma_{\theta_{p}}]$')
-        B.plot_exp(pm[thnq==ithnq], y, sig_the_Ef[thnq==ithnq], marker='<', color='green', label=r'$[d\sigma_{\theta_{e}}, dE_{f}]$')
-        B.plot_exp(pm[thnq==ithnq], y, sig_the_Eb[thnq==ithnq], marker='v', color='cyan', label=r'$[d\sigma_{\theta_{e}}, dE_{b}]$')
-        B.plot_exp(pm[thnq==ithnq], y, sig_thp_Ef[thnq==ithnq], marker='>', color='magenta', label=r'$[d\sigma_{\theta_{p}}, dE_{f}]$')
-        B.plot_exp(pm[thnq==ithnq], y, sig_thp_Eb[thnq==ithnq], marker='P', color='Maroon', label=r'$[d\sigma_{\theta_{p}}, dE_{b}]$')
-        B.plot_exp(pm[thnq==ithnq], y, sig_Ef_Eb[thnq==ithnq], marker='x', color='navy', label=r'$[dE_{f}, dE_{b}]$')
+        B.plot_exp(pm[thnq==ithnq], y, sig_the_thp[thnq==ithnq], marker='o', color='red', label=r'$[d\sigma_{\theta_{e}},d\sigma_{\theta_{p}}]$')
+        B.plot_exp(pm[thnq==ithnq], y, sig_the_Ef[thnq==ithnq], marker='o', color='green', label=r'$[d\sigma_{\theta_{e}}, dE_{f}]$')
+        B.plot_exp(pm[thnq==ithnq], y, sig_the_Eb[thnq==ithnq], marker='o', color='cyan', label=r'$[d\sigma_{\theta_{e}}, dE_{b}]$')
+        B.plot_exp(pm[thnq==ithnq], y, sig_thp_Ef[thnq==ithnq], marker='o', color='magenta', label=r'$[d\sigma_{\theta_{p}}, dE_{f}]$')
+        B.plot_exp(pm[thnq==ithnq], y, sig_thp_Eb[thnq==ithnq], marker='o', color='Maroon', label=r'$[d\sigma_{\theta_{p}}, dE_{b}]$')
+        B.plot_exp(pm[thnq==ithnq], y, sig_Ef_Eb[thnq==ithnq], marker='o', color='navy', label=r'$[dE_{f}, dE_{b}]$')
 
 
-        eb = B.plot_exp(pm[thnq==ithnq], y, sig_tot[thnq==ithnq], marker='8', color='grey', label=r'$d\sigma_{total}$')
+        eb = B.plot_exp(pm[thnq==ithnq], y, sig_tot[thnq==ithnq], marker='8', color='grey', label=r'$d\sigma^{\mathrm{kin}}_{\mathrm{tot}}$')
         eb[-1][0].set_linestyle('--')
         
         if(pm_set==80):
-            B.pl.xlim(0, 0.4)
+            B.pl.xlim(0, 0.5)
+            B.pl.ylim(-65, 65)
         else:
-            B.pl.xlim(0.4, 1.1)
-        B.pl.xlabel('Neutron Recoil Momenta [GeV]')
-        B.pl.ylabel(r'Kinematics Systematic Errors [%]')
-        B.pl.title(r'Systematic Errors: $P_{m}$=%i (set%i) MeV, $\theta_{nq}:(%i, %i)$'%(pm_set, data_set, th_nq_min, th_nq_max))
-        B.pl.legend(loc='upper right', fontsize='xx-small', markerscale=0.2)
+            B.pl.xlim(0.4, 1.2)
+            B.pl.ylim(-15, 15)
+        B.pl.xlabel('$p_{\mathrm{r}}$ [GeV]', fontsize=16)
+        B.pl.ylabel(r'd$\sigma^{\mathrm{kin}}$ [\%]', fontsize=16)
+        B.pl.title(r'Kinematic Systematic Errors: %i MeV (set%i), $\theta_{nq}=%i\pm5^{\circ}$'%(pm_set, data_set, ithnq), fontsize=15)
+        B.pl.xticks(fontsize=14)
+        B.pl.yticks(fontsize=14)
+        B.pl.legend(ncol=3, loc='upper left', fontsize=14, prop={'size': 12}, markerscale=1.5, frameon=True, framealpha=1.0)
         if(pm_set==80):
             B.pl.savefig('./kin_syst_contributions_pm%i_thnq%i.pdf'%(pm_set, ithnq))
         else:
@@ -350,14 +367,14 @@ def main():
     print('Entering Main . . .')
 
     stats_thrs = 0.5  #Statistics Threshold (ONLY use data Xsec which are withih the statistical uncertainty of the mean Xsec)
-    plot_kin_syst()
+    #plot_kin_syst()
 
 
     plot_derivative(80, 'fsi', 1)
 
     #compare_Xsec(80, 1)
-    #plot_derivative(580, 'fsi', 2)
-    #plot_derivative(750, 'fsi', 1)
+    plot_derivative(580, 'fsi', 2)
+    plot_derivative(750, 'fsi', 1)
 
     '''
     pm80_sys, thnq80_sys, syst_err_80 = get_syst_error(80, 'fsi', 1)

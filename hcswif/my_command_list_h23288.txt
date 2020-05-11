@@ -1,0 +1,2 @@
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh D2_heep_3288_rad.data                                    
+/u/group/E12-10-003/cyero/simc_heep/run_simc_heep.sh D2_heep_3288_norad.data                                                       

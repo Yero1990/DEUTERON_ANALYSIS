@@ -2,6 +2,18 @@ import LT.box as B
 import numpy as np
 import os
 import sys
+import matplotlib.pyplot as plt
+from matplotlib import rc
+
+#Use latex commands (e.g. \textit ot \textbf)
+rc('text', usetex=True)
+#Set default font to times new roman
+font = {'family' : 'Times New Roman',
+        'weight' : 'normal',
+        'size'   : 12
+}
+plt.rc('font', **font)
+
 
 def plotEm_syst(study='', stats_thrs=0.):
 
@@ -18,17 +30,19 @@ def plotEm_syst(study='', stats_thrs=0.):
     if not os.path.exists(dir_name):
         os.makedirs(dir_name)
 
-    f30_name="../datafiles/"+study_dir+"systematicsEm30MeV.txt"
-    f40_name="../datafiles/"+study_dir+"systematicsEm40MeV.txt"
-    f45_name="../datafiles/"+study_dir+"systematicsEm45MeV.txt"
-    f50_name="../datafiles/"+study_dir+"systematicsEm50MeV.txt"
-    f60_name="../datafiles/"+study_dir+"systematicsEm60MeV.txt"
-    
+    f30_name="../datafiles/"+study_dir+"systematicsEm_30MeV.txt"
+    f40_name="../datafiles/"+study_dir+"systematicsEm_40MeV.txt"
+    #f45_name="../datafiles/"+study_dir+"systematicsEm_45MeV.txt"
+    f50_name="../datafiles/"+study_dir+"systematicsEm_50MeV.txt"
+    f60_name="../datafiles/"+study_dir+"systematicsEm_60MeV.txt"
+    f70_name="../datafiles/"+study_dir+"systematicsEm_70MeV.txt" 
+
     f30 = B.get_file(f30_name)
     f40 = B.get_file(f40_name)
-    f45 = B.get_file(f45_name)
+    #f45 = B.get_file(f45_name)
     f50 = B.get_file(f50_name)
     f60 = B.get_file(f60_name)
+    f70 = B.get_file(f70_name)
     
     thnq = B.get_data(f40, 'xb') 
     pm = B.get_data(f40, 'yb') 
@@ -46,14 +60,14 @@ def plotEm_syst(study='', stats_thrs=0.):
     R750set1_em40 = B.get_data(f40,'R750set1')  ;  del750set1_em40 = B.get_data(f40,'del_750set1')  ; sig_del750set1_em40 = B.get_data(f40,'sig_del750set1')
     R750set2_em40 = B.get_data(f40,'R750set2')  ;  del750set2_em40 = B.get_data(f40,'del_750set2')  ; sig_del750set2_em40 = B.get_data(f40,'sig_del750set2')
     R750set3_em40 = B.get_data(f40,'R750set3')  ;  del750set3_em40 = B.get_data(f40,'del_750set3')  ; sig_del750set3_em40 = B.get_data(f40,'sig_del750set3')
-    
+    '''
     R80_em45 = B.get_data(f45,'R80')            ;  del80_em45 = B.get_data(f45,'del80')             ; sig_del80_em45 = B.get_data(f45,'sig_del80')          
     R580set1_em45 = B.get_data(f45,'R580set1')  ;  del580set1_em45 = B.get_data(f45,'del_580set1')  ; sig_del580set1_em45 = B.get_data(f45,'sig_del580set1')
     R580set2_em45 = B.get_data(f45,'R580set2')  ;  del580set2_em45 = B.get_data(f45,'del_580set2')  ; sig_del580set2_em45 = B.get_data(f45,'sig_del580set2')
     R750set1_em45 = B.get_data(f45,'R750set1')  ;  del750set1_em45 = B.get_data(f45,'del_750set1')  ; sig_del750set1_em45 = B.get_data(f45,'sig_del750set1')
     R750set2_em45 = B.get_data(f45,'R750set2')  ;  del750set2_em45 = B.get_data(f45,'del_750set2')  ; sig_del750set2_em45 = B.get_data(f45,'sig_del750set2')
     R750set3_em45 = B.get_data(f45,'R750set3')  ;  del750set3_em45 = B.get_data(f45,'del_750set3')  ; sig_del750set3_em45 = B.get_data(f45,'sig_del750set3')
-    
+    '''
     R80_em50 = B.get_data(f50,'R80')            ;  del80_em50 = B.get_data(f50,'del80')             ; sig_del80_em50 = B.get_data(f50,'sig_del80')          
     R580set1_em50 = B.get_data(f50,'R580set1')  ;  del580set1_em50 = B.get_data(f50,'del_580set1')  ; sig_del580set1_em50 = B.get_data(f50,'sig_del580set1')
     R580set2_em50 = B.get_data(f50,'R580set2')  ;  del580set2_em50 = B.get_data(f50,'del_580set2')  ; sig_del580set2_em50 = B.get_data(f50,'sig_del580set2')
@@ -68,6 +82,12 @@ def plotEm_syst(study='', stats_thrs=0.):
     R750set2_em60 = B.get_data(f60,'R750set2')  ;  del750set2_em60 = B.get_data(f60,'del_750set2')  ; sig_del750set2_em60 = B.get_data(f60,'sig_del750set2')
     R750set3_em60 = B.get_data(f60,'R750set3')  ;  del750set3_em60 = B.get_data(f60,'del_750set3')  ; sig_del750set3_em60 = B.get_data(f60,'sig_del750set3')
 
+    #R80_em70 = B.get_data(f70,'R80')            ;  del80_em70 = B.get_data(f70,'del80')             ; sig_del80_em70 = B.get_data(f70,'sig_del80')              
+    #R580set1_em70 = B.get_data(f70,'R580set1')  ;  del580set1_em70 = B.get_data(f70,'del_580set1')  ; sig_del580set1_em70 = B.get_data(f70,'sig_del580set1')         
+    #R580set2_em70 = B.get_data(f70,'R580set2')  ;  del580set2_em70 = B.get_data(f70,'del_580set2')  ; sig_del580set2_em70 = B.get_data(f70,'sig_del580set2')   
+    #R750set1_em70 = B.get_data(f70,'R750set1')  ;  del750set1_em70 = B.get_data(f70,'del_750set1')  ; sig_del750set1_em70 = B.get_data(f70,'sig_del750set1')            
+    #R750set2_em70 = B.get_data(f70,'R750set2')  ;  del750set2_em70 = B.get_data(f70,'del_750set2')  ; sig_del750set2_em70 = B.get_data(f70,'sig_del750set2')               
+    #R750set3_em70 = B.get_data(f70,'R750set3')  ;  del750set3_em70 = B.get_data(f70,'del_750set3')  ; sig_del750set3_em70 = B.get_data(f70,'sig_del750set3') 
 
     #Define theta_nq bins to plot
     thnq_arr = [5, 15, 25, 35, 45, 55, 65, 75, 85, 95, 105]
@@ -79,50 +99,57 @@ def plotEm_syst(study='', stats_thrs=0.):
         th_nq_min = ithnq - 5
         th_nq_max = ithnq + 5
         
-        fig1 = B.pl.figure(i)
+        fig1 = B.pl.figure(i, figsize=(7,6))
         B.pl.clf()
     
-        B.plot_exp(pm[thnq==ithnq], R80_em30[thnq==ithnq], color='black', marker='s', label='80 MeV Systematics (Em: 30 MeV)' )
+        B.plot_exp(pm[thnq==ithnq], R80_em30[thnq==ithnq], color='black', marker='s', label=r'80 MeV ($E_{\mathrm{m}}$: 30 MeV)' )
        # B.plot_exp(pm[thnq==ithnq], R580set1_em30[thnq==ithnq], color='black', marker='o', label='580 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R580set2_em30[thnq==ithnq], color='black', marker='^',label='580 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set1_em30[thnq==ithnq], color='black', marker='>', label='750 (set1) MeV Systematics' )
+        B.plot_exp(pm[thnq==ithnq], R580set2_em30[thnq==ithnq], color='black', marker='^',label='580 MeV (set2)' )
+        B.plot_exp(pm[thnq==ithnq], R750set1_em30[thnq==ithnq], color='black', marker='>', label='750 MeV (set1)' )
        # B.plot_exp(pm[thnq==ithnq], R750set2_em30[thnq==ithnq], color='black', marker='v', label='750 (set2) MeV Systematics' )
        # B.plot_exp(pm[thnq==ithnq], R750set3_em30[thnq==ithnq], color='black', marker='<', label='750 (set3) MeV Systematics' )
         
-        B.plot_exp(pm[thnq==ithnq], R80_em40[thnq==ithnq], color='red', marker='s', label='80 MeV Systematics (Em: 40 MeV)' )
+        B.plot_exp(pm[thnq==ithnq], R80_em40[thnq==ithnq], color='red', marker='s', label='80 MeV ($E_{\mathrm{m}}$: 40 MeV)' )
        # B.plot_exp(pm[thnq==ithnq], R580set1_em40[thnq==ithnq], color='red', marker='o', label='580 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R580set2_em40[thnq==ithnq], color='red', marker='^',label='580 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set1_em40[thnq==ithnq], color='red', marker='>', label='750 (set1) MeV Systematics' )
+        B.plot_exp(pm[thnq==ithnq], R580set2_em40[thnq==ithnq], color='red', marker='^',label='580 MeV (set2)' )
+        B.plot_exp(pm[thnq==ithnq], R750set1_em40[thnq==ithnq], color='red', marker='>', label='750 MeV (set1)' )
        # B.plot_exp(pm[thnq==ithnq], R750set2_em40[thnq==ithnq], color='red', marker='v', label='750 (set2) MeV Systematics' )
        # B.plot_exp(pm[thnq==ithnq], R750set3_em40[thnq==ithnq], color='red', marker='<', label='750 (set3) MeV Systematics' )    
         
         
-        B.plot_exp(pm[thnq==ithnq], R80_em45[thnq==ithnq], color='green', marker='s', label='80 MeV Systematics (Em: 45 MeV)' )
+        #B.plot_exp(pm[thnq==ithnq], R80_em45[thnq==ithnq], color='green', marker='s', label='80 MeV ($E_{\mathrm{m}}$: 45 MeV)' )
        # B.plot_exp(pm[thnq==ithnq], R580set1_em45[thnq==ithnq], color='green', marker='o', label='580 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R580set2_em45[thnq==ithnq], color='green', marker='^',label='580 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set1_em45[thnq==ithnq], color='green', marker='>', label='750 (set1) MeV Systematics' )
+        #B.plot_exp(pm[thnq==ithnq], R580set2_em45[thnq==ithnq], color='green', marker='^',label='580 MeV (set2)' )
+        #B.plot_exp(pm[thnq==ithnq], R750set1_em45[thnq==ithnq], color='green', marker='>', label='750 MeV (set1)' )
        # B.plot_exp(pm[thnq==ithnq], R750set2_em45[thnq==ithnq], color='green', marker='v', label='750 (set2) MeV Systematics' )
        # B.plot_exp(pm[thnq==ithnq], R750set3_em45[thnq==ithnq], color='green', marker='<', label='750 (set3) MeV Systematics' )
         
-        B.plot_exp(pm[thnq==ithnq], R80_em50[thnq==ithnq], color='magenta', marker='s', label='80 MeV Systematics (Em: 50 MeV)' )
+        B.plot_exp(pm[thnq==ithnq], R80_em50[thnq==ithnq], color='magenta', marker='s', label='80 MeV ($E_{\mathrm{m}}$: 50 MeV)' )
        # B.plot_exp(pm[thnq==ithnq], R580set1_em50[thnq==ithnq], color='magenta', marker='o', label='580 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R580set2_em50[thnq==ithnq], color='magenta', marker='^', label='580 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set1_em50[thnq==ithnq], color='magenta', marker='>', label='750 (set1) MeV Systematics' )
+        B.plot_exp(pm[thnq==ithnq], R580set2_em50[thnq==ithnq], color='magenta', marker='^', label='580 MeV (set2) MeV' )
+        B.plot_exp(pm[thnq==ithnq], R750set1_em50[thnq==ithnq], color='magenta', marker='>', label='750 MeV (set1) MeV' )
        # B.plot_exp(pm[thnq==ithnq], R750set2_em50[thnq==ithnq], color='magenta', marker='v', label='750 (set2) MeV Systematics' )
        # B.plot_exp(pm[thnq==ithnq], R750set3_em50[thnq==ithnq], color='magenta', marker='<', label='750 (set3) MeV Systematics' )
         
-        B.plot_exp(pm[thnq==ithnq], R80_em60[thnq==ithnq], color='blue', marker='s', label='80 MeV Systematics (Em: 60 MeV)' )
+        B.plot_exp(pm[thnq==ithnq], R80_em60[thnq==ithnq], color='blue', marker='s', label='80 MeV ($E_{\mathrm{m}}$: 60 MeV)' )
        # B.plot_exp(pm[thnq==ithnq], R580set1_em60[thnq==ithnq], color='blue', marker='o', label='580 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R580set2_em60[thnq==ithnq], color='blue', marker='^', label='580 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set1_em60[thnq==ithnq], color='blue', marker='>', label='750 (set1) MeV Systematics' )
+        B.plot_exp(pm[thnq==ithnq], R580set2_em60[thnq==ithnq], color='blue', marker='^', label='580 MeV (set2) MeV' )
+        B.plot_exp(pm[thnq==ithnq], R750set1_em60[thnq==ithnq], color='blue', marker='>', label='750 MeV (set1) MeV' )
        # B.plot_exp(pm[thnq==ithnq], R750set2_em60[thnq==ithnq], color='blue', marker='v', label='750 (set2) MeV Systematics' )
        # B.plot_exp(pm[thnq==ithnq], R750set3_em60[thnq==ithnq], color='blue', marker='<', label='750 (set3) MeV Systematics' )
             
-            
-        B.pl.xlabel('Neutron Recoil Momenta [GeV]')
-        B.pl.ylabel(r'Ratio, $\frac{\Delta}{\sigma_{\Delta}}$')
-        B.pl.axes().grid()
-        B.pl.ylim(-10, 10)
+        #B.plot_exp(pm[thnq==ithnq], R80_em70[thnq==ithnq], color='blue', marker='s', label='80 MeV ($E_{\mathrm{m}}$: 70 MeV)' )                                              
+       # B.plot_exp(pm[thnq==ithnq], R580set1_em70[thnq==ithnq], color='blue', marker='o', label='580 (set1) MeV Systematics' )                                                         
+        #B.plot_exp(pm[thnq==ithnq], R580set2_em70[thnq==ithnq], color='blue', marker='^', label='580 MeV (set2) MeV' )                                                            
+        #B.plot_exp(pm[thnq==ithnq], R750set1_em70[thnq==ithnq], color='blue', marker='>', label='750 MeV (set1) MeV' )                                                               
+       # B.plot_exp(pm[thnq==ithnq], R750set2_em70[thnq==ithnq], color='blue', marker='v', label='750 (set2) MeV Systematics' )                                                         
+       # B.plot_exp(pm[thnq==ithnq], R750set3_em70[thnq==ithnq], color='blue', marker='<', label='750 (set3) MeV Systematics' )             
+
+        B.pl.xlabel(r'$p_{\mathrm{r}}$ [GeV]', fontsize=14)
+        B.pl.ylabel(r'R = $\Delta/\sigma_{\Delta}$', fontsize=14)
+        B.pl.xticks(fontsize=14)
+        B.pl.yticks(fontsize=14)
+        B.pl.ylim(-15, 15)
         B.pl.xlim(0, 2.0)
         
         B.pl.axhline(y=-2., color='black', linestyle='--')
@@ -132,10 +159,10 @@ def plotEm_syst(study='', stats_thrs=0.):
         B.pl.axhline(y=4., color='black', linestyle='-')
         
         
-        B.pl.title(r'Ratio $\frac{\Delta}{\sigma_{\Delta}}$, $\theta_{nq}:(%i, %i)$, Stats. (within %.1f %%)'%(th_nq_min, th_nq_max, stats_thrs))
+        B.pl.title(r'$E_{\mathrm{m}}$ Cut Systematics, $\theta_{nq}=%i\pm5^{\circ}$'%(ithnq), fontsize=15)
             
-        B.pl.legend(loc='upper right', fontsize='xx-small')
-        
+        B.pl.legend(loc='upper right', fontsize=10, frameon=True, framealpha=1.)
+        B.pl.tight_layout()
         B.pl.savefig(dir_name+'/full_sys_thnq%i.pdf'%(ithnq))
             
         '''
@@ -326,53 +353,54 @@ def plotZtar_syst(study='', stats_thrs=0.):
         th_nq_min = ithnq - 5
         th_nq_max = ithnq + 5
         
-        fig1 = B.pl.figure(i)
+        fig1 = B.pl.figure(i, figsize=(7,6))
         B.pl.clf()
         #|Ztar| < 2.5 cm cut
-        B.plot_exp(pm[thnq==ithnq], R80_z2p5[thnq==ithnq], color='magenta', marker='s', label=r'80 MeV Systematics ($|Z_{tar}|$ < 2.5 cm)' )
+        B.plot_exp(pm[thnq==ithnq], R80_z2p5[thnq==ithnq], color='magenta', marker='s', label=r'80 MeV ($|Z_{tar}| <$ 2.5 cm)' )
        # B.plot_exp(pm[thnq==ithnq], R580set1_z2p5[thnq==ithnq], color='magenta', marker='o', label='580 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R580set2_z2p5[thnq==ithnq], color='magenta', marker='^',label='580 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set1_z2p5[thnq==ithnq], color='magenta', marker='>', label='750 (set1) MeV Systematics' )
+        B.plot_exp(pm[thnq==ithnq], R580set2_z2p5[thnq==ithnq], color='magenta', marker='^',label='580 MeV (set2)' )
+        B.plot_exp(pm[thnq==ithnq], R750set1_z2p5[thnq==ithnq], color='magenta', marker='>', label='750 MeV (set1)' )
        # B.plot_exp(pm[thnq==ithnq], R750set2_z2p5[thnq==ithnq], color='magenta', marker='v', label='750 (set2) MeV Systematics' )
        # B.plot_exp(pm[thnq==ithnq], R750set3_z2p5[thnq==ithnq], color='magenta', marker='<', label='750 (set3) MeV Systematics' )    
         
        #|Ztar| < 2.0 cm cut
-        B.plot_exp(pm[thnq==ithnq], R80_z2p0[thnq==ithnq], color='black', marker='s', label=r'80 MeV Systematics ($|Z_{tar}|$ < 2.0 cm)' )
+        B.plot_exp(pm[thnq==ithnq], R80_z2p0[thnq==ithnq], color='black', marker='s', label=r'80 MeV ($|Z_{tar}| <$ 2.0 cm)' )
       #  B.plot_exp(pm[thnq==ithnq], R580set1_z2p0[thnq==ithnq], color='black', marker='o', label='580 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R580set2_z2p0[thnq==ithnq], color='black', marker='^',label='580 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set1_z2p0[thnq==ithnq], color='black', marker='>', label='750 (set1) MeV Systematics' )
+        B.plot_exp(pm[thnq==ithnq], R580set2_z2p0[thnq==ithnq], color='black', marker='^',label='580 MeV (set2)' )
+        B.plot_exp(pm[thnq==ithnq], R750set1_z2p0[thnq==ithnq], color='black', marker='>', label='750 MeV (set1)' )
       #  B.plot_exp(pm[thnq==ithnq], R750set2_z2p0[thnq==ithnq], color='black', marker='v', label='750 (set2) MeV Systematics' )
       #  B.plot_exp(pm[thnq==ithnq], R750set3_z2p0[thnq==ithnq], color='black', marker='<', label='750 (set3) MeV Systematics' )    
        
       #|Ztar| < 1.5 cm cut
-        B.plot_exp(pm[thnq==ithnq], R80_z1p5[thnq==ithnq], color='red', marker='s', label=r'80 MeV Systematics ($|Z_{tar}|$ < 1.5 cm)' )
+        B.plot_exp(pm[thnq==ithnq], R80_z1p5[thnq==ithnq], color='red', marker='s', label=r'80 MeV ($|Z_{tar}| <$ 1.5 cm)' )
       #  B.plot_exp(pm[thnq==ithnq], R580set1_z1p5[thnq==ithnq], color='red', marker='o', label='580 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R580set2_z1p5[thnq==ithnq], color='red', marker='^',label='580 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set1_z1p5[thnq==ithnq], color='red', marker='>', label='750 (set1) MeV Systematics' )
+        B.plot_exp(pm[thnq==ithnq], R580set2_z1p5[thnq==ithnq], color='red', marker='^',label='580 MeV (set2' )
+        B.plot_exp(pm[thnq==ithnq], R750set1_z1p5[thnq==ithnq], color='red', marker='>', label='750 MeV (set1)' )
       #  B.plot_exp(pm[thnq==ithnq], R750set2_z1p5[thnq==ithnq], color='red', marker='v', label='750 (set2) MeV Systematics' )
       #  B.plot_exp(pm[thnq==ithnq], R750set3_z1p5[thnq==ithnq], color='red', marker='<', label='750 (set3) MeV Systematics' )    
        
       #|Ztar| < 1.0 cm cut
-        B.plot_exp(pm[thnq==ithnq], R80_z1p0[thnq==ithnq], color='green', marker='s', label=r'80 MeV Systematics ($|Z_{tar}|$ < 1.0 cm)' )
+        B.plot_exp(pm[thnq==ithnq], R80_z1p0[thnq==ithnq], color='green', marker='s', label=r'80 MeV ($|Z_{tar}| <$ 1.0 cm)' )
       #  B.plot_exp(pm[thnq==ithnq], R580set1_z1p0[thnq==ithnq], color='green', marker='o', label='580 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R580set2_z1p0[thnq==ithnq], color='green', marker='^',label='580 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set1_z1p0[thnq==ithnq], color='green', marker='>', label='750 (set1) MeV Systematics' )
+        B.plot_exp(pm[thnq==ithnq], R580set2_z1p0[thnq==ithnq], color='green', marker='^',label='580 MeV (set2)' )
+        B.plot_exp(pm[thnq==ithnq], R750set1_z1p0[thnq==ithnq], color='green', marker='>', label='750 MeV (set1)' )
       #  B.plot_exp(pm[thnq==ithnq], R750set2_z1p0[thnq==ithnq], color='green', marker='v', label='750 (set2) MeV Systematics' )
       #  B.plot_exp(pm[thnq==ithnq], R750set3_z1p0[thnq==ithnq], color='green', marker='<', label='750 (set3) MeV Systematics' )
        
       #|Ztar| < 0.5 cm cut
-        B.plot_exp(pm[thnq==ithnq], R80_z0p5[thnq==ithnq], color='blue', marker='s', label=r'80 MeV Systematics ($|Z_{tar}|$ < 0.5 cm)' )
+        B.plot_exp(pm[thnq==ithnq], R80_z0p5[thnq==ithnq], color='blue', marker='s', label=r'80 MeV ($|Z_{tar}| <$ 0.5 cm)' )
       #  B.plot_exp(pm[thnq==ithnq], R580set1_z0p5[thnq==ithnq], color='blue', marker='o', label='580 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R580set2_z0p5[thnq==ithnq], color='blue', marker='^', label='580 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set1_z0p5[thnq==ithnq], color='blue', marker='>', label='750 (set1) MeV Systematics' )
+        B.plot_exp(pm[thnq==ithnq], R580set2_z0p5[thnq==ithnq], color='blue', marker='^', label='580 MeV (set2)' )
+        B.plot_exp(pm[thnq==ithnq], R750set1_z0p5[thnq==ithnq], color='blue', marker='>', label='750 MeV (set1)' )
       #  B.plot_exp(pm[thnq==ithnq], R750set2_z0p5[thnq==ithnq], color='blue', marker='v', label='750 (set2) MeV Systematics' )
       #  B.plot_exp(pm[thnq==ithnq], R750set3_z0p5[thnq==ithnq], color='blue', marker='<', label='750 (set3) MeV Systematics' )
             
             
-        B.pl.xlabel('Neutron Recoil Momenta [GeV]')
-        B.pl.ylabel(r'Ratio, $\frac{\Delta}{\sigma_{\Delta}}$')
-        B.pl.axes().grid()
-        B.pl.ylim(-10, 10)
+        B.pl.xlabel(r'$p_{\mathrm{r}}$ [GeV]', fontsize=14)
+        B.pl.ylabel(r'R = $\Delta / \sigma_{\Delta}$', fontsize=14)
+        B.pl.xticks(fontsize=14)                                                                                                                                                            
+        B.pl.yticks(fontsize=14)
+        B.pl.ylim(-15, 15)
         B.pl.xlim(0, 2.0)
         
         B.pl.axhline(y=-2., color='black', linestyle='--')
@@ -382,10 +410,10 @@ def plotZtar_syst(study='', stats_thrs=0.):
         B.pl.axhline(y=4., color='black', linestyle='-')
         
         
-        B.pl.title(r'Ratio $\frac{\Delta}{\sigma_{\Delta}}$, $\theta_{nq}:(%i, %i)$, Stats. (within %.1f %%)'%(th_nq_min, th_nq_max, stats_thrs))
+        B.pl.title(r'Z$_{\mathrm{tar}}$ Cut Systematics, $\theta_{nq}=%i\pm5^{\circ}$'%(ithnq), fontsize=15)
         
-        B.pl.legend(loc='upper right', fontsize='xx-small')
-        
+        B.pl.legend(loc='upper right', fontsize=10, frameon=True, framealpha=1.)
+        B.pl.tight_layout()
         B.pl.savefig(dir_name+'/full_sys_thnq%i.pdf'%(ithnq))
             
         '''
@@ -535,39 +563,40 @@ def plothColl_syst(study='', stats_thrs=0.):
         th_nq_min = ithnq - 5
         th_nq_max = ithnq + 5
         
-        fig1 = B.pl.figure(i)
+        fig1 = B.pl.figure(i, figsize=(7,6))
         B.pl.clf()
         #hColl scale 1.0
-        B.plot_exp(pm[thnq==ithnq], R80_h1p0[thnq==ithnq], color='blue', marker='s', label=r'80 MeV Systematics (Scale: 1.0)' )
+        B.plot_exp(pm[thnq==ithnq], R80_h1p0[thnq==ithnq], color='blue', marker='s', label=r'80 MeV (Scale: 1.0)' )
        # B.plot_exp(pm[thnq==ithnq], R580set1_h1p0[thnq==ithnq], color='blue', marker='o', label='580 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R580set2_h1p0[thnq==ithnq], color='blue', marker='^',label='580 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set1_h1p0[thnq==ithnq], color='blue', marker='>', label='750 (set1) MeV Systematics' )
+        B.plot_exp(pm[thnq==ithnq], R580set2_h1p0[thnq==ithnq], color='blue', marker='^',label='580 MeV (set2) MeV' )
+        B.plot_exp(pm[thnq==ithnq], R750set1_h1p0[thnq==ithnq], color='blue', marker='>', label='750 MeV (set1) MeV' )
        # B.plot_exp(pm[thnq==ithnq], R750set2_h1p0[thnq==ithnq], color='blue', marker='v', label='750 (set2) MeV Systematics' )
        # B.plot_exp(pm[thnq==ithnq], R750set3_h1p0[thnq==ithnq], color='blue', marker='<', label='750 (set3) MeV Systematics' )    
        
        #hColl scale 0.9
-        B.plot_exp(pm[thnq==ithnq], R80_h0p9[thnq==ithnq], color='green', marker='s', label=r'80 MeV Systematics (Scale 0.9)' )
+        B.plot_exp(pm[thnq==ithnq], R80_h0p9[thnq==ithnq], color='green', marker='s', label=r'80 MeV (Scale 0.9)' )
        # B.plot_exp(pm[thnq==ithnq], R580set1_h0p9[thnq==ithnq], color='green', marker='o', label='580 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R580set2_h0p9[thnq==ithnq], color='green', marker='^',label='580 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set1_h0p9[thnq==ithnq], color='green', marker='>', label='750 (set1) MeV Systematics' )
+        B.plot_exp(pm[thnq==ithnq], R580set2_h0p9[thnq==ithnq], color='green', marker='^',label='580 MeV (set2)' )
+        B.plot_exp(pm[thnq==ithnq], R750set1_h0p9[thnq==ithnq], color='green', marker='>', label='750 MeV (set1)' )
        # B.plot_exp(pm[thnq==ithnq], R750set2_h0p9[thnq==ithnq], color='green', marker='v', label='750 (set2) MeV Systematics' )
        # B.plot_exp(pm[thnq==ithnq], R750set3_h0p9[thnq==ithnq], color='green', marker='<', label='750 (set3) MeV Systematics' )    
        
        #hColl scale 0.8
-        B.plot_exp(pm[thnq==ithnq], R80_h0p8[thnq==ithnq], color='red', marker='s', label=r'80 MeV Systematics (Scale 0.8)' )
+        B.plot_exp(pm[thnq==ithnq], R80_h0p8[thnq==ithnq], color='red', marker='s', label=r'80 MeV (Scale 0.8)' )
        # B.plot_exp(pm[thnq==ithnq], R580set1_h0p8[thnq==ithnq], color='red', marker='o', label='580 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R580set2_h0p8[thnq==ithnq], color='red', marker='^',label='580 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set1_h0p8[thnq==ithnq], color='red', marker='>', label='750 (set1) MeV Systematics' )
+        B.plot_exp(pm[thnq==ithnq], R580set2_h0p8[thnq==ithnq], color='red', marker='^',label='580 MeV (set2)' )
+        B.plot_exp(pm[thnq==ithnq], R750set1_h0p8[thnq==ithnq], color='red', marker='>', label='750 MeV (set1)' )
        # B.plot_exp(pm[thnq==ithnq], R750set2_h0p8[thnq==ithnq], color='red', marker='v', label='750 (set2) MeV Systematics' )
        # B.plot_exp(pm[thnq==ithnq], R750set3_h0p8[thnq==ithnq], color='red', marker='<', label='750 (set3) MeV Systematics' )    
     
             
-        B.pl.xlabel('Neutron Recoil Momenta [GeV]')
-        B.pl.ylabel(r'Ratio, $\frac{\Delta}{\sigma_{\Delta}}$')
-        B.pl.axes().grid()
-        B.pl.ylim(-10, 10)
-        B.pl.xlim(0, 2.0)
+        B.pl.xlabel('$p_{\mathrm{r}}$ [GeV]')
+        B.pl.ylabel(r'R = $\Delta / \sigma_{\Delta}$')
         
+        B.pl.ylim(-15, 15)
+        B.pl.xlim(0, 2.0)
+        B.pl.xticks(fontsize=14)                                                                                                                                                         
+        B.pl.yticks(fontsize=14)
         B.pl.axhline(y=-2., color='black', linestyle='--')
         B.pl.axhline(y=2., color='black', linestyle='--')
         
@@ -575,9 +604,9 @@ def plothColl_syst(study='', stats_thrs=0.):
         B.pl.axhline(y=4., color='black', linestyle='-')
         
         
-        B.pl.title(r'Ratio $\frac{\Delta}{\sigma_{\Delta}}$, $\theta_{nq}:(%i, %i)$, Stats. (within %.1f %%)'%(th_nq_min, th_nq_max, stats_thrs))
+        B.pl.title(r'HMS Collimator Cut Systematics, $\theta_{nq}=%i\pm5^{\circ}$'%(ithnq), fontsize=15)
         
-        B.pl.legend(loc='upper right', fontsize='xx-small')
+        B.pl.legend(loc='upper right', fontsize=10, frameon=True, framealpha=1.)
         
         B.pl.savefig(dir_name+'/full_sys_thnq%i.pdf'%(ithnq))
             
@@ -622,22 +651,22 @@ def plotctime_syst(study='', stats_thrs=0.):
         th_nq_min = ithnq - 5
         th_nq_max = ithnq + 5
         
-        fig1 = B.pl.figure(i)
+        fig1 = B.pl.figure(i, figsize=(7,6))
         B.pl.clf()
         #ctime ON
-        B.plot_exp(pm[thnq==ithnq], R80_ctime[thnq==ithnq], color='black', marker='s', label=r'80 MeV Systematics (Coin. Time)' )
-        B.plot_exp(pm[thnq==ithnq], R580set1_ctime[thnq==ithnq], color='blue', marker='o', label='580 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R580set2_ctime[thnq==ithnq], color='green', marker='^',label='580 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set1_ctime[thnq==ithnq], color='red', marker='>', label='750 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set2_ctime[thnq==ithnq], color='magenta', marker='v', label='750 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set3_ctime[thnq==ithnq], color='cyan', marker='<', label='750 (set3) MeV Systematics' )    
+        B.plot_exp(pm[thnq==ithnq], R80_ctime[thnq==ithnq], color='black', marker='s', label=r'80 MeV' )
+        B.plot_exp(pm[thnq==ithnq], R580set1_ctime[thnq==ithnq], color='blue', marker='o', label='580 MeV (set1)' )
+        B.plot_exp(pm[thnq==ithnq], R580set2_ctime[thnq==ithnq], color='green', marker='^',label='580 MeV (set2)' )
+        B.plot_exp(pm[thnq==ithnq], R750set1_ctime[thnq==ithnq], color='red', marker='>', label='750 MeV (set1)' )
+        B.plot_exp(pm[thnq==ithnq], R750set2_ctime[thnq==ithnq], color='magenta', marker='v', label='750 MeV (set2)' )
+        B.plot_exp(pm[thnq==ithnq], R750set3_ctime[thnq==ithnq], color='cyan', marker='<', label='750 MeV (set3)' )    
             
-        B.pl.xlabel('Neutron Recoil Momenta [GeV]')
-        B.pl.ylabel(r'Ratio, $\frac{\Delta}{\sigma_{\Delta}}$')
-        B.pl.axes().grid()
-        B.pl.ylim(-10, 10)
+        B.pl.xlabel(r'$p_{\mathrm{r}}$ [GeV]', fontsize=14)
+        B.pl.ylabel(r'R = $\Delta / \sigma_{\Delta}$', fontsize=14)
+        B.pl.ylim(-15, 15)
         B.pl.xlim(0, 2.0)
-        
+        B.pl.xticks(fontsize=14)                                                                                                                                
+        B.pl.yticks(fontsize=14)
         B.pl.axhline(y=-2., color='black', linestyle='--')
         B.pl.axhline(y=2., color='black', linestyle='--')
         
@@ -645,9 +674,9 @@ def plotctime_syst(study='', stats_thrs=0.):
         B.pl.axhline(y=4., color='black', linestyle='-')
         
         
-        B.pl.title(r'Ratio $\frac{\Delta}{\sigma_{\Delta}}$, $\theta_{nq}:(%i, %i)$, Stats. (within %.1f %%)'%(th_nq_min, th_nq_max, stats_thrs))
+        B.pl.title(r'Coincidence Time Cut Systematics, $\theta_{nq}=%i\pm5^{\circ}$'%(ithnq), fontsize=15)
         
-        B.pl.legend(loc='upper right', fontsize='xx-small')
+        B.pl.legend(loc='upper right', fontsize=10, frameon=True, framealpha=1.)
         
         B.pl.savefig(dir_name+'/full_sys_thnq%i.pdf'%(ithnq))
                  
@@ -692,22 +721,23 @@ def plotpcal_syst(study='', stats_thrs=0.):
         th_nq_min = ithnq - 5
         th_nq_max = ithnq + 5
         
-        fig1 = B.pl.figure(i)
+        fig1 = B.pl.figure(i, figsize=(7,6))
         B.pl.clf()
         #ctime ON
-        B.plot_exp(pm[thnq==ithnq], R80_ctime[thnq==ithnq], color='black', marker='s', label=r'80 MeV Systematics (SHMS Calorimeter)' )
-        B.plot_exp(pm[thnq==ithnq], R580set1_ctime[thnq==ithnq], color='blue', marker='o', label='580 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R580set2_ctime[thnq==ithnq], color='green', marker='^',label='580 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set1_ctime[thnq==ithnq], color='red', marker='>', label='750 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set2_ctime[thnq==ithnq], color='magenta', marker='v', label='750 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set3_ctime[thnq==ithnq], color='cyan', marker='<', label='750 (set3) MeV Systematics' )    
+        B.plot_exp(pm[thnq==ithnq], R80_ctime[thnq==ithnq], color='black', marker='s', label=r'80 MeV' )
+        B.plot_exp(pm[thnq==ithnq], R580set1_ctime[thnq==ithnq], color='blue', marker='o', label='580 MeV (set1) ' )
+        B.plot_exp(pm[thnq==ithnq], R580set2_ctime[thnq==ithnq], color='green', marker='^',label='580 MeV (set2) ' )
+        B.plot_exp(pm[thnq==ithnq], R750set1_ctime[thnq==ithnq], color='red', marker='>', label='750 MeV (set1) ' )
+        B.plot_exp(pm[thnq==ithnq], R750set2_ctime[thnq==ithnq], color='magenta', marker='v', label='750 MeV (set2) ' )
+        B.plot_exp(pm[thnq==ithnq], R750set3_ctime[thnq==ithnq], color='cyan', marker='<', label='750 MeV (set3) ' )    
             
-        B.pl.xlabel('Neutron Recoil Momenta [GeV]')
-        B.pl.ylabel(r'Ratio, $\frac{\Delta}{\sigma_{\Delta}}$')
-        B.pl.axes().grid()
-        B.pl.ylim(-10, 10)
-        B.pl.xlim(0, 2.0)
+        B.pl.xlabel('$p_{\mathrm{r}}$ [GeV]', fontsize=14)
+        B.pl.ylabel(r'R = $\Delta / \sigma_{\Delta}$', fontsize=14)
         
+        B.pl.ylim(-15, 15)
+        B.pl.xlim(0, 2.0)
+        B.pl.xticks(fontsize=14)                                                                                                                                        
+        B.pl.yticks(fontsize=14)
         B.pl.axhline(y=-2., color='black', linestyle='--')
         B.pl.axhline(y=2., color='black', linestyle='--')
         
@@ -715,10 +745,10 @@ def plotpcal_syst(study='', stats_thrs=0.):
         B.pl.axhline(y=4., color='black', linestyle='-')
         
         
-        B.pl.title(r'Ratio $\frac{\Delta}{\sigma_{\Delta}}$, $\theta_{nq}:(%i, %i)$, Stats. (within %.1f %%)'%(th_nq_min, th_nq_max, stats_thrs))
+        B.pl.title(r'SHMS Calorimeter Cut Systematics, $\theta_{nq}=%i\pm5^{\circ}$'%(ithnq))
         
-        B.pl.legend(loc='upper right', fontsize='xx-small')
-        
+        B.pl.legend(loc='upper right', fontsize=10, frameon=True, framealpha=1.)
+        B.pl.tight_layout()
         B.pl.savefig(dir_name+'/full_sys_thnq%i.pdf'%(ithnq))
 
 
@@ -737,7 +767,7 @@ def plotRCBC_syst(study='', stats_thrs=0.):
 
 
     #Set systematic file names
-    fname="../datafiles/"+study_dir+"systematics%s.txt"%(study)
+    fname="./datafiles/"+study_dir+"systematics%s.txt"%(study)
 
     f = B.get_file(fname)
         
@@ -820,47 +850,49 @@ def plotRCBC_syst(study='', stats_thrs=0.):
         th_nq_min = ithnq - 5
         th_nq_max = ithnq + 5
         
-        B.pl.figure(i)
+        B.pl.figure(i, figsize=(7,6))
         B.pl.clf()
        
-        B.plot_exp(pm[thnq==ithnq], R80[thnq==ithnq], color='black', marker='s', label=r'80 MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R580set1[thnq==ithnq], color='blue', marker='o', label='580 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R580set2[thnq==ithnq], color='green', marker='^',label='580 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set1[thnq==ithnq], color='red', marker='>', label='750 (set1) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set2[thnq==ithnq], color='magenta', marker='v', label='750 (set2) MeV Systematics' )
-        B.plot_exp(pm[thnq==ithnq], R750set3[thnq==ithnq], color='cyan', marker='<', label='750 (set3) MeV Systematics' )    
+        B.plot_exp(pm[thnq==ithnq], R80[thnq==ithnq], color='black', marker='s', label=r'80 MeV' )
+        B.plot_exp(pm[thnq==ithnq], R580set1[thnq==ithnq], color='blue', marker='o', label='580 MeV (set1)' )
+        B.plot_exp(pm[thnq==ithnq], R580set2[thnq==ithnq], color='green', marker='^',label='580 MeV (set2)' )
+        B.plot_exp(pm[thnq==ithnq], R750set1[thnq==ithnq], color='red', marker='>', label='750 MeV (set1)' )
+        B.plot_exp(pm[thnq==ithnq], R750set2[thnq==ithnq], color='magenta', marker='v', label='750 MeV (set2)' )
+        B.plot_exp(pm[thnq==ithnq], R750set3[thnq==ithnq], color='cyan', marker='<', label='750 MeV (set3)' )    
             
-        B.pl.xlabel('Neutron Recoil Momenta [GeV]')
-        B.pl.ylabel(r'Ratio, $\frac{\Delta}{\sigma_{\Delta}}$')
-        B.pl.axes().grid()
-        B.pl.ylim(-10, 10)
-        B.pl.xlim(0, 2.0)
+        B.pl.xlabel(r'$p_{\mathrm{r}}$ [GeV]', fontsize=14)
+        B.pl.ylabel(r'R = $\Delta/\sigma_{\Delta}$', fontsize=14)
+        B.pl.xticks(fontsize=14)
+        B.pl.yticks(fontsize=14)
         
-        B.pl.axhline(y=-2., color='black', linestyle='--')
+        B.pl.ylim(-15, 15)
+        B.pl.xlim(0, 1.2)
+        
+        B.pl.axhline(y=-2., color='black', linestyle='--');
         B.pl.axhline(y=2., color='black', linestyle='--')
         
         B.pl.axhline(y=-4., color='black', linestyle='-')
         B.pl.axhline(y=4., color='black', linestyle='-')
         
         
-        B.pl.title(r'Ratio $\frac{\Delta}{\sigma_{\Delta}}$, $\theta_{nq}:(%i, %i)$, Stats. (within %.1f %%)'%(th_nq_min, th_nq_max, stats_thrs))
+        B.pl.title(r'Radiative Systematics, $\theta_{nq}=%i\pm5^{\circ}$'%(ithnq), fontsize=15) #/ \sigma_{\Delta}$: $\theta_{nq}=%i\pm5^{\circ}$, $\sigma_{stat}<%.1f %%$)'%(ithnq, stats_thrs))
         
-        B.pl.legend(loc='upper right', fontsize='xx-small')
-        
+        B.pl.legend(loc='upper right', fontsize=10, frameon=True, framealpha=1.)
+        B.pl.tight_layout()
         B.pl.savefig(dir_name+'/full_sys_thnq%i.pdf'%(ithnq))
 
 
         if(study=='radiative'):
             B.pl.figure(i+1)
             
-            B.plot_exp(pm[thnq==ithnq], dataXsec_80_pwiaRC[thnq==ithnq],       dataXsec_80_err_pwiaRC[thnq==ithnq],      color='black', marker='s',  markersize=1, label=r'PWIA Radiative Corrected Systematics)' )
+            B.plot_exp(pm[thnq==ithnq], dataXsec_80_pwiaRC[thnq==ithnq],       dataXsec_80_err_pwiaRC[thnq==ithnq],      color='black', marker='s',  markersize=1, label=r'PWIA Radiative Corrected Cross Section)' )
             B.plot_exp(pm[thnq==ithnq], dataXsec_580set1_pwiaRC[thnq==ithnq],  dataXsec_580set1_err_pwiaRC[thnq==ithnq], color='black', marker='o',  markersize=1)
             B.plot_exp(pm[thnq==ithnq], dataXsec_580set2_pwiaRC[thnq==ithnq],  dataXsec_580set2_err_pwiaRC[thnq==ithnq], color='black', marker='^',  markersize=1)
             B.plot_exp(pm[thnq==ithnq], dataXsec_750set1_pwiaRC[thnq==ithnq],  dataXsec_750set1_err_pwiaRC[thnq==ithnq], color='black', marker='>',  markersize=1)
             B.plot_exp(pm[thnq==ithnq], dataXsec_750set2_pwiaRC[thnq==ithnq],  dataXsec_750set2_err_pwiaRC[thnq==ithnq], color='black', marker='v',  markersize=1)
             B.plot_exp(pm[thnq==ithnq], dataXsec_750set3_pwiaRC[thnq==ithnq],  dataXsec_750set3_err_pwiaRC[thnq==ithnq], color='black', marker='<',  markersize=1)    
             
-            B.plot_exp(pm[thnq==ithnq], dataXsec_80_fsiRC[thnq==ithnq],       dataXsec_80_err_fsiRC[thnq==ithnq],      color='red', marker='s', markersize=1, label=r'FSI Radiative Corrected Systematics' )
+            B.plot_exp(pm[thnq==ithnq], dataXsec_80_fsiRC[thnq==ithnq],       dataXsec_80_err_fsiRC[thnq==ithnq],      color='red', marker='s', markersize=1, label=r'FSI Radiative Corrected Cross Section' )
             B.plot_exp(pm[thnq==ithnq], dataXsec_580set1_fsiRC[thnq==ithnq],  dataXsec_580set1_err_fsiRC[thnq==ithnq], color='red', marker='o', markersize=1)
             B.plot_exp(pm[thnq==ithnq], dataXsec_580set2_fsiRC[thnq==ithnq],  dataXsec_580set2_err_fsiRC[thnq==ithnq], color='red', marker='^', markersize=1)
             B.plot_exp(pm[thnq==ithnq], dataXsec_750set1_fsiRC[thnq==ithnq],  dataXsec_750set1_err_fsiRC[thnq==ithnq], color='red', marker='>', markersize=1)
@@ -869,7 +901,7 @@ def plotRCBC_syst(study='', stats_thrs=0.):
 
             B.pl.xlabel('Neutron Recoil Momenta [GeV]')
             B.pl.ylabel(r'Data Cross Section, $\frac{d\sigma}{d\Omega}$')
-            B.pl.yscale('log')
+            #B.pl.yscale('log')
 
             B.pl.title(r'Data Cross Section, $\theta_{nq}:(%i, %i)$, Stats. (within %.1f %%)'%(th_nq_min, th_nq_max, stats_thrs))
         
@@ -897,7 +929,7 @@ def plotRCBC_syst(study='', stats_thrs=0.):
 
             B.pl.xlabel('Neutron Recoil Momenta [GeV]')
             B.pl.ylabel(r'Data Cross Section, $\frac{d\sigma}{d\Omega}$')
-            B.pl.yscale('log')
+            #B.pl.yscale('log')
 
             B.pl.title(r'Data Cross Section, $\theta_{nq}:(%i, %i)$, Stats. (within %.1f %%)'%(th_nq_min, th_nq_max, stats_thrs))
         
@@ -1029,7 +1061,7 @@ def plotXsec_vs_Emcuts(study='', stats_thrs=0.,  thnq_bin = 0.):
     for i, ipm in enumerate(pm_arr):
         print('Loop over Pmiss: ', ipm, 'GeV/c')
 
-        B.pl.figure(i)
+        B.pl.figure(i, figsize=(7,6))
         B.pl.clf()
         
         pm_i = ipm * 1000.    #Pmiss converter to MeV
@@ -1430,7 +1462,7 @@ def plotXsec_vs_Ztarcuts(study='', stats_thrs=0., thnq_bin = 0):
     for i, ipm in enumerate(pm_arr):
         print('Loop over Pmiss: ', ipm, 'GeV/c')
 
-        B.pl.figure(i)
+        B.pl.figure(i, figsize=(7,6))
         B.pl.clf()
         
         pm_i = ipm * 1000.    #Pmiss converter to MeV
@@ -1818,7 +1850,7 @@ def plotXsec_vs_hCollcuts(study='', stats_thrs=0., thnq_bin = 0):
     for i, ipm in enumerate(pm_arr):
         print('Loop over Pmiss: ', ipm, 'GeV/c')
 
-        B.pl.figure(i)
+        B.pl.figure(i, figsize=(7,6))
         B.pl.clf()
         
         pm_i = ipm * 1000.    #Pmiss converter to MeV
@@ -2136,7 +2168,7 @@ def plotXsec_vs_ctimecuts(study='', stats_thrs=0., thnq_bin = 0):
     for i, ipm in enumerate(pm_arr):
         print('Loop over Pmiss: ', ipm, 'GeV/c')
 
-        B.pl.figure(i)
+        B.pl.figure(i, figsize=(7,6))
         B.pl.clf()
         
         pm_i = ipm * 1000.    #Pmiss converter to MeV
@@ -2412,7 +2444,7 @@ def plotXsec_vs_pcalcuts(study='', stats_thrs=0., thnq_bin = 0):
     for i, ipm in enumerate(pm_arr):
         print('Loop over Pmiss: ', ipm, 'GeV/c')
 
-        B.pl.figure(i)
+        B.pl.figure(i, figsize=(7,6))
         B.pl.clf()
         
         pm_i = ipm * 1000.    #Pmiss converter to MeV

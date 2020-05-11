@@ -18,7 +18,7 @@ RUN_DATA: 1
 
 ;Analyze Radiative(1) or NonRadiative(0) SIMC?                            
 ;IMPORTANT: If doing radiative corrections, set to -1                        
-radiate: 1    
+radiate: 1
 
 ;Do Radiative Corrections
 rad_corr_flag: 0
@@ -37,11 +37,11 @@ e_delta_max:  22.
 W_min: 0.85      
 W_max: 1.05
 
-ztarDiff_min: -3.
-ztarDiff_max: 3.
+ztarDiff_min: -2.
+ztarDiff_max: 2.
 
-Q2_min: 4.3
-Q2_max: 4.6
+Q2_min: 4.
+Q2_max: 5.
 
 thnq_min: 0.
 thnq_max: 180.
@@ -53,15 +53,15 @@ MM_max: 0.1
 shms_cal_min: 0.7
 shms_cal_max: 5.
 
-coin_time_min: 10.
-coin_time_max: 15.
+coin_time_min: 10.5
+coin_time_max: 14.5
 
 
 #------TURN BASIC CUTS ON/OFF------
 # True (ON) =  1,  False (OFF) = 0
 
 bool Em      = 1
-bool W       = 1
+bool W       = 0
 bool h_delta = 1
 bool e_delta = 1
 bool ztar_diff = 1

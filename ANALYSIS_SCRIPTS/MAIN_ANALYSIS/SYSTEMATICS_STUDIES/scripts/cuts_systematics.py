@@ -379,38 +379,39 @@ def main():
     #plot_data_sets(sys_ext1, sys_ext2)
     #-----------------------------------------------------
 
-    '''
+    
     #--------Calc. ALl Systematics for Missing Energy Cut Variation-----------
     
     #Emiss Systematics
     study= "Em"      #What Systematic Study to be done? "Em", "Ztar", "hColl", 
-    sys_ext1 = "Em80MeV"  # the largest (total) set
+    sys_ext1 = "Em_70MeV"  # the largest (total) set
 
-    calc_systematics(study, sys_ext1, "Em30MeV", stats_thrs)
-    calc_systematics(study, sys_ext1, "Em40MeV", stats_thrs)
-    calc_systematics(study, sys_ext1, "Em45MeV", stats_thrs)
-    calc_systematics(study, sys_ext1, "Em50MeV", stats_thrs)
-    calc_systematics(study, sys_ext1, "Em60MeV", stats_thrs)
-    
+    calc_systematics(study, sys_ext1, "Em_30MeV", stats_thrs)
+    calc_systematics(study, sys_ext1, "Em_40MeV", stats_thrs)
+    #calc_systematics(study, sys_ext1, "Em_45MeV", stats_thrs)
+    calc_systematics(study, sys_ext1, "Em_50MeV", stats_thrs)
+    calc_systematics(study, sys_ext1, "Em_60MeV", stats_thrs)
+    #calc_systematics(study, sys_ext1, "Em_70MeV", stats_thrs)
+
     #Call Plotting Functions
     pu.plotEm_syst(study, stats_thrs)
-    pu.plotXsec_vs_Emcuts(study, stats_thrs, 45) #the last argument is the theta_nq central bin value
+    #pu.plotXsec_vs_Emcuts(study, stats_thrs, 45) #the last argument is the theta_nq central bin value
 
     
-
+    '''
     #--------Calc. ALl Systematics for ZtarDiff Cut Variation------------
     #Ztar Systematics
     study= "Ztar"      #What Systematic Study to be done? "Em", "Ztar", "hColl", 
     sys_ext1 = "Ztar3.0cm"  # the largest (total) set
 
-    calc_systematics(study, sys_ext1, "Ztar2.5cm", stats_thrs)
-    calc_systematics(study, sys_ext1, "Ztar2.0cm", stats_thrs)
-    calc_systematics(study, sys_ext1, "Ztar1.5cm", stats_thrs)
-    calc_systematics(study, sys_ext1, "Ztar1.0cm", stats_thrs)
-    calc_systematics(study, sys_ext1, "Ztar0.5cm", stats_thrs)
+    #calc_systematics(study, sys_ext1, "Ztar2.5cm", stats_thrs)
+    #calc_systematics(study, sys_ext1, "Ztar2.0cm", stats_thrs)
+    #calc_systematics(study, sys_ext1, "Ztar1.5cm", stats_thrs)
+    #calc_systematics(study, sys_ext1, "Ztar1.0cm", stats_thrs)
+    #calc_systematics(study, sys_ext1, "Ztar0.5cm", stats_thrs)
     
     pu.plotZtar_syst(study, stats_thrs)
-    pu.plotXsec_vs_Ztarcuts(study, stats_thrs, 45)
+    #pu.plotXsec_vs_Ztarcuts(study, stats_thrs, 45)
 
     
     #--------Calc. All Systematics for HMS Collimator Cut Variation------------
@@ -418,12 +419,12 @@ def main():
     study= "hColl"      #What Systematic Study to be done? "Em", "Ztar", "hColl", 
     sys_ext1 = "hColl1.1"  # the largest (total) set
 
-    calc_systematics(study, sys_ext1, "hColl1.0", stats_thrs)
-    calc_systematics(study, sys_ext1, "hColl0.9", stats_thrs)
-    calc_systematics(study, sys_ext1, "hColl0.8", stats_thrs)
+    #calc_systematics(study, sys_ext1, "hColl1.0", stats_thrs)
+    #calc_systematics(study, sys_ext1, "hColl0.9", stats_thrs)
+    #calc_systematics(study, sys_ext1, "hColl0.8", stats_thrs)
     
     pu.plothColl_syst(study, stats_thrs)
-    pu.plotXsec_vs_hCollcuts(study, stats_thrs, 45)
+    #pu.plotXsec_vs_hCollcuts(study, stats_thrs, 45)
 
     
     #--------Calc. All Systematics for Coincidence Time  Cut Variation------------
@@ -431,22 +432,22 @@ def main():
     study= "ctime"      #What Systematic Study to be done? "Em", "Ztar", "hColl", 
     sys_ext1 = "ctimeOFF"  # the largest (total) set
 
-    calc_systematics(study, sys_ext1, "ctimeON", stats_thrs)
+    #calc_systematics(study, sys_ext1, "ctimeON", stats_thrs)
 
     pu.plotctime_syst(study, stats_thrs)
-    pu.plotXsec_vs_ctimecuts(study, stats_thrs, 45)
+    #pu.plotXsec_vs_ctimecuts(study, stats_thrs, 45)
 
-    '''
+    
     #--------Calc. All Systematics for SHMS Cal  Cut Variation------------
     #ctime Systematics
     study= "shmsCal"      #What Systematic Study to be done? "Em", "Ztar", "hColl", 
     sys_ext1 = "shmsCalOFF"  # the largest (total) set
 
-    calc_systematics(study, sys_ext1, "shmsCalON", stats_thrs)
+    #calc_systematics(study, sys_ext1, "shmsCalON", stats_thrs)
 
     pu.plotpcal_syst(study, stats_thrs)
-    pu.plotXsec_vs_pcalcuts(study, stats_thrs, 45)
-    
+    #pu.plotXsec_vs_pcalcuts(study, stats_thrs, 45)
+    '''
 
 if __name__=="__main__":
     main()

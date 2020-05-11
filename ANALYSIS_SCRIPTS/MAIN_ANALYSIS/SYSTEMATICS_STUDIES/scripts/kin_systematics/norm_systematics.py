@@ -1,4 +1,6 @@
 import numpy as np
+import sys
+from sys import argv
 from LT.datafile import dfile
 import LT.box as B
 import shutil as sh
@@ -21,20 +23,18 @@ import os
                   #(The model='' input parameter refers to the model used for the radiative corrections. We use Laget FSI, as it closely represents data in all kinematical regions)
 
 #Tracking efficiencies
-def get_trkEff_syst(pm_set=0, model='', data_set=0):
+def get_trkEff_syst(pm_set=0, model='', data_set=0, sys_ext=''):
     
     #This code reads the tracking efficiency and its uncertainty
     #for all runs of a given data set, and calculates the weighted 
     #average. The systematic uncertanity on the data Xsec is determined from the relative
     #uncertainty on the tracking efficiencies.
     
-    avg_kin_file, final_Xsec_file, report_file = get_filenames(pm_set, model, data_set)
+    avg_kin_file, final_Xsec_file, report_file = get_filenames(pm_set, model, data_set, sys_ext)
 
     
     #open report 
     r = dfile(report_file)                 #open report file
-    fXsec = dfile(final_Xsec_file)         #open final Xsec data file 
-    avg_kin = dfile(avg_kin_file)          #open avg kin file (assumed to have '_systematics.txt extension'                   
     
     #Get Tracking Eff. and its error
     htrk_eff = r['hTrkEff']
@@ -43,6 +43,13 @@ def get_trkEff_syst(pm_set=0, model='', data_set=0):
     etrk_eff = r['eTrkEff']
     etrk_eff_err = r['eTrkEff_err']
 
+    #Get Tracking Eff. Average
+    htrk_eff_avg = htrk_eff[htrk_eff!=1.].mean()
+    htrk_eff_err_avg = htrk_eff_err[htrk_eff_err!=0.].mean()
+
+    etrk_eff_avg = etrk_eff[etrk_eff!=1.].mean()
+    etrk_eff_err_avg = etrk_eff_err[etrk_eff_err!=0.].mean()
+    
     #determine corr. factor and its error for each run of the data set
     f_htrk = 1. / htrk_eff[htrk_eff_err!=0]
     f_etrk = 1. / etrk_eff
@@ -58,10 +65,8 @@ def get_trkEff_syst(pm_set=0, model='', data_set=0):
     df_f_htrk_avg = np.average(np.abs(df_htrk)/f_htrk)
     df_f_etrk_avg = np.average(np.abs(df_etrk)/f_etrk)
    
-    #run-by-run systematic added in quadrature
-    df_f_htrk_quad = np.sqrt( np.sum(df_f_htrk_syst**2) )  #sqrt of sum of squares of errors
-    df_f_etrk_quad = np.sqrt( np.sum(df_f_etrk_syst**2) )
 
+    '''#DEBUG
     print('====Pm: %i (set %i) :: Tracking Eff.======'%(pm_set, data_set))
     print('hms_df/f=',df_f_htrk_syst)
     print('shms_df/f=',df_f_etrk_syst)
@@ -71,66 +76,21 @@ def get_trkEff_syst(pm_set=0, model='', data_set=0):
           
     print('hms_df/f_quad=', df_f_htrk_quad)
     print('shms_df/f_quad=', df_f_etrk_quad)
-      
+    '''
 
-    #Determine Weighted Average of correction factor
-    
-    #define the weights
-    w_htrk =  1. / df_htrk**2
-    w_etrk =  1. / df_etrk**2
-    
+    return[htrk_eff_avg, htrk_eff_err_avg, etrk_eff_avg, etrk_eff_err_avg, df_f_htrk_avg, df_f_etrk_avg]
 
-    #weighted average of corr. factor
-    fw_htrkEff = np.sum(f_htrk * w_htrk)/np.sum(w_htrk)
-    fw_etrkEff = np.sum(f_etrk * w_etrk)/np.sum(w_etrk)
-    
-
-    dfw_htrkEff = np.sqrt(1./np.sum(w_htrk)) 
-    dfw_etrkEff = np.sqrt(1./np.sum(w_etrk)) 
-
-    trk_eff_syst = np.array([dfw_etrkEff, dfw_htrkEff])
-
-    #relative error, df / f
-    df_f_htrkEff =  dfw_htrkEff / fw_htrkEff
-    df_f_etrkEff =  dfw_etrkEff / fw_etrkEff
-    
-    #----calculate systematic contribution---
-
-    sig_exp = fXsec['fsiRC_dataXsec_fsibc_corr']    #data experimental cross section to be plotted
-    sig_exp = convert2NaN(sig_exp, value=-1.0)
-
-    #square of the systematic error contribution from tracking efficiencies
-    dsig2_htrk = sig_exp**2 * df_f_htrkEff**2
-    dsig2_etrk = sig_exp**2 * df_f_etrkEff**2
-
-    #write contributions to the systematic data file
-    avg_kin.add_key('dsig_syst_htrk', 'f')
-    avg_kin.add_key('dsig_syst_etrk', 'f')
-
-    #get 2d bin
-    ib = avg_kin['i_b']
-    
-    #loop over all bins
-    for i, ib_i in enumerate(ib):
-        avg_kin.data[i]['dsig_syst_htrk'] =  df_f_htrkEff
-        avg_kin.data[i]['dsig_syst_etrk'] =  df_f_etrkEff
-    avg_kin.save(avg_kin_file)
-
-    return [df_f_htrk_avg, dsig2_htrk, df_f_etrk_avg, dsig2_etrk]
-
-def get_tgtboil_syst(pm_set=0, model='', data_set=0):
+def get_tgtboil_syst(pm_set=0, model='', data_set=0, sys_ext=''):
 
     #This code calculated the systematic uncertainty on the data Xsec from the uncertainty in
     #the target boiling factor.
 
     
-    avg_kin_file, final_Xsec_file, report_file = get_filenames(pm_set, model, data_set)
+    avg_kin_file, final_Xsec_file, report_file = get_filenames(pm_set, model, data_set, sys_ext)
 
     #open report 
     r = dfile(report_file)                 #open report file
-    fXsec = dfile(final_Xsec_file)         #open final Xsec data file 
-    avg_kin = dfile(avg_kin_file)          #open avg kin file (assumed to have '_systematics.txt extension'                   
-    
+
     I = r['avg_current']     #in uA  (is an array if there are multiple runs per data set)
     tgt_boil = r['tgtBoil_factor']
 
@@ -141,8 +101,13 @@ def get_tgtboil_syst(pm_set=0, model='', data_set=0):
 
     sig_I = dI_I * I             
 
-    #f = 1 / (1. - m*I)       #correction factor to data yield 
-    f = 1./ tgt_boil
+    #tgt_b = (1. - m*I)       
+    tgt_boil_err = np.sqrt( (I*sig_m)**2 + (m*sig_I)**2 )
+    
+    tgt_boil_avg = np.average(tgt_boil)
+    tgt_boil_avg_err = np.average(tgt_boil_err)
+    
+    f = 1./ tgt_boil     #correction factor to data yield 
     
     #derivatives of corr. factor
     df_dm = -I/(1. - m*I)**2
@@ -160,57 +125,26 @@ def get_tgtboil_syst(pm_set=0, model='', data_set=0):
     #run-by-run systematic added in quadrature
     df_f_quad = np.sqrt(np.sum(df_f_syst**2))
     
+    '''#DEBUG
     print('====Pm: %i (set %i) :: Target Boiling======'%(pm_set, data_set))
     print('df/f=',df_f_syst)
     print('df/f_avg=',df_f_avg)
     print('df/f_quad=',df_f_quad)
-
-
-    #Define the weight
-    w = 1 / df**2
-
-    #Calculate the weighted average
-    f_w = np.sum(f*w) / np.sum(w)
-    df_w = np.sqrt(1./np.sum(w))    #systematics [fractional, not in %] (uncertainty in weighted average of corr. factor)
-
-    #relative error
-    df_f = df_w / f_w
+    '''
     
-    #----calculate systematic contribution---
+    return [tgt_boil_avg, tgt_boil_avg_err, df_f_avg]  #average tgt_boil facter, average error, relative err on Xsec
 
-    sig_exp = fXsec['fsiRC_dataXsec_fsibc_corr']    #data experimental cross section to be plotted
-    sig_exp = convert2NaN(sig_exp, value=-1.0)
-
-    #square of the systematic error contribution from target boiling
-    dsig2_tgtBoil = sig_exp**2 * df_f**2
-
-    #write contributions to the systematic data file
-    avg_kin.add_key('dsig_syst_tgtBoil', 'f')
-
-    #get 2d bin
-    ib = avg_kin['i_b']
-    
-    #loop over all bins
-    for i, ib_i in enumerate(ib):
-        avg_kin.data[i]['dsig_syst_tgtBoil'] =  df_f
-    avg_kin.save(avg_kin_file)
-    
-    return [df_f_avg, dsig2_tgtBoil]
-
-def get_pT_syst(pm_set=0, model='', data_set=0):
+def get_pT_syst(pm_set=0, model='', data_set=0, sys_ext=''):
     
     #code to get systematics on proton absorption
     #The proton absorption for E12-10-003 was determined to 
     #be: 4.66 +/- 0.472 %,  the transmission is: (100-4.66 or 95.34) +/- 0.472%
     #It is assumed that this factor is relatively constant over a range of angles/momenta
 
-    avg_kin_file, final_Xsec_file, report_file = get_filenames(pm_set, model, data_set)
+    avg_kin_file, final_Xsec_file, report_file = get_filenames(pm_set, model, data_set, sys_ext)
 
     #open report 
     r = dfile(report_file)                 #open report file
-    fXsec = dfile(final_Xsec_file)         #open final Xsec data file 
-    avg_kin = dfile(avg_kin_file)          #open avg kin file (assumed to have '_systematics.txt extension'                   
- 
     
     pT = 0.9534           #proton transmission factor (what fraction of coin. protons made it to form the trigger) --See docDB proton absorption Under Yero.
     d_pT = 0.472/100.     
@@ -228,41 +162,23 @@ def get_pT_syst(pm_set=0, model='', data_set=0):
     #run-by-run systematic added in quadrature
     df_f_quad = np.sqrt(np.sum(df_f_syst**2))
 
+    '''#DEBUG
     print('====Pm: %i (set %i) : Proton Transmission======'%(pm_set, data_set))
     print('df/f=',df_f_syst)
     print('df/f_avg=',df_f_avg)
     print('df/f_quad=',df_f_quad)
+    '''
 
-    #----calculate systematic contribution---
-    sig_exp = fXsec['fsiRC_dataXsec_fsibc_corr']    #data experimental cross section to be plotted
-    sig_exp = convert2NaN(sig_exp, value=-1.0)
-
-    #square of the systematic error contribution from proton transmission factor
-    dsig2_pT = sig_exp**2 * df_f_syst **2
-
-    #write contributions to the systematic data file
-    avg_kin.add_key('dsig_syst_pT', 'f')
-
-    #get 2d bin
-    ib = avg_kin['i_b']
+    return [pT, d_pT, df_f_avg]
     
-    #loop over all bins
-    for i, ib_i in enumerate(ib):
-        avg_kin.data[i]['dsig_syst_pT'] =  df_f_avg
-    avg_kin.save(avg_kin_file)
-    
-    return [df_f_avg, dsig2_pT]
-    
-def get_tLT_syst(pm_set=0, model='', data_set=0):
+def get_tLT_syst(pm_set=0, model='', data_set=0, sys_ext=''):
 
     #code to get the total live time (from EDTM) systematics
     
-    avg_kin_file, final_Xsec_file, report_file = get_filenames(pm_set, model, data_set)
+    avg_kin_file, final_Xsec_file, report_file = get_filenames(pm_set, model, data_set, sys_ext)
 
     #open report 
     r = dfile(report_file)                 #open report file
-    fXsec = dfile(final_Xsec_file)         #open final Xsec data file 
-    avg_kin = dfile(avg_kin_file)          #open avg kin file (assumed to have '_systematics.txt extension'  
 
     tLT = r['tLT']     #total live time [fraction or %/100]
     shms_3of4 = r['ptrig1_rate']    #shms 3/4 trigger tae in kHz.  Used to crudely estimate relative error on Xsec
@@ -273,6 +189,9 @@ def get_tLT_syst(pm_set=0, model='', data_set=0):
     print('total_live_time_rel_err=',df_f_approx_avg)
 
     d_tLT = 0.03 * tLT          #assume uncertainty in total live time contributes to 3 % systematics (conservative estimate)
+
+    tLT_avg = np.average(tLT)
+    d_tLT_avg = np.average(d_tLT)
     
     f = 1./tLT                #correction factor
     df = -1./tLT**2 * d_tLT   #uncertainty in corr. factor
@@ -285,61 +204,33 @@ def get_tLT_syst(pm_set=0, model='', data_set=0):
 
     #run-by-run systematic added in quadrature
     df_f_quad = np.sqrt(np.sum(df_f_syst**2))
-    
+     
+    '''#DEBUG
     print('====Pm: %i (set %i) :: Total Live Time======'%(pm_set, data_set))
     print('df/f=',df_f_syst)
     print('df/f_avg=',df_f_avg)
+    print('df/f_approx_avg=',df_f_approx_avg)
     print('df/f_quad=',df_f_quad)
+    '''
 
+    return [tLT_avg, d_tLT_avg, round(df_f_avg,3)]
     
-    #Define the weight
-    w = 1 / df**2
-
-    #Calculate the weighted average
-    f_w = np.sum(f*w) / np.sum(w)
-    df_w = np.sqrt(1./np.sum(w))    #systematics [fractional, not in %] (uncertainty in weighted average of corr. factor)
-
-    #relative error
-    df_f = df_w / f_w     
-    
-    #----calculate systematic contribution---
-    sig_exp = fXsec['fsiRC_dataXsec_fsibc_corr']    #data experimental cross section to be plotted
-    sig_exp = convert2NaN(sig_exp, value=-1.0)
-
-    #square of the systematic error contribution from total live time
-    dsig2_tLT = sig_exp**2 * df_f **2
-
-    #write contributions to the systematic data file
-    avg_kin.add_key('dsig_syst_tLT', 'f')
-
-    #get 2d bin
-    ib = avg_kin['i_b']
-    
-    #loop over all bins
-    for i, ib_i in enumerate(ib):
-        avg_kin.data[i]['dsig_syst_tLT'] =  df_f    #5% systematics or squared (0.05**2 = 0.0025)
-    avg_kin.save(avg_kin_file)
-
-    return [df_f_avg, dsig2_tLT]
-    
-def get_Qtot_syst(pm_set=0, model='', data_set=0):
+def get_Qtot_syst(pm_set=0, model='', data_set=0, sys_ext=''):
     
     #code to get the systematics of the total accumulated charge (related to BCMs uncertainty)
       
-    avg_kin_file, final_Xsec_file, report_file = get_filenames(pm_set, model, data_set)
+    avg_kin_file, final_Xsec_file, report_file = get_filenames(pm_set, model, data_set, sys_ext)
 
     #open report 
     r = dfile(report_file)                 #open report file
-    fXsec = dfile(final_Xsec_file)         #open final Xsec data file 
-    avg_kin = dfile(avg_kin_file)          #open avg kin file (assumed to have '_systematics.txt extension'   
-
-    r = dfile(report_file)
 
     Q = r['charge']          #total accumulated charge (mC)
-    dQ_Q = 2.0/100           #uncertainty in total charge (take 2% for now, conservative)
+    dQ_Q = 0.02           #uncertainty in total charge (take 2% for now, conservative)
 
     dQ = dQ_Q * Q
 
+    Q_tot = np.sum(Q) 
+    dQ_tot = Q_tot * dQ_Q
     f =  1./Q             #correction factor
     df = -1/Q**2 * dQ     #uncertainty in corr. factor
     
@@ -351,43 +242,15 @@ def get_Qtot_syst(pm_set=0, model='', data_set=0):
 
     #run-by-run systematic added in quadrature
     df_f_quad = np.sqrt(np.sum(df_f_syst**2))
-    
+     
+    '''#DEBUG
     print('====Pm: %i (set %i) :: Total Charge======'%(pm_set, data_set))
     print('df/f=',df_f_syst)
     print('df/f_avg=',df_f_avg)
     print('df/f_quad=',df_f_quad)
-    
+    '''
 
-    #Define the weight
-    w = 1 / df**2
-
-    #Calculate the weighted average
-    f_w = np.sum(f*w) / np.sum(w)
-    df_w = np.sqrt(1./np.sum(w))    #systematics [fractional, not in %] (uncertainty in weighted average of corr. factor)
-
-    #relative error
-    df_f = 0.02 #for now, assume total relative uncertainty in charge is 2% :: df_w / f_w
-
-
-    #----calculate systematic contribution---
-    sig_exp = fXsec['fsiRC_dataXsec_fsibc_corr']    #data experimental cross section to be plotted
-    sig_exp = convert2NaN(sig_exp, value=-1.0)
-
-    #square of the systematic error contribution from total charge
-    dsig2_Qtot = sig_exp**2 * df_f**2
-
-    #write contributions to the systematic data file
-    avg_kin.add_key('dsig_syst_Qtot', 'f')
-
-    #get 2d bin
-    ib = avg_kin['i_b']
-    
-    #loop over all bins
-    for i, ib_i in enumerate(ib):
-        avg_kin.data[i]['dsig_syst_Qtot'] =  df_f
-    avg_kin.save(avg_kin_file)
-    
-    return [df_f_avg, dsig2_Qtot]
+    return [Q_tot, dQ_tot, round(df_f_avg, 3)]
 
 
 def convert2NaN(arr=np.array([]), value=0):
@@ -399,14 +262,16 @@ def convert2NaN(arr=np.array([]), value=0):
     return arr
 
 
-def get_filenames(pm_set, model, data_set):
+def get_filenames(pm_set, model, data_set, sys_ext):
     #This code returns the filename paths for the average kinematics, final Xsec results and report file
     #for the determination of systematics.
 
     d2_dir = "/u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/ANALYSIS_SCRIPTS/MAIN_ANALYSIS/"
-    avg_kin_dir = d2_dir+"Deep_CrossSections/average_kinematics/Em_final40MeV/"
-    final_Xsec_dir = d2_dir+"Deep_CrossSections/bin_centering_corrections/Em_final40MeV/"
-    
+    avg_kin_dir = d2_dir+"Deep_CrossSections/average_kinematics/%s/"%(sys_ext)
+    final_Xsec_dir = d2_dir+"Deep_CrossSections/bin_centering_corrections/%s/"%(sys_ext)
+    #avg_kin_dir = d2_dir+"Deep_CrossSections/average_kinematics/all_thnq_Q2_3to4GeV/"  
+    #final_Xsec_dir = d2_dir+"Deep_CrossSections/bin_centering_corrections/all_thnq_Q2_3to4GeV/"
+
     if(pm_set==80):
         init_file= avg_kin_dir+'pm%i_%s_norad_avgkin.txt'%(pm_set, model) 
         avg_kin_file = avg_kin_dir+'pm%i_%s_norad_avgkin_systematics.txt'%(pm_set, model) 
@@ -424,60 +289,104 @@ def get_filenames(pm_set, model, data_set):
         if not os.path.exists(avg_kin_file):
             sh.copyfile(init_file, avg_kin_file)
 
-    report_file=d2_dir+'root_files/pm%i_fsiXsec_set%i_Em_final40MeV/report_deep_pm%i_set%i.dat'%(pm_set, data_set, pm_set, data_set)
-
+    report_file=d2_dir+'root_files/pm%i_fsiXsec_set%i_%s/report_deep_pm%i_set%i.dat'%(pm_set, data_set, sys_ext, pm_set, data_set)
+    #report_file=d2_dir+'root_files/pm%i_fsiXsec_set%i_all_thnq_Q2_3to4GeV/report_deep_pm%i_set%i.dat'%(pm_set, data_set, pm_set, data_set)  
 
     return [avg_kin_file, final_Xsec_file, report_file]
 
 
-def combine_norm_systematics(pm_set=0, model='', data_set=0):
+def get_average_systematics(sys_ext=""):
     
-    #This code call all the utilities function to write their systematics to file as well as 
-    #combines the systematic contributions to the cross sections in quadrature
+    #This code calls functions to get systematics (that have been already averaged per run)
+    #and averages them over different data sets to get an overall final systeamtic value
 
-    get_trkEff_syst(pm_set, model, data_set)
-    get_tgtboil_syst(pm_set, model, data_set)
-    get_pT_syst(pm_set, model, data_set)
-    get_tLT_syst(pm_set, model, data_set)
-    get_Qtot_syst(pm_set, model, data_set)
-
-    avg_kin_file, final_Xsec_file, report_file = get_filenames(pm_set, model, data_set)
-
-    #open average kin. file to write systematics
-    avg_kin = dfile(avg_kin_file)          #open avg kin file (assumed to have '_systematics.txt extension'   
+    '''
+    #Pm = 80 (set1)
+    df_f_htrkEff_80s1, df_f_etrkEff_80s1 = get_trkEff_syst(80, 'fsi', 1)
+    df_f_tgtBoil_80s1 = get_tgtboil_syst(80, 'fsi', 1)
+    df_f_pT_80s1 = get_pT_syst(80, 'fsi', 1)
+    df_f_tLT_80s1 = get_tLT_syst(80, 'fsi', 1)
+    df_f_Qtot_80s1 = get_Qtot_syst(80, 'fsi', 1)
+    
+    #Pm = 580 (set1)
+    df_f_htrkEff_580s1, df_f_etrkEff_580s1 = get_trkEff_syst(580, 'fsi', 1)
+    df_f_tgtBoil_580s1 = get_tgtboil_syst(580, 'fsi', 1)
+    df_f_pT_580s1 = get_pT_syst(580, 'fsi', 1)
+    df_f_tLT_580s1 = get_tLT_syst(580, 'fsi', 1)
+    df_f_Qtot_580s1 = get_Qtot_syst(580, 'fsi', 1)
         
-    #Call utilities functions
-    df_f_htrkEff, dsig2_htrk, df_f_etrkEff, dsig2_etrk = get_trkEff_syst(pm_set, model, data_set)
-    df_f_tgtBoil, dsig2_tgtBoil = get_tgtboil_syst(pm_set, model, data_set)
-    df_f_pT, dsig2_pT = get_pT_syst(pm_set, model, data_set)
-    df_f_tLT, dsig2_tLT = get_tLT_syst(pm_set, model, data_set)
-    df_f_Qtot, dsig2_Qtot = get_Qtot_syst(pm_set, model, data_set)
+    #Pm = 580 (set2)
+    df_f_htrkEff_580s2, df_f_etrkEff_580s2 = get_trkEff_syst(580, 'fsi', 2)
+    df_f_tgtBoil_580s2 = get_tgtboil_syst(580, 'fsi', 2)
+    df_f_pT_580s2 = get_pT_syst(580, 'fsi', 2)
+    df_f_tLT_580s2 = get_tLT_syst(580, 'fsi', 2)
+    df_f_Qtot_580s2 = get_Qtot_syst(580, 'fsi', 2)
+    
+    #Pm = 750 (set1)
+    df_f_htrkEff_750s1, df_f_etrkEff_750s1 = get_trkEff_syst(750, 'fsi', 1)
+    df_f_tgtBoil_750s1 = get_tgtboil_syst(750, 'fsi', 1)
+    df_f_pT_750s1 = get_pT_syst(750, 'fsi', 1)
+    df_f_tLT_750s1 = get_tLT_syst(750, 'fsi', 1)
+    df_f_Qtot_750s1 = get_Qtot_syst(750, 'fsi', 1)
+        
+    #Pm = 750 (set2)
+    df_f_htrkEff_750s2, df_f_etrkEff_750s2 = get_trkEff_syst(750, 'fsi', 2)
+    df_f_tgtBoil_750s2 = get_tgtboil_syst(750, 'fsi', 2)
+    df_f_pT_750s2 = get_pT_syst(750, 'fsi', 2)
+    df_f_tLT_750s2 = get_tLT_syst(750, 'fsi', 2)
+    df_f_Qtot_750s2 = get_Qtot_syst(750, 'fsi', 2)
+    
+    #Pm = 750 (set3)
+    df_f_htrkEff_750s3, df_f_etrkEff_750s3 = get_trkEff_syst(750, 'fsi', 3)
+    df_f_tgtBoil_750s3 = get_tgtboil_syst(750, 'fsi', 3)
+    df_f_pT_750s3 = get_pT_syst(750, 'fsi', 3)
+    df_f_tLT_750s3 = get_tLT_syst(750, 'fsi', 3)
+    df_f_Qtot_750s3 = get_Qtot_syst(750, 'fsi', 3)
+    
+    df_f_htrkEff_arr = np.array([df_f_htrkEff_80s1, df_f_htrkEff_580s1, df_f_htrkEff_580s2, df_f_htrkEff_750s1, df_f_htrkEff_750s2, df_f_htrkEff_750s3])
+    df_f_etrkEff_arr = np.array([df_f_etrkEff_80s1, df_f_etrkEff_580s1, df_f_etrkEff_580s2, df_f_etrkEff_750s1, df_f_etrkEff_750s2, df_f_etrkEff_750s3])
+    df_f_tgtBoil_arr = np.array([df_f_tgtBoil_80s1, df_f_tgtBoil_580s1, df_f_tgtBoil_580s2, df_f_tgtBoil_750s1, df_f_tgtBoil_750s2, df_f_tgtBoil_750s3])
+    df_f_pT_arr = np.array([df_f_pT_80s1, df_f_pT_580s1, df_f_pT_580s2, df_f_pT_750s1, df_f_pT_750s2, df_f_pT_750s3])
+    df_f_tLT_arr = np.array([df_f_tLT_80s1, df_f_tLT_580s1, df_f_tLT_580s2, df_f_tLT_750s1, df_f_tLT_750s2, df_f_tLT_750s3])
+    df_f_Qtot_arr = np.array([df_f_Qtot_80s1, df_f_Qtot_580s1, df_f_Qtot_580s2, df_f_Qtot_750s1, df_f_Qtot_750s2, df_f_Qtot_750s3])
+    
+    #Average of correction factors
+    df_f_htrkEff_avg = np.average(df_f_htrkEff_arr)
+    df_f_etrkEff_avg = np.average(df_f_etrkEff_arr)
+    df_f_tgtBoil_avg = np.average(df_f_tgtBoil_arr)
+    df_f_pT_avg = np.average(df_f_pT_arr)
+    df_f_tLT_avg = np.average(df_f_tLT_arr)
+    df_f_Qtot_avg = np.average(df_f_Qtot_arr)
+    '''
+    #Add correction factors quadratically (assuming they are uncorrelated)
+    #df_f_total = np.sqrt( df_f_htrkEff_avg**2 +  df_f_etrkEff_avg**2 + df_f_tgtBoil_avg**2 + df_f_pT_avg**2 + df_f_tLT_avg**2 + df_f_Qtot_avg**2 )
 
-    #Add absolute Xsec systematic errors in quadrature
-    dsig2_norm_tot = dsig2_htrk + dsig2_etrk + dsig2_tgtBoil + dsig2_pT + dsig2_tLT + dsig2_Qtot
+    fout_path='../../../Deep_CrossSections/average_kinematics/%s/normalization_systematics_summary.txt'%(sys_ext)
+    #fout_path='../../../Deep_CrossSections/average_kinematics/all_thnq_Q2_3to4GeV/normalization_systematics_summary.txt'                                                                             
+    fout = open(fout_path, 'w')
+    fout.write('#This file contains the run-by-run averaged (for all data sets) correction factor systematics on the cross section\n')
+    fout.write('#These are relative errors, dsig / dig. Units: Multiply by 100 to convert to %%\n')
+    fout.write('#The last header is the quadrature sum of the headers, 0-6.  \n')
+    fout.write('#! pm[i,0]/  set[i,1]/   htrk_eff[f,2]/  htrk_eff_err[f,3]/ etrk_eff[f,4]/ etrk_eff_err[f,5]/  tgtBoil[f,6]/ tgtBoil_err[f,7]/  pAbs[f,8]/   pAbs_err[f,9]/  tLT[f,10]/   tLT_err[f,11]/  Qtot[f,12]/   Qtot_err[f,13]/  htrk_eff_syst[f,14]/  etrk_eff_syst[f,15]/  tgtBoil_syst[f,16]/  pAbs_syst[f,17]/  tLT_syst[f,18]/   Qtot_syst[f,19]/  \n')
+    fout.write('%i  %i  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  \n'%(80, 1, get_trkEff_syst(80, 'fsi', 1,sys_ext)[0], get_trkEff_syst(80, 'fsi', 1,sys_ext)[1],get_trkEff_syst(80, 'fsi', 1,sys_ext)[2], get_trkEff_syst(80, 'fsi', 1,sys_ext)[3], get_tgtboil_syst(80, 'fsi', 1,sys_ext)[0], get_tgtboil_syst(80, 'fsi', 1,sys_ext)[1], get_pT_syst(80, 'fsi', 1,sys_ext)[0], get_pT_syst(80, 'fsi', 1,sys_ext)[1], get_tLT_syst(80, 'fsi', 1,sys_ext)[0], get_tLT_syst(80, 'fsi', 1,sys_ext)[1], get_Qtot_syst(80, 'fsi', 1,sys_ext)[0], get_Qtot_syst(80, 'fsi', 1,sys_ext)[1], get_trkEff_syst(80, 'fsi', 1,sys_ext)[4], get_trkEff_syst(80, 'fsi', 1,sys_ext)[5], get_tgtboil_syst(80, 'fsi', 1,sys_ext)[2], get_pT_syst(80, 'fsi', 1,sys_ext)[2], get_tLT_syst(80, 'fsi', 1,sys_ext)[2], get_Qtot_syst(80, 'fsi', 1,sys_ext)[2]))
+    fout.write('%i  %i  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  \n'%(580, 1, get_trkEff_syst(580, 'fsi', 1,sys_ext)[0], get_trkEff_syst(580, 'fsi', 1,sys_ext)[1],get_trkEff_syst(580, 'fsi', 1,sys_ext)[2], get_trkEff_syst(580, 'fsi', 1,sys_ext)[3], get_tgtboil_syst(580, 'fsi', 1,sys_ext)[0], get_tgtboil_syst(580, 'fsi', 1,sys_ext)[1], get_pT_syst(580, 'fsi', 1,sys_ext)[0], get_pT_syst(580, 'fsi', 1,sys_ext)[1], get_tLT_syst(580, 'fsi', 1,sys_ext)[0], get_tLT_syst(580, 'fsi', 1,sys_ext)[1], get_Qtot_syst(580, 'fsi', 1,sys_ext)[0], get_Qtot_syst(580, 'fsi', 1,sys_ext)[1], get_trkEff_syst(580, 'fsi', 1,sys_ext)[4], get_trkEff_syst(580, 'fsi', 1,sys_ext)[5], get_tgtboil_syst(580, 'fsi', 1,sys_ext)[2], get_pT_syst(580, 'fsi', 1,sys_ext)[2], get_tLT_syst(580, 'fsi', 1,sys_ext)[2], get_Qtot_syst(580, 'fsi', 1,sys_ext)[2]))
+    fout.write('%i  %i  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  \n'%(580, 2, get_trkEff_syst(580, 'fsi', 2,sys_ext)[0], get_trkEff_syst(580, 'fsi', 2,sys_ext)[1],get_trkEff_syst(580, 'fsi', 2,sys_ext)[2], get_trkEff_syst(580, 'fsi', 2,sys_ext)[3], get_tgtboil_syst(580, 'fsi', 2,sys_ext)[0], get_tgtboil_syst(580, 'fsi', 2,sys_ext)[1], get_pT_syst(580, 'fsi', 2,sys_ext)[0], get_pT_syst(580, 'fsi', 2,sys_ext)[1], get_tLT_syst(580, 'fsi', 2,sys_ext)[0], get_tLT_syst(580, 'fsi', 2,sys_ext)[1], get_Qtot_syst(580, 'fsi', 2,sys_ext)[0], get_Qtot_syst(580, 'fsi', 2,sys_ext)[1], get_trkEff_syst(580, 'fsi', 2,sys_ext)[4], get_trkEff_syst(580, 'fsi', 2,sys_ext)[5], get_tgtboil_syst(580, 'fsi', 2,sys_ext)[2], get_pT_syst(580, 'fsi', 2,sys_ext)[2], get_tLT_syst(580, 'fsi', 2,sys_ext)[2], get_Qtot_syst(580, 'fsi', 2,sys_ext)[2]))
+    fout.write('%i  %i  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  \n'%(750, 1, get_trkEff_syst(750, 'fsi', 1,sys_ext)[0], get_trkEff_syst(750, 'fsi', 1,sys_ext)[1],get_trkEff_syst(750, 'fsi', 1,sys_ext)[2], get_trkEff_syst(750, 'fsi', 1,sys_ext)[3], get_tgtboil_syst(750, 'fsi', 1,sys_ext)[0], get_tgtboil_syst(750, 'fsi', 1,sys_ext)[1], get_pT_syst(750, 'fsi', 1,sys_ext)[0], get_pT_syst(750, 'fsi', 1,sys_ext)[1], get_tLT_syst(750, 'fsi', 1,sys_ext)[0], get_tLT_syst(750, 'fsi', 1,sys_ext)[1], get_Qtot_syst(750, 'fsi', 1,sys_ext)[0], get_Qtot_syst(750, 'fsi', 1,sys_ext)[1], get_trkEff_syst(750, 'fsi', 1,sys_ext)[4], get_trkEff_syst(750, 'fsi', 1,sys_ext)[5], get_tgtboil_syst(750, 'fsi', 1,sys_ext)[2], get_pT_syst(750, 'fsi', 1,sys_ext)[2], get_tLT_syst(750, 'fsi', 1,sys_ext)[2], get_Qtot_syst(750, 'fsi', 1,sys_ext)[2]))
+    fout.write('%i  %i  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  \n'%(750, 2, get_trkEff_syst(750, 'fsi', 2,sys_ext)[0], get_trkEff_syst(750, 'fsi', 2,sys_ext)[1],get_trkEff_syst(750, 'fsi', 2,sys_ext)[2], get_trkEff_syst(750, 'fsi', 2,sys_ext)[3], get_tgtboil_syst(750, 'fsi', 2,sys_ext)[0], get_tgtboil_syst(750, 'fsi', 2,sys_ext)[1], get_pT_syst(750, 'fsi', 2,sys_ext)[0], get_pT_syst(750, 'fsi', 2,sys_ext)[1], get_tLT_syst(750, 'fsi', 2,sys_ext)[0], get_tLT_syst(750, 'fsi', 2,sys_ext)[1], get_Qtot_syst(750, 'fsi', 2,sys_ext)[0], get_Qtot_syst(750, 'fsi', 2,sys_ext)[1], get_trkEff_syst(750, 'fsi', 2,sys_ext)[4], get_trkEff_syst(750, 'fsi', 2,sys_ext)[5], get_tgtboil_syst(750, 'fsi', 2,sys_ext)[2], get_pT_syst(750, 'fsi', 2,sys_ext)[2], get_tLT_syst(750, 'fsi', 2,sys_ext)[2], get_Qtot_syst(750, 'fsi', 2,sys_ext)[2]))
+    fout.write('%i  %i  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  %f  \n'%(750, 3, get_trkEff_syst(750, 'fsi', 3,sys_ext)[0], get_trkEff_syst(750, 'fsi', 3,sys_ext)[1],get_trkEff_syst(750, 'fsi', 3,sys_ext)[2], get_trkEff_syst(750, 'fsi', 3,sys_ext)[3], get_tgtboil_syst(750, 'fsi', 3,sys_ext)[0], get_tgtboil_syst(750, 'fsi', 3,sys_ext)[1], get_pT_syst(750, 'fsi', 3,sys_ext)[0], get_pT_syst(750, 'fsi', 3,sys_ext)[1], get_tLT_syst(750, 'fsi', 3,sys_ext)[0], get_tLT_syst(750, 'fsi', 3,sys_ext)[1], get_Qtot_syst(750, 'fsi', 3,sys_ext)[0], get_Qtot_syst(750, 'fsi', 3,sys_ext)[1], get_trkEff_syst(750, 'fsi', 3,sys_ext)[4], get_trkEff_syst(750, 'fsi', 3,sys_ext)[5], get_tgtboil_syst(750, 'fsi', 3,sys_ext)[2], get_pT_syst(750, 'fsi', 3,sys_ext)[2], get_tLT_syst(750, 'fsi', 3,sys_ext)[2], get_Qtot_syst(750, 'fsi', 3,sys_ext)[2]))
+    fout.close()
 
-    #Add relative errors in quadrature
-    relative_err2_tot = df_f_htrkEff**2 + df_f_etrkEff**2 + df_f_tgtBoil**2 + df_f_pT**2 +  df_f_tLT**2 + df_f_Qtot**2
-    relative_err_tot = np.sqrt(relative_err2_tot)
+    #print('=====Relative Errors=====')
+    #print('hms_trfEff = ',df_f_htrkEff_avg*100.,' [%]')
+    #print('shms_trfEff = ',df_f_etrkEff_avg*100.,' [%]')
+    #print('tgt_boil = ',df_f_tgtBoil_avg*100.,' [%]')
+    #print('proton_abs = ',df_f_pT_avg*100.,' [%]')
+    #print('total_LT= ',df_f_tLT_avg*100.,' [%]')
+    #print('Qtot= ',df_f_Qtot_avg*100.,' [%]')
+    #print('df_f_total= ',df_f_total*100.,' [%]')
+        
 
-    #write total contribution to the systematic data file
-    avg_kin.add_key('dsig_norm_tot', 'f')
-
-    #loop over all bins
-    ib = avg_kin['i_b']    
-    for i, ib_i in enumerate(ib):
-        avg_kin.data[i]['dsig_norm_tot'] = relative_err_tot   
-    avg_kin.save(avg_kin_file)
-
-    print('=====Relative Errors=====')
-    print('hms_trfEff = ',df_f_htrkEff*100.,' [%]')
-    print('shms_trfEff = ',df_f_etrkEff*100.,' [%]')
-    print('tgt_boil = ',df_f_tgtBoil*100.,' [%]')
-    print('proton_abs = ',df_f_pT*100.,' [%]')
-    print('total_LT= ',df_f_tLT*100.,' [%]')
-    print('Qtot= ',df_f_Qtot*100.,' [%]')
-    print('tot_norm_err= ',relative_err_tot*100,' [%]')
-
+    '''
     avg_kin.add_header_comment('=====Relative Systematic Errors (from Normalization Factors)=====')
     avg_kin.add_header_comment('hms_trkEff = %.4f [%%]' % (df_f_htrkEff*100.))
     avg_kin.add_header_comment('shms_trkEff = %.4f [%%]' % (df_f_etrkEff*100.))
@@ -488,21 +397,21 @@ def combine_norm_systematics(pm_set=0, model='', data_set=0):
     avg_kin.add_header_comment('tot_norm_err= %.4f [%%]' % (relative_err_tot*100.))
     avg_kin.add_header_comment('=================================================================')
     avg_kin.save(avg_kin_file)
+    '''
 
 def main():
 
+    #User Input
+    sys_ext = (sys.argv[1]) 
+
+    print('Main')
     #Call method to calculate and combine normalization systematic errors
 
     #combine_norm_systematics(80, 'fsi', 1)
     #get_radbc_syst(fname, 80, 1)
     #plot_relative_error(fname, 80, 1)
     #plot_Xsec_Ratio(fname, 80, 1)
-
-    get_trkEff_syst(580, 'fsi', 1)
-    get_tgtboil_syst(580, 'fsi', 1)
-    get_pT_syst(580, 'fsi', 1)
-    get_tLT_syst(580, 'fsi', 1)
-    get_Qtot_syst(580, 'fsi', 1)
+    get_average_systematics(sys_ext)
 
 if __name__=="__main__":
     main()

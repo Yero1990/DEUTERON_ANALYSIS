@@ -152,7 +152,7 @@ for i,acont in enumerate(all.cont):
       Q2_calc = 4.*Ei*Ef*np.sin(the*dtr/2.)**2
       q_calc = np.sqrt(Q2_calc + nu_calc*nu_calc)    # |q| in the lab frame
       if q_calc==0.:
-         # unphysical, skip
+         #unphysical, skip
          continue
          # calculate hadron kinematics
       Ep = np.sqrt( MP**2 + Pf**2)

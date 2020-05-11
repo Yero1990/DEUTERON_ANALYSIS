@@ -18,6 +18,14 @@ from sys import argv
 # ** combines (takes average) different data sets of a given kinematic setting and writes to file
 # ** combines different kinematic settings
 
+# some constants                                                                                                                                                     
+dtr = np.pi/180.                                                                                                                                                                               
+#GeV                                                                                                                                                                             
+MP = 938.272 / 1000.                                                                                                                                                                       
+MN = 939.566 / 1000.                                                                                                                                                 
+MD = 1875.61 / 1000.                                                                                                                                                                           
+me = 0.51099 / 1000. 
+
 def convert2NaN(arr=np.array([]), value=0):
     #method to convert a specified value in a array to nan (not a number)
 
@@ -48,8 +56,9 @@ header = """
 #\\ xb = th_nq                                                                                                    
 #\\ yb = pm                                                                        
 #relative errors df/f=dsig/sig: kin_syst_tot (kinematic systematics),  norm_syst_tot (constant, norm. syst.)
-# current header line:  
-#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/  pm_avg[f,5]/  kin_syst_tot[f,6]/  norm_syst_tot[f,7]/  tot_syst_err[f,8]/  tot_stats_err[f,9]/  tot_err[f,10]/   red_dataXsec_avg[f,11]/   red_dataXsec_avg_err[f,12]/  red_dataXsec_avg_syst_err[f,13]/   red_dataXsec_avg_tot_err[f,14]/  red_pwiaXsec_avg[f,15]/ red_fsiXsec_avg[f,16]/  
+# current header line: all averaged kinematics are either in GeV or deg : Ei_avg (beam energy), kf_avg(final e- momentum),  the_avg(final e- angle), pf_avg(final proton momentum),
+# nu_avg(energy transfer, Ei-kf), Q2_avg(4-momentum transfer, GeV2), q_avg(|qlab|, magnitude of 3-momentum transfer), cthpq_cm_avg(c.o.mass angle between proton and qlab), cphi_avg(out-of-plane angle between proton and qlab)
+#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/  pm_avg[f,5]/  kin_syst_tot[f,6]/  norm_syst_tot[f,7]/  tot_syst_err[f,8]/  tot_stats_err[f,9]/  tot_err[f,10]/   red_dataXsec_avg[f,11]/   red_dataXsec_avg_err[f,12]/  red_dataXsec_avg_syst_err[f,13]/   red_dataXsec_avg_tot_err[f,14]/  red_pwiaXsec_avg[f,15]/ red_fsiXsec_avg[f,16]/  Ei_avg[f,17]/   kf_avg[f,18]/   the_avg[f,19]/   pf_avg[f,20]/  nu_avg[f,21]/  Q2_avg[f,22]/  q_avg[f,23]/  cthpq_cm_avg[f,24]/  cphi_avg[f,25]/   
 """
 fout.write(header)
 
@@ -79,7 +88,19 @@ def get_pm_avg(pm_set, data_set):
     kin = dfile(fname)
     pm = kin['pm']
     pm_bin = kin['yb']
+    lowEdge = pm_bin - 20.  #lower edged of Pm bin
+    upEdge = pm_bin + 20.   #upper edge of Pm bin
     return pm_bin, pm
+
+def get_avg_kin(header_name, pm_set, data_set):                                                                                                                                                  
+    #Code to get any header and average kinematics dara array                                                                                              
+    if(pm_set==80):
+        fname = '../average_kinematics/%s/pm%i_fsi_norad_avgkin.txt' %(sys_ext, pm_set) 
+    else:
+        fname = '../average_kinematics/%s/pm%i_fsi_norad_avgkin_set%i.txt' %(sys_ext, pm_set, data_set)
+    kin = dfile(fname)
+    data = kin[header_name]                                                                                                                                                          
+    return data 
 
 def get_sig_red(header_name, pm_set, data_set):
     #Code to get any header and data array from bin-center corrected data files
@@ -105,8 +126,9 @@ def get_norm_syst(header_name):
     #Code to get any header and data array from the normalization. systematic data file
 
     #Get file containing kin. systematics
-    f = dfile('../average_kinematics/Em_final40MeV/normalization_systematics.txt')
-    
+    #f = dfile('../average_kinematics/Em_final40MeV/normalization_systematics.txt')
+    f = dfile('../average_kinematics/%s/normalization_systematics_summary.txt' % (sys_ext))
+
     #Get data array with desired header name (norm. syst are in fractional rel. error)
     data = f[header_name]   
     return data
@@ -116,8 +138,8 @@ f1  = dfile(get_fname(80, 1))
 i_b = f1['i_b']
 i_x = f1['i_x']
 i_y = f1['i_y']
-xb  = f1['xb']
-yb  = f1['yb']
+xb  = f1['xb']   #th_nq bin
+yb  = f1['yb']   #pm_bin
 
 #Get Average Pmiss
 pm1_b, pm80 = get_pm_avg(80, 1)
@@ -127,6 +149,32 @@ pm4_b, pm750_set1 = get_pm_avg(750, 1)
 pm5_b, pm750_set2 = get_pm_avg(750, 2)
 pm6_b, pm750_set3 = get_pm_avg(750, 3)
 
+#Get Average initial beam energy [MeV]     Get avg final e- energy [MeV]              Get final e- angle [deg]                
+Ei_80 = get_avg_kin('Ei', 80, 1)      ;    kf_80 = get_avg_kin('kf', 80, 1)     ;     the_80 = get_avg_kin('th_e', 80, 1)
+Ei_580s1 = get_avg_kin('Ei', 580, 1) ;    kf_580s1 = get_avg_kin('kf', 580, 1) ;     the_580s1 = get_avg_kin('th_e', 580, 1)
+Ei_580s2 = get_avg_kin('Ei', 580, 2) ;    kf_580s2 = get_avg_kin('kf', 580, 2) ;     the_580s2 = get_avg_kin('th_e', 580, 2)
+Ei_750s1 = get_avg_kin('Ei', 750, 1) ;    kf_750s1 = get_avg_kin('kf', 750, 1) ;     the_750s1 = get_avg_kin('th_e', 750, 1)
+Ei_750s2 = get_avg_kin('Ei', 750, 2) ;    kf_750s2 = get_avg_kin('kf', 750, 2) ;     the_750s2 = get_avg_kin('th_e', 750, 2)
+Ei_750s3 = get_avg_kin('Ei', 750, 3) ;    kf_750s3 = get_avg_kin('kf', 750, 3) ;     the_750s3 = get_avg_kin('th_e', 750, 3)
+#omega, Q2_calc, q_lab, theta_pq_calc, th_pq_cm, cos_phi
+#Get final proton momentum [MeV]          #Get omega average [MeV]                   #Get averaged Q2 [MeV2]
+pf_80 = get_avg_kin('pf', 80, 1)     ;    nu_80 = get_avg_kin('omega', 80, 1)     ;  Q2_80 = get_avg_kin('Q2_calc', 80, 1)         ;
+pf_580s1 = get_avg_kin('pf', 580, 1) ;    nu_580s1 = get_avg_kin('omega', 580, 1) ;  Q2_580s1 = get_avg_kin('Q2_calc', 580, 1)     ;
+pf_580s2 = get_avg_kin('pf', 580, 2) ;    nu_580s2 = get_avg_kin('omega', 580, 2) ;  Q2_580s2 = get_avg_kin('Q2_calc', 580, 2)     ;
+pf_750s1 = get_avg_kin('pf', 750, 1) ;    nu_750s1 = get_avg_kin('omega', 750, 1) ;  Q2_750s1 = get_avg_kin('Q2_calc', 750, 1)     ;
+pf_750s2 = get_avg_kin('pf', 750, 2) ;    nu_750s2 = get_avg_kin('omega', 750, 2) ;  Q2_750s2 = get_avg_kin('Q2_calc', 750, 2)     ;
+pf_750s3 = get_avg_kin('pf', 750, 3) ;    nu_750s3 = get_avg_kin('omega', 750, 3) ;  Q2_750s3 = get_avg_kin('Q2_calc', 750, 3)     ;
+
+#Get final |q_lab| MeV                    #Get th_pq_cm                                         #Get cos(phi_pq)
+q_80 = get_avg_kin('q_lab', 80, 1)     ;  thpq_cm_80 = get_avg_kin('th_pq_cm', 80, 1)     ;     cphi_80 = get_avg_kin('cos_phi', 80, 1)     ;
+q_580s1 = get_avg_kin('q_lab', 580, 1) ;  thpq_cm_580s1 = get_avg_kin('th_pq_cm', 580, 1) ;     cphi_580s1 = get_avg_kin('cos_phi', 580, 1)     ;
+q_580s2 = get_avg_kin('q_lab', 580, 2) ;  thpq_cm_580s2 = get_avg_kin('th_pq_cm', 580, 2) ;     cphi_580s2 = get_avg_kin('cos_phi', 580, 2)     ;
+q_750s1 = get_avg_kin('q_lab', 750, 1) ;  thpq_cm_750s1 = get_avg_kin('th_pq_cm', 750, 1) ;     cphi_750s1 = get_avg_kin('cos_phi', 750, 1)     ;
+q_750s2 = get_avg_kin('q_lab', 750, 2) ;  thpq_cm_750s2 = get_avg_kin('th_pq_cm', 750, 2) ;     cphi_750s2 = get_avg_kin('cos_phi', 750, 2)     ;
+q_750s3 = get_avg_kin('q_lab', 750, 3) ;  thpq_cm_750s3 = get_avg_kin('th_pq_cm', 750, 3) ;     cphi_750s3 = get_avg_kin('cos_phi', 750, 3)     ;
+
+
+ 
 #Get reduced Xsec
 sig_red_80 = get_sig_red('red_dataXsec', 80, 1)
 sig_red_580_set1 = get_sig_red('red_dataXsec', 580, 1)
@@ -166,8 +214,31 @@ kin_syst_750_set1 = get_kin_syst('sig_kin_tot', 750, 1)
 kin_syst_750_set2 = get_kin_syst('sig_kin_tot', 750, 2)
 kin_syst_750_set3 = get_kin_syst('sig_kin_tot', 750, 3)
 
-norm_syst_tot = get_norm_syst('total_norm_syst')
 
+pm_set = get_norm_syst('pm')
+data_set = get_norm_syst('set')
+
+#Get norm. syst. errors that are the same for all data sets (these should be added as an overall norm. factor, and not in quadrature, as they affect all data sets the same)
+pAbs_syst = get_norm_syst('pAbs_syst')[0]   #proton absorption systematic relative error (dsig / sig), (0.4951 %)
+tLT_syst = get_norm_syst('tLT_syst')[0]   #total live time systematics (3 %)
+Qtot_syst = get_norm_syst('Qtot_syst')[0]   #total charge systematics (2 %)
+const_norm_syst = np.sqrt(pAbs_syst**2 + tLT_syst**2 + Qtot_syst**2)   #constant norm. systematics to be added as a single value later
+
+#Get norm. syst. errors that change per data set 
+htrk_eff_syst = get_norm_syst('htrk_eff_syst')
+etrk_eff_syst = get_norm_syst('etrk_eff_syst')
+tgtBoil_syst = get_norm_syst('tgtBoil_syst')
+
+#norm_syst_tot = get_norm_syst('total_norm_syst')  #new syst. array (systematcis for each separate set, added in quadrature),  norm_syst_tot[i] -> i=0: 80 MeV setting, i=1: 580 (set1) setting, . . . 
+
+norm_syst_80 = np.sqrt(htrk_eff_syst[0]**2 + etrk_eff_syst[0]**2 + tgtBoil_syst[0]**2)
+norm_syst_580_set1 = np.sqrt(htrk_eff_syst[1]**2 + etrk_eff_syst[1]**2 + tgtBoil_syst[1]**2)
+norm_syst_580_set2 = np.sqrt(htrk_eff_syst[2]**2 + etrk_eff_syst[2]**2 + tgtBoil_syst[2]**2)
+norm_syst_750_set1 = np.sqrt(htrk_eff_syst[3]**2 + etrk_eff_syst[3]**2 + tgtBoil_syst[3]**2)
+norm_syst_750_set2 = np.sqrt(htrk_eff_syst[4]**2 + etrk_eff_syst[4]**2 + tgtBoil_syst[4]**2)
+norm_syst_750_set3 = np.sqrt(htrk_eff_syst[5]**2 + etrk_eff_syst[5]**2 + tgtBoil_syst[5]**2)
+
+ 
 #Loop over all 2d bins
 for ib in range(len(i_b)):
 
@@ -182,19 +253,31 @@ for ib in range(len(i_b)):
 
 
     #=======DATA REDUCED CROSS SECTION WEIGHTED AVERAGE==========
-    red_dataXsec_avg = ma.average(red_dataXsec_m, weights=red_dataXsec_weights)
+    red_dataXsec_avg = ma.average(red_dataXsec_m, weights=red_dataXsec_weights_m)
     red_dataXsec_avg_err = 1. / np.sqrt(np.sum(red_dataXsec_weights_m))    #combined data sets statistical uncertainty per (Pm, thnq) bin
 
+    #Construct array of kinematic uncertainty for each bin
     kin_syst_arr = np.array([kin_syst_80[ib], kin_syst_580_set1[ib], kin_syst_580_set2[ib], kin_syst_750_set1[ib], kin_syst_750_set2[ib], kin_syst_750_set3[ib]])
+    
     #mask elements corresponding to masked dataXsec (We do not want to add in quadrature elements for which there is no Xsec)
     kin_syst_arr_m = ma.masked_array(kin_syst_arr, ma.getmask(red_dataXsec_m))
 
-    #Add kinematic systematics in quadrature
+    #Add masked kinematic systematics array in quadrature
     kin_syst_tot2 = np.sum(kin_syst_arr_m**2)
-    kin_syst_tot = np.sqrt( np.sum(kin_syst_arr_m**2) )
+    kin_syst_tot = np.sqrt( kin_syst_tot2 )
+
+
+    #March 6, 2020
+    #--Construct array of normalization uncertainties--
+    norm_syst_arr = np.array([norm_syst_80, norm_syst_580_set1, norm_syst_580_set2, norm_syst_750_set1, norm_syst_750_set2, norm_syst_750_set3])
+    #mask elements corresponding to masked dataXsec (We do not want to add in quadrature elements for which there is no Xsec)
+    norm_syst_arr_m = ma.masked_array(norm_syst_arr, ma.getmask(red_dataXsec_m))
+    #Add masked norm systematics array in quadrature
+    norm_syst_final2 = np.sum(norm_syst_arr_m**2 + const_norm_syst**2)
+    norm_syst_final = np.sqrt( norm_syst_final2 )
 
     #Add total systematic error in quadrature
-    tot_syst_err = np.sqrt(kin_syst_tot**2 + norm_syst_tot**2)
+    tot_syst_err = np.sqrt(kin_syst_tot**2 + norm_syst_final**2)
 
     #Define relative statistical relative error
     tot_stats_err = red_dataXsec_avg_err/red_dataXsec_avg 
@@ -224,13 +307,106 @@ for ib in range(len(i_b)):
     #==================================
 
     pm_arr = np.array([pm80[ib], pm580_set1[ib], pm580_set2[ib], pm750_set1[ib], pm750_set2[ib], pm750_set3[ib]])
-    pm_arr_m = np.ma.masked_values(pm_arr, 0.)
+    #pm_arr_m = np.ma.masked_values(pm_arr, 0.)
+    #pm_avg = np.ma.average(pm_arr_m) / 1000.
+     
+    pm_arr_m = ma.masked_array(pm_arr, ma.getmask(red_dataXsec_m))     #mask elements for which there is no cross section
+    pm_avg = np.ma.average(pm_arr_m[pm_arr_m!=0.]) / 1000.  # average :: Convert to GeV  this is the true averaged recoil momentum
 
-    pm_avg = np.ma.average(pm_arr_m) / 1000.  #Convert to GeV
 
-    print(xb[ib])
+    #print('pm_bin=',yb[ib])
+    #print('pm_arr=',pm_arr)
+    #print('pm_mask=',pm_arr_m)
+    #print('pm_avg=',pm_avg)
+    
+    #Get average final proton momentum
+    pf_arr = np.array([pf_80[ib], pf_580s1[ib], pf_580s2[ib], pf_750s1[ib], pf_750s2[ib], pf_750s3[ib]])
+    pf_arr_m = np.ma.masked_values(pf_arr, ma.getmask(red_dataXsec_m))
+    pf_avg = np.ma.average(pf_arr_m[pf_arr_m!=0]) / 1000.   #convert to GeV
+    #if(xb[ib]==25):
+    #    print('pm_bin=',yb[ib])                                                                                                                                     
+    #    print('pf_arr=',pf_arr)                                                                                                                                           
+    #    print('pf_mask=',pf_arr_m)                                                                                                                                          
+    #    print('pf_avg>>>=',pf_avg)  
 
-    l="%i  %i  %i  %f   %f   %f   %f   %f   %f   %f   %f   %.12e  %.12e  %.12e  %.12e  %.12e  %.12e \n" % (i_b[ib], i_x[ib], i_y[ib], xb[ib], yb[ib], pm_avg, kin_syst_tot, norm_syst_tot, tot_syst_err, tot_stats_err, tot_err, red_dataXsec_avg, red_dataXsec_avg_err, red_dataXsec_avg_syst_err, red_dataXsec_avg_tot_err, red_pwiaXsec_avg, red_fsiXsec_avg )
+
+    #=======Get Other Averaged Kinematics========
+    Ei_arr = np.array([Ei_80[ib], Ei_580s1[ib], Ei_580s2[ib], Ei_750s1[ib], Ei_750s2[ib], Ei_750s3[ib]])
+    Ei_arr_m = ma.masked_array(Ei_arr, ma.getmask(red_dataXsec_m))
+    Ei_avg = np.average(Ei_arr_m[Ei_arr_m!=0]) / 1000. #convert to GeV
+    #if(xb[ib]==25):                                                                                                                                         
+    #    print('pm_bin=',yb[ib])                                                                                                                                        
+    #    print('Ei_arr=',Ei_arr)                                                                                                                                       
+    #    print('Ei_mask=',Ei_arr_m)                                                                                                                                      
+    #    print('Ei_avg>>>=',Ei_avg)  
+    
+    kf_arr = np.array([kf_80[ib], kf_580s1[ib], kf_580s2[ib], kf_750s1[ib], kf_750s2[ib], kf_750s3[ib]])  
+    kf_arr_m = ma.masked_array(kf_arr, ma.getmask(red_dataXsec_m))                                                                
+    kf_avg = np.average(kf_arr_m[kf_arr_m!=0]) / 1000. #convert to GeV                                                                                             
+    #if(xb[ib]==25):                                                                                                                     
+    #    print('pm_bin=',yb[ib])                                                                              
+    #    print('kf_arr=',kf_arr)                                                                                      
+    #    print('kf_mask=',kf_arr_m)                                                                                                                 
+    #    print('kf_avg>>>=',kf_avg)
+
+    the_arr = np.array([the_80[ib], the_580s1[ib], the_580s2[ib], the_750s1[ib], the_750s2[ib], the_750s3[ib]])
+    the_arr_m = ma.masked_array(the_arr, ma.getmask(red_dataXsec_m)) 
+    the_avg = np.average(the_arr_m[the_arr_m!=0])   #deg
+    #if(xb[ib]==25):                                                                                                                                            
+    #    print('pm_bin=',yb[ib])                                                                                                        
+    #    print('the_arr=',the_arr)                                                                                                      
+    #    print('the_mask=',the_arr_m)                                                                                                                          
+    #    print('the_avg>>>=',the_avg) 
+ 
+    nu_arr = np.array([nu_80[ib], nu_580s1[ib], nu_580s2[ib], nu_750s1[ib], nu_750s2[ib], nu_750s3[ib]])
+    nu_arr_m = ma.masked_array(nu_arr, ma.getmask(red_dataXsec_m)) 
+    nu_avg = np.average(nu_arr_m) / 1000.   
+    #if(xb[ib]==15):                                                                                                                              
+    #    print('pm_bin=',yb[ib])                                                                              
+    #    print('nu_arr=',nu_arr)                                                                                                      
+    #    print('nu_mask=',nu_arr_m)                                                                                                         
+    #    print('nu_avg>>>=',nu_avg)   
+
+    Q2_arr = np.array([Q2_80[ib], Q2_580s1[ib], Q2_580s2[ib], Q2_750s1[ib], Q2_750s2[ib], Q2_750s3[ib]])                                                          
+    Q2_arr_m = ma.masked_array(Q2_arr, ma.getmask(red_dataXsec_m))                                                                                                      
+    Q2_avg = np.average(Q2_arr_m) / 1E6                                                                                                               
+    #if(xb[ib]==15):                                                                                                                                               
+    #    print('pm_bin=',yb[ib])                                                                                                                         
+    #    print('Q2_arr=',Q2_arr)                                                                                                                                    
+    #    print('Q2_mask=',Q2_arr_m)                                                                                                                               
+    #    print('Q2_avg>>>=',Q2_avg)
+
+    q_arr = np.array([q_80[ib], q_580s1[ib], q_580s2[ib], q_750s1[ib], q_750s2[ib], q_750s3[ib]])                                               
+    q_arr_m = ma.masked_array(q_arr, ma.getmask(red_dataXsec_m))                                                                                                                        
+    q_avg = np.average(q_arr_m) / 1000.                                                                                                                                             
+    #if(xb[ib]==35):                                                                                                                                                  
+    #    print('pm_bin=',yb[ib])                                                                                                                                             
+    #    print('q_arr=',q_arr)                                                                                                                        
+    #    print('q_mask=',q_arr_m)                                                                                                                                
+    #    print('q_avg>>>=',q_avg) 
+
+    thpq_cm_arr = np.array([thpq_cm_80[ib], thpq_cm_580s1[ib], thpq_cm_580s2[ib], thpq_cm_750s1[ib], thpq_cm_750s2[ib], thpq_cm_750s3[ib]])                                                    
+    thpq_cm_arr_m = ma.masked_array(thpq_cm_arr, ma.getmask(red_dataXsec_m))                                                                                         
+    thpq_cm_avg = np.average(thpq_cm_arr_m[thpq_cm_arr_m!=180.])                                                                                                                              
+    cthpq_cm_avg = np.cos(thpq_cm_avg*dtr)  #calculate cos(thpq_cm)
+    #if(xb[ib]==25):                                                                                                                                                           
+    #    print('pm_bin=',yb[ib])                                                                                                                                                     
+    #    print('thpq_cm_arr=',thpq_cm_arr)                                                                                                                                                        
+    #    print('thpq_cm_mask=',thpq_cm_arr_m)                                                                                                                                                   
+    #    print('thpq_cm_avg>>>=',thpq_cm_avg)  
+
+    cphi_arr = np.array([cphi_80[ib], cphi_580s1[ib], cphi_580s2[ib], cphi_750s1[ib], cphi_750s2[ib], cphi_750s3[ib]])                
+    cphi_arr_m = ma.masked_array(cphi_arr, ma.getmask(red_dataXsec_m))                                                                              
+    cphi_avg = np.average(cphi_arr_m[cphi_arr_m!=0.])                                                                                                         
+    phi_avg = np.arccos(cphi_avg)*180./np.pi    #calculate phi = arccos(cos(phi)) covert to deg                                                                                                               
+    #if(xb[ib]==25):                                                                                                                                                                        
+    #    print('pm_bin=',yb[ib])                                                                                                                                                            
+    #    print('cphi_arr=',cphi_arr)                                                                                                                                              
+    #    print('cphi_mask=',cphi_arr_m)                                                                                                                                                    
+    #    print('cphi_avg>>>=',cphi_avg)  
+    #    print('phi_avg>>>=',phi_avg)                                                                                                                                                            
+    
+    l="%i  %i  %i  %f   %f   %f   %f  %f   %f   %f   %f   %.12e  %.12e  %.12e  %.12e  %.12e  %.12e  %f  %f  %f  %f  %f  %f  %f  %f  %f \n" % (i_b[ib], i_x[ib], i_y[ib], xb[ib], yb[ib], pm_avg, kin_syst_tot, norm_syst_final, tot_syst_err, tot_stats_err, tot_err, red_dataXsec_avg, red_dataXsec_avg_err, red_dataXsec_avg_syst_err, red_dataXsec_avg_tot_err, red_pwiaXsec_avg, red_fsiXsec_avg, Ei_avg, kf_avg, the_avg, pf_avg, nu_avg, Q2_avg, q_avg, cthpq_cm_avg, cphi_avg)
     fout.write(l)
     
     

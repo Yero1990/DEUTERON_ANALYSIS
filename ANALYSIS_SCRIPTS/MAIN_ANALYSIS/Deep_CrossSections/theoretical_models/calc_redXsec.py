@@ -19,7 +19,7 @@ model_dir = "./FSI_models/"    #PWIA_models or FSI_models
 #-----------------------------------------------------------------
 
 if(model_dir=="./PWIA_models/"):
-    model_name = "3_1_1_0_1"  #2_1_1_0_1 = V18 Potential, 3_1_1_0_1 = CD-Bonn     #!!!!! USER SET BY HAND
+    model_name = "2_1_1_0_1"  #2_1_1_0_1 = V18 Potential, 3_1_1_0_1 = CD-Bonn     #!!!!! USER SET BY HAND
     
     #Create Base Name & Directory to Store Update Files
     if(model_name=="2_1_1_0_1"):
@@ -33,7 +33,7 @@ if(model_dir=="./PWIA_models/"):
         os.mkdir(output_dir_name)
 
 elif(model_dir == "./FSI_models/"):
-    model_name = "3_1_1_0_12"  #2_1_1_0_12 = V18 Potential, 3_1_1_0_12 = CD-Bonn,  12 -> PWIA+ FSI    #USER SET BY HAND
+    model_name = "2_1_1_0_12"  #2_1_1_0_12 = V18 Potential, 3_1_1_0_12 = CD-Bonn,  12 -> PWIA+ FSI    #USER SET BY HAND
 
     #Create Base Name & Directory to Store Update Files
     if(model_name=="2_1_1_0_12"):
@@ -110,11 +110,17 @@ for i, ithnq in enumerate(thnq_arr):
 
         #Open the corresponding file with the K*sigcc1, and match (ix,iy) bins before dividing by K*sigcc1
         avg_kin_dir = "../average_kinematics/Em_final40MeV/"
-        if(pm_set==80):
-            avg_kin_fname = avg_kin_dir + 'pm80_fsi_norad_avgkin.txt'
-        else:
-            avg_kin_fname = avg_kin_dir + 'pm%i_fsi_norad_avgkin_set%i.txt' % (pm_set, data_set)
-         
+        if(model_dir=="./PWIA_models/"):
+            if(pm_set==80):
+                avg_kin_fname = avg_kin_dir + 'pm80_pwia_norad_avgkin.txt'
+            else:
+                avg_kin_fname = avg_kin_dir + 'pm%i_pwia_norad_avgkin_set%i.txt' % (pm_set, data_set)
+        elif(model_dir=="./FSI_models/"):
+            if(pm_set==80):
+                avg_kin_fname = avg_kin_dir + 'pm80_fsi_norad_avgkin.txt'
+            else:
+                avg_kin_fname = avg_kin_dir + 'pm%i_fsi_norad_avgkin_set%i.txt' % (pm_set, data_set)
+
         avg_kin = dfile(avg_kin_fname)
         dklen = len(avg_kin['i_b'])  #get length of array of avgkin file
         pm_k = avg_kin['yb']
@@ -134,10 +140,11 @@ for i, ithnq in enumerate(thnq_arr):
                 #print('avgkin_datafile: pm=',pm_k[k],' thnq=',thnq_k[k])
                 #print('KSig_cc1 = ', Ksig_cc1[k])
                 #Do the Calculations Here ! ! !
-                
+                if(Ksig_cc1[k]==0.0):
+                    continue
                 #Convert Xsec units from nb * GeV ^-1 * sr^-2 to ub * MeV^-1 *sr^-2
-                pwia_theoryXsec[j] = pwia_theoryXsec[j] * nb2ub * (1/GeV2MeV)
-                fsi_theoryXsec[j]  = fsi_theoryXsec[j] * nb2ub * (1/GeV2MeV)
+                pwia_theoryXsec[j] = pwia_theoryXsec[j] * nb2ub * (1./GeV2MeV)
+                fsi_theoryXsec[j]  = fsi_theoryXsec[j] * nb2ub * (1./GeV2MeV)
                 
                 #Calculate Reduced Xsec
                 red_pwiaXsec = pwia_theoryXsec[j] / Ksig_cc1[k]

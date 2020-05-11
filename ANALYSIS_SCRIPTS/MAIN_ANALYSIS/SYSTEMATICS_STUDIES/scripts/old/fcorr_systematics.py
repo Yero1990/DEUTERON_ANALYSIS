@@ -18,7 +18,7 @@ def calc_systematics(study='', stats_thrs=0.):
     #study: 'radiative' or 'binCentering'
 
     #check if directory to store systematics datafiles exists, else creates it.
-    study_dir = "../datafiles/"+study+"_study"
+    study_dir = "./datafiles/"+study+"_study"
     if not os.path.exists(study_dir):
         os.makedirs(study_dir)
         
@@ -57,12 +57,12 @@ def calc_systematics(study='', stats_thrs=0.):
 
 
     #Open File Containing Cross Sections with radiative corrections / radiative + bin-centering corrections
-    fname80       = '../../Deep_CrossSections/bin_centering_corrections/Em40MeV/pm80_laget_bc_corr.txt'
-    fname580_set1 = '../../Deep_CrossSections/bin_centering_corrections/Em40MeV/pm580_laget_bc_corr_set1.txt'
-    fname580_set2 = '../../Deep_CrossSections/bin_centering_corrections/Em40MeV/pm580_laget_bc_corr_set2.txt'
-    fname750_set1 = '../../Deep_CrossSections/bin_centering_corrections/Em40MeV/pm750_laget_bc_corr_set1.txt'
-    fname750_set2 = '../../Deep_CrossSections/bin_centering_corrections/Em40MeV/pm750_laget_bc_corr_set2.txt'
-    fname750_set3 = '../../Deep_CrossSections/bin_centering_corrections/Em40MeV/pm750_laget_bc_corr_set3.txt'
+    fname80       = '../../../Deep_CrossSections/bin_centering_corrections/Em_final40MeV/pm80_laget_bc_corr.txt'
+    fname580_set1 = '../../../Deep_CrossSections/bin_centering_corrections/Em_final40MeV/pm580_laget_bc_corr_set1.txt'
+    fname580_set2 = '../../../Deep_CrossSections/bin_centering_corrections/Em_final40MeV/pm580_laget_bc_corr_set2.txt'
+    fname750_set1 = '../../../Deep_CrossSections/bin_centering_corrections/Em_final40MeV/pm750_laget_bc_corr_set1.txt'
+    fname750_set2 = '../../../Deep_CrossSections/bin_centering_corrections/Em_final40MeV/pm750_laget_bc_corr_set2.txt'
+    fname750_set3 = '../../../Deep_CrossSections/bin_centering_corrections/Em_final40MeV/pm750_laget_bc_corr_set3.txt'
     
     #Get Data Files
     f80 = B.get_file(fname80)
@@ -490,15 +490,15 @@ def main():
     stats_thrs = 0.5  #Statistics Threshold (ONLY use data Xsec which are withih the statistical uncertainty of the mean Xsec)
     
     #Calculate systematics for rad. corr factor
-    study= "radiative"     
-    calc_systematics(study, stats_thrs)
+    #study= "radiative"     
+    #calc_systematics(study, stats_thrs)
 
     #Calculate systematics for bin-centering factor
     study= "binCentering"     
-    calc_systematics(study, stats_thrs)
+    #calc_systematics(study, stats_thrs)
 
     #Plot Rad./BC Corr Roger Barlow Ratios
-    pu.plotRCBC_syst('radiative', stats_thrs)
+    #pu.plotRCBC_syst('radiative', stats_thrs)
     pu.plotRCBC_syst('binCentering', stats_thrs)
 
 if __name__=="__main__":

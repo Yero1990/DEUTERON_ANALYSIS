@@ -695,6 +695,7 @@ class analyze
   TH1F *H_bcmCurrent_total = 0;					     TH1F *H_bcmCurrent_i = 0;                                       
 
   //SYSTEMATICS TOTAL		                                      //SYSTEMATICS ith		     
+  TH1F *H_Em_sys_total = 0;                                           TH1F *H_Em_sys_i = 0;                                                               
   TH1F *H_Em_nuc_sys_total = 0;	     				      TH1F *H_Em_nuc_sys_i = 0;	     
   TH1F *H_hdelta_sys_total = 0;	     				      TH1F *H_hdelta_sys_i = 0;	     
   TH1F *H_edelta_sys_total = 0;	     				      TH1F *H_edelta_sys_i = 0;	     
@@ -704,7 +705,9 @@ class analyze
   TH1F *H_pcal_etotTrkNorm_sys_total = 0;			      TH1F *H_pcal_etotTrkNorm_sys_i = 0;
   TH1F *H_ctime_sys_total = 0;	     				      TH1F *H_ctime_sys_i = 0;	       	          				    
   TH2F *H_hXColl_vs_hYColl_sys_total = 0;			      TH2F *H_hXColl_vs_hYColl_sys_i = 0;
+  TH2F *H_Ztar_vs_Ctime_sys_total = 0;			              TH2F *H_Ztar_vs_Ctime_sys_i = 0;
 
+  
   //Emiss Systematics
   TH1F *H_Pm_sysEm_nominal_total = 0;                                 TH1F *H_Pm_sysEm_nominal_i = 0;
   TH1F *H_Pm_sysEm_loose_total = 0;                                   TH1F *H_Pm_sysEm_loose_i = 0;
@@ -875,6 +878,7 @@ class analyze
 
   //-----------------------------SYSTEMATICS STUDIES HISTOGRAMS-------------------------
 
+  TH1F *H_Em_sys; 
   TH1F *H_Em_nuc_sys;
   TH1F *H_hdelta_sys;
   TH1F *H_edelta_sys;
@@ -884,6 +888,7 @@ class analyze
   TH1F *H_pcal_etotTrkNorm_sys;
   TH1F *H_ctime_sys;
   TH2F *H_hXColl_vs_hYColl_sys;
+  TH2F *H_Ztar_vs_Ctime_sys;
 
   //Missing Momentum used for systematic studies. These will be used to take the data/simc ratio at various cuts
   //Emiss Systematics

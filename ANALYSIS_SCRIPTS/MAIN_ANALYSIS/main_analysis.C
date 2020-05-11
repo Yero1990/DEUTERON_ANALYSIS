@@ -10,7 +10,7 @@ using namespace std;
 int main_analysis(int input)
 {
 
-  //int input;
+  //int input;  root -l : .L main_analysis.C : main_analysis(1) to analyze H(e,e'p)
   string inputCutFileName;
   string runlist_name;
   int pm_set;

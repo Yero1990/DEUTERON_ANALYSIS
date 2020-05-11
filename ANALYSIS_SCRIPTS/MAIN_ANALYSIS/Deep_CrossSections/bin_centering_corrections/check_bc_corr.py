@@ -37,9 +37,9 @@ if not os.path.exists(dir_name):
 
 #Read data file
 if pm_set==80:
-    fname = sys_ext + '/pm%i_laget_bc_corr_systematics.txt' % (pm_set)
+    fname = sys_ext + '/pm%i_laget_bc_corr.txt' % (pm_set)
 else:
-    fname = sys_ext + '/pm%i_laget_bc_corr_set%i_systematics.txt' %(pm_set, data_set)
+    fname = sys_ext + '/pm%i_laget_bc_corr_set%i.txt' %(pm_set, data_set)
 
 f = dfile(fname)
 

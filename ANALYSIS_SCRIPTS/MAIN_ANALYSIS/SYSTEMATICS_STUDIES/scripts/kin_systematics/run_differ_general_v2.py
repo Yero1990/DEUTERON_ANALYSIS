@@ -11,7 +11,7 @@ import os
 import shutil as SU
 
 #load module to calculate norm. systematics
-import norm_systematics_testing as ns
+import norm_systematics as ns
 
 dtr = np.pi/180.
 
@@ -19,15 +19,16 @@ dtr = np.pi/180.
 pm_set = int(sys.argv[1])
 model = sys.argv[2]
 data_set = int(sys.argv[3])
+sys_ext = sys.argv[4]
 
-#Code usage example: ipython run_differ_general_v2.py 580 fsi 1
+#Code usage example: ipython run_differ_general_v2.py 580 fsi 1 sys_ext
 
 
 #--------------CALCULATE NORM. SYSTEMATICS ERROR ON Xsec (Used External Module 'norm_systematics')-----------------
 
 #This code will write the systematic contribution and the quadrature sum of normalization factors as relative error, df/f
 #To get the absolute error to plot, one would have to multiply by the cross section
-ns.get_average_systematics()
+ns.get_average_systematics(sys_ext)
 
 #------------------------------------------------------------------------------------------------------------------
 
@@ -35,7 +36,7 @@ ns.get_average_systematics()
 #----------------------------CALCULATE KINEMATIC SYSTEMATICS ERRORS ON Xsec-----------------------
 
 #average kinematics directory for avg. kin with the nominal cut settings
-avg_kin_dir = '../../../Deep_CrossSections/average_kinematics/Em_final40MeV/'   #'./avg_kin_dir/'
+avg_kin_dir = '../../../Deep_CrossSections/average_kinematics/%s/'%(sys_ext)   #'./avg_kin_dir/'
 results_dir = './kin_syst_results/'
 
 #create input/output filenames for average kinematics to be read/ to write out systematics results

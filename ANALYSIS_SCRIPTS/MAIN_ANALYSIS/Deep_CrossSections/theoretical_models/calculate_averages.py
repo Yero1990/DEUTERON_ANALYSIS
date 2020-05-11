@@ -7,7 +7,7 @@ import averages as av
 
 #----------USER INPUT-------------
 theory = "V18"   #V18 or CD-Bonn
-model = "PWIA"   #FSI or PWIA
+model = "FSI"   #FSI or PWIA
 
 thnq_arr = np.array([5, 15, 25, 35, 45, 55, 65, 75, 85, 95, 105])
 
