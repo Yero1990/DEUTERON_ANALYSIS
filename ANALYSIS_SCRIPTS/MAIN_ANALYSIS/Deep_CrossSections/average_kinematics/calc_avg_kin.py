@@ -222,41 +222,41 @@ for i,acont in enumerate(all.cont):
 
 
       l = "%i %i %i %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %f %i %i %f\n"%( \
-                                                                                                                                  # 0
+                                                                                                                                  # 0 2d bin number
                                                                                                                                   i_bin, \
-                                                                                                                                  # 1
+                                                                                                                                  # 1 
                                                                                                                                   i_xbin, \
                                                                                                                                   # 2
                                                                                                                                   i_ybin, \
-                                                                                                                                  # 3
+                                                                                                                                  # 3 central thnq_bin
                                                                                                                                   thnq_b, \
-                                                                                                                                  # 4
+                                                                                                                                  # 4 central pm_bin
                                                                                                                                   pm_b, \
-                                                                                                                                  # 5
+                                                                                                                                  # 5 avg. beam energy 
                                                                                                                                   Ei, \
-                                                                                                                                  # 6
+                                                                                                                                  # 6 avg. e- momentum
                                                                                                                                   kf, \
-                                                                                                                                  # 7
+                                                                                                                                  # 7 avg. e- angle
                                                                                                                                   the, \
-                                                                                                                                  # 8
+                                                                                                                                  # 8 MC average energy transfer
                                                                                                                                   nu, \
-                                                                                                                                  # 9
+                                                                                                                                  # 9 calc. average energy transer
                                                                                                                                   nu_calc, \
-                                                                                                                                  # 10
+                                                                                                                                  # 10 MC average 4-Momentum tranfer
                                                                                                                                   Q2, \
-                                                                                                                                  # 11
+                                                                                                                                  # 11 calc. average 4-Momentum transfer
                                                                                                                                   Q2_calc, \
-                                                                                                                                  # 12
+                                                                                                                                  # 12 MC average |q| 3-momentum tranfer
                                                                                                                                   q, \
-                                                                                                                                  # 13
+                                                                                                                                  # 13 calc. average |q| 3-momentum transfer
                                                                                                                                   q_calc, \
-                                                                                                                                  # 14
+                                                                                                                                  # 14 calc. average final proton energy (assume proton mass)
                                                                                                                                   Ep, \
-                                                                                                                                  # 15
+                                                                                                                                  # 15 MC average final proton momentum
                                                                                                                                   Pf, \
-                                                                                                                                  # 16
+                                                                                                                                  # 16 MC average missing momentum
                                                                                                                                   Pm, \
-                                                                                                                                  # 17
+                                                                                                                                  # 17 calc. average Missing momentum  (assume deuteron mass)
                                                                                                                                   Pm_calc, \
                                                                                                                                   # 18
                                                                                                                                   En_calc, \

@@ -52,7 +52,14 @@ o = open(output_file,'w')
 # write header
 o.write(header)
 
+# some constants
 dtr = np.pi/180.
+#MeV
+MP = 938.272
+MN = 939.566
+#MD = 1875.6127
+MD = 1875.61
+me = 0.51099 
 
 fm2ub = 1.e4   #fm^2 to ub
 
@@ -99,17 +106,16 @@ cont = B.get_data(f, 'cont')    #2D bin content
 #units are in MeV and deg [convert to radians, as Laget code takes MeV and radians]
 
 th_cm = B.get_data(f, 'th_pq_cm')*dtr     #center of mass in-plane angle between proton and q-vector [rad]
-omega = B.get_data(f,  'omega')           #energy transfer [MeV]
-q = B.get_data(f, 'q_lab')                #magnitude of 3-momentum transfer [MeV]
-Q2 = B.get_data(f, 'Q2_calc')                      #4-Momentum Transfer [MeV^2]
-cphi = B.get_data(f, 'cos_phi')           #Cos(phi) 
+omega = B.get_data(f,  'omega')           #averaged calculated energy transfer [MeV]
+q = B.get_data(f, 'q_lab')                #averaged magnitude of 3-momentum transfer [MeV]
+Q2 = B.get_data(f, 'Q2_calc')             #averaged calculated 4-Momentum Transfer [MeV^2]
+cphi = B.get_data(f, 'cos_phi')           #averaged Cos(phi_pq) : out-of-plane angle between proton and q-vector, determined from SIMC  vertex quantities 
 phi = np.arccos(cphi)                     #phi, out-of-plane angle between the proton and q-vector (angle between reaction-scattering plane) [rad]
-Ei = B.get_data(f, 'Ei')                  #Incident Beam Energy [MeV]
+Ei = B.get_data(f, 'Ei')                  #averaged Incident Beam Energy [MeV]
 GEp = B.get_data(f, 'GEp')                #Proton Electric Form Factor at the avg. kinematics
 GMp = B.get_data(f, 'GMp')                #Proton Magnetic Form Factor at the avg. kinematics
 sigMott = B.get_data(f, 'sigMott')        #Mott cross section at the avg. kinematics
 Ksig_cc1 = B.get_data(f, 'Ksig_cc1')      #Kinematic Factor K * deForest cc1 cross section at the avg. kinematics
-
 
 # DO PWIA
 if use_binary:
@@ -166,19 +172,24 @@ cont = B.get_data(f, 'cont')   #the bin content, however, might be different so 
 #=========  Laget_Xsec_fp_1.f,  get_sigma_laget() Input Parameters =============
 #===============================================================================
 #units are in MeV and deg [convert to radians, as Laget code takes MeV and radians]
-
+#All these quantities are averaged from SIMC or they have been calculated using the assumed masses
 th_cm = B.get_data(f, 'th_pq_cm')*dtr     #center of mass in-plane angle between proton and q-vector [rad]
 omega = B.get_data(f,  'omega')           #energy transfer [MeV]
 q = B.get_data(f, 'q_lab')                #magnitude of 3-momentum transfer [MeV]
 Q2 = B.get_data(f, 'Q2_calc')             #4-Momentum Transfer [MeV^2]
-cphi = B.get_data(f, 'cos_phi')           #Cos(phi) 
+cphi = B.get_data(f, 'cos_phi')           #Cos(phi_pq)  out of plane angle between the proton and q-vector (lab frame)
 phi = np.arccos(cphi)                     #phi, out-of-plane angle between the proton and q-vector (angle between reaction-scattering plane) [rad]
 Ei = B.get_data(f, 'Ei')                  #Incident Beam Energy [MeV]
 GEp = B.get_data(f, 'GEp')                #Proton Electric Form Factor at the avg. kinematics
 GMp = B.get_data(f, 'GMp')                #Proton Magnetic Form Factor at the avg. kinematics
 sigMott = B.get_data(f, 'sigMott')        #Mott cross section at the avg. kinematics
 Ksig_cc1 = B.get_data(f, 'Ksig_cc1')      #deForest cc1 cross section at the avg. kinematics
-
+#Additional averaged kinematics to add
+Pf = B.get_data(f, 'pf')                  #averaged proton final momentum
+pm_avg = B.get_data(f, 'pm')              #averaged calculated missing momentum assuming deuteron proton and neutron mass
+kf = B.get_data(f, 'kf')                  #avergaed final e- momentum
+th_e = B.get_data(f, 'the')               #averaged in-plane electron angle
+xbj = Q2 / (2.*MP*omega)                  #averaged x-Bkorker determined from calculated averaged Q2 and omega
 
 # DO FSI
 if use_binary:
@@ -191,22 +202,49 @@ for i, e0_i in enumerate(Ei):
     # check kinematics
     #print("i = ",i," e0_i= ",e0_i, " Q2= ",Q2[i]," nu= ", omega[i]," th_cm=",th_cm[i], " phi=",phi[i])
     #print "p_rec = ", LX.p_recoil(Q2[i], omega[i], th_cm[i])
-    
+    #create new headers and set them to -1.
     if cont[i]==0.0:
         sig = -1.   
-        output_file.data[i]['fsiXsec']      = -1.
-        output_file.data[i]['fsiGEp']       = -1.
-        output_file.data[i]['fsiGMp']       = -1.
-        output_file.data[i]['fsi_sigMott']  = -1.
-        output_file.data[i]['fsi_Ksig_cc1'] = -1.
+        output_file.data[i]['fsiXsec']      = -1.  #theory FSI Xsec (Paris)
+        output_file.data[i]['fsiGEp']       = -1.  #proton Electric Form Factor
+        output_file.data[i]['fsiGMp']       = -1.  #proton Magnetic Form Factor
+        output_file.data[i]['fsi_sigMott']  = -1.  #mott cross section
+        output_file.data[i]['fsi_Ksig_cc1'] = -1.  #K * f_rec *sig_cc1 
+        #Write averaged kinematics
+        output_file.data[i]['Ei_avg']      = -1.  #averaged incident beam energy  [MeV] 
+        output_file.data[i]['th_pq_cm']      = -1.  #averaged th_pq in cm frame   [deg]
+        output_file.data[i]['omega_avg']        = -1. #average energy transfer    [MeV]
+        output_file.data[i]['q_avg']         = -1.  #average 3-momentum transfer, |q|  [MeV]
+        output_file.data[i]['Q2_avg']        = -1.   #avg. calc. 4-momentum transfer [MeV^2]
+        output_file.data[i]['cphi_pq_avg']    = -1.  #avg. cos(ph_pq) in the lab frame 
+        output_file.data[i]['pf_avg']    = -1.      #avg. final proton momentum [MeV]
+        output_file.data[i]['pm_avg']    = -1.     #avg. missing momentum [MeV]
+        output_file.data[i]['kf_avg']    = -1.     #avg. final e- momentum [MeV]
+        output_file.data[i]['the_avg']    = -1.     #avg. final e- angle [deg]
+        output_file.data[i]['xbj_avg']    = -1.     #avg. X-Bjorken 
+
+        
+
     else:
         # calculate cross sections (returns Xsec in fm^2 sr^-2 MeV^-1 (SIMC is in microbarn.  1 ub = 1e-4 fm^2)
         sig = LX.get_sigma_laget(e0_i,Q2[i],omega[i],th_cm[i],phi[i]) * fm2ub    #convert to (ub sr^-2 MeV^-1)
-        output_file.data[i]['fsiXsec'] = float("%.12e"%(sig))
+        output_file.data[i]['fsiXsec'] = float("%.12e"%(sig))                    #ub sr^-2 MeV^-1
         output_file.data[i]['fsiGEp'] = float("%.6f"%(GEp[i]))
         output_file.data[i]['fsiGMp'] = float("%.6f"%(GMp[i]))
-        output_file.data[i]['fsi_sigMott'] = float("%.6f"%(sigMott[i]))
-        output_file.data[i]['fsi_Ksig_cc1'] = float("%.6f"%(Ksig_cc1[i]))
-
+        output_file.data[i]['fsi_sigMott'] = float("%.6f"%(sigMott[i]))           #ub / sr
+        output_file.data[i]['fsi_Ksig_cc1'] = float("%.6f"%(Ksig_cc1[i]))         # ub MeV^2 / sr^2
+        #Write averaged kinematics quantities 
+        output_file.data[i]['Ei_avg'] = float("%.6f"%(Ei))                    
+        output_file.data[i]['th_pq_cm'] = float("%.6f"%(th_cm))/dtr     
+        output_file.data[i]['omega_avg'] = float("%.6f"%(omega))     
+        output_file.data[i]['q_avg'] = float("%.6f"%(q))
+        output_file.data[i]['Q2_avg'] = float("%.6f"%(Q2))
+        output_file.data[i]['cphi_pq_avg'] = float("%.6f"%(cphi))
+        output_file.data[i]['pf_avg'] = float("%.6f"%(Pf))
+        output_file.data[i]['pm_avg'] = float("%.6f"%(pm_avg))
+        output_file.data[i]['kf_avg'] = float("%.6f"%(kf))
+        output_file.data[i]['the_avg'] = float("%.6f"%(th_e))
+        output_file.data[i]['xbj_avg'] = float("%.6f"%(xbj))
+        
 # Write to File
 output_file.save(fname)

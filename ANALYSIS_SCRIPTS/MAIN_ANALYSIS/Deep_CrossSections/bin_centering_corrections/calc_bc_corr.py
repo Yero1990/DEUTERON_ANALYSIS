@@ -79,18 +79,14 @@ fsi_Ksig_cc1 = B.get_data(ft, 'fsi_Ksig_cc1')
 
 
 #Get Average Xsec  
-pwiaXsec_avg = B.get_data(fa, 'pwiaXsec')                             #PWIA Model Average Xsec (from SIMC)                                                          
-pwiaXsec_avg_err = B.get_data(fa, 'pwiaXsec_err')                                                                                
-
+pwiaXsec_avg = B.get_data(fa, 'pwiaXsec')                             #PWIA Model Average Xsec (from SIMC)                              
+pwiaXsec_avg_err = B.get_data(fa, 'pwiaXsec_err')                                                                
 fsiXsec_avg = B.get_data(fa, 'fsiXsec')                               #FSI Model Average Xsec (from SIMC)
-fsiXsec_avg_err = B.get_data(fa, 'fsiXsec_err') 
-
+fsiXsec_avg_err = B.get_data(fa, 'fsiXsec_err')
 pwiaRC_dataXsec_avg = B.get_data(fa, 'pwiaRC_dataXsec')               #Radiative Corrected Data Xsec Using PWIA model
 pwiaRC_dataXsec_avg_err = B.get_data(fa, 'pwiaRC_dataXsec_err')
-
 fsiRC_dataXsec_avg = B.get_data(fa, 'fsiRC_dataXsec')                 #Radiative Corrected Data Xsec Using FSI model
 fsiRC_dataXsec_avg_err = B.get_data(fa, 'fsiRC_dataXsec_err')
-
 
 #The bin scheme is exactly the same for all data sets and settings. That is, the same number of 2D bins
 
