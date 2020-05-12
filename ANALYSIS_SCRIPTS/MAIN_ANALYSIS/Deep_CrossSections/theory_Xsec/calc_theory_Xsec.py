@@ -164,6 +164,25 @@ output_file.add_key('fsiGEp', 'f')
 output_file.add_key('fsiGMp', 'f')
 output_file.add_key('fsi_sigMott', 'f')
 output_file.add_key('fsi_Ksig_cc1', 'f')
+#Add additional avg. kinematics to output_file header
+output_file.add_key('Ei_avg')     
+output_file.add_key('th_pq_cm')   
+output_file.add_key('omega_avg')  
+output_file.add_key('q_avg')      
+output_file.add_key('Q2_avg')     
+output_file.add_key('cphi_pq_avg')
+output_file.add_key('pf_avg')     
+output_file.add_key('pm_avg')     
+output_file.add_key('kf_avg')     
+output_file.add_key('the_avg')    
+output_file.add_key('xbj_avg')    
+
+
+
+
+
+
+
 
 #NOTE: The PWIA and FSI avg. kin. files bin-numbering must be EXACTLY the same. Therefore, there is no need to read them a second time.
 cont = B.get_data(f, 'cont')   #the bin content, however, might be different so it is read
@@ -188,7 +207,7 @@ Ksig_cc1 = B.get_data(f, 'Ksig_cc1')      #deForest cc1 cross section at the avg
 Pf = B.get_data(f, 'pf')                  #averaged proton final momentum
 pm_avg = B.get_data(f, 'pm')              #averaged calculated missing momentum assuming deuteron proton and neutron mass
 kf = B.get_data(f, 'kf')                  #avergaed final e- momentum
-th_e = B.get_data(f, 'the')               #averaged in-plane electron angle
+th_e = B.get_data(f, 'th_e')               #averaged in-plane electron angle
 xbj = Q2 / (2.*MP*omega)                  #averaged x-Bkorker determined from calculated averaged Q2 and omega
 
 # DO FSI
@@ -234,17 +253,17 @@ for i, e0_i in enumerate(Ei):
         output_file.data[i]['fsi_sigMott'] = float("%.6f"%(sigMott[i]))           #ub / sr
         output_file.data[i]['fsi_Ksig_cc1'] = float("%.6f"%(Ksig_cc1[i]))         # ub MeV^2 / sr^2
         #Write averaged kinematics quantities 
-        output_file.data[i]['Ei_avg'] = float("%.6f"%(Ei))                    
-        output_file.data[i]['th_pq_cm'] = float("%.6f"%(th_cm))/dtr     
-        output_file.data[i]['omega_avg'] = float("%.6f"%(omega))     
-        output_file.data[i]['q_avg'] = float("%.6f"%(q))
-        output_file.data[i]['Q2_avg'] = float("%.6f"%(Q2))
-        output_file.data[i]['cphi_pq_avg'] = float("%.6f"%(cphi))
-        output_file.data[i]['pf_avg'] = float("%.6f"%(Pf))
-        output_file.data[i]['pm_avg'] = float("%.6f"%(pm_avg))
-        output_file.data[i]['kf_avg'] = float("%.6f"%(kf))
-        output_file.data[i]['the_avg'] = float("%.6f"%(th_e))
-        output_file.data[i]['xbj_avg'] = float("%.6f"%(xbj))
+        output_file.data[i]['Ei_avg']     = float("%.6f"%(Ei[i]))                    
+        output_file.data[i]['th_pq_cm']   = float("%.6f"%(th_cm[i]))/dtr     
+        output_file.data[i]['omega_avg']  = float("%.6f"%(omega[i]))     
+        output_file.data[i]['q_avg']      = float("%.6f"%(q[i]))
+        output_file.data[i]['Q2_avg']     = float("%.6f"%(Q2[i]))
+        output_file.data[i]['cphi_pq_avg']= float("%.6f"%(cphi[i]))
+        output_file.data[i]['pf_avg']     = float("%.6f"%(Pf[i]))
+        output_file.data[i]['pm_avg']     = float("%.6f"%(pm_avg[i]))
+        output_file.data[i]['kf_avg']     = float("%.6f"%(kf[i]))
+        output_file.data[i]['the_avg']    = float("%.6f"%(th_e[i]))
+        output_file.data[i]['xbj_avg']    = float("%.6f"%(xbj[i]))
         
 # Write to File
 output_file.save(fname)
