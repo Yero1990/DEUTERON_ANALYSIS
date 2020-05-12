@@ -26,15 +26,31 @@ header = """
 #bc_fact_pwia(fsi):  bin-centering correction factor using PWIA or FSI model
 #pwia(fsi)RC_dataXsec: average data Xsec radiative corrected using PWIA(FSI) model --> study rad. corr systematics  __
 #fsiRC_dataXsec_pwiabc_corr: data Xsec radiative corrected using FSI model and Bin-Center corrected using PWIA model  | these can be used to study bin-centering corr. systematics from model dependency
-#fsiRC_dataXsec_fsibc_corr: data Xsec radiative corrected using FSI model and Bin-Center corrected using FSI model  __|  
+#fsiRC_dataXsec_fsibc_corr: data Xsec radiative corrected using FSI model and Bin-Center corrected using FSI model  __| -->We write FSI bin-center corr. cross section to official table
 #red_dataXsec: reduced data Xsec radiative corrected and bin-center corrected using FSI model (K_sig_cc1 evaluated at FSI avg. kin is used)
 #red_pwiaXsec: reduced theoretical Xsec (K_sig_cc1 evaluated at PWIA avg. kin is used)
 #red_fsiXsec: reduced theoretical Xsec (K_sig_cc1 evaluated at FSI avg. kin is used)                    
 #i_b = 2D bin id number
 #xb = th_nq value at bin center                                                                                                   
-#yb = pmiss value at bin center                                                                        
+#yb = pmiss value at bin center        
+#Averaged Kinemtics Definitions
+#K_sig_cc1  [ub MeV^2 / sr^2]
+#cross sections [ub sr^-2 MeV^-1]
+#reduced cross sections   [ub sr^-2 MeV^-1] / [ub MeV^2 / sr^2] = [MeV]^-3                                                             
+#Ei_avg : averaged beam energy [GeV]
+#kf_avg : averaged final e- momentum [GeV/c]
+#the_avg : averaged e- scattering angle [deg]
+#nu_avg : averaged energy transfer [GeV]
+#q_avg : averaged 3-momentum transfer [GeV/c]
+#Q2_avg : averaged 4-momentum transfer [GeV/c]^2
+#pf_avg : averaged final proton momentum [GeV/c]
+#pm_avg : averaged missing momentum [GeV/c]
+#th_pq_cm : averaged center of mass in-plane angle between proton and q-vector [deg]
+#cphi_pq_avg : cos(phi_pq), where phi_pq is the averaged out of plane angle between (pf, q) or the scattering and reaction planes [deg]
+#xbj_avg : avergaed x-Bjorken scale [unitless]
+
 # current header line:  
-#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ bc_fact_pwia[f,5]/  bc_fact_pwia_err[f,6]/  bc_fact_fsi[f,7]/  bc_fact_fsi_err[f,8]/  pwiaRC_dataXsec[f,9]/  pwiaRC_dataXsec_err[f,10]/  fsiRC_dataXsec[f,11]/   fsiRC_dataXsec_err[f,12]/    fsiRC_dataXsec_pwiabc_corr[f,13]/   fsiRC_dataXsec_pwiabc_corr_err[f,14]/  fsiRC_dataXsec_fsibc_corr[f,15]/  fsiRC_dataXsec_fsibc_corr_err[f,16]/   pwiaXsec_theory[f,17]/   fsiXsec_theory[f,18]/   red_dataXsec[f,19]/   red_dataXsec_err[f,20]/   red_pwiaXsec[f,21]/   red_fsiXsec[f,22]/   pwia_Ksigcc1[f,23]/   fsi_Ksigcc1[f,24]/
+#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/ bc_fact_pwia[f,5]/  bc_fact_pwia_err[f,6]/  bc_fact_fsi[f,7]/  bc_fact_fsi_err[f,8]/  pwiaRC_dataXsec[f,9]/  pwiaRC_dataXsec_err[f,10]/  fsiRC_dataXsec[f,11]/   fsiRC_dataXsec_err[f,12]/    fsiRC_dataXsec_pwiabc_corr[f,13]/   fsiRC_dataXsec_pwiabc_corr_err[f,14]/  fsiRC_dataXsec_fsibc_corr[f,15]/  fsiRC_dataXsec_fsibc_corr_err[f,16]/   pwiaXsec_theory[f,17]/   fsiXsec_theory[f,18]/   red_dataXsec[f,19]/   red_dataXsec_err[f,20]/   red_pwiaXsec[f,21]/   red_fsiXsec[f,22]/   pwia_Ksigcc1[f,23]/   fsi_Ksigcc1[f,24]/  Ei_avg[f,25]/  kf_avg[f,26]/  the_avg[f,27]/  nu_avg[f,28]/  q_avg[f,29]/  Q2_avg[f,30]/   pf_avg[f,31]/   pm_avg[f,32]/   th_pq_cm[f,33]/   cphi_pq_avg[f,34]/   xbj_avg[f,35]/                                                                                                                                                                          
 """
 
 #User Input
@@ -76,6 +92,18 @@ pwiaXsec_theory = B.get_data(ft, 'pwiaXsec')
 fsiXsec_theory = B.get_data(ft, 'fsiXsec') 
 pwia_Ksig_cc1 = B.get_data(ft, 'pwia_Ksig_cc1')    #deForest K*sig_cc1 factor for calculating the reduced cross section
 fsi_Ksig_cc1 = B.get_data(ft, 'fsi_Ksig_cc1')
+#Get Averaged kinematics (corresponding to Laget FSI model)
+Ei_avg = B.get_data(ft, 'Ei_avg') / 1000.    #[GeV]
+kf_avg = B.get_data(ft, 'kf_avg') / 1000.    #[GeV]
+the_avg = B.get_data(ft, 'the_avg')          #[deg]
+nu_avg = B.get_data(ft, 'omega_avg') / 1000. #[GeV]
+q_avg = B.get_data(ft, 'q_avg') / 1000.      #[GeV]
+Q2_avg = B.get_data(ft, 'Q2_avg') / (1.e6)     #[GeV]^2
+pf_avg = B.get_data(ft, 'pf_avg') / 1000.    #[GeV]
+pm_avg = B.get_data(ft, 'pm_avg') / 1000.    #[GeV]
+th_pq_cm = B.get_data(ft, 'th_pq_cm')        #[deg]
+cphi_pq_avg = B.get_data(ft, 'cphi_pq_avg')
+xbj_avg = B.get_data(ft, 'xbj_avg')
 
 
 #Get Average Xsec  
@@ -146,7 +174,7 @@ for i, ib in enumerate(ib_t):
     if pwiaXsec_theory[i]>0. and pwia_Ksig_cc1[i]>0.:
         red_pwiaXsec =  pwiaXsec_theory[i] / pwia_Ksig_cc1[i]
 
-    l= "%i %i %i %f %f %f %f %f %f %.12e %.12e %.12e %.12e %.12e %12e %.12e  %.12e  %.12e  %.12e   %.12e   %.12e   %.12e    %.12e    %f     %f\n"%(ib, ix_t[i], iy_t[i], thnq_t[i], pm_t[i], bc_factor_pwia, bc_factor_pwia_err, bc_factor_fsi, bc_factor_fsi_err, pwiaRC_dataXsec_avg[i], pwiaRC_dataXsec_avg_err[i], fsiRC_dataXsec_avg[i], fsiRC_dataXsec_avg_err[i],  fsiRC_dataXsec_pwiabc_corr,  fsiRC_dataXsec_pwiabc_corr_err,  fsiRC_dataXsec_fsibc_corr,  fsiRC_dataXsec_fsibc_corr_err,  pwiaXsec_theory[i],  fsiXsec_theory[i], red_dataXsec, red_dataXsec_err,  red_pwiaXsec, red_fsiXsec,  pwia_Ksig_cc1[i],  fsi_Ksig_cc1[i]) 
+    l= "%i %i %i %f %f %f %f %f %f %.12e %.12e %.12e %.12e %.12e %12e %.12e  %.12e  %.12e  %.12e   %.12e   %.12e   %.12e    %.12e    %f     %f     %f     %f     %f     %f     %f     %f     %f     %f     %f     %f     %f \n"%(ib, ix_t[i], iy_t[i], thnq_t[i], pm_t[i], bc_factor_pwia, bc_factor_pwia_err, bc_factor_fsi, bc_factor_fsi_err, pwiaRC_dataXsec_avg[i], pwiaRC_dataXsec_avg_err[i], fsiRC_dataXsec_avg[i], fsiRC_dataXsec_avg_err[i],  fsiRC_dataXsec_pwiabc_corr,  fsiRC_dataXsec_pwiabc_corr_err,  fsiRC_dataXsec_fsibc_corr,  fsiRC_dataXsec_fsibc_corr_err,  pwiaXsec_theory[i],  fsiXsec_theory[i], red_dataXsec, red_dataXsec_err,  red_pwiaXsec, red_fsiXsec,  pwia_Ksig_cc1[i],  fsi_Ksig_cc1[i], Ei_avg[i], kf_avg[i], the_avg[i], nu_avg[i], q_avg[i], Q2_avg[i], pf_avg[i], pm_avg[i], th_pq_cm[i], cphi_pq_avg[i], xbj_avg[i])               
     o.write(l)
 
 o.close()
