@@ -56,7 +56,7 @@ void get_elastic(TString target, Double_t Ebeam, Double_t theta_elec)
   
   if(target=="h") {m_targ = m_p;}
   else if(target=="c") {m_targ = m_c;}
-
+  else if(target=="d") {m_targ = m_d;} 
   E_beam = Ebeam;
   theta_e = theta_elec;
 

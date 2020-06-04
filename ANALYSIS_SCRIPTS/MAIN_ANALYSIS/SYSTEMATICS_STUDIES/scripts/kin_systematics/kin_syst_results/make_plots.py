@@ -47,7 +47,7 @@ def plot_kin_syst():
     
         B.pl.xlim(0, 0.3)
         B.pl.ylim(-20,20)
-        B.pl.xlabel('Neutron Recoil Momenta [GeV]')
+        B.pl.xlabel('Neutron Recoil Momenta [GeV/c]')
         B.pl.ylabel(r'Relative Error')
         B.pl.title(r'Relative Error (80MeV) $\theta_{nq}:(%i, %i)$'%(th_nq_min, th_nq_max))
         B.pl.legend()
@@ -126,7 +126,7 @@ def plot_derivative(pm_set=0, model='', data_set=0):
             B.pl.xlim(0, 0.5)
         else:
             B.pl.xlim(0.4, 1.2)
-        B.pl.xlabel(r'$p_{\mathrm{r}}$ [GeV]', fontsize=16)
+        B.pl.xlabel(r'$p_{\mathrm{r}}$ [GeV/c]', fontsize=16)
         B.pl.ylabel(r'$\delta\sigma_{\mathrm{Laget,fsi}}$ [\%/mrad or \%/MeV]', fontsize=16)
         B.pl.title(r'Cross Section Derivatives: %i MeV (set%i), $\theta_{nq}=%i\pm5^{\circ}$'%(pm_set, data_set, ithnq), fontsize=15)
         B.pl.xticks(fontsize=14)
@@ -143,26 +143,26 @@ def plot_derivative(pm_set=0, model='', data_set=0):
         fig2 = B.pl.figure(i+1, figsize=(8,6))
         B.pl.clf()
 
-        B.plot_exp(pm[thnq==ithnq], y, sig_the[thnq==ithnq], marker='o', color='black', label=r'$d\sigma_{\theta_{e}}$')
+        B.plot_exp(pm[thnq==ithnq], y, sig_the[thnq==ithnq], marker='o', color='black', label=r'$d\sigma_{\theta_{e}}$', zorder=2)
         #B.plot_exp(pm[thnq==ithnq], y, sig_phe[thnq==ithnq], marker='s', color='red', label=r'$d\sigma_{\phi_{e}}$')
-        B.plot_exp(pm[thnq==ithnq], y, sig_thp[thnq==ithnq], marker='o', color='blue', label=r'$d\sigma_{\theta_{p}}$')
+        B.plot_exp(pm[thnq==ithnq], y, sig_thp[thnq==ithnq], marker='o', color='blue', label=r'$d\sigma_{\theta_{p}}$', zorder=2)
         #B.plot_exp(pm[thnq==ithnq], y, sig_php[thnq==ithnq], marker='<', color='green', label=r'$d\sigma_{\phi_{p}}$')
         #B.plot_exp(pm[thnq==ithnq], y, sig_thb[thnq==ithnq], marker='v', color='cyan', label=r'$d\sigma_{\theta_{b}}$')
         #B.plot_exp(pm[thnq==ithnq], y, sig_phb[thnq==ithnq], marker='>', color='magenta', label=r'$d\sigma_{\phi_{b}}$')
         
-        B.plot_exp(pm[thnq==ithnq], y, sig_ef[thnq==ithnq], marker='o', color='blueviolet', label=r'$d\sigma_{E_{f}}$')
-        B.plot_exp(pm[thnq==ithnq], y, sig_E[thnq==ithnq], marker='o', color='orange', label=r'$d\sigma_{E_{b}}$')
+        B.plot_exp(pm[thnq==ithnq], y, sig_ef[thnq==ithnq], marker='o', color='blueviolet', label=r'$d\sigma_{k_{\mathrm{f}}}$', zorder=2)
+        B.plot_exp(pm[thnq==ithnq], y, sig_E[thnq==ithnq], marker='o', color='orange', label=r'$d\sigma_{E_{\mathrm{b}}}$', zorder=2)
 
         #Plot COrrelated Errors
-        B.plot_exp(pm[thnq==ithnq], y, sig_the_thp[thnq==ithnq], marker='o', color='red', label=r'$[d\sigma_{\theta_{e}},d\sigma_{\theta_{p}}]$')
-        B.plot_exp(pm[thnq==ithnq], y, sig_the_Ef[thnq==ithnq], marker='o', color='green', label=r'$[d\sigma_{\theta_{e}}, dE_{f}]$')
-        B.plot_exp(pm[thnq==ithnq], y, sig_the_Eb[thnq==ithnq], marker='o', color='cyan', label=r'$[d\sigma_{\theta_{e}}, dE_{b}]$')
-        B.plot_exp(pm[thnq==ithnq], y, sig_thp_Ef[thnq==ithnq], marker='o', color='magenta', label=r'$[d\sigma_{\theta_{p}}, dE_{f}]$')
-        B.plot_exp(pm[thnq==ithnq], y, sig_thp_Eb[thnq==ithnq], marker='o', color='Maroon', label=r'$[d\sigma_{\theta_{p}}, dE_{b}]$')
-        B.plot_exp(pm[thnq==ithnq], y, sig_Ef_Eb[thnq==ithnq], marker='o', color='navy', label=r'$[dE_{f}, dE_{b}]$')
+        B.plot_exp(pm[thnq==ithnq], y, sig_the_thp[thnq==ithnq], marker='o', color='grey', label=r'$[d\sigma_{\theta_{e}},d\sigma_{\theta_{p}}]$', zorder=3)
+        B.plot_exp(pm[thnq==ithnq], y, sig_the_Ef[thnq==ithnq], marker='o', color='green', label=r'$[d\sigma_{\theta_{e}}, dk_{\mathrm{f}}]$', zorder=3)
+        B.plot_exp(pm[thnq==ithnq], y, sig_the_Eb[thnq==ithnq], marker='o', color='cyan', label=r'$[d\sigma_{\theta_{e}}, dE_{\mathrm{b}}]$', zorder=3)
+        B.plot_exp(pm[thnq==ithnq], y, sig_thp_Ef[thnq==ithnq], marker='o', color='magenta', label=r'$[d\sigma_{\theta_{p}}, dk_{\mathrm{f}}]$', zorder=3)
+        B.plot_exp(pm[thnq==ithnq], y, sig_thp_Eb[thnq==ithnq], marker='o', color='Maroon', label=r'$[d\sigma_{\theta_{p}}, dE_{\mathrm{b}}]$', zorder=3)
+        B.plot_exp(pm[thnq==ithnq], y, sig_Ef_Eb[thnq==ithnq], marker='o', color='navy', label=r'$[dk_{\mathrm{f}}, dE_{\mathrm{b}}]$', zorder=3)
 
 
-        eb = B.plot_exp(pm[thnq==ithnq], y, sig_tot[thnq==ithnq], marker='8', color='grey', label=r'$d\sigma^{\mathrm{kin}}_{\mathrm{tot}}$')
+        eb = B.plot_exp(pm[thnq==ithnq], y, sig_tot[thnq==ithnq], marker='8', color='red', label=r'$d\sigma^{\mathrm{kin}}_{\mathrm{tot}}$', zorder=4)
         eb[-1][0].set_linestyle('--')
         
         if(pm_set==80):
@@ -171,17 +171,17 @@ def plot_derivative(pm_set=0, model='', data_set=0):
         else:
             B.pl.xlim(0.4, 1.2)
             B.pl.ylim(-15, 15)
-        B.pl.xlabel('$p_{\mathrm{r}}$ [GeV]', fontsize=16)
-        B.pl.ylabel(r'd$\sigma^{\mathrm{kin}}$ [\%]', fontsize=16)
+        B.pl.xlabel('$p_{\mathrm{r}}$ [GeV/c]', fontsize=16)
+        B.pl.ylabel(r'$\delta\sigma^{\mathrm{kin}}$ [\%]', fontsize=16)
         B.pl.title(r'Kinematic Systematic Errors: %i MeV (set%i), $\theta_{nq}=%i\pm5^{\circ}$'%(pm_set, data_set, ithnq), fontsize=15)
         B.pl.xticks(fontsize=14)
         B.pl.yticks(fontsize=14)
         B.pl.legend(ncol=3, loc='upper left', fontsize=14, prop={'size': 12}, markerscale=1.5, frameon=True, framealpha=1.0)
-        if(pm_set==80):
-            B.pl.savefig('./kin_syst_contributions_pm%i_thnq%i.pdf'%(pm_set, ithnq))
-        else:
-            B.pl.savefig('./kin_syst_contributions_pm%iset%i_thnq%i.pdf'%(pm_set, data_set, ithnq))
-
+        #if(pm_set==80):
+        #    B.pl.savefig('./kin_syst_contributions_pm%i_thnq%i.pdf'%(pm_set, ithnq))
+        #else:
+        #    B.pl.savefig('./kin_syst_contributions_pm%iset%i_thnq%i.pdf'%(pm_set, data_set, ithnq))
+        B.pl.show()
        
 
       

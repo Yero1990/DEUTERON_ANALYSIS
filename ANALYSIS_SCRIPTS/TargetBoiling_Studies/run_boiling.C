@@ -134,7 +134,11 @@ void get_boiling(Int_t runNum, Double_t &set_current, Double_t &avg_current_bcm4
 
 
   //Created and Read Rootfile
-  TString filename=Form("../../../ROOTfiles/hms_replay_tgt_boiling_%d_-1.root", runNum);
+
+  //Casey-Morean target boiling files
+  //TString filename=Form("/volatile/hallc/xem2/abishek/ROOTfiles/casey_boiling/hms_replay_production_%d_-1.root", runNum);
+  
+  TString filename=Form("../../../ROOTfiles/hms_replay_tgt_boiling_%d_-1.root", runNum); 
   
   TFile *file = new TFile(filename);
   

@@ -2,20 +2,20 @@
 *************************
  Electron Kinematics 
 *************************
-Beam Energy: 3.8334 GeV
-e- Scattered Energy = 2.83286 GeV
-e- Scattered Angle = 23.999 deg 
-Energy Transfer (E-E') = 1.00054 GeV
-Q2 = 1.87755 GeV2
+Beam Energy: 10.6005 GeV
+e- Scattered Energy = 5.14956 GeV
+e- Scattered Angle = 25 deg 
+Energy Transfer (E-E') = 5.45094 GeV
+Q2 = 10.2289 GeV2
 B-jorken X = 1
-Beam Momentum = 3.8334 GeV/c
-e-Scattered Momentum = 2.83286 GeV/c
+Beam Momentum = 10.6005 GeV/c
+e-Scattered Momentum = 5.14956 GeV/c
 *************************
  
 *************************
  Proton Kinematics 
 *************************
-p-Scattered Energy = 1.93881 GeV
-p-Scattered Momentum = 1.69665 GeV/c
-p-Scattered Angle = 42.7728 deg 
+p-Scattered Energy = 6.38921 GeV
+p-Scattered Momentum = 6.31994 GeV/c
+p-Scattered Angle = 20.1424 deg 
 *************************q
