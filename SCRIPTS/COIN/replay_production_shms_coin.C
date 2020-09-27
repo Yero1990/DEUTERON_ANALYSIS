@@ -1,4 +1,4 @@
-void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const char* ftype="heep_check") {
+void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const char* ftype="al_dummy") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {
@@ -38,9 +38,9 @@ void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const
   //----------------------------------------
   //------------BCM Current Module----------
 
-  ifstream pbcmFile;                                                                                
-  TString pbcmParamFile = Form("DEUTERON_ANALYSIS/PARAM/SHMS/BCM/Pbcmcurrent_%d.param",  RunNumber);   
-  pbcmFile.open(pbcmParamFile);   
+  //ifstream pbcmFile;                                                                                
+  //TString pbcmParamFile = Form("DEUTERON_ANALYSIS/PARAM/SHMS/BCM/Pbcmcurrent_%d.param",  RunNumber);   
+  //pbcmFile.open(pbcmParamFile);   
 
   //-----------------------------------------
 
@@ -110,6 +110,7 @@ void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const
   THcHodoEff* peff = new THcHodoEff("phodeff", "SHMS hodo efficiency", "P.hod");
   gHaPhysics->Add(peff);   
 
+  /*
  //BCM CUrrent Module
   
     if (pbcmFile.is_open())                                                        
@@ -122,7 +123,7 @@ void replay_production_shms_coin (Int_t RunNumber = 0, Int_t MaxEvent = 0, const
     {                                                                                                    
       cout << "SHMS BCM Current Module will NOT be loaded . . ." << endl;                               
     } 
-  
+  */
 
   // Add event handler for prestart event 125.
   THcConfigEvtHandler* ev125 = new THcConfigEvtHandler("HC", "Config Event type 125");

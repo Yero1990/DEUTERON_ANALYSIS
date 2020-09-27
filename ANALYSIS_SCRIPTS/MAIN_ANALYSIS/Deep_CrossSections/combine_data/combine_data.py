@@ -58,7 +58,7 @@ header = """
 #relative errors df/f=dsig/sig: kin_syst_tot (kinematic systematics),  norm_syst_tot (constant, norm. syst.)
 # current header line: all averaged kinematics are either in GeV or deg : Ei_avg (beam energy), kf_avg(final e- momentum),  the_avg(final e- angle), pf_avg(final proton momentum),
 # nu_avg(energy transfer, Ei-kf), Q2_avg(4-momentum transfer, GeV2), q_avg(|qlab|, magnitude of 3-momentum transfer), cthpq_cm_avg(c.o.mass angle between proton and qlab), cphi_avg(out-of-plane angle between proton and qlab)
-#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/  pm_avg[f,5]/  kin_syst_tot[f,6]/  norm_syst_tot[f,7]/  tot_syst_err[f,8]/  tot_stats_err[f,9]/  tot_err[f,10]/   red_dataXsec_avg[f,11]/   red_dataXsec_avg_err[f,12]/  red_dataXsec_avg_syst_err[f,13]/   red_dataXsec_avg_tot_err[f,14]/  red_pwiaXsec_avg[f,15]/ red_fsiXsec_avg[f,16]/  Ei_avg[f,17]/   kf_avg[f,18]/   the_avg[f,19]/   pf_avg[f,20]/  nu_avg[f,21]/  Q2_avg[f,22]/  q_avg[f,23]/  cthpq_cm_avg[f,24]/  cphi_avg[f,25]/   
+#! i_b[i,0]/ i_x[i,1]/ i_y[i,2]/ xb[f,3]/ yb[f,4]/  pm_avg[f,5]/  kin_syst_tot[f,6]/  norm_syst_tot[f,7]/  tot_syst_err[f,8]/  tot_stats_err[f,9]/  tot_err[f,10]/   red_dataXsec_avg[f,11]/   red_dataXsec_avg_err[f,12]/  red_dataXsec_avg_syst_err[f,13]/   red_dataXsec_avg_tot_err[f,14]/  red_pwiaXsec_avg[f,15]/ red_fsiXsec_avg[f,16]/   
 """
 fout.write(header)
 
@@ -224,10 +224,18 @@ tLT_syst = get_norm_syst('tLT_syst')[0]   #total live time systematics (3 %)
 Qtot_syst = get_norm_syst('Qtot_syst')[0]   #total charge systematics (2 %)
 const_norm_syst = np.sqrt(pAbs_syst**2 + tLT_syst**2 + Qtot_syst**2)   #constant norm. systematics to be added as a single value later
 
+print('pAbs_syst = ',pAbs_syst)
+print('tLT_syst = ', tLT_syst)
+print('Qtot_syst = ', Qtot_syst)
+print('const_norm_syst = ', const_norm_syst)
+
 #Get norm. syst. errors that change per data set 
 htrk_eff_syst = get_norm_syst('htrk_eff_syst')
 etrk_eff_syst = get_norm_syst('etrk_eff_syst')
 tgtBoil_syst = get_norm_syst('tgtBoil_syst')
+print('htrk_eff_syst = ',htrk_eff_syst)
+print('etrk_eff_syst = ',etrk_eff_syst)
+print('tgtBoil_syst = ',tgtBoil_syst)
 
 #norm_syst_tot = get_norm_syst('total_norm_syst')  #new syst. array (systematcis for each separate set, added in quadrature),  norm_syst_tot[i] -> i=0: 80 MeV setting, i=1: 580 (set1) setting, . . . 
 
@@ -237,8 +245,13 @@ norm_syst_580_set2 = np.sqrt(htrk_eff_syst[2]**2 + etrk_eff_syst[2]**2 + tgtBoil
 norm_syst_750_set1 = np.sqrt(htrk_eff_syst[3]**2 + etrk_eff_syst[3]**2 + tgtBoil_syst[3]**2)
 norm_syst_750_set2 = np.sqrt(htrk_eff_syst[4]**2 + etrk_eff_syst[4]**2 + tgtBoil_syst[4]**2)
 norm_syst_750_set3 = np.sqrt(htrk_eff_syst[5]**2 + etrk_eff_syst[5]**2 + tgtBoil_syst[5]**2)
+print('norm_syst_80 = ', norm_syst_80 )
+print('norm_syst_580_set1 = ', norm_syst_580_set1 ) 
+print('norm_syst_580_set2 = ', norm_syst_580_set2 )       
+print('norm_syst_750_set1 = ', norm_syst_750_set1 )                                                                                                                                       
+print('norm_syst_750_set2 = ', norm_syst_750_set2 ) 
+print('norm_syst_750_set3 = ', norm_syst_750_set3 )                                                                                                                                                     
 
- 
 #Loop over all 2d bins
 for ib in range(len(i_b)):
 
@@ -270,14 +283,35 @@ for ib in range(len(i_b)):
     #March 6, 2020
     #--Construct array of normalization uncertainties--
     norm_syst_arr = np.array([norm_syst_80, norm_syst_580_set1, norm_syst_580_set2, norm_syst_750_set1, norm_syst_750_set2, norm_syst_750_set3])
+    #print('norm_syst_arr = ', norm_syst_arr)
+    #print('const_norm_syst = ', const_norm_syst)
     #mask elements corresponding to masked dataXsec (We do not want to add in quadrature elements for which there is no Xsec)
     norm_syst_arr_m = ma.masked_array(norm_syst_arr, ma.getmask(red_dataXsec_m))
     #Add masked norm systematics array in quadrature
     norm_syst_final2 = np.sum(norm_syst_arr_m**2 + const_norm_syst**2)
     norm_syst_final = np.sqrt( norm_syst_final2 )
 
+    norm_syst_final2_corr = np.sum(norm_syst_arr_m**2) + const_norm_syst**2
+    norm_syst_final_corr = np.sqrt( norm_syst_final2_corr )        
+
+    if norm_syst_final > 0.08:
+        print('------WRONG WAY-------------')
+        print('norm_syst_arr_m = ',norm_syst_arr_m)
+        print('const_norm_syst = ',const_norm_syst)
+        print('norm_syst_arr_m**2 + const_norm_syst**2 = ', norm_syst_arr_m**2 + const_norm_syst**2)
+        print('norm_syst_final2 = ', norm_syst_final2 )
+        print('norm_syst_final = ', norm_syst_final )     
+
+        print('------RIGHT WAY-------------')                                                                                                                                                       
+        print('norm_syst_arr_m = ',norm_syst_arr_m)                                                                                                                                                                      
+        print('const_norm_syst = ',const_norm_syst)                                                                                                                                                                      
+        print('norm_syst_arr_m**2 = ', norm_syst_arr_m**2)                                                                                                                    
+        print('np.sum(norm_syst_arr_m**2) + const_norm_syst**2 = ', norm_syst_final2_corr )                                                                                                                          
+        print('norm_syst_final_correct = ', norm_syst_final_corr )  
+
+    #print('norm_syst_final=',norm_syst_final)
     #Add total systematic error in quadrature
-    tot_syst_err = np.sqrt(kin_syst_tot**2 + norm_syst_final**2)
+    tot_syst_err = np.sqrt(kin_syst_tot**2 + norm_syst_final_corr**2)
 
     #Define relative statistical relative error
     tot_stats_err = red_dataXsec_avg_err/red_dataXsec_avg 
@@ -406,7 +440,7 @@ for ib in range(len(i_b)):
     #    print('cphi_avg>>>=',cphi_avg)  
     #    print('phi_avg>>>=',phi_avg)                                                                                                                                                            
     
-    l="%i  %i  %i  %f   %f   %f   %f  %f   %f   %f   %f   %.12e  %.12e  %.12e  %.12e  %.12e  %.12e  %f  %f  %f  %f  %f  %f  %f  %f  %f \n" % (i_b[ib], i_x[ib], i_y[ib], xb[ib], yb[ib], pm_avg, kin_syst_tot, norm_syst_final, tot_syst_err, tot_stats_err, tot_err, red_dataXsec_avg, red_dataXsec_avg_err, red_dataXsec_avg_syst_err, red_dataXsec_avg_tot_err, red_pwiaXsec_avg, red_fsiXsec_avg, Ei_avg, kf_avg, the_avg, pf_avg, nu_avg, Q2_avg, q_avg, cthpq_cm_avg, cphi_avg)
+    l="%i  %i  %i  %f   %f   %f   %f  %f   %f   %f   %f   %.12e  %.12e  %.12e  %.12e  %.12e  %.12e\n" % (i_b[ib], i_x[ib], i_y[ib], xb[ib], yb[ib], pm_avg, kin_syst_tot, norm_syst_final_corr, tot_syst_err, tot_stats_err, tot_err, red_dataXsec_avg, red_dataXsec_avg_err, red_dataXsec_avg_syst_err, red_dataXsec_avg_tot_err, red_pwiaXsec_avg, red_fsiXsec_avg)
     fout.write(l)
     
     

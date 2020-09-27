@@ -1,3 +1,6 @@
+#include "DEUTERON_ANALYSIS/DEF-files/HMS/HMS_PedDefault.def"
+#include "DEUTERON_ANALYSIS/DEF-files/SHMS/SHMS_PedDefault.def"
+
 block T.coin.*FADC_TREF*
 block T.coin.*tdcTimeRaw*
 block T.coin.*Mult*
@@ -7,10 +10,12 @@ block H.cer.*Mult*
 block H.dc.*rawtdc*
 block H.dc.*nhit*
 block H.dc.*ntrack*
+block H.dc.*RefTime*
 block H.hod.*AdcTdcDiffTime*
 block H.hod.*TdcTime*
 block H.hod.*starttime*
 block H.hod.*Mult*
+block H.hod.*RefTime*
 block H.cal.*AdcTdcDiffTime*
 block H.cal.*Mult*
 block H.cal.*PulseTime*
@@ -22,10 +27,12 @@ block P.ngcer.*Mult*
 block P.dc.*rawtdc*
 block P.dc.*nhit*
 block P.dc.*ntrack*
+block P.dc.*RefTime*
 block P.hod.*AdcTdcDiffTime*
 block P.hod.*TdcTime*
 block P.hod.*starttime*
 block P.hod.*Mult*
+block P.hod.*RefTime*
 block P.cal.*AdcTdcDiffTime*
 block P.cal.*AdcHits*
 block P.cal.*Mult*

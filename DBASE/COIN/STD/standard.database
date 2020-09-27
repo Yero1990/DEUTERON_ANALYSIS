@@ -7,7 +7,7 @@ g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/COIN/GEN/default_det_calib_files.
 g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/COIN/GEN/det_calib_1722.param"
 1920
 g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/COIN/GEN/det_calib_1920.param"
-3259
+3252-3259
 g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/COIN/GEN/det_calib_3259.param"
 3264
 g_ctp_calib_filename ="DEUTERON_ANALYSIS/DBASE/COIN/GEN/det_calib_3289.param"

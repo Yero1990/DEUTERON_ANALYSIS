@@ -1,9 +1,7 @@
 #****************************
-#H(e,e'p) Check Definitions *
+#Al dummy Check Definitions *
 #****************************
 
-#include "DEUTERON_ANALYSIS/DEF-files/HMS/HMS_PedDefault.def"                                                     
-#include "DEUTERON_ANALYSIS/DEF-files/SHMS/SHMS_PedDefault.def"    
 
 #BCM Current Module
 block H.bcm*

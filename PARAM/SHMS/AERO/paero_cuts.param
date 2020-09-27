@@ -25,3 +25,5 @@ paero_adcNegTimeWindowMin = -1000., -1000., -1000., -1000., -1000., -1000., -100
 
 paero_adcPosTimeWindowMax = 1000., 1000., 1000., 1000., 1000., 1000., 1000.
 paero_adcNegTimeWindowMax = 1000., 1000., 1000., 1000., 1000., 1000., 1000.
+
+paero_PedPosDefault= 2034, 2034, 1937, 1938, 1910, 1859, 1987

@@ -28,3 +28,4 @@ hcer_adcTimeWindowMax = 105., 110.
 
 ; NPE Threshold for good hit (for measureing effic.)
 hcer_npe_thresh = 0.5
+hcer_PedDefault= 2161, 1940

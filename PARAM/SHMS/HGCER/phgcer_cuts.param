@@ -27,3 +27,6 @@ phgcer_adcTimeWindowMax = 40.00, 40.00, 40.00, 40.00
 
 ; NPE Threshold for "good" hit (for measureing effic.)
 phgcer_npe_thresh = 0.5
+
+; pedestal cut (April 2020 CHANGES to hcana)
+phgcer_PedDefault= 2083, 2143, 2311, 1979
