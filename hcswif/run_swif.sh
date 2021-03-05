@@ -5,14 +5,15 @@
 
 #workflow_name="d2_highPmiss_FULL"
 #workflow_name="SHMS_LH2_boiling_studies"
-#workflow_name="SHMS_boiling_studies"
+workflow_name="HMS_boiling_studies"
 #workflow_name="deuteron_3289"
-workflow_name="Al_dummy"
+#workflow_name="Al_dummy"
 
 #runlist_name="current_prot.data"
 
 #runlist_name="h2_Pabs_shms.dat"
-runlist_name="runlists/Al.dat"
+#runlist_name="runlists/Al.dat"
+runlist_name="runlists/boiling_runs.txt"
 
 #-------April 2018, Boiling STudies-----
 #runlist_name="LH2_boiling_hms_Apr_02_2018.dat"
@@ -35,22 +36,22 @@ runlist_name="runlists/Al.dat"
 
 #Various optional flags to add to hcswif workflow
 mode=" --mode replay "
-spec=" --spectrometer COIN "
+#spec=" --spectrometer COIN "
 #spec=" --spectrometer SHMS_COIN "
-#spec=" --spectrometer HMS_ALL "
+spec=" --spectrometer HMS_ALL "
 #spec=" --spectrometer SHMS_ALL "
 time=" --time 172800"
 events="--events -1"
 range="--run 3377"
 filelist=" --run file $runlist_name "
-replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C"     
+#replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_coin_pElec_hProt.C"     
 #replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_shms_coin.C" 
 #replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/COIN/replay_production_coin_hElec_pProt.C "
-#replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/HMS/replay_hms.C " 
+replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/HMS/replay_hms.C" 
 #replay_script=" --replay /u/group/E12-10-003/cyero/hallc_replay/DEUTERON_ANALYSIS/SCRIPTS/SHMS/replay_shms.C " 
 disk_usage=" --disk 1000000000 "   #in bytes (or 1 Gb default)
 ram="--ram 1000000000 "
-cpu_cores="--cpu 2"   #number of cpu cores requested 
+cpu_cores="--cpu 8"   #number of cpu cores requested 
 project=" --project c-comm2017 "
 workflow=" --name $workflow_name"
 

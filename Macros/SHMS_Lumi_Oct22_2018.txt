@@ -1,0 +1,13 @@
+#SHMS Lumi Scan, Ps2=0 (SHMS EL-REAL), rest=-1 (Oct. 22, 2018) -- buffer level 10
+#ROOTfiles: /volatile/hallc/comm2017/mkjones/ROOTfiles/coin_replay_production_%d_10000024.root
+#Reportfiles: /lustre19/expphy/volatile/hallc/comm2017/mkjones/REPORT_OUTPUT/repla
+5347  
+5348
+5349
+5350
+5351 
+5352
+5353 
+5354  
+5361
+5362

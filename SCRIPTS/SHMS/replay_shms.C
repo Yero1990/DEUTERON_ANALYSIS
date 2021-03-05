@@ -1,4 +1,4 @@
-void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="timeWin_check") {
+void replay_shms (Int_t RunNumber = 0, Int_t MaxEvent = 0,const char* ftype="tgt_boiling") {
 
   // Get RunNumber and MaxEvent if not provided.
   if(RunNumber == 0) {

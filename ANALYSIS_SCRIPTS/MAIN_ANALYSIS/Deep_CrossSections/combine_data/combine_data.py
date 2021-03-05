@@ -133,6 +133,12 @@ def get_norm_syst(header_name):
     data = f[header_name]   
     return data
 
+#Target wall and spectrometer aceptance contributions
+#relative error on cross sections will be added quadratically to normalization (October, 19, 2020)
+tgt_wall_err = 0.029   #target wall contributes at most 2.9 % to the yield (integrated over all thnq,)
+spec_acc_err = 0.014   #spectrometer acceptance contributes 1.4 % to the total cross section (study by M.K.Jones)
+
+
 #Get bin information from each file
 f1  = dfile(get_fname(80, 1))
 i_b = f1['i_b']
@@ -222,7 +228,7 @@ data_set = get_norm_syst('set')
 pAbs_syst = get_norm_syst('pAbs_syst')[0]   #proton absorption systematic relative error (dsig / sig), (0.4951 %)
 tLT_syst = get_norm_syst('tLT_syst')[0]   #total live time systematics (3 %)
 Qtot_syst = get_norm_syst('Qtot_syst')[0]   #total charge systematics (2 %)
-const_norm_syst = np.sqrt(pAbs_syst**2 + tLT_syst**2 + Qtot_syst**2)   #constant norm. systematics to be added as a single value later
+const_norm_syst = np.sqrt(pAbs_syst**2 + tLT_syst**2 + Qtot_syst**2 + tgt_wall_err**2 + spec_acc_err**2)   #constant norm. systematics to be added as a single value later
 
 print('pAbs_syst = ',pAbs_syst)
 print('tLT_syst = ', tLT_syst)

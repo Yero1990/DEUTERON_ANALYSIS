@@ -203,7 +203,7 @@ B.plot_exp(avg_current_bcm4b_LD2, trkY4b_LD2, trkY_err4b_LD2, color='red', marke
 B.plot_line(trkY_fit_LD2.xpl, trkY_fit_LD2.ypl, color='red', label='fit: slope = %.2E +/- %.1E \n     offset = %.2E +/- %.1E' % (trk_slope_LD2, trk_slope_err_LD2, trk_offset_LD2, trk_offset_err_LD2))
 
 
-B.pl.title('HMS Boiling Studies (April 02, 2018)')                                                   
+B.pl.title('HMS Boiling Studies (tol = 100 ns) (April 02, 2018)')                                   
 B.pl.xlabel('BCM4B Avg. Current [uA]')
 B.pl.ylabel('Fractional Normalized Yield')
 B.pl.xlim(0, 85)

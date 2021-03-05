@@ -28,7 +28,8 @@ block P.dc.*ntrack*
 block P.hod.goodscinhit
 block P.hod.beta*
 block P.hod.*start*
-block P.cer.npeSum*
+block P.hgcer.npeSum*
+block P.ngcer.npeSum* 
 block P.cal.etot*
 block P.cal.etrack*
 block P.cal.*track*

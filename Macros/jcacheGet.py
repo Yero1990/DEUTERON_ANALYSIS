@@ -11,7 +11,8 @@ import re
 exp = sys.argv[1]   #user cmd-line input 'hms', 'shms', or 'coin' 
                     #Usage: python3 jcacheGet.py hms
 
-run_list = "heep_%s_runlist.dat" %(exp) 
+#run_list = "heep_%s_runlist.dat" %(exp) 
+run_list = "boiling_runs.txt"
 
 f = open(run_list, 'r')
 

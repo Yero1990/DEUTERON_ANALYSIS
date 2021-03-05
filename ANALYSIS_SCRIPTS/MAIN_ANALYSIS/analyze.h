@@ -101,6 +101,7 @@ class analyze
   Double_t MD;  
   Double_t MN; 
   Double_t me;
+  Double_t MAL; //aluminum mass
   Double_t tgt_mass;
 
   //Set Varibales to be read from REPORT_FILE
@@ -121,6 +122,14 @@ class analyze
   Double_t e_Pcen;
   Double_t h_Pcen;
 
+  //Pre-scale factor
+  Double_t Ps1_factor;
+  Double_t Ps2_factor;
+  Double_t Ps3_factor;
+  Double_t Ps4_factor;
+  Double_t Ps5_factor;
+  Double_t Ps6_factor;
+  
   //-----------Set Default histogram Binning--------------
   Double_t nbins = 100;
 
@@ -705,6 +714,7 @@ class analyze
   TH1F *H_pcal_etotTrkNorm_sys_total = 0;			      TH1F *H_pcal_etotTrkNorm_sys_i = 0;
   TH1F *H_ctime_sys_total = 0;	     				      TH1F *H_ctime_sys_i = 0;	       	          				    
   TH2F *H_hXColl_vs_hYColl_sys_total = 0;			      TH2F *H_hXColl_vs_hYColl_sys_i = 0;
+  TH2F *H_eXColl_vs_eYColl_sys_total = 0;                             TH2F *H_eXColl_vs_eYColl_sys_i = 0; 
   TH2F *H_Ztar_vs_Ctime_sys_total = 0;			              TH2F *H_Ztar_vs_Ctime_sys_i = 0;
 
   
@@ -888,6 +898,7 @@ class analyze
   TH1F *H_pcal_etotTrkNorm_sys;
   TH1F *H_ctime_sys;
   TH2F *H_hXColl_vs_hYColl_sys;
+  TH2F *H_eXColl_vs_eYColl_sys; 
   TH2F *H_Ztar_vs_Ctime_sys;
 
   //Missing Momentum used for systematic studies. These will be used to take the data/simc ratio at various cuts
@@ -954,7 +965,15 @@ class analyze
   Double_t eTrkEff;
   Double_t eTrkEff_err;
 
-  //Live Time 
+  //Live Time
+  //ptrig3 (el-clean)
+  Double_t ptrig3_cpuLT;
+  Double_t ptrig3_cpuLT_err;
+  Double_t ptrig3_tLT_corr_factor;
+  Double_t ptrig3_tLT;
+  Double_t ptrig3_tLT_err;
+  
+  //Coincidence trigger
   Double_t cpuLT;
   Double_t cpuLT_err;
   Double_t tLT_corr_factor;
@@ -965,6 +984,7 @@ class analyze
   //Data-Specific Boolean CUTS (For Tracking Eff. ONLY)
   Bool_t c_noedtm;
   Bool_t c_edtm;
+  Bool_t c_ptrig3;
   Bool_t c_ptrig6;
   Bool_t c_hgcerNpesum;
   Bool_t c_ngcerNpesum;
@@ -1228,6 +1248,7 @@ class analyze
   Double_t pEDTMscalerRate_bcm_cut;
 
   int coin_scaler;
+  int ptrig3_scaler;
   //Store Average BCM Current
   Double_t  avg_current_bcm_cut;
 

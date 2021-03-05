@@ -68,6 +68,29 @@ int main_analysis(int input)
     ifs.close();
   }
 
+  //Do Al_dummy
+  else if (input==3){
+
+    //Set Input Parameter File Name
+    inputCutFileName="set_al_dummy_cuts.inp";
+    
+    //Read Necessary Input Parameters to Run Analysis
+    pm_set = stoi(split(FindString("pm_setting", inputCutFileName)[0], ':')[1]);
+    theory = trim(split(FindString("theory", inputCutFileName)[0], ':')[1]);
+    model = trim(split(FindString("model", inputCutFileName)[0], ':')[1]);
+    dataSet = stoi(split(FindString("data_set", inputCutFileName)[0], ':')[1]);
+    runlist_name = "runlists/Al.dat";
+    run_simc_flag = stoi(split(FindString("RUN_SIMC", inputCutFileName)[0], ':')[1]);
+    run_data_flag = stoi(split(FindString("RUN_DATA", inputCutFileName)[0], ':')[1]);
+    run_pseudo_flag = stoi(split(FindString("RUN_PSEUDO", inputCutFileName)[0], ':')[1]);
+    rad_corr_flag = stoi(trim(split(FindString("rad_corr_flag", inputCutFileName)[0], ':')[1])); 
+    single_run_flag = stoi(split(FindString("single_run_flag", inputCutFileName)[0], ':')[1]);
+    react_type = "al_dummy";
+    
+    
+    ifs.close();
+  }
+  
   
   //==================================== D  A  T  A ============================================
   if(run_data_flag){
@@ -116,6 +139,20 @@ int main_analysis(int input)
 	      cout << "==================================" << endl;
 	      cout << Form("Analyzing D(e,e'p)n DATA: Run %i ", run) << endl;
 	      cout << Form("Pm: %d MeV || Set: %d", pm_set, dataSet) << endl;
+	      cout << "==================================" << endl;
+	  
+	      if(get_total_lines(runlist_name)==cnt){                                                                                    
+		Qnorm_flag=1;                                                                                                              
+		cout << "Reached Final Run: " << run << endl;                                                                             
+	      } 
+	
+	    }
+
+	    else if(react_type=="al_dummy"){
+
+ 
+	      cout << "==================================" << endl;
+	      cout << Form("Analyzing Dummy DATA: Run %i ", run) << endl;
 	      cout << "==================================" << endl;
 	  
 	      if(get_total_lines(runlist_name)==cnt){                                                                                    

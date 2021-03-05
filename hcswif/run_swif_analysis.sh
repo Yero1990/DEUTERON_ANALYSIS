@@ -4,14 +4,14 @@
 #where [options] ---> status,  delete
 
 #workflow_name="heep_coin_elec"
-workflow_name="Al_dummy"
+workflow_name="shms_study"
 
 #runlist_name="current_elec.data"
 #runlist_name="current_prot.data"
 #runlist_name="d2_80.dat"
 #runlist_name="d2_580_set2.dat"
 #runlist_name="d2_750.dat"
-runlist_name="Al.dat"
+#runlist_name="Al.dat"
 
 #Various optional flags to add to hcswif workflow
 mode=" --mode command "

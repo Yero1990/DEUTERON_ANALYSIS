@@ -6,7 +6,7 @@
 spec=$1 #for coincidence run, it should be coin
 #run=$2
 
-filename='runlists/Al.dat'
+filename='runlists/boiling_runs.txt'
 
 for run in $(cat $filename) ; do    
     mss="/mss/hallc/spring17/raw/${spec}_all_0${run}.dat"

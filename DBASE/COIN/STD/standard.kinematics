@@ -258,6 +258,15 @@ ppcentral = 8.5342488 ;original: 8.7
 
 
 #-----------------------------------------------------------
+5335-9999                                                                                                                                                               
+gpbeam = 10.585                                                                                                                                                      
+gtargmass_amu = 1.00794                                                                                                                                                
+htheta_lab = -13.50                                                                                                                                                    
+ptheta_lab = 13.50                                                                                                                                                   
+hpcentral = 6.269                                                                                                                                                    
+ppcentral = 6.269                                                                                                                                                    
+ppartmass = 0.0005109                                                                                                                                             
+hpartmass = 0.0005109     
 
 #Fall 2018 (Nov. 29, 2018) - SPRING 2019 (March 2019) SHMS Heep e- Singles in COIN DAQ
 #These runs will be used in H(e,e'p) Minimization Procedure

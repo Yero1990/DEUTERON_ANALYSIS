@@ -23,15 +23,19 @@ run=$2
 #filename='shms_elec_singles.dat'
 #filename='target_boiling_study/Al_boiling_hms_Apr_02_2018.dat'
 
-#for run in $(cat $filename) ; do    
-mss="/mss/hallc/spring17/raw/${spec}_all_0${run}.dat"
-#lustre="/lustre/expphy/cache/hallc/spring17/raw"
-    
-jcacheCMD="jcache get ${mss} -e cyero002@fiu.edu -x"
-    
-echo "Executing command: ${jcacheCMD}" 
-eval ${jcacheCMD}    
+filename='SHMS_Lumi_Oct22_2018.txt'
 
-#done
+for run in $(cat $filename) ; do    
+    
+    #echo ${run[0]}
+    mss="/mss/hallc/spring17/raw/${spec}_all_0${run}.dat"
+    #lustre="/lustre/expphy/cache/hallc/spring17/raw"
+    
+    jcacheCMD="jcache get ${mss} -e cyero002@fiu.edu -x"
+    
+    echo "Executing command: ${jcacheCMD}" 
+    eval ${jcacheCMD}    
+
+done
 
   

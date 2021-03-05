@@ -235,6 +235,7 @@ analyze::analyze(int run=-1000, string e_arm="SHMS", string type="data", string 
   H_pcal_etotTrkNorm_sys = NULL;
   H_ctime_sys = NULL;
   H_hXColl_vs_hYColl_sys = NULL;
+  H_hXColl_vs_hYColl_sys = NULL;   
   H_Ztar_vs_Ctime_sys = NULL;
   /*
   //Emiss Systematics
@@ -475,19 +476,20 @@ void analyze::SetFileNames()
   input_CutFileName = Form("set_%s_cuts.inp", reaction.c_str());
 
   //If reaction is D(e,e'p)n
-  if(reaction=="deep"){
+  if(reaction=="deep" || reaction=="al_dummy"){
 
     //Read Parameters from D(e,e'p) input file
     pm_setting = stoi(split(FindString("pm_setting", input_CutFileName)[0], ':')[1]);
     theory = trim(split(FindString("theory", input_CutFileName)[0], ':')[1]);
     model = trim(split(FindString("model", input_CutFileName)[0], ':')[1]);
     data_set = stoi(split(FindString("data_set", input_CutFileName)[0], ':')[1]);
-  
+
+    
     //Set Input Names
     data_InputFileName = Form("ROOTfiles/coin_replay_%s_check_%d_-1.root", reaction.c_str(), runNUM);
     data_InputReport = Form("REPORT_OUTPUT/COIN/PRODUCTION/replay_coin_%s_check_%d_-1.report", reaction.c_str(), runNUM); 
-
  
+    
     //NEW SIMC ROOTfile PATHs (THese have 5 Million Events Generated, and the seed used has been changed to be random in deut_simc)
     simc_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_nom.root", pm_setting, theory.c_str(), model.c_str(), data_set );
     simc_InputFileName_norad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_norad_set%d_nom.root", pm_setting, theory.c_str(), model.c_str(), data_set );
@@ -498,6 +500,8 @@ void analyze::SetFileNames()
     //pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_ep1MeV_thr.root", pm_setting, theory.c_str(), model.c_str(), data_set );
     //    pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_ep1mr_rec.root", pm_setting, theory.c_str(), model.c_str(), data_set );
     pseudo_InputFileName_rad = Form("ROOTfiles/SIMC/d2_pm%d_%s%s_rad_set%d_ep1mr_thr.root", pm_setting, theory.c_str(), model.c_str(), data_set );  //+1 mr offset on thrown quantities
+
+   
 
     
     //Read single file input 
@@ -669,18 +673,21 @@ void analyze::SetDefinitions()
   MN = 0.939566;     //neutron mass
   MD = 1.87561;      //deuteron mass
   me = 0.00051099;   //electron mass
+  MAL = 25.131710;   //aluminum mass
 
   //Target Mass 
   if(reaction=="heep"){tgt_mass = MP;} 
   else if(reaction=="deep"){tgt_mass = MD;} 
-   
+  else if(reaction=="al_dummy"){tgt_mass = MAL;}
+  
   //Read Spectrometer Kinematics from REPORT_FILE
   string temp;
-
+ 
+  cout << data_InputReport << endl;
   //Read Angles (in deg)
   temp = FindString("hHMS Angle", data_InputReport)[0];          //Find line containing string
   h_th = stod(split(temp, ':')[1]);                              //split string, take the number part, and conver to double
-
+  cout << "LINE689" << endl;
   temp = FindString("pSHMS Angle", data_InputReport)[0];
   e_th = stod(split(temp, ':')[1]);
   
@@ -690,28 +697,47 @@ void analyze::SetDefinitions()
   
   temp = FindString("pSHMS P Central", data_InputReport)[0]; 
   e_Pcen = stod(split(temp, ':')[1]);
+  cout << "LINE699" << endl; 
+  //Read Pre-Scale Factors
+  temp = FindString("Ps1_factor", data_InputReport)[0]; 
+  Ps1_factor = stod(split(temp, '=')[1]);
   
+  temp = FindString("Ps2_factor", data_InputReport)[0]; 
+  Ps2_factor = stod(split(temp, '=')[1]);
+
+  temp = FindString("Ps3_factor", data_InputReport)[0]; 
+  Ps3_factor = stod(split(temp, '=')[1]);
+
+  temp = FindString("Ps4_factor", data_InputReport)[0]; 
+  Ps4_factor = stod(split(temp, '=')[1]);
+
+  temp = FindString("Ps5_factor", data_InputReport)[0]; 
+  Ps5_factor = stod(split(temp, '=')[1]);
+
+  temp = FindString("Ps6_factor", data_InputReport)[0]; 
+  Ps6_factor = stod(split(temp, '=')[1]);
+
   //Read Beam Positions (in cm, Hall Coord. System)
   temp = FindString("pSHMS X BPM", data_InputReport)[0];
-  xBPM = stod(split(split(temp, ':')[1], 'c')[0]);
-  
+  //xBPM = stod(split(split(temp, ':')[1], 'c')[0]);
+  xBPM = 0.0; //C.Y. al. dummy
   temp = FindString("pSHMS Y BPM", data_InputReport)[0];
-  yBPM = stod(split(split(temp, ':')[1], 'c')[0]);
-  
-  
+  //yBPM = stod(split(split(temp, ':')[1], 'c')[0]);
+  yBPM = 0.0; //al. dummy
+    
   //Read MisPointings (in cm)
   temp = FindString("hHMS X Mispointing", data_InputReport)[0];
-  h_xMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
-  
+  //h_xMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
+  h_xMisPoint = 0.0;
   temp = FindString("hHMS Y Mispointing", data_InputReport)[0];
-  h_yMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
-  
+  //h_yMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
+  h_yMisPoint = 0.0;
   temp = FindString("pSHMS X Mispointing", data_InputReport)[0];
-  e_xMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
-  
+  //e_xMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
+  e_xMisPoint = 0.0;
   temp = FindString("pSHMS Y Mispointing", data_InputReport)[0];
-  e_yMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
-  
+  //e_yMisPoint = stod(split(split(temp, ':')[1], 'c')[0]);
+  e_yMisPoint = 0.0;
   
   cout << "Ending SetDefinitions() . . . " << endl;
   
@@ -745,13 +771,13 @@ void analyze::SetHistBins()
       //-----------------------KINEMATICS---------------------
       
       //Beam Energy
-      Em_nbins = 100;
-      Em_xmin = 10.;
-      Em_xmax = 11.;
+      Ein_nbins = 100;
+      Ein_xmin = 10.;
+      Ein_xmax = 11.;
 
       //Missing Energy                    //Q2			          //Final Proton Momentum			     
-      Em_nbins = 100;			  Q2_nbins = nbins;	   	   Pf_nbins = nbins;				    
-      Em_xmin = -0.05;			  Q2_xmin = 2.5;	   	   Pf_xmin = 2.5;				    
+      Em_nbins = 40;/*100*/			  Q2_nbins = nbins;	   	   Pf_nbins = nbins;				    
+      Em_xmin = -0.5;/*-0.05*/			  Q2_xmin = 2.5;	   	   Pf_xmin = 2.5;				    
       Em_xmax = 0.1;			  Q2_xmax = 5;		   	   Pf_xmax = 3.5;				    
       					 			   	 						    
       //Missing Momentum 		  //omega (E-E')	   	   //Final Proton Energy              
@@ -761,7 +787,7 @@ void analyze::SetHistBins()
       								   	 						    
       Pmx_nbins = nbins;		  //W_inv		   	   //Final Electron Momentum			    
       Pmx_xmin = -0.05;			  W_nbins = nbins;	   	   kf_nbins = nbins;				    
-      Pmx_xmax = 0.05;			  W_xmin = 0.85;	   	   kf_xmin = 8;					    
+      Pmx_xmax = 0.05;			  W_xmin = 0.5;/*0.85*/	   	   kf_xmin = 8;					    
       					  W_xmax = 1.05;;	   	   kf_xmax = 9;					    
       Pmy_nbins = nbins;					   	 						    
       Pmy_xmin = -0.05;			  //W2			   	   //th_q (Angle between +Z(hall) and q-vector)	    
@@ -833,9 +859,9 @@ void analyze::SetHistBins()
       //-----------------------KINEMATICS---------------------
 
       //Beam Energy
-      Em_nbins = 100;
-      Em_xmin = 10.;
-      Em_xmax = 11.;
+      Ein_nbins = 100;
+      Ein_xmin = 10.;
+      Ein_xmax = 11.;
 
       //Missing Energy                    //Q2			          //Final Proton Momentum			     
       Em_nbins = 100;			  Q2_nbins = nbins;	   	   Pf_nbins = nbins;				    
@@ -921,9 +947,9 @@ void analyze::SetHistBins()
       //-----------------------KINEMATICS---------------------
       
       //Beam Energy
-      Em_nbins = 100;
-      Em_xmin = 10.;
-      Em_xmax = 11.;
+      Ein_nbins = 100;
+      Ein_xmin = 10.;
+      Ein_xmax = 11.;
       
       //Missing Energy                    //Q2			          //Final Proton Momentum			     
       Em_nbins = 100;			  Q2_nbins = nbins;	   	   Pf_nbins = nbins;				    
@@ -1091,7 +1117,7 @@ void analyze::SetHistBins()
   
     } //End 3377
   
-  if(runNUM==3289)
+  if(runNUM==3289 || runNUM==3254 || runNUM==3252)
     {
 
       nbins = 60;
@@ -1099,18 +1125,18 @@ void analyze::SetHistBins()
       //-----------------------KINEMATICS---------------------
       
       //Beam Energy
-      Em_nbins = 100;
-      Em_xmin = 10.;
-      Em_xmax = 11.;
+      Ein_nbins = 100;
+      Ein_xmin = 10.;
+      Ein_xmax = 11.;
 
       //Missing Energy                    //Q2			          //Final Proton Momentum			     
-      Em_nbins = nbins;			  Q2_nbins = 60;	   	   Pf_nbins = nbins;				    
-      Em_xmin = -0.05;			  Q2_xmin = 2.5; 	   	   Pf_xmin = 2.5;				    
+      Em_nbins = 40/*nbins*/;			  Q2_nbins = 60;	   	   Pf_nbins = nbins;				    
+      Em_xmin = -0.1/*-0.05*/;			  Q2_xmin = 2.5; 	   	   Pf_xmin = 1.5;				    
       Em_xmax = 0.1;			  Q2_xmax = 5.5;       	   	   Pf_xmax = 3.2;				    
       					 			   	 						    
       //Missing Momentum(40 MeV) 	  //omega (E-E')	   	   //Final Proton Energy				    
       Pm_nbins = 30;			  om_nbins = nbins;	   	   Ep_nbins = nbins;				    
-      Pm_xmin = 0;			  om_xmin = 1.5;	   	   Ep_xmin = 2.7;				    
+      Pm_xmin = 0;			  om_xmin = 1.;	   	           Ep_xmin = 2.7;				    
       Pm_xmax = 1.2;			  om_xmax = 2.7;	   	   Ep_xmax = 3.3;				    
       								   	 						    
       Pmx_nbins = nbins;		  //W_inv		   	   //Final Electron Momentum			    
@@ -1138,7 +1164,7 @@ void analyze::SetHistBins()
       // X-bJORKEN                         //th_nq (10 deg)                 //Proton Kin. Energy         //phi_nq 		  
       xbj_nbins = nbins;		   thnq_nbins = 19;                 Kp_nbins = nbins; 	          phnq_nbins = nbins; 
       xbj_xmin = 0.8;			   thnq_xmin = 0;                   Kp_xmin = 1.6;   	          phnq_xmin = -1.;	  
-      xbj_xmax = 1.2;			   thnq_xmax = 190;                 Kp_xmax = 2.6;  	          phnq_xmax =  1;    
+      xbj_xmax = 2.0;			   thnq_xmax = 190;                 Kp_xmax = 2.6;  	          phnq_xmax =  1;    
      
       //Neutron Kin. Energy                 //Neutron Final Energy, En       //phi_pq (Out-Of-Plane Angle between proton and q-vector)  
       Kn_nbins = nbins;                      En_nbins = nbins;		     phpq_nbins = nbins;					      
@@ -1195,19 +1221,19 @@ void analyze::SetHistBins()
       //-----------------------KINEMATICS---------------------
 
       //Beam Energy
-      Em_nbins = 100;
-      Em_xmin = 10.;
-      Em_xmax = 11.;
+      Ein_nbins = 100;
+      Ein_xmin = 10.;
+      Ein_xmax = 11.;
       
       //Missing Energy                    //Q2			          //Final Proton Momentum			     
       Em_nbins = 40;			  Q2_nbins = 60;	   	   Pf_nbins = nbins;				    
-      Em_xmin = -0.05;			  Q2_xmin = 2.5; 	   	   Pf_xmin = 1.5;				    
-      Em_xmax = 0.1;			  Q2_xmax = 5.5;       	   	   Pf_xmax = 2.5;				    
+      Em_xmin = -0.1;/*-0.05*/		  Q2_xmin = 2.5; 	   	   Pf_xmin = 1.5;				    
+      Em_xmax = 0.1;			  Q2_xmax = 5.5;       	   	   Pf_xmax = 3.2;				    
       					 			   	 						    
       //Missing Momentum(40 MeV) 	  //omega (E-E')	   	   //Final Proton Energy				    
       Pm_nbins = 30;			  om_nbins = nbins;	   	   Ep_nbins = nbins;				    
       Pm_xmin = 0.;			  om_xmin = 1.;	        	   Ep_xmin = 2.;				    
-      Pm_xmax = 1.2;			  om_xmax = 2.4;	   	   Ep_xmax = 2.8;				    
+      Pm_xmax = 1.2;			  om_xmax = 2.7;	   	   Ep_xmax = 2.8;				    
       								   	 						    
       Pmx_nbins = nbins;		          //W_inv		   //Final Electron Momentum (10 MeV)			    
       Pmx_xmin = -0.5;			  W_nbins = nbins;	   	   kf_nbins = nbins;				    
@@ -1233,7 +1259,7 @@ void analyze::SetHistBins()
       
       // X-bJORKEN                         //th_nq (10 deg)                 //Proton Kin. Energy          //phi_nq 		  
       xbj_nbins = nbins;		   thnq_nbins = 19;                  Kp_nbins = nbins; 		   phnq_nbins = nbins; 
-      xbj_xmin = 0.5;			   thnq_xmin = 0;                   Kp_xmin = 1.;   		   phnq_xmin = -1.;	  
+      xbj_xmin = 0.8;			   thnq_xmin = 0;                   Kp_xmin = 1.;   		   phnq_xmin = -1.;	  
       xbj_xmax = 2.0;			   thnq_xmax = 190;                  Kp_xmax = 1.8;  		   phnq_xmax =  1;    
      
       //Neutron Kin. Energy                 //Neutron Final Energy, En        //phi_pq (Out-Of-Plane Angle between proton and q-vector)  
@@ -1491,6 +1517,7 @@ void analyze::CreateHist()
   H_ctime_sys = new TH1F("H_ctime_sys", "ep Coincidence Time", coin_nbins, coin_xmin, coin_xmax);
   
   H_hXColl_vs_hYColl_sys = new TH2F("H_hXColl_vs_hYColl_sys", Form("%s  Collimator", h_arm_name.c_str()), hYColl_nbins, hYColl_xmin, hYColl_xmax,  hXColl_nbins, hXColl_xmin, hXColl_xmax);
+  H_eXColl_vs_eYColl_sys = new TH2F("H_eXColl_vs_eYColl_sys", Form("%s  Collimator", e_arm_name.c_str()), eYColl_nbins, eYColl_xmin, eYColl_xmax,  eXColl_nbins, eXColl_xmin, eXColl_xmax);                                                                                          
   H_Ztar_vs_Ctime_sys = new TH2F("H_Ztar_vs_Ctime_sys", "Z_{tar} Diff. vs. Coincidence Time", coin_nbins, coin_xmin, coin_xmax,  ztar_nbins, ztar_xmin, ztar_xmax);
   
   /*
@@ -1970,7 +1997,7 @@ void analyze::EventLoop()
 	  MM2 = M_recoil * M_recoil;
 
 	  //-----If H(e,e'p)
-	  if(reaction=="heep"){
+	  if(reaction=="heep" || reaction=="al_dummy"){
 	    M_recoil = sqrt(Em*Em - Pm*Pm);
 	    MM2 = Em*Em - Pm*Pm;
 	  }
@@ -1990,6 +2017,7 @@ void analyze::EventLoop()
 	  
 	  c_noedtm = pEDTM_tdcTimeRaw==0;
 	  c_edtm = pEDTM_tdcTimeRaw>0.;
+	  c_ptrig3 = pTRIG3_tdcTimeRaw>0;
 	  c_ptrig6 = pTRIG6_tdcTimeRaw>0.;
 	  c_hgcerNpesum =  pHGCER_npeSum>0.7;
 	  c_ngcerNpesum =  pNGCER_npeSum>0.5;
@@ -2019,7 +2047,7 @@ void analyze::EventLoop()
 	  if(Em_cut_flag) {
 	   
 	    if(reaction=="heep") { c_Em = Em>=Em_min&&Em<=Em_max; }
-	    if(reaction=="deep") { c_Em = Em_nuc>=Em_min&&Em_nuc<=Em_max; }
+	    if(reaction=="deep"||reaction=="al_dummy") { c_Em = Em_nuc>=Em_min&&Em_nuc<=Em_max; }
 	  }                   
 	  else{c_Em=1;}
 	  
@@ -2027,6 +2055,8 @@ void analyze::EventLoop()
 	    //cout << "data_zmean = " << ztd_mean << endl;
 
 	    c_ztarDiff = ztar_diff>=(ztd_mean + ztarDiff_min)&&ztar_diff<=(ztd_mean + ztarDiff_max);
+	    //cout << "ztar_min_data = " << ztd_mean + ztarDiff_min << endl;
+	    //cout << "ztar_max_data = " << ztd_mean + ztarDiff_max << endl;
 	    //c_ztarDiff = ztar_diff>ztarDiff_min&&ztar_diff<ztarDiff_max;
 	  }
 	  else{c_ztarDiff=1;}
@@ -2064,6 +2094,8 @@ void analyze::EventLoop()
 	  
 	  //Count Accepted EDTM events (no current cut)
 	  if(c_edtm){ total_pedtm_accp++;}
+	  //Count Accepted pTRIG3 events (no current cut)
+	  if(c_ptrig3){total_ptrig3_accp++;}
 	  //Count Accepted pTRIG6 events (no current cut)
 	  if(c_ptrig6){total_ptrig6_accp++;}
 	  
@@ -2076,7 +2108,9 @@ void analyze::EventLoop()
 	      
 	      //Count Accepted pTRIG6 events (without EDTM)
 	      if(c_ptrig6&&c_noedtm){ total_ptrig6_accp_bcm_cut++;}
-	      
+
+	      //Count Accepter pTRIG3 events (without EDTM)
+	      if(c_ptrig3&&c_noedtm){ total_ptrig3_accp_bcm_cut++;}
 	      
 	      //REQUIRE "NO EDTM" CUT TO FILL DATA HISTOGRAMS
 	      if(c_noedtm) 
@@ -2198,12 +2232,12 @@ void analyze::EventLoop()
 		      H_eXColl_vs_eYColl->Fill(eYColl, eXColl);
 		      
 		      //Xfp vs Yfp
-		      //H_hxfp_vs_hyfp->Fill(h_yfp, h_xfp);
-		      //H_exfp_vs_eyfp->Fill(e_yfp, e_xfp);
+		      H_hxfp_vs_hyfp->Fill(h_yfp, h_xfp);
+		      H_exfp_vs_eyfp->Fill(e_yfp, e_xfp);
 
 		      //Xfp vs Yfp Projected at the Dipole Exit
-		      H_hxfp_vs_hyfp->Fill(ydip_hms, xdip_hms);
-		      H_exfp_vs_eyfp->Fill(ydip_shms, xdip_shms);
+		      //H_hxfp_vs_hyfp->Fill(ydip_hms, xdip_hms);
+		      //H_exfp_vs_eyfp->Fill(ydip_shms, xdip_shms);
 
 		      H_Em_vs_Pm->Fill(Pm, Em);
 		      H_Em_nuc_vs_Pm->Fill(Pm, Em_nuc);
@@ -2329,6 +2363,20 @@ void analyze::EventLoop()
 		      //if(hmsColl_Cut){ H_Pm_syshColl_nominal->Fill(Pm); }
 
 		    }
+		  if(c_Em&&c_hdelta&&c_edelta&&c_ztarDiff&&c_Q2&&c_th_nq&&c_shms_cal&&c_ctime&&hmsColl_Cut&&Pm<0.1)                                                                                                                                                                                       
+                    {    
+		      //This has an additional cut on missing energy (should only be for 80 MeV/c setting
+		      //in order to cut out the high missing momentum part of the 80 MeV/c setting to determin
+		      //if it is causing the extra low events in the SIMC collimator. Both data/simc systematics
+		      //SHMS collimator plots will have this additional pmicc < 0.3 GeV/c cut to check.)
+                      H_eXColl_vs_eYColl_sys->Fill(eYColl, eXColl);                                                                                                                                                                                                                  
+                                                                                                                                                                                                                                                                                     
+                      //PART II Systematics on Missing Momentum Yield: HMS Coll Cut                                                                                                                                                                                                  
+                      //NOTE: This cut will have to be done on three separate replays, each with a different                                                                                                                                                                         
+                      //HMS Coll. CUt Scale, as we cannot put different scale cuts simultaneously.                                                                                                                                                                                   
+                      //if(hmsColl_Cut){ H_Pm_syshColl_nominal->Fill(Pm); }                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                    }   
+
 		  if(c_Em&&c_hdelta&&c_edelta&&c_Q2&&c_th_nq&&c_shms_cal&&hmsColl_Cut)
 		    {
 		      H_Ztar_vs_Ctime_sys->Fill(epCoinTime, ztar_diff);
@@ -2597,6 +2645,8 @@ void analyze::EventLoop()
 	    //cout << "simc_zmean = " << ztd_mean << endl;
 	    //ztd_mean = getZtarMean(pm_setting, data_set, model, "simc");  //Get Mean of ZtarDiff 
 	    c_ztarDiff = ztar_diff>=(ztd_mean + ztarDiff_min)&&ztar_diff<=(ztd_mean + ztarDiff_max);
+	    //cout << "ztar_min_SIMC = " << ztd_mean + ztarDiff_min << endl;                                                                                                                                                                                                           
+            //cout << "ztar_max_SIMC = " << ztd_mean + ztarDiff_max << endl; 
 	    //c_ztarDiff = ztar_diff>ztarDiff_min&&ztar_diff<ztarDiff_max;
 	  }
 	  else{c_ztarDiff=1;}
@@ -2790,12 +2840,12 @@ void analyze::EventLoop()
 	    H_eXColl_vs_eYColl->Fill(eYColl, eXColl, FullWeight);
 	    
 	    //Xfp vs Yfp
-	    //H_hxfp_vs_hyfp->Fill(h_yfp, h_xfp, FullWeight);
-	    //H_exfp_vs_eyfp->Fill(e_yfp, e_xfp, FullWeight);
+	    H_hxfp_vs_hyfp->Fill(h_yfp, h_xfp, FullWeight);
+	    H_exfp_vs_eyfp->Fill(e_yfp, e_xfp, FullWeight);
 	    
 	    //Xfp vs Yfp Projected at the Dipole Exit
-	    H_hxfp_vs_hyfp->Fill(ydip_hms, xdip_hms, FullWeight);
-	    H_exfp_vs_eyfp->Fill(ydip_shms, xdip_shms, FullWeight);
+	    //H_hxfp_vs_hyfp->Fill(ydip_hms, xdip_hms, FullWeight);
+	    //H_exfp_vs_eyfp->Fill(ydip_shms, xdip_shms, FullWeight);
 
 	    H_Em_vs_Pm->Fill(Pm, Em, FullWeight);
 
@@ -2894,7 +2944,15 @@ void analyze::EventLoop()
 	      //if(hmsColl_Cut){ H_Pm_syshColl_nominal->Fill(Pm,FullWeight); }
 
 	    }
-	  
+	  if(c_Em&&c_hdelta&&c_edelta&&c_ztarDiff&&c_Q2&&c_th_nq&&hmsColl_Cut&&Pm<0.1)                                                                                                                                                                                                                     
+            {                                                                                                                                                                                                                                                                        
+              H_eXColl_vs_eYColl_sys->Fill(eYColl, eXColl, FullWeight);                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+              //PART II Systematics on Missing Momentum Yield: HMS Coll Cut                                                                                                                                                                                                          
+              //NOTE: This cut will have to be done on three separate replays, each with a different                                                                                                                                                                                 
+              //HMS Coll. CUt Scale, as we cannot put different scale cuts simultaneously.                                                                                                                                                                                           
+              //if(hmsColl_Cut){ H_Pm_syshColl_nominal->Fill(Pm,FullWeight); }                                                                                                                                                                                                       
+                                                                                                                                                                                                                                                                                     
+            }  
 	
 
 
@@ -2979,19 +3037,23 @@ void analyze::CalcEff()
   pTRIG6scalerRate_bcm_cut = pTRIG6scalerRate_bcm_cut / 1000.;
   pEDTMscalerRate_bcm_cut = pEDTMscalerRate_bcm_cut / 1000.;
 
+  ptrig3_scaler = total_ptrig3_scaler_bcm_cut - total_pedtm_scaler_bcm_cut;
   coin_scaler = total_ptrig6_scaler_bcm_cut - total_pedtm_scaler_bcm_cut;
 
   //Calculate  Live Time                                                                                                                        
   cpuLT =  (total_ptrig6_accp_bcm_cut) / coin_scaler;
-
+  ptrig3_cpuLT =  (total_ptrig3_accp_bcm_cut) / (ptrig3_scaler/Ps3_factor);
+  
   //cpuLT =  total_ptrig6_accp_bcm_cut / (total_ptrig6_scaler_bcm_cut);      
   cpuLT_err = sqrt(total_ptrig6_accp_bcm_cut) / (total_ptrig6_scaler_bcm_cut- total_pedtm_scaler_bcm_cut);                                 
-  
+  ptrig3_cpuLT_err = sqrt(total_ptrig3_accp_bcm_cut) / ((total_ptrig3_scaler_bcm_cut- total_pedtm_scaler_bcm_cut)/Ps3_factor);
+   
   //Correction Factor to total Live Time
   tLT_corr_factor = 1 - (pTRIG6scalerRate_bcm_cut*1000. + pEDTMscalerRate_bcm_cut*1000.)*250*1e-6 + pTRIG6scalerRate_bcm_cut*1000.*250*1e-6*(1. + pEDTMscalerRate_bcm_cut*1000./(pTRIG6scalerRate_bcm_cut*1000. + pEDTMscalerRate_bcm_cut*1000.));
-  tLT =  total_pedtm_accp_bcm_cut / total_pedtm_scaler_bcm_cut;  
+  ptrig3_tLT_corr_factor = 1 - (pTRIG3scalerRate_bcm_cut*1000. + pEDTMscalerRate_bcm_cut*1000.)*250*1e-6 + pTRIG3scalerRate_bcm_cut*1000.*250*1e-6*(1. + pEDTMscalerRate_bcm_cut*1000./(pTRIG3scalerRate_bcm_cut*1000. + pEDTMscalerRate_bcm_cut*1000.));
   
-
+  tLT =  total_pedtm_accp_bcm_cut / total_pedtm_scaler_bcm_cut;  
+  ptrig3_tLT =  (total_pedtm_accp_bcm_cut / (total_pedtm_scaler_bcm_cut / Ps3_factor)) * ptrig3_tLT_corr_factor;  //ptrig3 total live time (corrected for pre-scale)
 
 
   //Calculate Tracking Efficiency                                                                                                
@@ -3030,8 +3092,17 @@ void analyze::ApplyWeight()
       tgtBoil_corr = (1.-LD2_slope * avg_current_bcm_cut);
     }
     
-    //Proton Absorption
-    pAbs_corr = 0.9534;
+
+    if(reaction=="heep" || reaction=="deep"){
+      //Proton Absorption
+      pAbs_corr = 0.9534;
+    }
+    
+    if(reaction=="al_dummy")
+      {
+	tgtBoil_corr = 1.0; //1 means no correction is needed, as target is dummy (empty)
+	pAbs_corr = 1.0;  //not necessary to correct for protons, as Al. dummy SHMS singles were taken
+      }
     
     //Original: Take the total charge per runs
     //FullWeight = 1. / (total_charge_bcm_cut * eTrkEff * hTrkEff * tLT * pAbs_corr * tgtBoil_corr );
@@ -3040,6 +3111,10 @@ void analyze::ApplyWeight()
     //in a separate histogram. Then, Scale the added histos by (1 / charge)
     FullWeight = 1. / (eTrkEff * hTrkEff * tLT * pAbs_corr * tgtBoil_corr );
 
+    if(reaction=="al_dummy")
+      {
+	FullWeight = 1. / (eTrkEff * hTrkEff * ptrig3_tLT * pAbs_corr * tgtBoil_corr );
+      }
 
     cout << "total charge = " << setprecision(5) << total_charge_bcm_cut << " mC " << endl;
     cout << "e- trk eff = "   << setprecision(5) << eTrkEff << endl;
@@ -3174,6 +3249,7 @@ void analyze::ApplyWeight()
     H_pcal_etotTrkNorm_sys->Scale(FullWeight);
     H_ctime_sys->Scale(FullWeight);
     H_hXColl_vs_hYColl_sys->Scale(FullWeight);
+    H_eXColl_vs_eYColl_sys->Scale(FullWeight);  
     H_Ztar_vs_Ctime_sys->Scale(FullWeight);
     /*
     //Emiss Systematics on Pm
@@ -3347,6 +3423,7 @@ void analyze::WriteHist(string rad_flag="")
       H_pcal_etotTrkNorm_sys->Write();
       H_ctime_sys->Write();
       H_hXColl_vs_hYColl_sys->Write();
+      H_eXColl_vs_eYColl_sys->Write();
       H_Ztar_vs_Ctime_sys->Write();
       /*
       //Emiss Systematics
@@ -3561,6 +3638,7 @@ void analyze::WriteHist(string rad_flag="")
       H_Q2_sys->Write();
       H_theta_nq_sys->Write();
       H_hXColl_vs_hYColl_sys->Write();
+      H_eXColl_vs_eYColl_sys->Write();
       /*
       //Emiss Systematics on Pm
       H_Pm_sysEm_nominal->Write();
@@ -3627,7 +3705,7 @@ void analyze::WriteReport()
 	out_file << "#--------------------------------------" << endl;
 	out_file << "# All rates are in [kHz] :: total_time has a bcm current cut and is in seconds (all quantities have bcm cut) :: tLT has been corrected with tLT_corr_factor" << endl;
 	out_file << "# Spectrometer Mispointings and BPMs are in [cm]" << endl;
-	out_file << "#!Run[i,0]/" << std::setw(25) << "charge[f,1]/" << std::setw(25) << "cpuLT[f,2]/"  << std::setw(25) << "cpuLT_err[f,3]/"  << std::setw(25) << "tLT[f,4]/" << std::setw(25) << "tLT_corr_factor[f,5]/" << std::setw(25) <<  "hTrkEff[f,6]/" << std::setw(25) <<  "hTrkEff_err[f,7]/" << std::setw(25) << "eTrkEff[f,8]/" << std::setw(25) << "eTrkEff_err[f,9]/"  << std::setw(25) <<  "tgtBoil_factor[f,10]/" <<  std::setw(25)  << "avg_current[f,11]/"  << std::setw(25) << "pS1X_rate[f,12]/"  << std::setw(25) << "ptrig1_rate[f,13]/" << std::setw(25) << "ptrig2_rate[f,14]/" << std::setw(25) << "ptrig3_rate[f,15]/" << std::setw(25) << "ptrig4_rate[f,16]/" << std::setw(25) << "ptrig6_rate[f,17]/" << std::setw(25) << "pEDTM_rate[f,18]/"  << std::setw(35) << "ptrig6_scl_noedtm[i,19]/" << std::setw(25) << "ptrig6_scl[i,20]/" <<  std::setw(25) << "ptrig6_accp[i,21]/"  << std::setw(25) << "pEDTM_scl[i,22]/" << std::setw(25) << "pEDTM_accp[i,23]/" << "total_time[f,23]/" << std::setw(25)  << "HMS_Angle[f,24]/"  << std::setw(25) << "HMS_Pcen[f,25]/"  << std::setw(25) << "SHMS_Angle[f,26]/"   << std::setw(25) << "SHMS_Pcen[f,27]/"  << std::setw(25) << "HMS_Xmp[f,28]/" << std::setw(25) << "HMS_Ymp[f,29]/" << std::setw(25) << "SHMS_Xmp[f,30]/" << std::setw(25) << "SHMS_Ymp[f,31]/" << std::setw(25) << "xBPM[f,32]/" << std::setw(25) << "yBPM[f,33]/" << endl;
+	out_file << "#!Run[i,0]/" << std::setw(25) << "charge[f,1]/" << std::setw(25) << "cpuLT[f,2]/"  << std::setw(25) << "cpuLT_err[f,3]/"  << std::setw(25) << "tLT[f,4]/" << std::setw(25) << "tLT_corr_factor[f,5]/" << std::setw(25) <<  "hTrkEff[f,6]/" << std::setw(25) <<  "hTrkEff_err[f,7]/" << std::setw(25) << "eTrkEff[f,8]/" << std::setw(25) << "eTrkEff_err[f,9]/"  << std::setw(25) <<  "tgtBoil_factor[f,10]/" <<  std::setw(25)  << "avg_current[f,11]/"  << std::setw(25) << "pS1X_rate[f,12]/"  << std::setw(25) << "ptrig1_rate[f,13]/" << std::setw(25) << "ptrig2_rate[f,14]/" << std::setw(25) << "ptrig3_rate[f,15]/" << std::setw(25) << "ptrig4_rate[f,16]/" << std::setw(25) << "ptrig6_rate[f,17]/" << std::setw(25) << "pEDTM_rate[f,18]/"  << std::setw(35) << "ptrig6_scl_noedtm[i,19]/" << std::setw(25) << "ptrig6_scl[i,20]/" <<  std::setw(25) << "ptrig6_accp[i,21]/"  << std::setw(25) << "pEDTM_scl[i,22]/" << std::setw(25) << "pEDTM_accp[i,23]/" << "total_time[f,23]/" << std::setw(25)  << "HMS_Angle[f,24]/"  << std::setw(25) << "HMS_Pcen[f,25]/"  << std::setw(25) << "SHMS_Angle[f,26]/"   << std::setw(25) << "SHMS_Pcen[f,27]/"  << std::setw(25) << "HMS_Xmp[f,28]/" << std::setw(25) << "HMS_Ymp[f,29]/" << std::setw(25) << "SHMS_Xmp[f,30]/" << std::setw(25) << "SHMS_Ymp[f,31]/" << std::setw(25) << "xBPM[f,32]/" << std::setw(25) << "yBPM[f,33]/" << std::setw(25) << "ptrig3_cpuLT[f,34]/" << std::setw(25) << "ptrig3_tLT[f,35]" << std::setw(25) << "ptrig3_tLT_corr_factor[f,36]/" << endl;
       out_file.close();
       in_file.close();
 
@@ -3636,7 +3714,7 @@ void analyze::WriteReport()
    
     //Open Report FIle in append mode
     out_file.open(report_OutputFileName, ios::out | ios::app);
-    out_file << runNUM << std::setw(25) << total_charge_bcm_cut << std::setw(25) << cpuLT << std::setw(25) << cpuLT_err << std::setw(25) << tLT << std::setw(25) << tLT_corr_factor << std::setw(25) << hTrkEff  << std::setw(25) << hTrkEff_err << std::setw(25) << eTrkEff  << std::setw(25) << eTrkEff_err << std::setw(25) << tgtBoil_corr << std::setw(25) << avg_current_bcm_cut << std::setw(25) << pS1XscalerRate_bcm_cut << std::setw(25) << pTRIG1scalerRate_bcm_cut << std::setw(25) << pTRIG2scalerRate_bcm_cut << std::setw(25) << pTRIG3scalerRate_bcm_cut << std::setw(25) << pTRIG4scalerRate_bcm_cut << std::setw(25) << pTRIG6scalerRate_bcm_cut << std::setw(25) << pEDTMscalerRate_bcm_cut << std::setw(25) << coin_scaler << std::setw(25) << total_ptrig6_scaler_bcm_cut << std::setw(25) << total_ptrig6_accp_bcm_cut << std::setw(25) << total_pedtm_scaler_bcm_cut << std::setw(25) << total_pedtm_accp_bcm_cut << std::setw(25) << total_time_bcm_cut << std::setw(25) << h_th  << std::setw(25) << h_Pcen << std::setw(25) << e_th << std::setw(25) << e_Pcen << std::setw(25) <<  h_xMisPoint << std::setw(25) <<  h_yMisPoint << std::setw(25) << e_xMisPoint << std::setw(25) << e_yMisPoint << std::setw(25) << xBPM << std::setw(25) << yBPM << endl;
+    out_file << runNUM << std::setw(25) << total_charge_bcm_cut << std::setw(25) << cpuLT << std::setw(25) << cpuLT_err << std::setw(25) << tLT << std::setw(25) << tLT_corr_factor << std::setw(25) << hTrkEff  << std::setw(25) << hTrkEff_err << std::setw(25) << eTrkEff  << std::setw(25) << eTrkEff_err << std::setw(25) << tgtBoil_corr << std::setw(25) << avg_current_bcm_cut << std::setw(25) << pS1XscalerRate_bcm_cut << std::setw(25) << pTRIG1scalerRate_bcm_cut << std::setw(25) << pTRIG2scalerRate_bcm_cut << std::setw(25) << pTRIG3scalerRate_bcm_cut << std::setw(25) << pTRIG4scalerRate_bcm_cut << std::setw(25) << pTRIG6scalerRate_bcm_cut << std::setw(25) << pEDTMscalerRate_bcm_cut << std::setw(25) << coin_scaler << std::setw(25) << total_ptrig6_scaler_bcm_cut << std::setw(25) << total_ptrig6_accp_bcm_cut << std::setw(25) << total_pedtm_scaler_bcm_cut << std::setw(25) << total_pedtm_accp_bcm_cut << std::setw(25) << total_time_bcm_cut << std::setw(25) << h_th  << std::setw(25) << h_Pcen << std::setw(25) << e_th << std::setw(25) << e_Pcen << std::setw(25) <<  h_xMisPoint << std::setw(25) <<  h_yMisPoint << std::setw(25) << e_xMisPoint << std::setw(25) << e_yMisPoint << std::setw(25) << xBPM << std::setw(25) << yBPM << std::setw(25) << ptrig3_cpuLT << std::setw(25) << ptrig3_tLT << std::setw(25) << ptrig3_tLT_corr_factor << endl;
     out_file.close();
 
     
@@ -3757,6 +3835,7 @@ void analyze::CombineHistos()
     data_file->GetObject("H_pcal_etotTrkNorm_sys",H_pcal_etotTrkNorm_sys_i);
     data_file->GetObject("H_ctime_sys",H_ctime_sys_i);
     data_file->GetObject("H_hXColl_vs_hYColl_sys",H_hXColl_vs_hYColl_sys_i);
+    data_file->GetObject("H_eXColl_vs_eYColl_sys",H_eXColl_vs_eYColl_sys_i);
     data_file->GetObject("H_Ztar_vs_Ctime_sys",H_Ztar_vs_Ctime_sys_i);
     
     /*
@@ -3890,6 +3969,7 @@ void analyze::CombineHistos()
       H_pcal_etotTrkNorm_sys_i->Write();
       H_ctime_sys_i->Write();
       H_hXColl_vs_hYColl_sys_i->Write();
+      H_eXColl_vs_eYColl_sys_i->Write();
       H_Ztar_vs_Ctime_sys_i->Write();
 
       /*
@@ -4025,6 +4105,7 @@ void analyze::CombineHistos()
       outROOT->GetObject("H_pcal_etotTrkNorm_sys",H_pcal_etotTrkNorm_sys_total);
       outROOT->GetObject("H_ctime_sys",H_ctime_sys_total);
       outROOT->GetObject("H_hXColl_vs_hYColl_sys",H_hXColl_vs_hYColl_sys_total);
+      outROOT->GetObject("H_eXColl_vs_eYColl_sys",H_eXColl_vs_eYColl_sys_total); 
       outROOT->GetObject("H_Ztar_vs_Ctime_sys",H_Ztar_vs_Ctime_sys_total);
       
       /*
@@ -4148,6 +4229,7 @@ void analyze::CombineHistos()
       H_pcal_etotTrkNorm_sys_total->Add(               H_pcal_etotTrkNorm_sys_i);
       H_ctime_sys_total->Add(                          H_ctime_sys_i);
       H_hXColl_vs_hYColl_sys_total->Add(               H_hXColl_vs_hYColl_sys_i);
+      H_eXColl_vs_eYColl_sys_total->Add(               H_eXColl_vs_eYColl_sys_i);  
       H_Ztar_vs_Ctime_sys_total->Add(                  H_Ztar_vs_Ctime_sys_i);
 
       /*
@@ -4272,6 +4354,7 @@ void analyze::CombineHistos()
       H_pcal_etotTrkNorm_sys_total->Write("", TObject::kOverwrite);
       H_ctime_sys_total->Write("", TObject::kOverwrite);
       H_hXColl_vs_hYColl_sys_total->Write("", TObject::kOverwrite);
+      H_eXColl_vs_eYColl_sys_total->Write("", TObject::kOverwrite);
       H_Ztar_vs_Ctime_sys_total->Write("", TObject::kOverwrite);
       
       /*
@@ -4426,6 +4509,7 @@ void analyze::ChargeNorm()
    outROOT->GetObject("H_pcal_etotTrkNorm_sys",H_pcal_etotTrkNorm_sys_total);
    outROOT->GetObject("H_ctime_sys",H_ctime_sys_total);
    outROOT->GetObject("H_hXColl_vs_hYColl_sys",H_hXColl_vs_hYColl_sys_total);
+   outROOT->GetObject("H_eXColl_vs_eYColl_sys",H_eXColl_vs_eYColl_sys_total);
    outROOT->GetObject("H_Ztar_vs_Ctime_sys",H_Ztar_vs_Ctime_sys_total);
 
    /*
@@ -4548,6 +4632,7 @@ void analyze::ChargeNorm()
    H_pcal_etotTrkNorm_sys_total->Scale(charge_norm);
    H_ctime_sys_total->Scale(charge_norm);
    H_hXColl_vs_hYColl_sys_total->Scale(charge_norm);
+   H_eXColl_vs_eYColl_sys_total->Scale(charge_norm); 
    H_Ztar_vs_Ctime_sys_total->Scale(charge_norm);
    
    /*
@@ -4672,6 +4757,7 @@ void analyze::ChargeNorm()
    H_pcal_etotTrkNorm_sys_total->Write("", TObject::kOverwrite);
    H_ctime_sys_total->Write("", TObject::kOverwrite);
    H_hXColl_vs_hYColl_sys_total->Write("", TObject::kOverwrite);
+   H_eXColl_vs_eYColl_sys_total->Write("", TObject::kOverwrite); 
    H_Ztar_vs_Ctime_sys_total->Write("", TObject::kOverwrite);
 
    /*
