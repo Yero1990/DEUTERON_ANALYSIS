@@ -2101,16 +2101,29 @@ void analyze::EventLoop()
 	  
 	  //recoil ("missing neutron") momentum component along q-vector
 	  PmPar = Pm * cos(th_nq);
-
+	  
+	  /*
+	  cout << "---- Data Light Cone -----" << endl;
+	  cout << "Pm = " << Pm << endl;
+	  cout << "thnq = " << th_nq << endl;
+	  cout << "PmPar = " << PmPar << endl;
+	  */
 	  //recoil momentum component transverse to q-vector
 	  PmPerp = sqrt(pow(Pm,2) - pow(PmPar,2));
-	    
+	  
+	  //cout << "PmPerp = " << PmPerp << endl;
+
 	  //light-cone momentum fraction of the recoil neutron
 	  alpha_n = (En - PmPar) / (MD/2.);
-
+	  /*
+	  cout << "En = " << En << endl;
+	  cout << "MD = " << MD << endl;
+	  cout << "alpha_n = " << alpha_n << endl;
+	  */
 	  //momentum fraction of struck nucleon (normalized such that: alpha + alpha_n = 2)
 	  alpha = 2. - alpha_n;
-
+	  //cout << "alpha = " << alpha << endl;
+	  
 
 	  //-----If H(e,e'p)
 	  if(reaction=="heep" || reaction=="al_dummy"){
@@ -2649,7 +2662,43 @@ void analyze::EventLoop()
 	  
 	  
 	  //--------------------------------------------------------------------------------
+	   //---------Light Cone Variables (C.Y. March 05, 2021)---------
+
+	  /*
+	    NOTE: In analogy to binning the exp. cross section in (Pm, th_nq) 2D histo bins,
+	    one can also bin the exp. cross sections in light-cone (alpha, pt) 2D histo bins, which can
+	    be later used to extact the light-cone momentum distributions. See https://arxiv.org/abs/1501.05377
+	    alpha -> light-cone momentum fraction of the struck nucleon, pt -> transverse momentum component of 
+	    the struck nucleon which is equal to the -pt_n (transverse momentum component of the recoil system 
+	    (neutron for D(e,e'p)n case)
+	  */
 	  
+	  //recoil ("missing neutron") momentum component along q-vector
+	  PmPar = Pm * cos(th_nq);
+	  
+	  /*
+	  cout << "---- SIMC Light Cone -----" << endl;
+	  cout << "Pm = " << Pm << endl;
+	  cout << "thnq = " << th_nq << endl;
+	  cout << "PmPar = " << PmPar << endl;
+	  */
+	  //recoil momentum component transverse to q-vector
+	  PmPerp = sqrt(pow(Pm,2) - pow(PmPar,2));
+	  
+	  //cout << "PmPerp = " << PmPerp << endl;
+
+	  //light-cone momentum fraction of the recoil neutron
+	  alpha_n = (En - PmPar) / (MD/2.);
+
+	  /*
+	  cout << "En = " << En << endl;
+	  cout << "MD = " << MD << endl;
+	  cout << "alpha_n = " << alpha_n << endl;
+	  */
+
+	  //momentum fraction of struck nucleon (normalized such that: alpha + alpha_n = 2)
+	  alpha = 2. - alpha_n;
+	  //cout << "alpha = " << alpha << endl;
 
 
 	  //---------Calculate Necessary Vertex Quantities for Average Kinematics----------------

@@ -34,7 +34,7 @@ theory     : laget
 model      : fsi                                                                                               
                                                                                                               
 ;DataSet 1, 2, 3                                                                                              
-data_set   : 3                                                                                               
+data_set   : 1                                                                                               
                                                                                                               
 #------TURN CUTS ON/OFF------                                                                                 
 # True (ON) =  1,  False (OFF) = 0                                                                            
