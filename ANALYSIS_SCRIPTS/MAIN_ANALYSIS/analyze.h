@@ -212,6 +212,16 @@ class analyze
   Double_t Pmz_nbins = nbins;
   Double_t Pmz_xmin = -0.15;
   Double_t Pmz_xmax = 0.15;
+
+  //Transverse Component (Pt)
+  Double_t Pt_nbins = nbins;
+  Double_t Pt_xmin  =  0.;
+  Double_t Pt_xmax  =  1.0;
+
+  //Light-Cone Alpha
+  Double_t Alpha_nbins = 100;
+  Double_t Alpha_xmin = 0.;
+  Double_t Alpha_xmax = 2.0;
   
   //Missing Mass 
   Double_t MM_nbins = nbins;
@@ -552,6 +562,12 @@ class analyze
   TH2F *H_Pm_vs_thnq;
   TH2F *H_Pm_vs_thnq_ps;  //Phase Space 2D (use for cross section calculation)
 
+  //---Light-Cone Variables----
+  
+  //2D Alpha vs. Pt (Used for 2D cross sections, binned in Pt)
+  TH2F *H_Alpha_vs_Pt;
+  TH2F *H_Alpha_vs_Pt_ps;  
+
   //Create Scaler Related Histogram (ONLY FOR SCALERS)
   TH1F *H_bcmCurrent;
 
@@ -570,13 +586,15 @@ class analyze
   TH1F *simc_Pm_rad = 0;					     				     
   TH1F *simc_th_nq_rad = 0;					     
   TH2F *simc_Pm_vs_thnq_rad = 0;
-
+  TH2F *simc_Alpha_vs_Pt_rad = 0;
+  
   //--------SIMC NON-RADIATIVE---------
   TH1F *simc_Q2_norad = 0;			   	      		     
   TH1F *simc_Pm_norad = 0;					     				     
   TH1F *simc_th_nq_norad = 0;									                                           
   TH2F *simc_Pm_vs_thnq_norad = 0;
-
+  TH2F *simc_Alpha_vs_Pt_norad = 0;
+  
   //Used in ApplyRadCorr() Method. DO NOT NEED TO BE INITIALIZED in analyze.C. These just hold existing histos
   
   //-------DATA (BEFORE APPLYING RADIATIVE CORRECTIONS)------
@@ -584,13 +602,14 @@ class analyze
   TH1F *data_Pm = 0;					     				     
   TH1F *data_th_nq = 0;
   TH2F *data_Pm_vs_thnq = 0;
-
+  TH2F *data_Alpha_vs_Pt = 0;
+  
   //-------RADIATIVE CORRECTION RATIO simc_Ynorad / simc_Yrad--------
   TH1F *ratio_Q2 = 0;
   TH1F *ratio_Pm = 0;
   TH1F *ratio_th_nq = 0;
   TH2F *ratio_Pm_vs_thnq = 0;
-
+  TH2F *ratio_Alpha_vs_Pt = 0;
 
   //-------DATA (AFTER APPLYING RADIATIVE CORRECTIONS)------
   TH1F *data_Q2_corr = 0;			   	      		     
@@ -602,14 +621,20 @@ class analyze
   Double_t PhaseSpace;   //to be calculated in the SIMC event loop (the one in non-radiative SIMC should be used after rad. corrections)
 
   //Related Histograms
-  TH1F *dataPm = 0;
-  TH1F *simcPm = 0;
+  TH1F *dataPm    = 0;
+  TH1F *simcPm    = 0;
   TH1F *simcPm_ps = 0;
+ 
+
   //2D Pm vs. thnq (FullWeight) / Pm vs thnq (PhaseSpace)
-  TH2F *dataPm_v_thnq = 0;
-  TH2F *simcPm_v_thnq = 0;
+  TH2F *dataPm_v_thnq    = 0;
+  TH2F *simcPm_v_thnq    = 0;
   TH2F *simcPm_v_thnq_ps = 0;
 
+  //Light-Cone Histograms of momentum fraction (Alpha) vs. Transverse Recoil Nucleon Momentum (Pt)
+  TH2F *dataAlpha_v_Pt    = 0;
+  TH2F *simcAlpha_v_Pt    = 0;
+  TH2F *simcAlpha_v_Pt_ps = 0;
 
   //---------------------------------------------------------------------------------
 
@@ -701,6 +726,8 @@ class analyze
 
   
   TH2F *H_Pm_vs_thnq_total = 0;                                      TH2F *H_Pm_vs_thnq_i = 0; 
+  TH2F *H_Alpha_vs_Pt_total = 0;                                     TH2F *H_Alpha_vs_Pt_i = 0;
+  
   TH1F *H_bcmCurrent_total = 0;					     TH1F *H_bcmCurrent_i = 0;                                       
 
   //SYSTEMATICS TOTAL		                                      //SYSTEMATICS ith		     
@@ -760,6 +787,14 @@ class analyze
   //These corrections are applied after radiative corrections, therefore, the average kinematics must be calculated
   //with radiative effects turned OFF.
 
+
+  //Light-Cone Momentum Variables (at vertex)
+  Double_t PmPar_v;     //parallel component of recoil momentum relative to q-vector
+  Double_t PmPerp_v;    //transverse component of recoil momentum relative to q-vector
+  Double_t alpha_n_v;   //light-cone momentum fraction of the recoil neutron
+  Double_t alpha_v;     //momentum fraction of struck nucleon (normalized such that: alpha + alpha_n = 2)
+
+  //Standard Kinematic variable (at vertex)
   Double_t Ein_v;               //incident beam energy at vertex (simulates external rad. has rad. tail) ??? 
   Double_t Q2_v;                //Q2 (vertex)  
   Double_t nu_v;                //energy transfer = Ein_v - Ef_v
@@ -769,7 +804,8 @@ class analyze
   Double_t Pf_v;                //final proton momentum at the vertex
   Double_t Ep_v;                //final proton energy at the vertex
   Double_t Ef_v;                //final electron energy at the vertex
-
+  Double_t En_v;                //final neutron energy at the vertex
+  
   Double_t ki_v;
   Double_t kf_v;
   Double_t X_v;
@@ -886,6 +922,30 @@ class analyze
   TH2F *H_sphi_pq_2Davg;
   TH2F *H_sphi_nq_2Davg;
 
+  //Declare 2D Light-Cone (LC) Average Kinematic Histograms (Alpha_vertex vs. Pt_vertex averaged over different kinematics)
+  TH2F *H_Alpha_vs_Pt_v;            //2d for average histogram denominator (Yield)
+
+  TH2F *H_Alpha_2Davg_LC;
+  TH2F *H_Pt_2Davg_LC;
+  
+  TH2F *H_Ein_2Davg_LC;
+  TH2F *H_kf_2Davg_LC;
+  TH2F *H_theta_elec_2Davg_LC;
+  TH2F *H_Pf_2Davg_LC;
+  TH2F *H_theta_prot_2Davg_LC;
+  TH2F *H_q_2Davg_LC;
+  TH2F *H_theta_q_2Davg_LC;
+  TH2F *H_Q2_2Davg_LC;
+  TH2F *H_omega_2Davg_LC;
+  TH2F *H_xbj_2Davg_LC;
+  TH2F *H_Pm_2Davg_LC;
+  TH2F *H_theta_pq_2Davg_LC;
+  TH2F *H_theta_nq_2Davg_LC;
+  TH2F *H_cphi_pq_2Davg_LC;
+  TH2F *H_cphi_nq_2Davg_LC;
+  TH2F *H_sphi_pq_2Davg_LC;
+  TH2F *H_sphi_nq_2Davg_LC;
+  
   //-----------------------------SYSTEMATICS STUDIES HISTOGRAMS-------------------------
 
   TH1F *H_Em_sys; 
@@ -1149,7 +1209,12 @@ class analyze
   Double_t xangle;                //Angle of detected particle with scattered electron (Used to determine hadron angle)
   Double_t theta_p;               //to be calculated separately (in data)
 
-
+  //Light-Cone Momentum Variables
+  Double_t PmPar;     //parallel component of recoil momentum relative to q-vector
+  Double_t PmPerp;    //transverse component of recoil momentum relative to q-vector
+  Double_t alpha_n;   //light-cone momentum fraction of the recoil neutron
+  Double_t alpha;     //momentum fraction of struck nucleon (normalized such that: alpha + alpha_n = 2)
+  
   //SIMC Specific TTree Variable Names
   Double_t Normfac;
   

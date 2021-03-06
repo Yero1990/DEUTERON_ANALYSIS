@@ -46,7 +46,7 @@ bool h_delta = 1
 bool e_delta = 1                                                                                              
 bool ztar_diff = 1                                                                                            
 bool Q2 = 1                                                                                                   
-bool th_nq = 1                                                                                                
+bool th_nq = 0                                                                                                
 bool MM = 0                                                                                                   
                                                                                                               
 ;PID Cuts                                                                                                     

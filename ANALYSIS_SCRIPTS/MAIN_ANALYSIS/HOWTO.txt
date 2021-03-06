@@ -1,0 +1,34 @@
+********************************************
+ HOW TO: Running the D(e,e'p) Analysis Code
+********************************************
+
+
+analyze.C (.h) : main analysis code and header file
+main_analysis.C : steering script to run the main analysis
+
+To analys the data:
+
+-----------------------
+
+For H(e,e'p) analysis:
+>> root -l
+>> .L main_analysis.C
+>> main_analysis(1)
+
+-----------------------
+
+For D(e,e'p)n analysis:
+>> root -l
+>> .L main_analysis.C
+>> main_analysis(2)
+
+
+Depending on the analysis input (1 or 2), the
+steering script will load set_heep_cuts.inp for
+main_analysis(1) or set_deep_cuts.inp for
+main_analysis(2)
+
+In these .inp files, one can set the main parameters necessary for
+the analysis code to run. For example, whether to analyze data or simc,
+do radiative corrections, which setting or data set to analyze, and analysis
+cuts to use, etc.

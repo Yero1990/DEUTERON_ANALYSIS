@@ -126,6 +126,28 @@ analyze::analyze(int run=-1000, string e_arm="SHMS", string type="data", string 
   H_sphi_pq_2Davg    = NULL;
   H_sphi_nq_2Davg    = NULL;
 
+  //Initialize SIMC Light-Cone 2D Average Kinematic Histograms
+  H_Alpha_vs_Pt_v       = NULL;             //2d for average histogram denominator (Yield)
+  H_Alpha_2Davg_LC      = NULL;
+  H_Pt_2Davg_LC         = NULL;
+  H_Ein_2Davg_LC        = NULL;
+  H_kf_2Davg_LC         = NULL;
+  H_theta_elec_2Davg_LC = NULL;
+  H_Pf_2Davg_LC         = NULL;
+  H_theta_prot_2Davg_LC = NULL;
+  H_q_2Davg_LC          = NULL;
+  H_theta_q_2Davg_LC    = NULL;
+  H_Q2_2Davg_LC         = NULL;
+  H_omega_2Davg_LC      = NULL;
+  H_xbj_2Davg_LC        = NULL;
+  H_Pm_2Davg_LC         = NULL;
+  H_theta_pq_2Davg_LC   = NULL;
+  H_theta_nq_2Davg_LC   = NULL;
+  H_cphi_pq_2Davg_LC    = NULL;
+  H_cphi_nq_2Davg_LC    = NULL;
+  H_sphi_pq_2Davg_LC    = NULL;
+  H_sphi_nq_2Davg_LC    = NULL;
+ 
   //==Initialize DATA/SIMC Histograms==
 
   H_Pm_ps = NULL;  //(Phase Space ONLY used in SIMC)
@@ -220,6 +242,9 @@ analyze::analyze(int run=-1000, string e_arm="SHMS", string type="data", string 
   H_Pm_vs_thnq = NULL;
   H_Pm_vs_thnq_ps = NULL;
 
+  H_Alpha_vs_Pt = NULL;
+  H_Alpha_vs_Pt_ps = NULL;
+  
   //Initialize Scaler Histograms
   H_bcmCurrent = NULL;
 
@@ -362,6 +387,27 @@ analyze::~analyze()
   delete H_sphi_pq_2Davg;       H_sphi_pq_2Davg    = NULL;
   delete H_sphi_nq_2Davg;       H_sphi_nq_2Davg    = NULL;
 
+  delete H_Alpha_vs_Pt_v;          H_Alpha_vs_Pt_v       = NULL;
+  delete H_Alpha_2Davg_LC;         H_Alpha_2Davg_LC      = NULL;
+  delete H_Pt_2Davg_LC;            H_Pt_2Davg_LC         = NULL;
+  delete H_Ein_2Davg_LC;           H_Ein_2Davg_LC        = NULL;
+  delete H_kf_2Davg_LC;            H_kf_2Davg_LC         = NULL;
+  delete H_theta_elec_2Davg_LC;    H_theta_elec_2Davg_LC = NULL;
+  delete H_Pf_2Davg_LC;            H_Pf_2Davg_LC         = NULL;
+  delete H_theta_prot_2Davg_LC;    H_theta_prot_2Davg_LC = NULL;
+  delete H_q_2Davg_LC;             H_q_2Davg_LC          = NULL;
+  delete H_theta_q_2Davg_LC;       H_theta_q_2Davg_LC    = NULL;
+  delete H_Q2_2Davg_LC;            H_Q2_2Davg_LC         = NULL;
+  delete H_omega_2Davg_LC;         H_omega_2Davg_LC      = NULL;
+  delete H_xbj_2Davg_LC;           H_xbj_2Davg_LC        = NULL;
+  delete H_Pm_2Davg_LC;            H_Pm_2Davg_LC         = NULL;
+  delete H_theta_pq_2Davg_LC;      H_theta_pq_2Davg_LC   = NULL;
+  delete H_theta_nq_2Davg_LC;      H_theta_nq_2Davg_LC   = NULL;
+  delete H_cphi_pq_2Davg_LC;       H_cphi_pq_2Davg_LC    = NULL;
+  delete H_cphi_nq_2Davg_LC;       H_cphi_nq_2Davg_LC    = NULL;
+  delete H_sphi_pq_2Davg_LC;       H_sphi_pq_2Davg_LC    = NULL;
+  delete H_sphi_nq_2Davg_LC;       H_sphi_nq_2Davg_LC    = NULL;
+  
   //==DELETE DATA/SIMC Histograms==
 
   delete H_Pm_ps;      H_Pm_ps      = NULL;
@@ -456,6 +502,9 @@ analyze::~analyze()
   delete H_Pm_vs_thnq;       H_Pm_vs_thnq    = NULL;
   delete H_Pm_vs_thnq_ps;    H_Pm_vs_thnq_ps = NULL;
 
+  delete H_Alpha_vs_Pt;      H_Alpha_vs_Pt    = NULL;
+  delete H_Alpha_vs_Pt_ps;   H_Alpha_vs_Pt_ps = NULL;
+  
   //Delete Scaler Histograms
   delete H_bcmCurrent; H_bcmCurrent = NULL;
 
@@ -813,6 +862,7 @@ void analyze::SetHistBins()
       xbj_xmax = 1.1;			        
 
 
+      
       //-----------------------------------Focal Plane /  Target Reconstruction------------------------------------
       
       //Target Recon. Var.(Lab)        //Hadron arm Recon. Quantities (ytar, xptar, yptar, delta)	      //Hadron arm Focal Plane Quantities    		           
@@ -1209,7 +1259,12 @@ void analyze::SetHistBins()
   eYColl_xmin = -15.;                  edelta_xmin = -3.;  						      eypfp_xmin = -0.03; 
   eYColl_xmax = 15.;		       edelta_xmax = 3.;                                                     eypfp_xmax = 0.03;                        
   
-  
+  /*Alpha*/                           //Pt (transverse recoil momentum, w.r. to q-vec)
+  Alpha_nbins = 100;                  Pt_nbins = 30.;    //40 MeV bins (same as Pm)
+  Alpha_xmin  = 0.;                   Pt_xmin  = 0.; 
+  Alpha_xmax  = 2.;                   Pt_xmax  = 1.2;
+
+      
     } //End 3289
 
 
@@ -1304,7 +1359,12 @@ void analyze::SetHistBins()
   eYColl_nbins = 100;      	       edelta_nbins = nbins;						      eypfp_nbins = nbins;			 	   
   eYColl_xmin = -15.;                  edelta_xmin = -5.;  						      eypfp_xmin = -0.05; 
   eYColl_xmax = 15.;		       edelta_xmax = 15.;                                                      eypfp_xmax = 0.05;                        
-  
+
+    /*Alpha*/                           //Pt (transverse recoil momentum, w.r. to q-vec)
+  Alpha_nbins = 100;                  Pt_nbins = 30.;    //40 MeV bins (same as Pm)
+  Alpha_xmin  = 0.;                   Pt_xmin  = 0.; 
+  Alpha_xmax  = 2.;                   Pt_xmax  = 1.2;
+
   
     } //End Pm 580 MeV 
 
@@ -1378,6 +1438,7 @@ void analyze::CreateHist()
   
   //SIMC 2D Average Kinematics Histograms (Pmiss vs. th_nq averaged over different kinematics) 
   H_Pm_vs_thnq_v   = new TH2F("H_Pm_vs_thnq_v", "Pm vs. #theta_{nq} (vertex)", thnq_nbins, thnq_xmin, thnq_xmax, Pm_nbins, Pm_xmin, Pm_xmax);
+
   H_Ein_2Davg      = new TH2F("H_Ein_2Davg", "Ein (2D Average)",thnq_nbins, thnq_xmin, thnq_xmax, Pm_nbins, Pm_xmin, Pm_xmax);
   H_kf_2Davg         = new TH2F("H_kf_2Davg", "Final e^{-} Momentum (2D Average)",thnq_nbins, thnq_xmin, thnq_xmax, Pm_nbins, Pm_xmin, Pm_xmax);
   H_theta_elec_2Davg = new TH2F("H_theta_elec_2Davg", "Electron Scattering Angle (2D Average)",thnq_nbins, thnq_xmin, thnq_xmax, Pm_nbins, Pm_xmin, Pm_xmax); 
@@ -1396,6 +1457,34 @@ void analyze::CreateHist()
   H_sphi_pq_2Davg     = new TH2F("H_sphi_pq_2Davg", "sin(#phi_{pq}) (2D Average)",thnq_nbins, thnq_xmin, thnq_xmax, Pm_nbins, Pm_xmin, Pm_xmax);
   H_sphi_nq_2Davg     = new TH2F("H_sphi_nq_2Davg", "sin(#phi_{nq}) (2D Average)",thnq_nbins, thnq_xmin, thnq_xmax, Pm_nbins, Pm_xmin, Pm_xmax);
 
+  //SIMC 2D Light-Cone Average Kinematics Histograms (Alpha vs. Pt averaged over different kinematics) 
+  H_Alpha_vs_Pt_v  = new TH2F("H_Alpha_vs_Pt_v", "#alpha vs. P_{t} (vertex)", Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax);
+
+  H_Alpha_2Davg_LC   = new TH2F("H_Alpha_2Davg_LC", "#alpha (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax);
+  H_Pt_2Davg_LC      = new TH2F("H_Pt_2Davg_LC","Transverse (P_{t}) Missing Momentum (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax); 
+
+  H_Ein_2Davg_LC        = new TH2F("H_Ein_2Davg_LC", "Ein (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax);
+  H_kf_2Davg_LC         = new TH2F("H_kf_2Davg_LC",  "Final e^{-} Momentum (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax);
+  H_theta_elec_2Davg_LC = new TH2F("H_theta_elec_2Davg_LC", "Electron Scattering Angle (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax); 
+  H_Pf_2Davg_LC         = new TH2F("H_Pf_2Davg_LC", "Final Proton Momentum (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax);
+  H_theta_prot_2Davg_LC = new TH2F("H_theta_prot_2Davg_LC", "Proton Scattering Angle (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax);
+  H_q_2Davg_LC          = new TH2F("H_q_2Davg_LC", "q-vector, |q| (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax);
+  H_theta_q_2Davg_LC    = new TH2F("H_theta_q_2Davg_LC", "#theta_{q} (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax); 
+  H_Q2_2Davg_LC         = new TH2F("H_Q2_2Davg_LC","Q2 (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax); 
+  H_omega_2Davg_LC      = new TH2F("H_omega_2Davg_LC","Energy Transfer, #omega (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax); 
+  H_xbj_2Davg_LC        = new TH2F("H_xbj_2Davg_LC", "x-Bjorken (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax);  
+  H_Pm_2Davg_LC         = new TH2F("H_Pm_2Davg_LC","Missing Momentum (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax); 
+  H_theta_pq_2Davg_LC   = new TH2F("H_theta_pq_2Davg_LC", "#theta_{pq} (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax);
+  H_theta_nq_2Davg_LC   = new TH2F("H_theta_nq_2Davg_LC", "#theta_{nq} (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax);
+  H_cphi_pq_2Davg_LC    = new TH2F("H_cphi_pq_2Davg_LC", "cos(#phi_{pq}) (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax);
+  H_cphi_nq_2Davg_LC    = new TH2F("H_cphi_nq_2Davg_LC", "cos(#phi_{nq}) (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax);
+  H_sphi_pq_2Davg_LC    = new TH2F("H_sphi_pq_2Davg_LC", "sin(#phi_{pq}) (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax);
+  H_sphi_nq_2Davg_LC    = new TH2F("H_sphi_nq_2Davg_LC", "sin(#phi_{nq}) (2D LC Average)",Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax);
+
+
+
+
+  
   H_Pm_ps = new TH1F("H_Pm_ps", "Missing Momentum Phase Space", Pm_nbins, Pm_xmin, Pm_xmax);
 
   //Primary (electron) Kinematics
@@ -1497,6 +1586,9 @@ void analyze::CreateHist()
   //2D Pm vs. thnq (for cross section calculation)
   H_Pm_vs_thnq  = new TH2F("H_Pm_vs_thnq", "Pm vs. #theta_{nq}", thnq_nbins, thnq_xmin, thnq_xmax, Pm_nbins, Pm_xmin, Pm_xmax);
   H_Pm_vs_thnq_ps  = new TH2F("H_Pm_vs_thnq_ps", "Pm vs. #theta_{nq}", thnq_nbins, thnq_xmin, thnq_xmax, Pm_nbins, Pm_xmin, Pm_xmax);
+
+  H_Alpha_vs_Pt  = new TH2F("H_Alpha_vs_Pt", "#alpha vs. P_{t}", Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax);
+  H_Alpha_vs_Pt_ps  = new TH2F("H_Alpha_vs_Pt_ps", "#alpha vs. P_{t}", Pt_nbins, Pt_xmin, Pt_xmax, Alpha_nbins, Alpha_xmin, Alpha_xmax);
 
 
   //Scaler Histograms
@@ -1990,11 +2082,35 @@ void analyze::EventLoop()
 	  //--------Calculated Kinematic Varibales----------------
 	  theta_p = xangle - theta_e;
 
-	  En = Kn + MN;
-	  Ep = Kp + MP;
+	  En = Kn + MN;    //neutron energy
+	  Ep = Kp + MP;   //proton energy
 
 	  M_recoil = sqrt(pow((nu + MD - Ep), 2) - Pm*Pm);
 	  MM2 = M_recoil * M_recoil;
+
+	  //---------Light Cone Variables (C.Y. March 05, 2021)---------
+
+	  /*
+	    NOTE: In analogy to binning the exp. cross section in (Pm, th_nq) 2D histo bins,
+	    one can also bin the exp. cross sections in light-cone (alpha, pt) 2D histo bins, which can
+	    be later used to extact the light-cone momentum distributions. See https://arxiv.org/abs/1501.05377
+	    alpha -> light-cone momentum fraction of the struck nucleon, pt -> transverse momentum component of 
+	    the struck nucleon which is equal to the -pt_n (transverse momentum component of the recoil system 
+	    (neutron for D(e,e'p)n case)
+	  */
+	  
+	  //recoil ("missing neutron") momentum component along q-vector
+	  PmPar = Pm * cos(th_nq);
+
+	  //recoil momentum component transverse to q-vector
+	  PmPerp = sqrt(pow(Pm,2) - pow(PmPar,2));
+	    
+	  //light-cone momentum fraction of the recoil neutron
+	  alpha_n = (En - PmPar) / (MD/2.);
+
+	  //momentum fraction of struck nucleon (normalized such that: alpha + alpha_n = 2)
+	  alpha = 2. - alpha_n;
+
 
 	  //-----If H(e,e'p)
 	  if(reaction=="heep" || reaction=="al_dummy"){
@@ -2131,7 +2247,7 @@ void analyze::EventLoop()
 		  if(base_cuts_2d&&pid_cuts&&hmsColl_Cut&&shmsColl_Cut)
 		    {
 		      H_Pm_vs_thnq->Fill(th_nq/dtr, Pm);
-		    
+		      H_Alpha_vs_Pt->Fill(PmPerp, alpha);
 		    }
 
 		  if(base_cuts&&pid_cuts&&hmsColl_Cut&&shmsColl_Cut) //CHECK
@@ -2607,6 +2723,34 @@ void analyze::EventLoop()
 	  Pmz_q_v = p_miss_q_v.Z();   //parallel component to +z (+z is along q)
 	  Pmx_q_v = p_miss_q_v.X();   //in-plane perpendicular component to +z
 	  Pmy_q_v = p_miss_q_v.Y();   //out-of-plane component (Oop)
+
+
+	  //---------Light Cone Variables (at vertex) (C.Y. March 05, 2021)---------
+	  
+	  /*
+	    NOTE: In analogy to binning the exp. cross section in (Pm, th_nq) 2D histo bins,
+	    one can also bin the exp. cross sections in light-cone (alpha, pt) 2D histo bins, which can
+	    be later used to extact the light-cone momentum distributions. See https://arxiv.org/abs/1501.05377
+	    alpha -> light-cone momentum fraction of the struck nucleon, pt -> transverse momentum component of 
+	    the struck nucleon which is equal to the -pt_n (transverse momentum component of the recoil system 
+	    (neutron for D(e,e'p)n case)
+	  */
+
+	  //neutron energy at the vertex
+	  En_v = sqrt(MN*MN + Pm_v*Pm_v);
+
+	  //recoil ("missing neutron") momentum component along q-vector
+	  PmPar_v = Pm_v * cos(th_nq_v);
+
+	  //recoil momentum component transverse to q-vector
+	  PmPerp_v = sqrt(pow(Pm_v,2) - pow(PmPar_v,2));
+	    
+	  //light-cone momentum fraction of the recoil neutron
+	  alpha_n_v = (En_v - PmPar_v) / (MD/2.);
+
+	  //momentum fraction of struck nucleon (normalized such that: alpha + alpha_n = 2)
+	  alpha_v = 2. - alpha_n_v;
+
 	  
 	  
 	  //--------------------------------------------------------------------------------
@@ -2704,12 +2848,39 @@ void analyze::EventLoop()
 	      H_sphi_pq_2Davg    ->Fill(th_nq_v/dtr, Pm_v, sin(ph_pq_v)*FullWeight);
 	      H_sphi_nq_2Davg    ->Fill(th_nq_v/dtr, Pm_v, sin(ph_nq_v)*FullWeight);
 
+	      //Light-Cone average kinematics
+	      H_Alpha_vs_Pt_v       ->Fill(PmPerp_v, alpha_v, FullWeight);
+
+	      H_Alpha_2Davg_LC      ->Fill(PmPerp_v, alpha_v, alpha_v*FullWeight);
+	      H_Pt_2Davg_LC         ->Fill(PmPerp_v, alpha_v, PmPerp_v*FullWeight);
+	      
+	      H_Ein_2Davg_LC        ->Fill(PmPerp_v, alpha_v, Ein_v*FullWeight);
+	      H_kf_2Davg_LC         ->Fill(PmPerp_v, alpha_v, kf_v*FullWeight);
+	      H_theta_elec_2Davg_LC ->Fill(PmPerp_v, alpha_v, (th_e_v/dtr)*FullWeight);
+	      H_Pf_2Davg_LC         ->Fill(PmPerp_v, alpha_v, Pf_v*FullWeight);
+	      H_theta_prot_2Davg_LC ->Fill(PmPerp_v, alpha_v, (th_p_v/dtr)*FullWeight);
+	      H_q_2Davg_LC          ->Fill(PmPerp_v, alpha_v, q_lab_v*FullWeight);
+	      H_theta_q_2Davg_LC    ->Fill(PmPerp_v, alpha_v, (th_q_v/dtr)*FullWeight);
+	      H_Q2_2Davg_LC         ->Fill(PmPerp_v, alpha_v, Q2_v*FullWeight);
+	      H_omega_2Davg_LC      ->Fill(PmPerp_v, alpha_v, nu_v*FullWeight);
+	      H_xbj_2Davg_LC        ->Fill(PmPerp_v, alpha_v, X_v*FullWeight);
+	      H_Pm_2Davg_LC         ->Fill(PmPerp_v, alpha_v, Pm_v*FullWeight);
+	      H_theta_pq_2Davg_LC   ->Fill(PmPerp_v, alpha_v, (th_pq_v/dtr)*FullWeight);
+	      H_theta_nq_2Davg_LC   ->Fill(PmPerp_v, alpha_v, (th_nq_v/dtr)*FullWeight);
+	      H_cphi_pq_2Davg_LC    ->Fill(PmPerp_v, alpha_v, cos(ph_pq_v)*FullWeight);
+	      H_cphi_nq_2Davg_LC    ->Fill(PmPerp_v, alpha_v, cos(ph_nq_v)*FullWeight);
+	      H_sphi_pq_2Davg_LC    ->Fill(PmPerp_v, alpha_v, sin(ph_pq_v)*FullWeight);
+	      H_sphi_nq_2Davg_LC    ->Fill(PmPerp_v, alpha_v, sin(ph_nq_v)*FullWeight);
+
+
 	      
 	      //This is NOT used in the average. This is for the 2D cross section Pm vs. thnq binned in thnq 
 	      H_Pm_vs_thnq->Fill(th_nq/dtr, Pm, FullWeight);
 	      H_Pm_vs_thnq_ps->Fill(th_nq/dtr, Pm, PhaseSpace);
 
-
+	      H_Alpha_vs_Pt->Fill(PmPerp, alpha, FullWeight);
+	      H_Alpha_vs_Pt_ps->Fill(PmPerp, alpha, PhaseSpace);
+	      
 	    }
 
 	  if(base_cuts&&hmsColl_Cut&&shmsColl_Cut){
@@ -3003,7 +3174,28 @@ void analyze::EventLoop()
       H_sphi_pq_2Davg     ->Divide(H_Pm_vs_thnq_v);
       H_sphi_nq_2Davg     ->Divide(H_Pm_vs_thnq_v); 
 
+      //Finish Calculating Light-Cone 2D Average Kinematics
+      H_Alpha_2Davg_LC      ->Divide(H_Alpha_vs_Pt_v);
+      H_Pt_2Davg_LC         ->Divide(H_Alpha_vs_Pt_v);
 
+      H_Ein_2Davg_LC        ->Divide(H_Alpha_vs_Pt_v);
+      H_kf_2Davg_LC         ->Divide(H_Alpha_vs_Pt_v);
+      H_theta_elec_2Davg_LC ->Divide(H_Alpha_vs_Pt_v);
+      H_Pf_2Davg_LC         ->Divide(H_Alpha_vs_Pt_v);
+      H_theta_prot_2Davg_LC ->Divide(H_Alpha_vs_Pt_v);
+      H_q_2Davg_LC          ->Divide(H_Alpha_vs_Pt_v);
+      H_theta_q_2Davg_LC    ->Divide(H_Alpha_vs_Pt_v);
+      H_Q2_2Davg_LC         ->Divide(H_Alpha_vs_Pt_v);
+      H_omega_2Davg_LC      ->Divide(H_Alpha_vs_Pt_v);
+      H_xbj_2Davg_LC        ->Divide(H_Alpha_vs_Pt_v);
+      H_Pm_2Davg_LC         ->Divide(H_Alpha_vs_Pt_v);
+      H_theta_pq_2Davg_LC   ->Divide(H_Alpha_vs_Pt_v);
+      H_theta_nq_2Davg_LC   ->Divide(H_Alpha_vs_Pt_v);
+      H_cphi_pq_2Davg_LC     ->Divide(H_Alpha_vs_Pt_v);
+      H_cphi_nq_2Davg_LC     ->Divide(H_Alpha_vs_Pt_v); 
+      H_sphi_pq_2Davg_LC     ->Divide(H_Alpha_vs_Pt_v);
+      H_sphi_nq_2Davg_LC     ->Divide(H_Alpha_vs_Pt_v);
+      
       //These average kinematics histograms should be stored in a ROOTfile for later use
 
     } //End "SIMC"
@@ -3226,7 +3418,8 @@ void analyze::ApplyWeight()
 
     //2D Pm vs. theta_nq
     H_Pm_vs_thnq->Scale(FullWeight);
-
+    H_Alpha_vs_Pt->Scale(FullWeight);
+    
     H_Em_vs_Pm->Scale(FullWeight);
     
     H_Q2_vs_W->Scale(FullWeight);
@@ -3402,7 +3595,8 @@ void analyze::WriteHist(string rad_flag="")
       H_exfp_vs_eyfp->Write();
 
       H_Pm_vs_thnq->Write();
-
+      H_Alpha_vs_Pt->Write();
+      
       H_Em_vs_Pm->Write();
       H_Em_nuc_vs_Pm->Write();
       H_Q2_vs_W->Write();
@@ -3536,6 +3730,30 @@ void analyze::WriteHist(string rad_flag="")
       H_sphi_pq_2Davg     ->Write();
       H_sphi_nq_2Davg     ->Write(); 
 
+      //Write Light-Cone(LC) Average 2D Kinematics to file
+      H_Alpha_vs_Pt_v    ->Write();
+
+      H_Alpha_2Davg_LC   ->Write();
+      H_Pt_2Davg_LC      ->Write();
+      
+      H_Ein_2Davg_LC        ->Write();
+      H_kf_2Davg_LC         ->Write();
+      H_theta_elec_2Davg_LC ->Write();
+      H_Pf_2Davg_LC         ->Write();
+      H_theta_prot_2Davg_LC ->Write();
+      H_q_2Davg_LC          ->Write();
+      H_theta_q_2Davg_LC    ->Write();
+      H_Q2_2Davg_LC         ->Write();
+      H_omega_2Davg_LC      ->Write();
+      H_xbj_2Davg_LC        ->Write();
+      H_Pm_2Davg_LC         ->Write();
+      H_theta_pq_2Davg_LC   ->Write();
+      H_theta_nq_2Davg_LC   ->Write();
+      H_cphi_pq_2Davg_LC     ->Write();
+      H_cphi_nq_2Davg_LC     ->Write(); 
+      H_sphi_pq_2Davg_LC     ->Write();
+      H_sphi_nq_2Davg_LC     ->Write(); 
+	    
       //Write PhaseSpace to SIMC ROOT (Only norad SIMC should be used)
       H_Pm_ps->Write();
 
@@ -3624,6 +3842,9 @@ void analyze::WriteHist(string rad_flag="")
       H_Pm_vs_thnq->Write();
       H_Pm_vs_thnq_ps->Write();
 
+      H_Alpha_vs_Pt->Write();
+      H_Alpha_vs_Pt_ps->Write();
+      
       H_Em_vs_Pm->Write();
       H_Q2_vs_W->Write();
       H_Q2_vs_eyptar->Write();
@@ -3821,6 +4042,7 @@ void analyze::CombineHistos()
     data_file->GetObject("H_Q2_vs_eyptar",H_Q2_vs_eyptar_i);
     data_file->GetObject("H_Q2_vs_Pm",H_Q2_vs_Pm_i);
     data_file->GetObject("H_Pm_vs_thnq",H_Pm_vs_thnq_i);
+    data_file->GetObject("H_Alpha_vs_Pt",H_Alpha_vs_Pt_i);    
     data_file->GetObject("H_Em_nuc_vs_Pm",H_Em_nuc_vs_Pm_i);
     data_file->GetObject("H_bcmCurrent",H_bcmCurrent_i);
     
@@ -3955,6 +4177,7 @@ void analyze::CombineHistos()
       H_Q2_vs_Pm_i->Write();			  
       H_Em_nuc_vs_Pm_i->Write();
       H_Pm_vs_thnq_i->Write();
+      H_Alpha_vs_Pt_i->Write();
       H_bcmCurrent_i->Write();   
 
       
@@ -4092,6 +4315,7 @@ void analyze::CombineHistos()
       outROOT->GetObject("H_Q2_vs_Pm",H_Q2_vs_Pm_total);
       outROOT->GetObject("H_Em_nuc_vs_Pm",H_Em_nuc_vs_Pm_total);
       outROOT->GetObject("H_Pm_vs_thnq",H_Pm_vs_thnq_total);
+      outROOT->GetObject("H_Alpha_vs_Pt",H_Alpha_vs_Pt_total);      
       outROOT->GetObject("H_bcmCurrent",H_bcmCurrent_total);
       
       //----SYSTEMATIC HISTOS----
@@ -4216,6 +4440,7 @@ void analyze::CombineHistos()
       H_Q2_vs_Pm_total->Add(			       H_Q2_vs_Pm_i);
       H_Em_nuc_vs_Pm_total->Add(		       H_Em_nuc_vs_Pm_i);		  
       H_Pm_vs_thnq_total->Add(		               H_Pm_vs_thnq_i);		  
+      H_Alpha_vs_Pt_total->Add(		               H_Alpha_vs_Pt_i);		  
       H_bcmCurrent_total->Add(			       H_bcmCurrent_i);                    
       
       //----SYSTEMATIC HISTOS----
@@ -4341,6 +4566,7 @@ void analyze::CombineHistos()
       H_Q2_vs_Pm_total->Write("", TObject::kOverwrite);
       H_Em_nuc_vs_Pm_total->Write("", TObject::kOverwrite);	
       H_Pm_vs_thnq_total->Write("", TObject::kOverwrite);	
+      H_Alpha_vs_Pt_total->Write("", TObject::kOverwrite);	
       H_bcmCurrent_total->Write("", TObject::kOverwrite);		
       
       //----SYSTEMATIC HISTOS----
@@ -4496,6 +4722,7 @@ void analyze::ChargeNorm()
    outROOT->GetObject("H_Q2_vs_Pm",H_Q2_vs_Pm_total);
    outROOT->GetObject("H_Em_nuc_vs_Pm",H_Em_nuc_vs_Pm_total);
    outROOT->GetObject("H_Pm_vs_thnq",H_Pm_vs_thnq_total);
+   outROOT->GetObject("H_Alpha_vs_Pt",H_Alpha_vs_Pt_total);
    outROOT->GetObject("H_bcmCurrent",H_bcmCurrent_total);
    
    //----SYSTEMATIC HISTOS----
@@ -4619,6 +4846,7 @@ void analyze::ChargeNorm()
    H_Q2_vs_Pm_total->Scale(charge_norm);
    H_Em_nuc_vs_Pm_total->Scale(charge_norm);
    H_Pm_vs_thnq_total->Scale(charge_norm);
+   H_Alpha_vs_Pt_total->Scale(charge_norm);
    H_bcmCurrent_total->Scale(charge_norm);
    
    //----SYSTEMATIC HISTOS----
@@ -4744,6 +4972,7 @@ void analyze::ChargeNorm()
    H_Q2_vs_Pm_total->Write("", TObject::kOverwrite);
    H_Em_nuc_vs_Pm_total->Write("", TObject::kOverwrite);	
    H_Pm_vs_thnq_total->Write("", TObject::kOverwrite);
+   H_Alpha_vs_Pt_total->Write("", TObject::kOverwrite);
    H_bcmCurrent_total->Write("", TObject::kOverwrite);
    
    //----SYSTEMATIC HISTOS----
@@ -4863,24 +5092,28 @@ void analyze::CalcRadCorr()
   rad_file->GetObject("H_Pm", simc_Pm_rad);
   rad_file->GetObject("H_theta_nq", simc_th_nq_rad);
   rad_file->GetObject("H_Pm_vs_thnq", simc_Pm_vs_thnq_rad);
+  rad_file->GetObject("H_Alpha_vs_Pt", simc_Alpha_vs_Pt_rad);
 
   norad_file->cd();	
   norad_file->GetObject("H_Q2", simc_Q2_norad);
   norad_file->GetObject("H_Pm", simc_Pm_norad);
   norad_file->GetObject("H_theta_nq", simc_th_nq_norad);
   norad_file->GetObject("H_Pm_vs_thnq", simc_Pm_vs_thnq_norad);
+  norad_file->GetObject("H_Alpha_vs_Pt", simc_Alpha_vs_Pt_norad);
 
   //Calculate Non-Radiative to Radiative SIMC Ratio 
   simc_Q2_norad->Divide(simc_Q2_rad);
   simc_Pm_norad->Divide(simc_Pm_rad);
   simc_th_nq_norad->Divide(simc_th_nq_rad);
   simc_Pm_vs_thnq_norad->Divide(simc_Pm_vs_thnq_rad);
+  simc_Alpha_vs_Pt_norad->Divide(simc_Alpha_vs_Pt_rad);
 
   //Rename Histograms  / Set Title
   simc_Q2_norad->SetNameTitle("H_Q2_ratio", "SIMC Q2_{norad} / Q2_{rad} Ratio");
   simc_Pm_norad->SetNameTitle("H_Pm_ratio", "SIMC Pm_{norad} / Pm_{rad} Ratio");
   simc_th_nq_norad->SetNameTitle("H_th_nq_ratio", "SIMC th_nq_{norad} / th_nq_{rad} Ratio");
   simc_Pm_vs_thnq_norad->SetNameTitle("H_Pm_vs_thnq_ratio", "SIMC (Pm vs #theta_{nq})_{norad}/(Pm vs #theta_{nq})_{rad} Ratio");
+  simc_Alpha_vs_Pt_norad->SetNameTitle("H_Alpha_vs_Pt_ratio", "SIMC (#alpha vs P_{t})_{norad}/(#alpha vs P_{t})_{rad} Ratio");
 
   //Write Radiative Correction Ratios to ROOTfile
   if(model=="pwia"){simc_OutputFileName_radCorr =  simc_OutputFileName_radCorr_pwia;}
@@ -4895,6 +5128,7 @@ void analyze::CalcRadCorr()
   simc_Pm_norad->Write();
   simc_th_nq_norad->Write();
   simc_Pm_vs_thnq_norad->Write();
+  simc_Alpha_vs_Pt_norad->Write();
 
   rad_ratio_file->Close();
 
@@ -4939,19 +5173,22 @@ void analyze::ApplyRadCorr()
   data_file->GetObject("H_Pm", data_Pm);
   data_file->GetObject("H_theta_nq", data_th_nq);
   data_file->GetObject("H_Pm_vs_thnq", data_Pm_vs_thnq);
+  data_file->GetObject("H_Alpha_vs_Pt", data_Alpha_vs_Pt);
 
   radCorr_file->cd();	
   radCorr_file->GetObject("H_Q2_ratio", ratio_Q2);
   radCorr_file->GetObject("H_Pm_ratio", ratio_Pm);
   radCorr_file->GetObject("H_th_nq_ratio", ratio_th_nq);
   radCorr_file->GetObject("H_Pm_vs_thnq_ratio", ratio_Pm_vs_thnq);
+  radCorr_file->GetObject("H_Alpha_vs_Pt_ratio", ratio_Alpha_vs_Pt);
 
   //Apply Radiative Corrections to Data
   data_Q2->Multiply(ratio_Q2);
   data_Pm->Multiply(ratio_Pm);
   data_th_nq->Multiply(ratio_th_nq);
   data_Pm_vs_thnq->Multiply(ratio_Pm_vs_thnq);
-
+  data_Alpha_vs_Pt->Multiply(ratio_Alpha_vs_Pt);
+ 
   //Testing Systematic Studies Dependence on Rad. COrr Ratio
   //Do not apply rad. corr, and study systematic effects
 
@@ -4974,7 +5211,8 @@ void analyze::ApplyRadCorr()
   data_Pm->Write();
   data_th_nq->Write();
   data_Pm_vs_thnq->Write();
-
+  data_Alpha_vs_Pt->Write();
+  
   data_radcorr->Close();
 
 }
@@ -5013,12 +5251,16 @@ void analyze::GetXsec()
   data_file->cd();
   data_file->GetObject("H_Pm", dataPm); 
   data_file->GetObject("H_Pm_vs_thnq", dataPm_v_thnq); 
+  data_file->GetObject("H_Alpha_vs_Pt", dataAlpha_v_Pt); 
 
   simc_file->cd();                                                         
   simc_file->GetObject("H_Pm", simcPm);
   simc_file->GetObject("H_Pm_ps", simcPm_ps); 
   simc_file->GetObject("H_Pm_vs_thnq", simcPm_v_thnq);
   simc_file->GetObject("H_Pm_vs_thnq_ps", simcPm_v_thnq_ps); 
+
+  simc_file->GetObject("H_Alpha_vs_Pt", simcAlpha_v_Pt);
+  simc_file->GetObject("H_Alpha_vs_Pt_ps", simcAlpha_v_Pt_ps); 
 
   //Calculate the cross sections
   dataPm->Divide(simcPm_ps);
@@ -5027,11 +5269,17 @@ void analyze::GetXsec()
   dataPm_v_thnq->Divide(simcPm_v_thnq_ps);
   simcPm_v_thnq->Divide(simcPm_v_thnq_ps);
 
+  dataAlpha_v_Pt->Divide(simcAlpha_v_Pt_ps);
+  simcAlpha_v_Pt->Divide(simcAlpha_v_Pt_ps);
+
   //Set Histo Names/Title
   dataPm->SetNameTitle("H_dataXsec", "Data Cross Sections");
   simcPm->SetNameTitle("H_simcXsec", "SIMC Cross Sections"); 
   dataPm_v_thnq->SetNameTitle("H_data2DXsec", "2D Pm vs #theta_{nq} Data Cross Sections");
   simcPm_v_thnq->SetNameTitle("H_simc2DXsec", "2D Pm vs #theta_{nq} SIMC Cross Sections");
+
+  dataAlpha_v_Pt->SetNameTitle("H_data2DXsec_LC", "2D #alpha vs P_{t} Data Cross Sections");
+  simcAlpha_v_Pt->SetNameTitle("H_simc2DXsec_LC", "2D #alpha vs P_{t} SIMC Cross Sections");
 
   TFile *file_Xsec = NULL;
 
@@ -5051,6 +5299,9 @@ void analyze::GetXsec()
   simcPm->Write();
   dataPm_v_thnq->Write();
   simcPm_v_thnq->Write();
+
+  dataAlpha_v_Pt->Write();
+  simcAlpha_v_Pt->Write();
 
   file_Xsec->Close();
   data_file->Close();
