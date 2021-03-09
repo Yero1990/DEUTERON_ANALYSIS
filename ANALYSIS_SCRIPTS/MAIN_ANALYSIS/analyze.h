@@ -565,8 +565,8 @@ class analyze
   //---Light-Cone Variables----
   
   //2D Alpha vs. Pt (Used for 2D cross sections, binned in Pt)
-  TH2F *H_Alpha_vs_Pt;
-  TH2F *H_Alpha_vs_Pt_ps;  
+  TH2F *H_Pt_vs_Alpha;
+  TH2F *H_Pt_vs_Alpha_ps;  
 
   //Create Scaler Related Histogram (ONLY FOR SCALERS)
   TH1F *H_bcmCurrent;
@@ -586,14 +586,14 @@ class analyze
   TH1F *simc_Pm_rad = 0;					     				     
   TH1F *simc_th_nq_rad = 0;					     
   TH2F *simc_Pm_vs_thnq_rad = 0;
-  TH2F *simc_Alpha_vs_Pt_rad = 0;
+  TH2F *simc_Pt_vs_Alpha_rad = 0;
   
   //--------SIMC NON-RADIATIVE---------
   TH1F *simc_Q2_norad = 0;			   	      		     
   TH1F *simc_Pm_norad = 0;					     				     
   TH1F *simc_th_nq_norad = 0;									                                           
   TH2F *simc_Pm_vs_thnq_norad = 0;
-  TH2F *simc_Alpha_vs_Pt_norad = 0;
+  TH2F *simc_Pt_vs_Alpha_norad = 0;
   
   //Used in ApplyRadCorr() Method. DO NOT NEED TO BE INITIALIZED in analyze.C. These just hold existing histos
   
@@ -602,14 +602,14 @@ class analyze
   TH1F *data_Pm = 0;					     				     
   TH1F *data_th_nq = 0;
   TH2F *data_Pm_vs_thnq = 0;
-  TH2F *data_Alpha_vs_Pt = 0;
+  TH2F *data_Pt_vs_Alpha = 0;
   
   //-------RADIATIVE CORRECTION RATIO simc_Ynorad / simc_Yrad--------
   TH1F *ratio_Q2 = 0;
   TH1F *ratio_Pm = 0;
   TH1F *ratio_th_nq = 0;
   TH2F *ratio_Pm_vs_thnq = 0;
-  TH2F *ratio_Alpha_vs_Pt = 0;
+  TH2F *ratio_Pt_vs_Alpha = 0;
 
   //-------DATA (AFTER APPLYING RADIATIVE CORRECTIONS)------
   TH1F *data_Q2_corr = 0;			   	      		     
@@ -632,9 +632,9 @@ class analyze
   TH2F *simcPm_v_thnq_ps = 0;
 
   //Light-Cone Histograms of momentum fraction (Alpha) vs. Transverse Recoil Nucleon Momentum (Pt)
-  TH2F *dataAlpha_v_Pt    = 0;
-  TH2F *simcAlpha_v_Pt    = 0;
-  TH2F *simcAlpha_v_Pt_ps = 0;
+  TH2F *dataPt_v_Alpha    = 0;
+  TH2F *simcPt_v_Alpha    = 0;
+  TH2F *simcPt_v_Alpha_ps = 0;
 
   //---------------------------------------------------------------------------------
 
@@ -726,7 +726,7 @@ class analyze
 
   
   TH2F *H_Pm_vs_thnq_total = 0;                                      TH2F *H_Pm_vs_thnq_i = 0; 
-  TH2F *H_Alpha_vs_Pt_total = 0;                                     TH2F *H_Alpha_vs_Pt_i = 0;
+  TH2F *H_Pt_vs_Alpha_total = 0;                                     TH2F *H_Pt_vs_Alpha_i = 0;
   
   TH1F *H_bcmCurrent_total = 0;					     TH1F *H_bcmCurrent_i = 0;                                       
 
@@ -922,8 +922,8 @@ class analyze
   TH2F *H_sphi_pq_2Davg;
   TH2F *H_sphi_nq_2Davg;
 
-  //Declare 2D Light-Cone (LC) Average Kinematic Histograms (Alpha_vertex vs. Pt_vertex averaged over different kinematics)
-  TH2F *H_Alpha_vs_Pt_v;            //2d for average histogram denominator (Yield)
+  //Declare 2D Light-Cone (LC) Average Kinematic Histograms (Pt_vertex vs. Alpha_vertex averaged over different kinematics)
+  TH2F *H_Pt_vs_Alpha_v;            //2d for average histogram denominator (Yield)
 
   TH2F *H_Alpha_2Davg_LC;
   TH2F *H_Pt_2Davg_LC;
