@@ -1260,9 +1260,9 @@ void analyze::SetHistBins()
   eYColl_xmax = 15.;		       edelta_xmax = 3.;                                                     eypfp_xmax = 0.03;                        
   
   /*Alpha*/                           //Pt (transverse recoil momentum, w.r. to q-vec)
-  Alpha_nbins = 100;                  Pt_nbins = 30.;    //40 MeV bins (same as Pm)
+  Alpha_nbins = 500;                  Pt_nbins = 50.;    //0.02 GeV (20 MeV bins) 
   Alpha_xmin  = 0.;                   Pt_xmin  = 0.; 
-  Alpha_xmax  = 2.;                   Pt_xmax  = 1.2;
+  Alpha_xmax  = 2.;                   Pt_xmax  = 1.;
 
       
     } //End 3289
@@ -1361,9 +1361,9 @@ void analyze::SetHistBins()
   eYColl_xmax = 15.;		       edelta_xmax = 15.;                                                      eypfp_xmax = 0.05;                        
 
     /*Alpha*/                           //Pt (transverse recoil momentum, w.r. to q-vec)
-  Alpha_nbins = 100;                  Pt_nbins = 30.;    //40 MeV bins (same as Pm)
+  Alpha_nbins = 500;                  Pt_nbins = 50.;   
   Alpha_xmin  = 0.;                   Pt_xmin  = 0.; 
-  Alpha_xmax  = 2.;                   Pt_xmax  = 1.2;
+  Alpha_xmax  = 2.;                   Pt_xmax  = 1.;
 
   
     } //End Pm 580 MeV 
@@ -3356,14 +3356,14 @@ void analyze::ApplyWeight()
       {
 	FullWeight = 1. / (eTrkEff * hTrkEff * ptrig3_tLT * pAbs_corr * tgtBoil_corr );
       }
-
+    /*
     cout << "total charge = " << setprecision(5) << total_charge_bcm_cut << " mC " << endl;
     cout << "e- trk eff = "   << setprecision(5) << eTrkEff << endl;
     cout << "h trk eff = "    << setprecision(5) << hTrkEff << endl;
     cout << "tLT  = "         << setprecision(5) << tLT << endl;
     cout << "pAbs  = "        << setprecision(5) << pAbs_corr << endl;
     cout << "tgtBoil = "      << setprecision(5) << tgtBoil_corr << endl;
-    
+    */
     //Scale The DATA Histograms by Full Weight
     
     //Trigger Detector
