@@ -1260,7 +1260,7 @@ void analyze::SetHistBins()
   eYColl_xmax = 15.;		       edelta_xmax = 3.;                                                     eypfp_xmax = 0.03;                        
   
   /*Alpha*/                           //Pt (transverse recoil momentum, w.r. to q-vec)
-  Alpha_nbins = 500;                  Pt_nbins = 50.;    //0.02 GeV (20 MeV bins) 
+  Alpha_nbins = 500;                  Pt_nbins = 50;    //0.02 GeV (20 MeV bins) 
   Alpha_xmin  = 0.;                   Pt_xmin  = 0.; 
   Alpha_xmax  = 2.;                   Pt_xmax  = 1.;
 
@@ -1361,7 +1361,7 @@ void analyze::SetHistBins()
   eYColl_xmax = 15.;		       edelta_xmax = 15.;                                                      eypfp_xmax = 0.05;                        
 
     /*Alpha*/                           //Pt (transverse recoil momentum, w.r. to q-vec)
-  Alpha_nbins = 500;                  Pt_nbins = 50.;   
+  Alpha_nbins = 500;                  Pt_nbins = 50;   
   Alpha_xmin  = 0.;                   Pt_xmin  = 0.; 
   Alpha_xmax  = 2.;                   Pt_xmax  = 1.;
 
@@ -5408,7 +5408,7 @@ Double_t analyze::getZtarMean(int pm_set=0, int dataset=0, string model="", stri
     return data_mean;
   }
 
-
+  else {return -1000.0;}
 }
 
 //---------------AUXILIARY FUNCTIONS TO CALCULATE Pmx, Pmy, Pmz in SIMC (same as HCANA) -------------------

@@ -25,16 +25,16 @@ rad_corr_flag: 1
 #Units: Enegy/Momentum/W [GeV], spec_delta [%]                                                                
                                                                                                               
 ;80 MeV, 580 MeV, 750 MeV                                                                                     
-pm_setting : 750                                                                                               
+pm_setting : 80                                                                                               
                                                                                                               
 ;Theoretical Calculation: laget,  misak, . . .                                                                
 theory     : laget                                                                                            
                                                                                                               
 ;Theoretical Model: pwia, fsi                                                                                 
-model      : pwia                                                                                               
+model      : fsi                                                                                               
                                                                                                               
 ;DataSet 1, 2, 3                                                                                              
-data_set   : 3                                                                                               
+data_set   : 1                                                                                               
                                                                                                               
 #------TURN CUTS ON/OFF------                                                                                 
 # True (ON) =  1,  False (OFF) = 0                                                                            

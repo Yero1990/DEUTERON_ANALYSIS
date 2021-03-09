@@ -34,7 +34,7 @@ theory     : laget
 model      : pwia                                                                                               
                                                                                                               
 ;DataSet 1, 2, 3                                                                                              
-data_set   : 3                                                                                               
+data_set   : 2                                                                                               
                                                                                                               
 #------TURN CUTS ON/OFF------                                                                                 
 # True (ON) =  1,  False (OFF) = 0                                                                            

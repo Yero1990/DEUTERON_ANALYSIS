@@ -25,16 +25,16 @@ rad_corr_flag: 1
 #Units: Enegy/Momentum/W [GeV], spec_delta [%]                                                                
                                                                                                               
 ;80 MeV, 580 MeV, 750 MeV                                                                                     
-pm_setting : 750                                                                                               
+pm_setting : 80                                                                                               
                                                                                                               
 ;Theoretical Calculation: laget,  misak, . . .                                                                
 theory     : laget                                                                                            
                                                                                                               
 ;Theoretical Model: pwia, fsi                                                                                 
-model      : fsi                                                                                               
+model      : pwia                                                                                               
                                                                                                               
 ;DataSet 1, 2, 3                                                                                              
-data_set   : 3                                                                                               
+data_set   : 1                                                                                               
                                                                                                               
 #------TURN CUTS ON/OFF------                                                                                 
 # True (ON) =  1,  False (OFF) = 0                                                                            
@@ -46,7 +46,7 @@ bool h_delta = 1
 bool e_delta = 1                                                                                              
 bool ztar_diff = 1                                                                                            
 bool Q2 = 1                                                                                                   
-bool th_nq = 1                                                                                                
+bool th_nq = 0                                                                                                
 bool MM = 0                                                                                                   
                                                                                                               
 ;PID Cuts                                                                                                     
@@ -81,8 +81,8 @@ ztarDiff_max: 2.
 Q2_min: 4.                                                                                                    
 Q2_max: 5.                                                                                                    
                                                                                                               
-thnq_min: 30.                                                                                                 
-thnq_max: 40.                                                                                                 
+thnq_min: 40.                                                                                                 
+thnq_max: 50.                                                                                                 
                                                                                                               
 MM_min: 0.9                                                                                                   
 MM_max: 0.985                                                                                                 
