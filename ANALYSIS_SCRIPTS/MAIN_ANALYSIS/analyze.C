@@ -1180,8 +1180,8 @@ void analyze::SetHistBins()
       Ein_xmax = 11.;
 
       //Missing Energy                    //Q2			          //Final Proton Momentum			     
-      Em_nbins = 40/*nbins*/;			  Q2_nbins = 60;	   	   Pf_nbins = nbins;				    
-      Em_xmin = -0.1/*-0.05*/;			  Q2_xmin = 2.5; 	   	   Pf_xmin = 1.5;				    
+      Em_nbins = 40/*nbins*/;		  Q2_nbins = 60;	   	   Pf_nbins = nbins;				    
+      Em_xmin = -0.1/*-0.05*/;		  Q2_xmin = 2.5; 	   	   Pf_xmin = 1.5;				    
       Em_xmax = 0.1;			  Q2_xmax = 5.5;       	   	   Pf_xmax = 3.2;				    
       					 			   	 						    
       //Missing Momentum(40 MeV) 	  //omega (E-E')	   	   //Final Proton Energy				    
@@ -2085,7 +2085,8 @@ void analyze::EventLoop()
 	  En = Kn + MN;    //neutron energy
 	  Ep = Kp + MP;   //proton energy
 
-	  M_recoil = sqrt(pow((nu + MD - Ep), 2) - Pm*Pm);
+	  
+	  MM = sqrt(pow((nu + MD - Ep), 2) - Pm*Pm);
 	  MM2 = M_recoil * M_recoil;
 
 	  //---------Light Cone Variables (C.Y. March 05, 2021)---------
