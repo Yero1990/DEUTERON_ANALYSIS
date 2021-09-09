@@ -15,8 +15,7 @@
 
 using namespace std;
 
-//This code currrently works ony for ROOT 6.08
-void setTimeWindows(int run, string trg)
+void setTimeWindows(int run, TString trg, Bool_t debug=false)
 {
   
   //user input: trg --> "hms", "shms", "coin" (DAQ Mode) 
@@ -31,73 +30,77 @@ void setTimeWindows(int run, string trg)
   //========================================
   //====Create Directories to Save Plots====
   //========================================
-  mkdir(Form("Time_cuts_%d", run), S_IRWXU);
-  mkdir(Form("Time_cuts_%d/HMS", run), S_IRWXU);
-  mkdir(Form("Time_cuts_%d/SHMS", run), S_IRWXU);
+  mkdir(Form("Time_cuts_test%d", run), S_IRWXU);
+  mkdir(Form("Time_cuts_test%d/HMS", run), S_IRWXU);
+  mkdir(Form("Time_cuts_test%d/SHMS", run), S_IRWXU);
   //Create HMS Detectors Dir
-  mkdir(Form("Time_cuts_%d/HMS/refTime", run), S_IRWXU);
-  mkdir(Form("Time_cuts_%d/HMS/CER", run), S_IRWXU);
-  mkdir(Form("Time_cuts_%d/HMS/HODO", run), S_IRWXU);
-  mkdir(Form("Time_cuts_%d/HMS/CAL", run), S_IRWXU);
-  mkdir(Form("Time_cuts_%d/HMS/DC", run), S_IRWXU);
+  mkdir(Form("Time_cuts_test%d/HMS/refTime", run), S_IRWXU);
+  mkdir(Form("Time_cuts_test%d/HMS/CER", run), S_IRWXU);
+  mkdir(Form("Time_cuts_test%d/HMS/HODO", run), S_IRWXU);
+  mkdir(Form("Time_cuts_test%d/HMS/CAL", run), S_IRWXU);
+  mkdir(Form("Time_cuts_test%d/HMS/DC", run), S_IRWXU);
   
   //Create sHMS Detectors Dir
-  mkdir(Form("Time_cuts_%d/SHMS/refTime", run), S_IRWXU);
-  mkdir(Form("Time_cuts_%d/SHMS/CER", run), S_IRWXU);
-  mkdir(Form("Time_cuts_%d/SHMS/HODO", run), S_IRWXU);
-  mkdir(Form("Time_cuts_%d/SHMS/CAL", run), S_IRWXU);
-  mkdir(Form("Time_cuts_%d/SHMS/DC", run), S_IRWXU);
+  mkdir(Form("Time_cuts_test%d/SHMS/refTime", run), S_IRWXU);
+  mkdir(Form("Time_cuts_test%d/SHMS/CER", run), S_IRWXU);
+  mkdir(Form("Time_cuts_test%d/SHMS/HODO", run), S_IRWXU);
+  mkdir(Form("Time_cuts_test%d/SHMS/CAL", run), S_IRWXU);
+  mkdir(Form("Time_cuts_test%d/SHMS/DC", run), S_IRWXU);
 
 
   
   //===============================
   //INITIALIZE HISTOGRAM BINNING
   //===============================
-  
+
+  //-----------------
   //REF Time Histos 
+  //-----------------
+  
   //HMS                           SHMS
-  hhod_tref_nbins = 150,          phod_tref_nbins = 100;
-  hhod_tref_xmin = 2000,          phod_tref_xmin = 2000;
-  hhod_tref_xmax = 4000,          phod_tref_xmax = 6000;
+  hhod_tref_nbins = 200,          phod_tref_nbins = 200;
+  hhod_tref_xmin = 1000,          phod_tref_xmin = 1000;
+  hhod_tref_xmax = 8000,          phod_tref_xmax = 8000;
   
   hdc_tref_nbins = 200,           pdc_tref_nbins = 200;
-  hdc_tref_xmin = 14000,          pdc_tref_xmin = 14000;
-  hdc_tref_xmax = 17000,          pdc_tref_xmax = 17000;
+  hdc_tref_xmin = 10000,          pdc_tref_xmin = 10000;
+  hdc_tref_xmax = 20000,          pdc_tref_xmax = 20000;
   
-  hadc_tref_nbins = 200,          padc_tref_nbins = 100;
-  hadc_tref_xmin = 3500,          padc_tref_xmin = 3000;
-  hadc_tref_xmax = 6000,          padc_tref_xmax = 9000;
+  hadc_tref_nbins = 200,          padc_tref_nbins = 200;
+  hadc_tref_xmin = 1000,          padc_tref_xmin = 1000;
+  hadc_tref_xmax = 10000,          padc_tref_xmax = 10000;
   
-  //TRG
-  ptrg1_roc1_nbins=100, ptrg1_roc1_xmin=500, ptrg1_roc1_xmax=3100;
-  ptrg1_roc2_nbins=100, ptrg1_roc2_xmin=500, ptrg1_roc2_xmax=3800;
-  ptrg4_roc1_nbins=100, ptrg4_roc1_xmin=500, ptrg4_roc1_xmax=3000;
-  ptrg4_roc2_nbins=100, ptrg4_roc2_xmin=500, ptrg4_roc2_xmax=3600;
+  //TRG (ptrig1,2,3,4,5,6)
+  ptrg1_roc1_nbins=200, ptrg1_roc1_xmin=500, ptrg1_roc1_xmax=4000;
+  ptrg1_roc2_nbins=200, ptrg1_roc2_xmin=500, ptrg1_roc2_xmax=4000;
+  ptrg4_roc1_nbins=200, ptrg4_roc1_xmin=500, ptrg4_roc1_xmax=4000;
+  ptrg4_roc2_nbins=200, ptrg4_roc2_xmin=500, ptrg4_roc2_xmax=4000;
   
   //ADC-TDC Time Diff Histos
   //HMS               SHMS
   hhod_nbins = 100,   phod_nbins = 100;    
-  hhod_xmin = -70,    phod_xmin = -80;    
-  hhod_xmax = -40,    phod_xmax = 70;  
-  
+  hhod_xmin = -90,    phod_xmin = -90;    
+  hhod_xmax = 90,     phod_xmax = 90;  
+
+  //hodo tdc time bins (debug)
   hhod_tnbins = 100,   phod_tnbins = 100;    
-  hhod_txmin = -1000,    phod_txmin = -1000;    
-  hhod_txmax = 2000,    phod_txmax = 2000;  
+  hhod_txmin = -1000,  phod_txmin = -1000;    
+  hhod_txmax = 2000,   phod_txmax = 2000;  
   
   hdc_nbins = 100,    pdc_nbins = 100;                                                      
-  hdc_xmin = -16000,  pdc_xmin = -15000;                                                                
-  hdc_xmax = -10000,  pdc_xmax = -5000;  
+  hdc_xmin = -20000,  pdc_xmin = -20000;                                                                
+  hdc_xmax = -10000,  pdc_xmax = -10000;  
   
-  hcer_nbins = 100,   phgcer_nbins = 100,    pngcer_nbins = 100;                                                                                                                                     
+  hcer_nbins = 100,   phgcer_nbins = 200,    pngcer_nbins = 200;                                                                                                                                     
   hcer_xmin = 0,      phgcer_xmin = -500,    pngcer_xmin = -500;                                                                                                                                   
-  hcer_xmax = 200,    phgcer_xmax = 300,     pngcer_xmax = 300;                                                                                                                 
+  hcer_xmax = 200,    phgcer_xmax = 500,     pngcer_xmax = 500;                                                                                                                 
   
-  hcal_nbins = 200,   pPrsh_nbins = 100,      pcal_nbins = 75;                                                           
-  hcal_xmin = -140,   pPrsh_xmin = -300,      pcal_xmin = -100;                                                                                                                    
-  hcal_xmax = -60,    pPrsh_xmax = 210,       pcal_xmax = 50; 
+  hcal_nbins = 100,   pPrsh_nbins = 300,      pcal_nbins = 100;                                                           
+  hcal_xmin = -100,   pPrsh_xmin = -300,      pcal_xmin = -100;                                                                                                                    
+  hcal_xmax = 100,    pPrsh_xmax = 300,       pcal_xmax = 100; 
   
-  pPrshAdc_nbins = 200,         pcalAdc_nbins = 200;
-  pPrshAdc_xmin = -300.,        pcalAdc_xmin = -300.;
+  pPrshAdc_nbins = 500,         pcalAdc_nbins = 500;
+  pPrshAdc_xmin = -500.,        pcalAdc_xmin = -500.;
   pPrshAdc_xmax = 500.,         pcalAdc_xmax = 500.;
 
   //=====================================
@@ -108,35 +111,17 @@ void setTimeWindows(int run, string trg)
   //====OPEN ROOT FILE=======
   //=========================
   
-  string rtype = "shms";  //coin or "hms", "shms"  (singles in coin mode)
+  TString rtype = "coin";  //coin or "hms", "shms"  (singles in coin mode)
                                 
-  //Random Deuteron Experiemtn Runs, to verify that the quantities we are placing a cut on DO NOT MOVE significantly.
-  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3248_-1.root";                                         
-  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3268_-1.root";                                         
-  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3289_-1.root";                                         
-  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3305_-1.root";                                         
-  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3342_-1.root";                                         
-  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3371_-1.root";                                         
-  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3386_-1.root";                                         
+  TString filename = Form("./coin_replay_timeWin_check_%d_-1.root", run);
 
-  // TString filename = Form("../../../ROOTfiles/coin_replay_timeWin_check_%d_-1.root", run);                                         
-  //TString filename = "../../../ROOTfiles/pm750_tWinCheck_TimeWinSet.root";
-
-  //TString filename = "../../../ROOTfiles/hms_replay_timeWin_check_singles_setTimeWin.root";
-  TString filename = Form("../../../ROOTfiles/coin_replay_timeWin_check_%d_100000.root", run);
-
-  //TString filename = "../../../ROOTfiles/shms_replay_timeWin_check_1791_-1.root";
-  //TString filename = "../../../ROOTfiles/coin_replay_timeWin_check_3288_-1_refCUTset.root";
-   
   //read ROOTfile and Get TTree
   TFile *data_file = new TFile(filename, "READ"); 
   TTree *T = (TTree*)data_file->Get("T");
   
   //Create output root file where histograms will be stored
-  TFile *outROOT = new TFile(Form("./Time_cuts_%d/%s_histos_run%d.root", run, rtype.c_str(), run), "recreate");
+  TFile *outROOT = new TFile(Form("./Time_cuts_test%d/%s_histos_run%d.root", run, rtype.Data(), run), "recreate");
         
-
-
 
 
   //===========================
@@ -148,8 +133,8 @@ void setTimeWindows(int run, string trg)
   //HMS REF-TIME LEAFS
   for (int i=0; i<4; i++)
     {
-      n_hDC_ref = Form("T.%s.hDCREF%d_tdcTimeRaw", trg.c_str(), i+1);
-      n_hDC_tdcMult = Form("T.%s.hDCREF%d_tdcMultiplicity", trg.c_str(), i+1);
+      n_hDC_ref = Form("T.%s.hDCREF%d_tdcTimeRaw", trg.Data(), i+1);
+      n_hDC_tdcMult = Form("T.%s.hDCREF%d_tdcMultiplicity", trg.Data(), i+1);
       
       T->SetBranchAddress(n_hDC_ref, &hDC_ref[i]);
       T->SetBranchAddress(n_hDC_tdcMult, &hDC_tdcMult[i]);
@@ -166,10 +151,10 @@ void setTimeWindows(int run, string trg)
   H_FADC_Tref_CUT = new TH1F("hFADC_ref_CUT", "HMS fADC Ref. Time (CUT)", hadc_tref_nbins,  hadc_tref_xmin, hadc_tref_xmax);
   
   
-  n_hT1_ref = Form("T.%s.hT1_tdcTimeRaw", trg.c_str());
-  n_hFADC_ref = Form("T.%s.hFADC_TREF_ROC1_adcPulseTimeRaw", trg.c_str());
-  n_hT1_tdcMult = Form("T.%s.hT1_tdcMultiplicity", trg.c_str());
-  n_hFADC_adcMult = Form("T.%s.hFADC_TREF_ROC1_adcMultiplicity", trg.c_str());
+  n_hT1_ref = Form("T.%s.hT1_tdcTimeRaw", trg.Data());
+  n_hFADC_ref = Form("T.%s.hFADC_TREF_ROC1_adcPulseTimeRaw", trg.Data());
+  n_hT1_tdcMult = Form("T.%s.hT1_tdcMultiplicity", trg.Data());
+  n_hFADC_adcMult = Form("T.%s.hFADC_TREF_ROC1_adcMultiplicity", trg.Data());
   
   T->SetBranchAddress(n_hT1_ref, &hT1_ref);     
   T->SetBranchAddress(n_hFADC_ref, &hFADC_ref);
@@ -180,8 +165,8 @@ void setTimeWindows(int run, string trg)
   //SHMS REF-TIME LEAFS 
   for (int i=0; i<10; i++)
     {
-      n_pDC_ref = Form("T.%s.pDCREF%d_tdcTimeRaw",trg.c_str(), i+1);
-      n_pDC_tdcMult = Form("T.%s.pDCREF%d_tdcMultiplicity", trg.c_str(), i+1);
+      n_pDC_ref = Form("T.%s.pDCREF%d_tdcTimeRaw",trg.Data(), i+1);
+      n_pDC_tdcMult = Form("T.%s.pDCREF%d_tdcMultiplicity", trg.Data(), i+1);
       
       T->SetBranchAddress(n_pDC_ref, &pDC_ref[i]);
       T->SetBranchAddress(n_pDC_tdcMult, &pDC_tdcMult[i]);
@@ -191,12 +176,12 @@ void setTimeWindows(int run, string trg)
       
     }
   
-  n_pT1_ref = Form("T.%s.pT1_tdcTimeRaw", trg.c_str());
-  n_pT1_tdcMult = Form("T.%s.pT1_tdcMultiplicity", trg.c_str());
-  n_pT2_ref = Form("T.%s.pT2_tdcTimeRaw", trg.c_str());
-  n_pT2_tdcMult = Form("T.%s.pT2_tdcMultiplicity", trg.c_str());
-  n_pFADC_ref = Form("T.%s.pFADC_TREF_ROC2_adcPulseTimeRaw", trg.c_str());
-  n_pFADC_adcMult = Form("T.%s.pFADC_TREF_ROC2_adcMultiplicity", trg.c_str());
+  n_pT1_ref = Form("T.%s.pT1_tdcTimeRaw", trg.Data());
+  n_pT1_tdcMult = Form("T.%s.pT1_tdcMultiplicity", trg.Data());
+  n_pT2_ref = Form("T.%s.pT2_tdcTimeRaw", trg.Data());
+  n_pT2_tdcMult = Form("T.%s.pT2_tdcMultiplicity", trg.Data());
+  n_pFADC_ref = Form("T.%s.pFADC_TREF_ROC2_adcPulseTimeRaw", trg.Data());
+  n_pFADC_adcMult = Form("T.%s.pFADC_TREF_ROC2_adcMultiplicity", trg.Data());
   
   P_hodo_Tref1 = new TH1F("pT1_ref", "SHMS Hodo pT1 Ref. Time", phod_tref_nbins, phod_tref_xmin, phod_tref_xmax);
   P_hodo_Tref2 = new TH1F("pT2_ref", "SHMS Hodo pT2 Ref. Time", phod_tref_nbins, phod_tref_xmin, phod_tref_xmax);
@@ -289,8 +274,8 @@ void setTimeWindows(int run, string trg)
       T->SetBranchAddress(n_hdc_rawTDC, hdc_rawTDC[npl]);
       T->SetBranchAddress(n_hndata_rawTDC, &hndata_rawTDC[npl]);
 
-      H_dc_rawTDC[npl] = new TH1F(Form("hDC%s_rawTDC", hdc_pl_names[npl].c_str()), Form("HMS DC Plane %s Raw TDC", hdc_pl_names[npl].c_str()), hdc_nbins, hdc_xmin, hdc_xmax);
-      H_dc_rawTDC_CUT[npl] = new TH1F(Form("hDC%s_rawTDC_CUT", hdc_pl_names[npl].c_str()), Form("HMS DC Plane %s Raw TDC (CUT)", hdc_pl_names[npl].c_str()), hdc_nbins, hdc_xmin, hdc_xmax);
+      H_dc_rawTDC[npl] = new TH1F(Form("hDC%s_rawTDC", hdc_pl_names[npl].Data()), Form("HMS DC Plane %s Raw TDC", hdc_pl_names[npl].Data()), hdc_nbins, hdc_xmin, hdc_xmax);
+      H_dc_rawTDC_CUT[npl] = new TH1F(Form("hDC%s_rawTDC_CUT", hdc_pl_names[npl].Data()), Form("HMS DC Plane %s Raw TDC (CUT)", hdc_pl_names[npl].Data()), hdc_nbins, hdc_xmin, hdc_xmax);
       
       //SHMS
       base = "P.dc." + pdc_pl_names[npl];
@@ -300,8 +285,8 @@ void setTimeWindows(int run, string trg)
       T->SetBranchAddress(n_pdc_rawTDC, pdc_rawTDC[npl]);
       T->SetBranchAddress(n_pndata_rawTDC, &pndata_rawTDC[npl]);
       
-      P_dc_rawTDC[npl] = new TH1F(Form("pDC%s_rawTDC", pdc_pl_names[npl].c_str()), Form("SHMS DC Plane %s Raw TDC", pdc_pl_names[npl].c_str()), pdc_nbins, pdc_xmin, pdc_xmax);
-      P_dc_rawTDC_CUT[npl] = new TH1F(Form("pDC%s_rawTDC_CUT", pdc_pl_names[npl].c_str()), Form("SHMS DC Plane %s Raw TDC (CUT)", pdc_pl_names[npl].c_str()), pdc_nbins, pdc_xmin, pdc_xmax);
+      P_dc_rawTDC[npl] = new TH1F(Form("pDC%s_rawTDC", pdc_pl_names[npl].Data()), Form("SHMS DC Plane %s Raw TDC", pdc_pl_names[npl].Data()), pdc_nbins, pdc_xmin, pdc_xmax);
+      P_dc_rawTDC_CUT[npl] = new TH1F(Form("pDC%s_rawTDC_CUT", pdc_pl_names[npl].Data()), Form("SHMS DC Plane %s Raw TDC (CUT)", pdc_pl_names[npl].Data()), pdc_nbins, pdc_xmin, pdc_xmax);
       
     }
   
@@ -317,18 +302,22 @@ void setTimeWindows(int run, string trg)
 	  for (Int_t ipmt = 0; ipmt < hmaxPMT[npl]; ipmt++)
 	    {
 	      base = "H.hod." + hod_pl_names[npl];
-	      	  
-	      n_hhod_TdcTimeUnCorr = base + "." + side_names[iside] + "TdcTimeUnCorr";
+
+	      
+	      if(debug) n_hhod_TdcTimeUnCorr = base + "." + side_names[iside] + "TdcTimeUnCorr";
+	      
+	      
 	      n_hhod_TdcAdcTimeDiff = base + "." + side_names[iside] + "AdcTdcDiffTime";
 	      n_hhod_AdcMult = base + "." + side_names[iside] + "AdcMult";
-	      	      
-	      T->SetBranchAddress(n_hhod_TdcTimeUnCorr, hhod_TdcTimeUnCorr[npl][iside]);
+
+	      if(debug) T->SetBranchAddress(n_hhod_TdcTimeUnCorr, hhod_TdcTimeUnCorr[npl][iside]);
+	      
 	      T->SetBranchAddress(n_hhod_TdcAdcTimeDiff, hhod_TdcAdcTimeDiff[npl][iside]);
 	      T->SetBranchAddress(n_hhod_AdcMult, hhod_AdcMult[npl][iside]);
 	      	      
-	      H_hod_TdcTimeUnCorr[npl][iside][ipmt] = new TH1F(Form("hHod%s%d%s_TdcTimeUnCorr", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str() ), Form("HMS Hodo %s%d%s TdcTimeUnCorr", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str()),hhod_tnbins,hhod_txmin,hhod_txmax);
-	      H_hod_TdcAdcTimeDiff[npl][iside][ipmt] = new TH1F(Form("hHod%s%d%s_timeDiff", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str() ), Form("HMS Hodo %s%d%s AdcTdcTimeDiff", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str()),hhod_nbins,hhod_xmin,hhod_xmax);
-	      H_hod_TdcAdcTimeDiff_CUT[npl][iside][ipmt] = new TH1F(Form("hHod%s%d%s_timeDiff_CUT", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str() ), Form("HMS Hodo %s%d%s AdcTdcTimeDiff (CUT)", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str()),hhod_nbins,hhod_xmin,hhod_xmax);
+	      if(debug) H_hod_TdcTimeUnCorr[npl][iside][ipmt] = new TH1F(Form("hHod%s%d%s_TdcTimeUnCorr", hod_pl_names[npl].Data(),ipmt+1,nsign[iside].Data() ), Form("HMS Hodo %s%d%s TdcTimeUnCorr", hod_pl_names[npl].Data(),ipmt+1,nsign[iside].Data()),hhod_tnbins,hhod_txmin,hhod_txmax);
+	      H_hod_TdcAdcTimeDiff[npl][iside][ipmt] = new TH1F(Form("hHod%s%d%s_timeDiff", hod_pl_names[npl].Data(),ipmt+1,nsign[iside].Data() ), Form("HMS Hodo %s%d%s AdcTdcTimeDiff", hod_pl_names[npl].Data(),ipmt+1,nsign[iside].Data()),hhod_nbins,hhod_xmin,hhod_xmax);
+	      H_hod_TdcAdcTimeDiff_CUT[npl][iside][ipmt] = new TH1F(Form("hHod%s%d%s_timeDiff_CUT", hod_pl_names[npl].Data(),ipmt+1,nsign[iside].Data() ), Form("HMS Hodo %s%d%s AdcTdcTimeDiff (CUT)", hod_pl_names[npl].Data(),ipmt+1,nsign[iside].Data()),hhod_nbins,hhod_xmin,hhod_xmax);
 	      
 	    }
 	  
@@ -343,8 +332,8 @@ void setTimeWindows(int run, string trg)
 	      T->SetBranchAddress(n_hcal_TdcAdcTimeDiff, hcal_TdcAdcTimeDiff[npl][iside]);
 	      T->SetBranchAddress(n_hcal_AdcMult, hcal_AdcMult[npl][iside]);
 	  
-	      H_cal_TdcAdcTimeDiff[npl][iside][ipmt] = new TH1F(Form("hCal%s%d%s_timeDiff", cal_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str() ), Form("HMS Cal %s%d%s AdcTdcTimeDiff", cal_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str()),hcal_nbins,hcal_xmin,hcal_xmax) ;
-	      H_cal_TdcAdcTimeDiff_CUT[npl][iside][ipmt] = new TH1F(Form("hCal%s%d%s_timeDiff_CUT", cal_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str() ), Form("HMS Cal %s%d%s AdcTdcTimeDiff (CUT)", cal_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str()),hcal_nbins,hcal_xmin,hcal_xmax) ;
+	      H_cal_TdcAdcTimeDiff[npl][iside][ipmt] = new TH1F(Form("hCal%s%d%s_timeDiff", cal_pl_names[npl].Data(),ipmt+1,nsign[iside].Data() ), Form("HMS Cal %s%d%s AdcTdcTimeDiff", cal_pl_names[npl].Data(),ipmt+1,nsign[iside].Data()),hcal_nbins,hcal_xmin,hcal_xmax) ;
+	      H_cal_TdcAdcTimeDiff_CUT[npl][iside][ipmt] = new TH1F(Form("hCal%s%d%s_timeDiff_CUT", cal_pl_names[npl].Data(),ipmt+1,nsign[iside].Data() ), Form("HMS Cal %s%d%s AdcTdcTimeDiff (CUT)", cal_pl_names[npl].Data(),ipmt+1,nsign[iside].Data()),hcal_nbins,hcal_xmin,hcal_xmax) ;
 
 	    }
 
@@ -354,17 +343,17 @@ void setTimeWindows(int run, string trg)
 	    {
 	      base = "P.hod." + hod_pl_names[npl];
 
-	      n_phod_TdcTimeUnCorr = base + "." + side_names[iside] + "TdcTimeUnCorr";
+	      if(debug) n_phod_TdcTimeUnCorr = base + "." + side_names[iside] + "TdcTimeUnCorr";
 	      n_phod_TdcAdcTimeDiff = base + "." + side_names[iside] + "AdcTdcDiffTime";
 	      n_phod_AdcMult = base + "." + side_names[iside] + "AdcMult";
 	  		  
-	      T->SetBranchAddress(n_phod_TdcTimeUnCorr, phod_TdcTimeUnCorr[npl][iside]);
+	      if(debug) T->SetBranchAddress(n_phod_TdcTimeUnCorr, phod_TdcTimeUnCorr[npl][iside]);
 	      T->SetBranchAddress(n_phod_TdcAdcTimeDiff, phod_TdcAdcTimeDiff[npl][iside]);
 	      T->SetBranchAddress(n_phod_AdcMult, phod_AdcMult[npl][iside]);
 	    	     	      
-	      P_hod_TdcTimeUnCorr[npl][iside][ipmt] = new TH1F(Form("pHod%s%d%s_TdcTimeUnCorr", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str() ), Form("SHMS Hodo %s%d%s TdcTimeUnCorr", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str()),phod_tnbins,phod_txmin,phod_txmax);
-	      P_hod_TdcAdcTimeDiff[npl][iside][ipmt] = new TH1F(Form("pHod%s%d%s_timeDiff", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str() ), Form("SHMS Hodo %s%d%s AdcTdcTimeDiff", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str()),phod_nbins,phod_xmin,phod_xmax);
-	      P_hod_TdcAdcTimeDiff_CUT[npl][iside][ipmt] = new TH1F(Form("pHod%s%d%s_timeDiff_CUT", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str() ), Form("SHMS Hodo %s%d%s AdcTdcTimeDiff (CUT)", hod_pl_names[npl].c_str(),ipmt+1,nsign[iside].c_str()),phod_nbins,phod_xmin,phod_xmax);
+	      if(debug) P_hod_TdcTimeUnCorr[npl][iside][ipmt] = new TH1F(Form("pHod%s%d%s_TdcTimeUnCorr", hod_pl_names[npl].Data(),ipmt+1,nsign[iside].Data() ), Form("SHMS Hodo %s%d%s TdcTimeUnCorr", hod_pl_names[npl].Data(),ipmt+1,nsign[iside].Data()),phod_tnbins,phod_txmin,phod_txmax);
+	      P_hod_TdcAdcTimeDiff[npl][iside][ipmt] = new TH1F(Form("pHod%s%d%s_timeDiff", hod_pl_names[npl].Data(),ipmt+1,nsign[iside].Data() ), Form("SHMS Hodo %s%d%s AdcTdcTimeDiff", hod_pl_names[npl].Data(),ipmt+1,nsign[iside].Data()),phod_nbins,phod_xmin,phod_xmax);
+	      P_hod_TdcAdcTimeDiff_CUT[npl][iside][ipmt] = new TH1F(Form("pHod%s%d%s_timeDiff_CUT", hod_pl_names[npl].Data(),ipmt+1,nsign[iside].Data() ), Form("SHMS Hodo %s%d%s AdcTdcTimeDiff (CUT)", hod_pl_names[npl].Data(),ipmt+1,nsign[iside].Data()),phod_nbins,phod_xmin,phod_xmax);
 
 	    }
 	  
@@ -377,15 +366,15 @@ void setTimeWindows(int run, string trg)
 		  
 		  n_pPrSh_TdcAdcTimeDiff = base + "." + cal_side_names[iside] + "AdcTdcDiffTime";
 		  n_pPrSh_AdcMult = base + "." + cal_side_names[iside] + "AdcMult";
-		  n_pPrSh_AdcTime = base + "." +  cal_side_names[iside] + "AdcPulseTime";
+		  if(debug) n_pPrSh_AdcTime = base + "." +  cal_side_names[iside] + "AdcPulseTime";
 
 		  T->SetBranchAddress(n_pPrSh_TdcAdcTimeDiff, pPrSh_TdcAdcTimeDiff[npl][iside]);
 		  T->SetBranchAddress(n_pPrSh_AdcMult, pPrSh_AdcMult[npl][iside]);
-		  T->SetBranchAddress(n_pPrSh_AdcTime, pPrSh_AdcTime[npl][iside]);
+		  if(debug) T->SetBranchAddress(n_pPrSh_AdcTime, pPrSh_AdcTime[npl][iside]);
 
-		  P_prSh_TdcAdcTimeDiff[iside][ipmt] = new TH1F(Form("pPrSh_pmt%d%s", ipmt+1, nsign[iside].c_str()), Form("SHMS Pre-Shower PMT_%d%s", ipmt+1, nsign[iside].c_str()), pPrsh_nbins, pPrsh_xmin, pPrsh_xmax);
-		  P_prSh_TdcAdcTimeDiff_CUT[iside][ipmt] = new TH1F(Form("pPrSh_pmt%d%s_CUT", ipmt+1, nsign[iside].c_str()), Form("SHMS Pre-Shower PMT_%d%s (CUT)", ipmt+1, nsign[iside].c_str()), pPrsh_nbins, pPrsh_xmin, pPrsh_xmax);
-		  P_prSh_AdcTime[iside][ipmt] = new TH1F(Form("pPrShAdcTime_pmt%d%s", ipmt+1, nsign[iside].c_str()), Form("SHMS Pre-Shower Adc Time: PMT_%d%s", ipmt+1, nsign[iside].c_str()), pPrshAdc_nbins, pPrshAdc_xmin, pPrshAdc_xmax);
+		  P_prSh_TdcAdcTimeDiff[iside][ipmt] = new TH1F(Form("pPrSh_pmt%d%s", ipmt+1, nsign[iside].Data()), Form("SHMS Pre-Shower PMT_%d%s", ipmt+1, nsign[iside].Data()), pPrsh_nbins, pPrsh_xmin, pPrsh_xmax);
+		  P_prSh_TdcAdcTimeDiff_CUT[iside][ipmt] = new TH1F(Form("pPrSh_pmt%d%s_CUT", ipmt+1, nsign[iside].Data()), Form("SHMS Pre-Shower PMT_%d%s (CUT)", ipmt+1, nsign[iside].Data()), pPrsh_nbins, pPrsh_xmin, pPrsh_xmax);
+		  if(debug) P_prSh_AdcTime[iside][ipmt] = new TH1F(Form("pPrShAdcTime_pmt%d%s", ipmt+1, nsign[iside].Data()), Form("SHMS Pre-Shower Adc Time: PMT_%d%s", ipmt+1, nsign[iside].Data()), pPrshAdc_nbins, pPrshAdc_xmin, pPrshAdc_xmax);
 
 				  
 		}
@@ -397,16 +386,16 @@ void setTimeWindows(int run, string trg)
 		      base =  "P.cal.fly";
 		      n_pcal_TdcAdcTimeDiff = base + "." + "goodAdcTdcDiffTime";
 		      n_pcal_AdcMult = base + "." + "goodAdcMult";
-		      n_pcal_AdcTime = base + "." + "goodAdcPulseTime";
+		      if(debug) n_pcal_AdcTime = base + "." + "goodAdcPulseTime";
 
 		      //For multiplicity, see THcSHowerArray.cxx, for totNumGoodAdcHits, 
 		      T->SetBranchAddress(n_pcal_TdcAdcTimeDiff, pcal_TdcAdcTimeDiff[iside]);
 		      T->SetBranchAddress(n_pcal_AdcMult, pcal_AdcMult[iside]);
-		      T->SetBranchAddress(n_pcal_AdcTime, pcal_AdcTime[iside]);
+		      if(debug) T->SetBranchAddress(n_pcal_AdcTime, pcal_AdcTime[iside]);
 
 		      P_cal_TdcAdcTimeDiff[ipmt] = new TH1F(Form("pSh_pmt%d", ipmt+1), Form("SHMS Shower PMT_%d", ipmt+1), pcal_nbins, pcal_xmin, pcal_xmax);
 		      P_cal_TdcAdcTimeDiff_CUT[ipmt] = new TH1F(Form("pSh_pmt%d_CUT", ipmt+1), Form("SHMS Shower PMT_%d (CUT)", ipmt+1), pcal_nbins, pcal_xmin, pcal_xmax);
-		      P_cal_AdcTime[ipmt] = new TH1F(Form("pShAdcTime_pmt%d", ipmt+1), Form("SHMS Shower Adc Time: PMT_%d", ipmt+1), pcalAdc_nbins, pcalAdc_xmin, pcalAdc_xmax);
+		      if(debug) P_cal_AdcTime[ipmt] = new TH1F(Form("pShAdcTime_pmt%d", ipmt+1), Form("SHMS Shower Adc Time: PMT_%d", ipmt+1), pcalAdc_nbins, pcalAdc_xmin, pcalAdc_xmax);
 
 		    }
 		
@@ -425,7 +414,7 @@ void setTimeWindows(int run, string trg)
   //====== E V E N T    L O O P =======
   //===================================
 
-  Long64_t nentries = 100000;//T->GetEntries();
+  Long64_t nentries = T->GetEntries();
   
   //Define A Boolean for multiplicity CUTS
   Bool_t good_Mult;
@@ -596,7 +585,7 @@ void setTimeWindows(int run, string trg)
 
 		  //-------------HMS Hodoscopoes--------------
 		  
-		  H_hod_TdcTimeUnCorr[ip][iside][ipmt]->Fill(hhod_TdcTimeUnCorr[ip][iside][ipmt]/tdc_nsperch);
+		  if (debug) H_hod_TdcTimeUnCorr[ip][iside][ipmt]->Fill(hhod_TdcTimeUnCorr[ip][iside][ipmt]/tdc_nsperch);
 
 		  if(abs(hhod_TdcAdcTimeDiff[ip][iside][ipmt])<1000.)
 		    {
@@ -635,7 +624,7 @@ void setTimeWindows(int run, string trg)
 		  //------------SHMS Hodoscopes----------------
 		
 		  //UnCorrected TdcTime
-		  P_hod_TdcTimeUnCorr[ip][iside][ipmt]->Fill(phod_TdcTimeUnCorr[ip][iside][ipmt]/tdc_nsperch);
+		  if (debug) P_hod_TdcTimeUnCorr[ip][iside][ipmt]->Fill(phod_TdcTimeUnCorr[ip][iside][ipmt]/tdc_nsperch);
 		  
 		  if(abs(phod_TdcAdcTimeDiff[ip][iside][ipmt])<1000.)
 		    {
@@ -659,7 +648,7 @@ void setTimeWindows(int run, string trg)
 		    if(good_Mult){P_prSh_TdcAdcTimeDiff_CUT[iside][ipmt]->Fill(pPrSh_TdcAdcTimeDiff[ip][iside][ipmt]);}
 		  }
 		  
-		  P_prSh_AdcTime[iside][ipmt]->Fill(pPrSh_AdcTime[ip][iside][ipmt]);
+		  if(debug) P_prSh_AdcTime[iside][ipmt]->Fill(pPrSh_AdcTime[ip][iside][ipmt]);
 
 		} //End loop over SHMS PrSH PMTs
 
@@ -675,7 +664,7 @@ void setTimeWindows(int run, string trg)
 		    }
 		  
 		  if(iside==0){
-		    P_cal_AdcTime[ipmt]->Fill(pcal_AdcTime[iside][ipmt]);
+		    if(debug) P_cal_AdcTime[ipmt]->Fill(pcal_AdcTime[iside][ipmt]);
 		  
 		  }
 		}
@@ -687,6 +676,8 @@ void setTimeWindows(int run, string trg)
 	} //END LOOP OVER PLANES
       
       
+      cout << "Completion Percentage: " << std::setprecision(2) << double(i) / nentries * 100. << "  % " << std::flush << "\r";
+
     } //END EVENT LOOP
   
   
@@ -738,7 +729,7 @@ void setTimeWindows(int run, string trg)
   hFADC_Line->SetLineWidth(3);
   hFADC_Line->Draw();
   
-  hms_REF_Canv->SaveAs(Form("Time_cuts_%d/HMS/refTime/hms_REFTime_cuts.pdf", run));
+  hms_REF_Canv->SaveAs(Form("Time_cuts_test%d/HMS/refTime/hms_REFTime_cuts.pdf", run));
   
   
   //SHMS
@@ -786,7 +777,7 @@ void setTimeWindows(int run, string trg)
   pFADC_Line->SetLineWidth(3);
   pFADC_Line->Draw();
   
-  shms_REF_Canv->SaveAs(Form("Time_cuts_%d/SHMS/refTime/shms_REFTime_cuts.pdf", run));
+  shms_REF_Canv->SaveAs(Form("Time_cuts_test%d/SHMS/refTime/shms_REFTime_cuts.pdf", run));
   
   
   
@@ -863,7 +854,7 @@ void setTimeWindows(int run, string trg)
   ptrg4r2_LineMin->Draw();
   ptrg4r2_LineMax->Draw();
 
-  pTRG_Canv->SaveAs(Form("Time_cuts_%d/coin_trg_tWin.pdf",run));
+  pTRG_Canv->SaveAs(Form("Time_cuts_test%d/coin_trg_tWin.pdf",run));
   
   //===========
   //Cherenkovs
@@ -962,9 +953,9 @@ void setTimeWindows(int run, string trg)
   
 
   //Save CHerenkovs to Canvas
-  hCer_Canv->SaveAs(Form("Time_cuts_%d/HMS/CER/hCER_timeWindow.pdf",run));
-  phgCer_Canv->SaveAs(Form("Time_cuts_%d/SHMS/CER/pHGCER_timeWindow.pdf",run));
-  pngCer_Canv->SaveAs(Form("Time_cuts_%d/SHMS/CER/pNGCER_timeWindow.pdf",run));
+  hCer_Canv->SaveAs(Form("Time_cuts_test%d/HMS/CER/hCER_timeWindow.pdf",run));
+  phgCer_Canv->SaveAs(Form("Time_cuts_test%d/SHMS/CER/pHGCER_timeWindow.pdf",run));
+  pngCer_Canv->SaveAs(Form("Time_cuts_test%d/SHMS/CER/pNGCER_timeWindow.pdf",run));
   
   //==================
   //==Drift Chambers==
@@ -1022,8 +1013,8 @@ void setTimeWindows(int run, string trg)
   
   
   //Save DC to Canvas
-  hdcCanv->SaveAs(Form("Time_cuts_%d/HMS/DC/hDC_rawTDC_window.pdf",run));
-  pdcCanv->SaveAs(Form("Time_cuts_%d/SHMS/DC/pDC_rawTDC_window.pdf",run));
+  hdcCanv->SaveAs(Form("Time_cuts_test%d/HMS/DC/hDC_rawTDC_window.pdf",run));
+  pdcCanv->SaveAs(Form("Time_cuts_test%d/SHMS/DC/pDC_rawTDC_window.pdf",run));
   
   
   //HODOSCOPES / CALORIMETERS
@@ -1036,18 +1027,18 @@ void setTimeWindows(int run, string trg)
 	{  
 	  
 	  //Define HMS Hodo Canv
-	  hhodoCanv[npl][iside] = new TCanvas(Form("hhodo_TDC:ADC Time Diff. Hod Plane %s%s", hod_pl_names[npl].c_str(), side_names[iside].c_str()), Form("HMS Hodo TDC-ADC Time Diff, Plane %s%s", hod_pl_names[npl].c_str(), side_names[iside].c_str()),  1500, 600);
-	  hhodo_tdcCanv[npl][iside] = new TCanvas(Form("hhodo_TDC UnCorr Time Hod Plane %s%s", hod_pl_names[npl].c_str(), side_names[iside].c_str()), Form("HMS Hodo TDC Time UnCorr, Plane %s%s", hod_pl_names[npl].c_str(), side_names[iside].c_str()),  1500, 600);
+	  hhodoCanv[npl][iside] = new TCanvas(Form("hhodo_TDC:ADC Time Diff. Hod Plane %s%s", hod_pl_names[npl].Data(), side_names[iside].Data()), Form("HMS Hodo TDC-ADC Time Diff, Plane %s%s", hod_pl_names[npl].Data(), side_names[iside].Data()),  1500, 600);
+	  if (debug) hhodo_tdcCanv[npl][iside] = new TCanvas(Form("hhodo_TDC UnCorr Time Hod Plane %s%s", hod_pl_names[npl].Data(), side_names[iside].Data()), Form("HMS Hodo TDC Time UnCorr, Plane %s%s", hod_pl_names[npl].Data(), side_names[iside].Data()),  1500, 600);
 
 	  
 	  //Define SHMS Hodo Canv
-	  phodoCanv[npl][iside] = new TCanvas(Form("phodo_TDC:ADC Time Diff. Hod Plane %s%s", hod_pl_names[npl].c_str(), side_names[iside].c_str()), Form("SHMS Hodo TDC-ADC Time Diff, Plane %s%s", hod_pl_names[npl].c_str(), side_names[iside].c_str()),  1500, 600);
-	  phodo_tdcCanv[npl][iside] = new TCanvas(Form("phodo_TDC UnCorr Time Hod Plane %s%s", hod_pl_names[npl].c_str(), side_names[iside].c_str()), Form("SHMS Hodo TDC Time UnCorr, Plane %s%s", hod_pl_names[npl].c_str(), side_names[iside].c_str()),  1500, 600);
+	  phodoCanv[npl][iside] = new TCanvas(Form("phodo_TDC:ADC Time Diff. Hod Plane %s%s", hod_pl_names[npl].Data(), side_names[iside].Data()), Form("SHMS Hodo TDC-ADC Time Diff, Plane %s%s", hod_pl_names[npl].Data(), side_names[iside].Data()),  1500, 600);
+	  if (debug) phodo_tdcCanv[npl][iside] = new TCanvas(Form("phodo_TDC UnCorr Time Hod Plane %s%s", hod_pl_names[npl].Data(), side_names[iside].Data()), Form("SHMS Hodo TDC Time UnCorr, Plane %s%s", hod_pl_names[npl].Data(), side_names[iside].Data()),  1500, 600);
 
 	  
 	  //Define HMS Calorimeter Canvas for all planes
 	  if (!(npl==2&&iside==1) && !(npl==3&&iside==1)){
-	    hcaloCanv[npl][iside] = new TCanvas(Form("hcalo_TDC:ADC Time Diff. Cal Plane %s%s", cal_pl_names[npl].c_str(), cal_side_names[iside].c_str()), Form("Calo TDC:ADC Time Diff, Plane %s %s", cal_pl_names[npl].c_str(), cal_side_names[iside].c_str()),  1500, 600);
+	    hcaloCanv[npl][iside] = new TCanvas(Form("hcalo_TDC:ADC Time Diff. Cal Plane %s%s", cal_pl_names[npl].Data(), cal_side_names[iside].Data()), Form("Calo TDC:ADC Time Diff, Plane %s %s", cal_pl_names[npl].Data(), cal_side_names[iside].Data()),  1500, 600);
 	    hcaloCanv[npl][iside]->Divide(5,3);	     
 	  }
 	  
@@ -1055,8 +1046,8 @@ void setTimeWindows(int run, string trg)
 	  //Define SHMS PreShower and Calorimeter Canvas
 	  if(npl==0)
 	    {
-	      pPrshCanv[iside] =  new TCanvas(Form("pPrSh_TDC:ADC Time Diff %s", cal_side_names[iside].c_str()), Form("SHMS PreShower TDC:ADC Time Diff %s",  cal_side_names[iside].c_str()),  1500, 600);
-	      pPrshAdcCanv[iside] =  new TCanvas(Form("pPrSh_ADC Time %s", cal_side_names[iside].c_str()), Form("SHMS PreShower ADC Time %s",  cal_side_names[iside].c_str()),  1500, 600);
+	      pPrshCanv[iside] =  new TCanvas(Form("pPrSh_TDC:ADC Time Diff %s", cal_side_names[iside].Data()), Form("SHMS PreShower TDC:ADC Time Diff %s",  cal_side_names[iside].Data()),  1500, 600);
+	      if(debug) pPrshAdcCanv[iside] =  new TCanvas(Form("pPrSh_ADC Time %s", cal_side_names[iside].Data()), Form("SHMS PreShower ADC Time %s",  cal_side_names[iside].Data()),  1500, 600);
 
 	    }
 	  
@@ -1065,14 +1056,14 @@ void setTimeWindows(int run, string trg)
 	  if(npl == 0 || npl == 2)
 	    {
 	      hhodoCanv[npl][iside]->Divide(4,4);
-	      hhodo_tdcCanv[npl][iside]->Divide(4,4);
+	      if(debug) hhodo_tdcCanv[npl][iside]->Divide(4,4);
 
 	    }
 	  
 	  else if (npl==1 || npl==3)
 	    {
 	      hhodoCanv[npl][iside]->Divide(5,2);
-	      hhodo_tdcCanv[npl][iside]->Divide(5,2);
+	      if(debug) hhodo_tdcCanv[npl][iside]->Divide(5,2);
 	    }
 	  
 	  
@@ -1080,14 +1071,14 @@ void setTimeWindows(int run, string trg)
 	  if(npl == 0 || npl == 1 || npl==2)
 	    {
 	      phodoCanv[npl][iside]->Divide(7,2);
-	      phodo_tdcCanv[npl][iside]->Divide(7,2);
+	      if(debug) phodo_tdcCanv[npl][iside]->Divide(7,2);
 
 	    }
 	  
 	  else if (npl==3)
 	    {
 	      phodoCanv[npl][iside]->Divide(7,3);
-	      phodo_tdcCanv[npl][iside]->Divide(7,3);
+	      if(debug) phodo_tdcCanv[npl][iside]->Divide(7,3);
 
 	    }
 	  
@@ -1097,7 +1088,7 @@ void setTimeWindows(int run, string trg)
 	    {
 	      
 	      pPrshCanv[iside]->Divide(7,2);
-	      pPrshAdcCanv[iside]->Divide(7,2);
+	      if(debug) pPrshAdcCanv[iside]->Divide(7,2);
 
 	    }
 	  
@@ -1113,50 +1104,8 @@ void setTimeWindows(int run, string trg)
 	      sig =  H_hod_TdcAdcTimeDiff_CUT[npl][iside][ipmt]->GetStdDev();
 	      
 	      //Set Time Window Cuts
-	      hhodo_tWinMin[npl][iside][ipmt] = mean - 4.0*sig;
-	      hhodo_tWinMax[npl][iside][ipmt] = mean + 5.5*sig;
-	      
-	      //Exceptions to CUTS
-	      if(npl==1&&iside==0){
-		if(ipmt==3||ipmt==4){
-		hhodo_tWinMin[npl][iside][ipmt] = -61.;
-		hhodo_tWinMax[npl][iside][ipmt] = -53.;
-		}
-	      
-	      }
-	      if(npl==1&&iside==1){
-		if(ipmt==0){
-		hhodo_tWinMin[npl][iside][ipmt] = -65.;
-		hhodo_tWinMax[npl][iside][ipmt] = -50.;
-		}
-		if(ipmt==4){
-		hhodo_tWinMin[npl][iside][ipmt] = -64.;
-		hhodo_tWinMax[npl][iside][ipmt] = -55.;
-		}
-
-	      }
-	      if(npl==3&&iside==1){
-		if(ipmt==0){
-		hhodo_tWinMin[npl][iside][ipmt] = -63.;
-		hhodo_tWinMax[npl][iside][ipmt] = -52.;
-		}
-		if(ipmt==1){
-		hhodo_tWinMin[npl][iside][ipmt] = -63.;
-		hhodo_tWinMax[npl][iside][ipmt] = -52.;
-		}
-		if(ipmt==9){
-		hhodo_tWinMin[npl][iside][ipmt] = -61.;
-		hhodo_tWinMax[npl][iside][ipmt] = -50.;
-		}
-		if(ipmt==8){
-		hhodo_tWinMin[npl][iside][ipmt] = -61.;
-		hhodo_tWinMax[npl][iside][ipmt] = -51.;
-		}
-		if(ipmt==7){
-		hhodo_tWinMin[npl][iside][ipmt] = -61.;
-		hhodo_tWinMax[npl][iside][ipmt] = -51.;
-		}
-	      }
+	      hhodo_tWinMin[npl][iside][ipmt] = mean - hhod_nSig*sig;
+	      hhodo_tWinMax[npl][iside][ipmt] = mean + hhod_nSig*sig;
 
 	            
 	      //Set Min/Max Line Limits
@@ -1177,9 +1126,9 @@ void setTimeWindows(int run, string trg)
 	      hhod_LineMin[npl][iside][ipmt]->Draw();
 	      hhod_LineMax[npl][iside][ipmt]->Draw();
 	         
-	      hhodo_tdcCanv[npl][iside]->cd(ipmt+1);
+	      if(debug) hhodo_tdcCanv[npl][iside]->cd(ipmt+1);
 	      gPad->SetLogy();
-	      H_hod_TdcTimeUnCorr[npl][iside][ipmt]->Draw();
+	      if(debug) H_hod_TdcTimeUnCorr[npl][iside][ipmt]->Draw();
 
 	      
 
@@ -1194,8 +1143,8 @@ void setTimeWindows(int run, string trg)
 	      sig =  P_hod_TdcAdcTimeDiff_CUT[npl][iside][ipmt]->GetStdDev();
 	      
 	      //Set Time Window Cuts
-	      phodo_tWinMin[npl][iside][ipmt] = mean - 6.0*sig;
-	      phodo_tWinMax[npl][iside][ipmt] = mean + 7.5*sig;
+	      phodo_tWinMin[npl][iside][ipmt] = mean - phod_nSig*sig;
+	      phodo_tWinMax[npl][iside][ipmt] = mean + phod_nSig*sig;
 	      
 	            
 	      //Set Min/Max Line Limits
@@ -1216,9 +1165,9 @@ void setTimeWindows(int run, string trg)
 	      phod_LineMin[npl][iside][ipmt]->Draw();
 	      phod_LineMax[npl][iside][ipmt]->Draw();
 	      
-	      phodo_tdcCanv[npl][iside]->cd(ipmt+1);
+	      if(debug) phodo_tdcCanv[npl][iside]->cd(ipmt+1);
 	      gPad->SetLogy();
-	      P_hod_TdcTimeUnCorr[npl][iside][ipmt]->Draw();
+	      if(debug) P_hod_TdcTimeUnCorr[npl][iside][ipmt]->Draw();
 
 
 	      } //end shms hodo pmt loop
@@ -1233,8 +1182,8 @@ void setTimeWindows(int run, string trg)
 	      sig =  H_cal_TdcAdcTimeDiff_CUT[npl][iside][ipmt]->GetStdDev();
 	      
 	      //Set Time Window Cuts
-	      hCal_tWinMin[npl][iside][ipmt] = mean - 3.2*sig;
-	      hCal_tWinMax[npl][iside][ipmt] = mean + 4.5*sig;                                                                                                          
+	      hCal_tWinMin[npl][iside][ipmt] = mean - hcal_nSig*sig;
+	      hCal_tWinMax[npl][iside][ipmt] = mean + hcal_nSig*sig;                                                                                                          
 	      
 	      //Set Min/Max Line Limits
 	      hcal_LineMin[npl][iside][ipmt] = new TLine(hCal_tWinMin[npl][iside][ipmt], 0, hCal_tWinMin[npl][iside][ipmt], H_cal_TdcAdcTimeDiff[npl][iside][ipmt]->GetMaximum());
@@ -1281,9 +1230,9 @@ void setTimeWindows(int run, string trg)
 	      pPrsh_LineMin[iside][ipmt]->Draw();
 	      pPrsh_LineMax[iside][ipmt]->Draw();
 	      	      
-	      pPrshAdcCanv[iside]->cd(ipmt+1);
+	      if(debug) pPrshAdcCanv[iside]->cd(ipmt+1);
 	      gPad->SetLogy();
-	      P_prSh_AdcTime[iside][ipmt]->Draw();
+	      if(debug) P_prSh_AdcTime[iside][ipmt]->Draw();
 
 
 
@@ -1321,19 +1270,19 @@ void setTimeWindows(int run, string trg)
 	
 	  
 	  
-	  hhodoCanv[npl][iside]->SaveAs(Form("Time_cuts_%d/HMS/HODO/hHodo_%s%s.pdf",run, hod_pl_names[npl].c_str(), side_names[iside].c_str()));
-	  phodoCanv[npl][iside]->SaveAs(Form("Time_cuts_%d/SHMS/HODO/pHodo_%s%s.pdf",run, hod_pl_names[npl].c_str(), side_names[iside].c_str()));
+	  hhodoCanv[npl][iside]->SaveAs(Form("Time_cuts_test%d/HMS/HODO/hHodo_%s%s.pdf",run, hod_pl_names[npl].Data(), side_names[iside].Data()));
+	  phodoCanv[npl][iside]->SaveAs(Form("Time_cuts_test%d/SHMS/HODO/pHodo_%s%s.pdf",run, hod_pl_names[npl].Data(), side_names[iside].Data()));
 	  	  
-	  hhodo_tdcCanv[npl][iside]->SaveAs(Form("Time_cuts_%d/HMS/HODO/hHodo_TdcUnCorr%s%s.pdf",run, hod_pl_names[npl].c_str(), side_names[iside].c_str()));
-	  phodo_tdcCanv[npl][iside]->SaveAs(Form("Time_cuts_%d/SHMS/HODO/pHodo_TdcUnCorr%s%s.pdf",run, hod_pl_names[npl].c_str(), side_names[iside].c_str()));
+	  if(debug) hhodo_tdcCanv[npl][iside]->SaveAs(Form("Time_cuts_test%d/HMS/HODO/hHodo_TdcUnCorr%s%s.pdf",run, hod_pl_names[npl].Data(), side_names[iside].Data()));
+	  if(debug) phodo_tdcCanv[npl][iside]->SaveAs(Form("Time_cuts_test%d/SHMS/HODO/pHodo_TdcUnCorr%s%s.pdf",run, hod_pl_names[npl].Data(), side_names[iside].Data()));
 
 	  if (!(npl==2&&iside==1) && !(npl==3&&iside==1)){
-	    hcaloCanv[npl][iside]->SaveAs(Form("Time_cuts_%d/HMS/CAL/hCalo_%s%s.pdf", run,cal_pl_names[npl].c_str(), side_names[iside].c_str()));
+	    hcaloCanv[npl][iside]->SaveAs(Form("Time_cuts_test%d/HMS/CAL/hCalo_%s%s.pdf", run,cal_pl_names[npl].Data(), side_names[iside].Data()));
 	  }
 	  
 	  if(npl==0){
-	    pPrshCanv[iside]->SaveAs(Form("Time_cuts_%d/SHMS/CAL/pPrsh_%s.pdf",run, side_names[iside].c_str()));
-	    pPrshAdcCanv[iside]->SaveAs(Form("Time_cuts_%d/SHMS/CAL/pPrshAdc_%s.pdf",run, side_names[iside].c_str()));
+	    pPrshCanv[iside]->SaveAs(Form("Time_cuts_test%d/SHMS/CAL/pPrsh_%s.pdf",run, side_names[iside].Data()));
+	    if(debug) pPrshAdcCanv[iside]->SaveAs(Form("Time_cuts_test%d/SHMS/CAL/pPrshAdc_%s.pdf",run, side_names[iside].Data()));
 
 	  }
 	  
@@ -1392,7 +1341,7 @@ void setTimeWindows(int run, string trg)
 
 	 pcalAdcCanv[row]->cd(col+1);
 	 gPad->SetLogy();
-	 P_cal_AdcTime[ipmt]->Draw();
+	 if(debug) P_cal_AdcTime[ipmt]->Draw();
 
 
 	 //increment pmt counter
@@ -1403,8 +1352,8 @@ void setTimeWindows(int run, string trg)
        }//end loop over rows
      
      //Save Each Cal. Column
-     pcalCanv[row]->SaveAs(Form("Time_cuts_%d/SHMS/CAL/pCal_row%d.pdf",run, row+1));
-     pcalAdcCanv[row]->SaveAs(Form("Time_cuts_%d/SHMS/CAL/pCalAdc_row%d.pdf",run, row+1));
+     pcalCanv[row]->SaveAs(Form("Time_cuts_test%d/SHMS/CAL/pCal_row%d.pdf",run, row+1));
+     if(debug) pcalAdcCanv[row]->SaveAs(Form("Time_cuts_test%d/SHMS/CAL/pCalAdc_row%d.pdf",run, row+1));
 
    }//end loop over columns
  
@@ -1422,9 +1371,9 @@ void setTimeWindows(int run, string trg)
  
   //------------Write Time Window Min/Max Limits to Parameter File---------------
 
- string n_side[2] = {"Pos", "Neg"};
- string n_side_cal[2] = {"pos", "neg"};
- string n_lim[2] = {"Min", "Max"};
+ TString n_side[2] = {"Pos", "Neg"};
+ TString n_side_cal[2] = {"pos", "neg"};
+ TString n_lim[2] = {"Min", "Max"};
  
  ofstream out_hhodo;
  ofstream out_phodo;
@@ -1437,62 +1386,63 @@ void setTimeWindows(int run, string trg)
  ofstream out_phgcer;
  ofstream out_pngcer; 
 
+ // Later on, once could set an actual path to where to write these parameter, for now, write in current dir.
  //HMS Hodo
- out_hhodo.open(Form("../../PARAM/HMS/HODO/hhodo_tWin_%d.param", run));
+ out_hhodo.open(Form("./hhodo_tWin_%d.param", run));
  out_hhodo << "; HMS Hodoscope Parameter File Containing TimeWindow Min/Max Cuts " << endl;
  out_hhodo << " " << endl;
  out_hhodo << " " << endl;
  out_hhodo << " " << endl;
  //SHMS Hodo
- out_phodo.open(Form("../../PARAM/SHMS/HODO/phodo_tWin_%d.param", run));
+ out_phodo.open(Form("./phodo_tWin_%d.param", run));
  out_phodo << "; SHMS Hodoscope Parameter File Containing TimeWindow Min/Max Cuts " << endl;
  out_phodo << " " << endl;
  out_phodo << " " << endl;
  out_phodo << " " << endl;
  //HMS Cal
- out_hcal.open(Form("../../PARAM/HMS/CAL/hcal_tWin_%d.param", run));
+ out_hcal.open(Form("./hcal_tWin_%d.param", run));
  out_hcal << "; HMS Calorimeter Parameter File Containing TimeWindow Min/Max Cuts " << endl;
  out_hcal << " " << endl;
  out_hcal << " " << endl;
  out_hcal << " " << endl;
  //SHMS PreSh
- out_pprsh.open(Form("../../PARAM/SHMS/CAL/pprsh_tWin_%d.param", run));
+ out_pprsh.open(Form("./pprsh_tWin_%d.param", run));
  out_pprsh << "; SHMS Pre-Shower Parameter File Containing TimeWindow Min/Max Cuts " << endl;
  out_pprsh << " " << endl;
  out_pprsh << " " << endl;
  out_pprsh << " " << endl;
  //SHMS Fly's Eye Cal
- out_pcal.open(Form("../../PARAM/SHMS/CAL/pcal_tWin_%d.param", run));
+ out_pcal.open(Form("./pcal_tWin_%d.param", run));
  out_pcal << "; SHMS Fly's Eye Calorimeter  Parameter File Containing TimeWindow Min/Max Cuts " << endl;
  out_pcal << " " << endl;
  out_pcal << " " << endl;
  out_pcal << " " << endl;
  //HMS DC
- out_hdc.open(Form("../../PARAM/HMS/DC/hdc_tWin_%d.param", run));
+ out_hdc.open(Form("./hdc_tWin_%d.param", run));
  out_hdc << "; HMS DC  Parameter File Containing TimeWindow Min/Max Cuts " << endl;
  out_hdc << " " << endl;
  out_hdc << " " << endl;
  out_hdc << " " << endl;
  //SHMS DC
- out_pdc.open(Form("../../PARAM/SHMS/DC/pdc_tWin_%d.param", run));
+ out_pdc.open(Form("./pdc_tWin_%d.param", run));
  out_pdc << "; SHMS DC  Parameter File Containing TimeWindow Min/Max Cuts " << endl;
  out_pdc << " " << endl;
  out_pdc << " " << endl;
  out_pdc << " " << endl;
  //HMS Cer
- out_hcer.open(Form("../../PARAM/HMS/CER/hcer_tWin_%d.param", run));
+ out_hcer.open(Form("./hcer_tWin_%d.param", run));
  out_hcer << "; HMS Cer  Parameter File Containing TimeWindow Min/Max Cuts " << endl;
  out_hcer << " " << endl;
  out_hcer << " " << endl;
  out_hcer << " " << endl;
 //SHMS HGCER
- out_phgcer.open(Form("../../PARAM/SHMS/HGCER/phgcer_tWin_%d.param", run));
+ out_phgcer.open(Form("./phgcer_tWin_%d.param", run));
  out_phgcer << "; SHMS Heavy Gas Cer  Parameter File Containing TimeWindow Min/Max Cuts " << endl;
  out_phgcer << " " << endl;
  out_phgcer << " " << endl;
  out_phgcer << " " << endl;
 //SHMS NGCER
- out_pngcer.open(Form("../../PARAM/SHMS/NGCER/pngcer_tWin_%d.param", run));
+ out_pngcer.open(Form("./pngcer_tWin_%d.param", run));
  out_pngcer << "; SHMS Noble Gas Cer  Parameter File Containing TimeWindow Min/Max Cuts " << endl;
  out_pngcer << " " << endl;
  out_pngcer << " " << endl;
@@ -1513,26 +1463,26 @@ void setTimeWindows(int run, string trg)
 	    //HMS Hodo
 	    out_hhodo << "" << endl;
 	    out_hhodo << "; " << setw(32) << "1x " << setw(19) << "1y " << setw(16) << "2x " << setw(16) << "2y " << endl;
-	    out_hhodo << Form("hhodo_%sAdcTimeWindow%s = ", n_side[iside].c_str(), n_lim[lim].c_str());
+	    out_hhodo << Form("hhodo_%sAdcTimeWindow%s = ", n_side[iside].Data(), n_lim[lim].Data());
 
 	    
 	    //SHMS Hodo
 	    out_phodo << "" << endl;
 	    out_phodo << "; " << setw(32) << "1x " << setw(19) << "1y " << setw(16) << "2x " << setw(16) << "2y " << endl;
-	    out_phodo << Form("phodo_%sAdcTimeWindow%s = ", n_side[iside].c_str(), n_lim[lim].c_str());
+	    out_phodo << Form("phodo_%sAdcTimeWindow%s = ", n_side[iside].Data(), n_lim[lim].Data());
 
 	    //HMS Calorimeter
 	    out_hcal << "" << endl;
-	    out_hcal << Form("hcal_%s_AdcTimeWindow%s = ", n_side_cal[iside].c_str(), n_lim[lim].c_str());
+	    out_hcal << Form("hcal_%s_AdcTimeWindow%s = ", n_side_cal[iside].Data(), n_lim[lim].Data());
 	    
 	    //SHMS PreSHower
 	    out_pprsh << "" << endl;
-	    out_pprsh << Form("pcal_%s_AdcTimeWindow%s = ", n_side_cal[iside].c_str(), n_lim[lim].c_str());
+	    out_pprsh << Form("pcal_%s_AdcTimeWindow%s = ", n_side_cal[iside].Data(), n_lim[lim].Data());
 	 
 	    if(iside==0){
 	    //SHMS Fly's Eye
 	    out_pcal << "" << endl;
-	    out_pcal << Form("pcal_arr_AdcTimeWindow%s = ", n_lim[lim].c_str());
+	    out_pcal << Form("pcal_arr_AdcTimeWindow%s = ", n_lim[lim].Data());
 	   
 	    //HMS DC
 	    out_hdc << "" << endl;
@@ -1561,25 +1511,25 @@ void setTimeWindows(int run, string trg)
 	    //HMS Hodo
 	    out_hhodo << "" << endl;
 	    out_hhodo << "; " << setw(32) << "1x " << setw(19) << "1y " << setw(16) << "2x " << setw(16) << "2y " << endl;
-	    out_hhodo << Form("hhodo_%sAdcTimeWindow%s = ", n_side[iside].c_str(), n_lim[lim].c_str());
+	    out_hhodo << Form("hhodo_%sAdcTimeWindow%s = ", n_side[iside].Data(), n_lim[lim].Data());
 
 	    //SHMS Hodo
 	    out_phodo << "" << endl;
 	    out_phodo << "; " << setw(32) << "1x " << setw(19) << "1y " << setw(16) << "2x " << setw(16) << "2y " << endl;
-	    out_phodo << Form("phodo_%sAdcTimeWindow%s = ", n_side[iside].c_str(), n_lim[lim].c_str());
+	    out_phodo << Form("phodo_%sAdcTimeWindow%s = ", n_side[iside].Data(), n_lim[lim].Data());
 
 	    //HMS Calorimeter
 	    out_hcal << "" << endl;
-	    out_hcal << Form("hcal_%s_AdcTimeWindow%s = ", n_side_cal[iside].c_str(), n_lim[lim].c_str());
+	    out_hcal << Form("hcal_%s_AdcTimeWindow%s = ", n_side_cal[iside].Data(), n_lim[lim].Data());
 	    
 	    //SHMS PreSHower
 	    out_pprsh << "" << endl;
-	    out_pprsh << Form("pcal_%s_AdcTimeWindow%s = ", n_side_cal[iside].c_str(), n_lim[lim].c_str());
+	    out_pprsh << Form("pcal_%s_AdcTimeWindow%s = ", n_side_cal[iside].Data(), n_lim[lim].Data());
 	    
 	    if(iside==0){
 	    //SHMS Fly's Eye
 	    out_pcal << "" << endl;
-	    out_pcal << Form("pcal_arr_AdcTimeWindow%s = ", n_lim[lim].c_str());
+	    out_pcal << Form("pcal_arr_AdcTimeWindow%s = ", n_lim[lim].Data());
 	    
 	    //HMS DC
 	    out_hdc << "" << endl;
@@ -1854,36 +1804,5 @@ void setTimeWindows(int run, string trg)
     } // end loop over sides
 
 
-
-  /*
-  //------------------Write CHerenkov Time Window Cuts to Param File------------------------
- 
-  outPARAM.open(Form("../PARAM/HMS/CER/hCer_tWin_%d.param", run));
-  //outPARAM.open(Form("./hCer_tWin_%d.param", run));
-  
-  outPARAM << "; HMS Cherenkov Parameter File Containing TimeWindow Min/Max Cuts " << endl;
-  outPARAM << " " << endl;
-  outPARAM << " " << endl;
-  outPARAM << "hcer_adcTimeWindowMin =" << hCer_tWinMin[0] << "," << hCer_tWinMin[1] << endl;
-  outPARAM << "hcer_adcTimeWindowMax =" << hCer_tWinMax[0] << "," << hCer_tWinMax[1] << endl;
-  outPARAM.close();
-
-
-  //--------------Write DC Time Window Cuts to Parameter File--------------------------------
-  
-  outPARAM.open(Form("../PARAM/HMS/DC/hDC_tWin_%d.param", run));
-  //outPARAM.open(Form("./hDC_tWin_%d.param", run));
-  
-  outPARAM << "; HMS DC Parameter File Containing TimeWindow Min/Max Cuts " << endl;
-  outPARAM << " " << endl;
-  outPARAM << " " << endl;
-  outPARAM << "hdc_tdc_min_win = " << setprecision(2) << hDC_tWinMin[0] << ", " << hDC_tWinMin[1] << ", " << hDC_tWinMin[2] << ", " << hDC_tWinMin[3] << ", " << hDC_tWinMin[4] << ", " << hDC_tWinMin[5] <<endl;
-  outPARAM << setw(27) << setprecision(2) << hDC_tWinMin[6] << ", " << hDC_tWinMin[7] << ", " << hDC_tWinMin[8] << ", " << hDC_tWinMin[9] << ", " << hDC_tWinMin[10] << ", " << hDC_tWinMin[11] <<endl;
-
-  outPARAM << "hdc_tdc_max_win = " << setprecision(2) << hDC_tWinMax[0] << ", " << hDC_tWinMax[1] << ", " << hDC_tWinMax[2] << ", " << hDC_tWinMax[3] << ", " << hDC_tWinMax[4] << ", " << hDC_tWinMax[5] <<endl;
-  outPARAM << setw(27) << setprecision(2) << hDC_tWinMax[6] << ", " << hDC_tWinMax[7] << ", " << hDC_tWinMax[8] << ", " << hDC_tWinMax[9] << ", " << hDC_tWinMax[10] << ", " << hDC_tWinMax[11] <<endl;
-
-  outPARAM.close();
-  */
 } //end program
 

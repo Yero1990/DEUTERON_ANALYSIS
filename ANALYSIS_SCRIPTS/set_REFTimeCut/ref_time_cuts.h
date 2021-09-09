@@ -14,21 +14,22 @@ static const Int_t cal_PLANES = 4;
 static const Int_t dc_PLANES = 12;
 static const Int_t SIDES = 2;
 
-static const string hod_pl_names[hod_PLANES] = {"1x", "1y", "2x", "2y"};
-static const string cal_pl_names[cal_PLANES] = {"1pr", "2ta", "3ta", "4ta"};
+static const TString hod_pl_names[hod_PLANES] = {"1x", "1y", "2x", "2y"};
+static const TString cal_pl_names[cal_PLANES] = {"1pr", "2ta", "3ta", "4ta"};
 
-static const string hdc_pl_names[dc_PLANES] = {"1u1", "1u2", "1x1", "1x2", "1v2", "1v1", "2v1", "2v2", "2x2", "2x1", "2u2", "2u1"};
-static const string pdc_pl_names[dc_PLANES] = {"1u1", "1u2", "1x1", "1x2", "1v1", "1v2", "2v2", "2v1", "2x2", "2x1", "2u2", "2u1"};
+static const TString hdc_pl_names[dc_PLANES] = {"1u1", "1u2", "1x1", "1x2", "1v2", "1v1", "2v1", "2v2", "2x2", "2x1", "2u2", "2u1"};
+static const TString pdc_pl_names[dc_PLANES] = {"1u1", "1u2", "1x1", "1x2", "1v1", "1v2", "2v2", "2v1", "2x2", "2x1", "2u2", "2u1"};
 
-static const string side_names[SIDES] = {"GoodPos", "GoodNeg"};
-static const string cal_side_names[SIDES] = {"goodPos", "goodNeg"};
+static const TString side_names[SIDES] = {"GoodPos", "GoodNeg"};
+static const TString cal_side_names[SIDES] = {"goodPos", "goodNeg"};
 
-static const string nsign[SIDES] = {"+", "-"};
+static const TString nsign[SIDES] = {"+", "-"};
 
 static const Int_t hmaxPMT[hod_PLANES] = {16, 10, 16, 10};
 static const Int_t pmaxPMT[hod_PLANES] = {13, 13, 14, 21};
 
 //=====================================================
+
 
 
 //=====================================================
@@ -38,14 +39,14 @@ static const Int_t pmaxPMT[hod_PLANES] = {13, 13, 14, 21};
 //NOTE: These Values must be entered with a "minus(-)" sign in the para file
 
 //(See /PARAM/HMS/GEN/h_reftime_cut.param, units in Channel)
-static const Double_t hhod_trefcut = 3000.;      //hodo tdc ref cut
-static const Double_t hdc_trefcut = 15800.;      //dc tdc ref cut
-static const Double_t hadc_trefcut = 4500.;      //hodo/cer/cal adc ref cut
+static const Double_t hhod_trefcut = 10000.;      //hodo tdc ref cut
+static const Double_t hdc_trefcut  = 100000.;      //dc tdc ref cut
+static const Double_t hadc_trefcut = 10000.;      //hodo/cer/cal adc ref cut
 
 //(See /PARAM/SHMS/GEN/p_reftime_cut.param, units in Channel)
-static const Double_t phod_trefcut = 4000.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
-static const Double_t pdc_trefcut = 14800.;
-static const Double_t padc_trefcut = 4500.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
+static const Double_t phod_trefcut = 10000.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
+static const Double_t pdc_trefcut  = 100000.;
+static const Double_t padc_trefcut = 10000.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
 
 //=======================================================
 
@@ -74,15 +75,15 @@ Double_t hCal_tWinMax[cal_PLANES][SIDES][13] = {0.};
 //-----------------------------
 //------ HMS CHERENKOV --------
 //-----------------------------
-Double_t hCer_tWinMin[2] = {80., 90.};
-Double_t hCer_tWinMax[2] = {105., 110.};
+Double_t hCer_tWinMin[2] = {-200., 200.};
+Double_t hCer_tWinMax[2] = {200., 200.};
 
 //----------------------------------
 //------ HMS DRIFT CHAMBERS --------
 //----------------------------------
 // Deuteron H(e,e'p) Elastics
-Double_t hDC_tWinMin[dc_PLANES] = {-14e3, -14e3,   -14e3,   -14e3,  -14.e3,  -14e3,     -14e3,   -14e3,   -14e3,   -14e3,   -14e3,   -14e3   };
-Double_t hDC_tWinMax[dc_PLANES] = {-11.e3, -11.9e3, -11.8e3, -11.8e3,-10.6e3, -11.8e3, -10.8e3, -11.6e3, -11.8e3, -11.8e3, -10.6e3, -11.8e3 };
+Double_t hDC_tWinMin[dc_PLANES] = {-100.e3, -100.e3,  -100.e3, -100.e3,  -100.e3,  -100.e3,  -100.e3,   -100.e3,  -100.e3, -100.e3,  -100.e3, -100.e3  };
+Double_t hDC_tWinMax[dc_PLANES] = { 100.e3,  100.e3,   100.e3,  100.e3,   100.e3,   100.e3,   100.e3,    100.e3,   100.e3,  100.e3,   100.e3,  100.e3 };
 
 
 
@@ -107,20 +108,20 @@ Double_t pPrsh_tWinMin[2][14] = { { -100., -100., -100., -100., -100., -100., -1
 				  { -100., -100., -100., -100., -80., -100., -100., -100., -100., -100., -100, -100., -100., -100. } };
 
 
-Double_t pPrsh_tWinMax[2][14] =  { { 20., 20., 20., 20., 20., 20., 20., 20., 20., 20., 20., 20., 20., 20. }, 
-				   { 20., 20., 20., 20., 20., 20., 20., 20., 20., 20., 20., 20., 20., 20. } };
+Double_t pPrsh_tWinMax[2][14] =  { { 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100. }, 
+				   { 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100. } };
 
 //----------------------------------------
 //------ SHMS HEAVY GAS CHERENKOV --------
 //----------------------------------------
-Double_t phgcer_tWinMin[4] = {-80., -80., -80, -80};
-Double_t phgcer_tWinMax[4] = {40., 40., 40., 40.};
+Double_t phgcer_tWinMin[4] = {-80., -80., -80., -80.};
+Double_t phgcer_tWinMax[4] = { 80.,  80.,  80.,  80.};
 
 //----------------------------------------
 //------ SHMS NOBLE GAS CHERENKOV --------
 //----------------------------------------
-Double_t pngcer_tWinMin[4] = {-60., -60., -60., -60.};
-Double_t pngcer_tWinMax[4] = {40., 40., 40., 40.};
+Double_t pngcer_tWinMin[4] = {-80., -80., -80., -80.};
+Double_t pngcer_tWinMax[4] = { 80.,  80.,  80.,  80.};
 
 //----------------------------------
 //------ HMS DRIFT CHAMBERS --------
@@ -128,8 +129,8 @@ Double_t pngcer_tWinMax[4] = {40., 40., 40., 40.};
 
 //Deuteron H(e,e'p) Elastics
 //Tighter SHMS DC Time Window Lower Limitcuts (Used run3377), to study the W yield
-Double_t pDC_tWinMin[dc_PLANES] = {-13.2e3, -13.2e3,  -13.2e3,   -13.2e3,   -13.2e3,   -13.2e3,   -13.2e3,  -13.2e3,   -13.2e3,  -13.2e3,  -13.2e3,  -13.2e3 };        
-Double_t pDC_tWinMax[dc_PLANES] = {-10.5e3,  -10.5e3, -10.5e3, -10.5e3,  -10.5e3,  -10.5e3,  -10.5e3,   -10.5e3,  -10.5e3, -10.5e3, -10.5e3, -10.5e3};      
+Double_t pDC_tWinMin[dc_PLANES] = {-100.e3, -100.e3,  -100.e3, -100.e3, -100.e3, -100.e3, -100.e3, -100.e3, -100.e3,-100.e3, -100.e3, -100.e3};        
+Double_t pDC_tWinMax[dc_PLANES] = { 100.e3,  100.e3,   100.e3,  100.e3,  100.e3,  100.e3,  100.e3,  100.e3,  100.e3, 100.e3,  100.e3,  100.e3};      
 
 //---------------------------------------
 //----Define and set Multiple of Sigma 
@@ -138,12 +139,12 @@ Double_t pDC_tWinMax[dc_PLANES] = {-10.5e3,  -10.5e3, -10.5e3, -10.5e3,  -10.5e3
 //----------------------------------------
 
 //HMS
-Double_t hhod_nSig = 4.0;
-Double_t hcal_nSig = 4.0;
+Double_t hhod_nSig = 5.5;  //hodoscopes
+Double_t hcal_nSig = 4.5;  //calorimeter
 
 //SHMS
-Double_t phod_nSig = 4.5;
-Double_t pcal_nSig = 10.0;
+Double_t phod_nSig = 7.0;  // hodoscopes
+Double_t pcal_nSig = 10.0;  // calorimeter
 
 
 //----------------------------------
