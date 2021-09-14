@@ -14,21 +14,22 @@ static const Int_t cal_PLANES = 4;
 static const Int_t dc_PLANES = 12;
 static const Int_t SIDES = 2;
 
-static const string hod_pl_names[hod_PLANES] = {"1x", "1y", "2x", "2y"};
-static const string cal_pl_names[cal_PLANES] = {"1pr", "2ta", "3ta", "4ta"};
+static const TString hod_pl_names[hod_PLANES] = {"1x", "1y", "2x", "2y"};
+static const TString cal_pl_names[cal_PLANES] = {"1pr", "2ta", "3ta", "4ta"};
 
-static const string hdc_pl_names[dc_PLANES] = {"1u1", "1u2", "1x1", "1x2", "1v2", "1v1", "2v1", "2v2", "2x2", "2x1", "2u2", "2u1"};
-static const string pdc_pl_names[dc_PLANES] = {"1u1", "1u2", "1x1", "1x2", "1v1", "1v2", "2v2", "2v1", "2x2", "2x1", "2u2", "2u1"};
+static const TString hdc_pl_names[dc_PLANES] = {"1u1", "1u2", "1x1", "1x2", "1v2", "1v1", "2v1", "2v2", "2x2", "2x1", "2u2", "2u1"};
+static const TString pdc_pl_names[dc_PLANES] = {"1u1", "1u2", "1x1", "1x2", "1v1", "1v2", "2v2", "2v1", "2x2", "2x1", "2u2", "2u1"};
 
-static const string side_names[SIDES] = {"GoodPos", "GoodNeg"};
-static const string cal_side_names[SIDES] = {"goodPos", "goodNeg"};
+static const TString side_names[SIDES] = {"GoodPos", "GoodNeg"};
+static const TString cal_side_names[SIDES] = {"goodPos", "goodNeg"};
 
-static const string nsign[SIDES] = {"+", "-"};
+static const TString nsign[SIDES] = {"+", "-"};
 
 static const Int_t hmaxPMT[hod_PLANES] = {16, 10, 16, 10};
 static const Int_t pmaxPMT[hod_PLANES] = {13, 13, 14, 21};
 
 //=====================================================
+
 
 
 //=====================================================
@@ -38,14 +39,14 @@ static const Int_t pmaxPMT[hod_PLANES] = {13, 13, 14, 21};
 //NOTE: These Values must be entered with a "minus(-)" sign in the para file
 
 //(See /PARAM/HMS/GEN/h_reftime_cut.param, units in Channel)
-static const Double_t hhod_trefcut = 3000.;      //hodo tdc ref cut
-static const Double_t hdc_trefcut = 15800.;      //dc tdc ref cut
-static const Double_t hadc_trefcut = 4500.;      //hodo/cer/cal adc ref cut
+static const Double_t hhod_trefcut = 1500.;      //hodo tdc ref cut
+static const Double_t hdc_trefcut  = 10000.;      //dc tdc ref cut
+static const Double_t hadc_trefcut = 1700.;      //hodo/cer/cal adc ref cut
 
 //(See /PARAM/SHMS/GEN/p_reftime_cut.param, units in Channel)
-static const Double_t phod_trefcut = 4000.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
-static const Double_t pdc_trefcut = 14800.;
-static const Double_t padc_trefcut = 4500.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
+static const Double_t phod_trefcut = 2000.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
+static const Double_t pdc_trefcut  = 10000.;
+static const Double_t padc_trefcut = 2000.;            //**NOTE: Use this to set t_coin_trig_tdcrefcut in tcoin.param
 
 //=======================================================
 
@@ -74,15 +75,15 @@ Double_t hCal_tWinMax[cal_PLANES][SIDES][13] = {0.};
 //-----------------------------
 //------ HMS CHERENKOV --------
 //-----------------------------
-Double_t hCer_tWinMin[2] = {80., 90.};
-Double_t hCer_tWinMax[2] = {105., 110.};
+Double_t hCer_tWinMin[2] = {110., 110.};
+Double_t hCer_tWinMax[2] = {170., 170.};
 
 //----------------------------------
 //------ HMS DRIFT CHAMBERS --------
 //----------------------------------
 // Deuteron H(e,e'p) Elastics
-Double_t hDC_tWinMin[dc_PLANES] = {-14e3, -14e3,   -14e3,   -14e3,  -14.e3,  -14e3,     -14e3,   -14e3,   -14e3,   -14e3,   -14e3,   -14e3   };
-Double_t hDC_tWinMax[dc_PLANES] = {-11.e3, -11.9e3, -11.8e3, -11.8e3,-10.6e3, -11.8e3, -10.8e3, -11.6e3, -11.8e3, -11.8e3, -10.6e3, -11.8e3 };
+Double_t hDC_tWinMin[dc_PLANES] = {-14.e3, -14.e3,  -14.e3, -14.e3,  -14.e3,  -14.e3,  -14.e3,   -14.e3,  -14.e3, -14.e3,  -14.e3, -14.e3  };
+Double_t hDC_tWinMax[dc_PLANES] = { -10.e3,  -10.e3,   -10.e3,  -10.e3,   -10.e3,   -10.e3,   -10.e3,    -10.e3,   -10.e3,  -10.e3,   -10.e3,  -10.e3 };
 
 
 
@@ -107,20 +108,20 @@ Double_t pPrsh_tWinMin[2][14] = { { -100., -100., -100., -100., -100., -100., -1
 				  { -100., -100., -100., -100., -80., -100., -100., -100., -100., -100., -100, -100., -100., -100. } };
 
 
-Double_t pPrsh_tWinMax[2][14] =  { { 20., 20., 20., 20., 20., 20., 20., 20., 20., 20., 20., 20., 20., 20. }, 
-				   { 20., 20., 20., 20., 20., 20., 20., 20., 20., 20., 20., 20., 20., 20. } };
+Double_t pPrsh_tWinMax[2][14] =  { { 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100. }, 
+				   { 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100., 100. } };
 
 //----------------------------------------
 //------ SHMS HEAVY GAS CHERENKOV --------
 //----------------------------------------
-Double_t phgcer_tWinMin[4] = {-80., -80., -80, -80};
-Double_t phgcer_tWinMax[4] = {40., 40., 40., 40.};
+Double_t phgcer_tWinMin[4] = {-80., -80., -80., -80.};
+Double_t phgcer_tWinMax[4] = { 80.,  80.,  80.,  80.};
 
 //----------------------------------------
 //------ SHMS NOBLE GAS CHERENKOV --------
 //----------------------------------------
-Double_t pngcer_tWinMin[4] = {-60., -60., -60., -60.};
-Double_t pngcer_tWinMax[4] = {40., 40., 40., 40.};
+Double_t pngcer_tWinMin[4] = {-80., -80., -80., -80.};
+Double_t pngcer_tWinMax[4] = { 80.,  80.,  80.,  80.};
 
 //----------------------------------
 //------ HMS DRIFT CHAMBERS --------
@@ -128,22 +129,22 @@ Double_t pngcer_tWinMax[4] = {40., 40., 40., 40.};
 
 //Deuteron H(e,e'p) Elastics
 //Tighter SHMS DC Time Window Lower Limitcuts (Used run3377), to study the W yield
-Double_t pDC_tWinMin[dc_PLANES] = {-13.2e3, -13.2e3,  -13.2e3,   -13.2e3,   -13.2e3,   -13.2e3,   -13.2e3,  -13.2e3,   -13.2e3,  -13.2e3,  -13.2e3,  -13.2e3 };        
-Double_t pDC_tWinMax[dc_PLANES] = {-10.5e3,  -10.5e3, -10.5e3, -10.5e3,  -10.5e3,  -10.5e3,  -10.5e3,   -10.5e3,  -10.5e3, -10.5e3, -10.5e3, -10.5e3};      
+Double_t pDC_tWinMin[dc_PLANES] = {-14.e3, -14.e3,  -14.e3, -14.e3, -14.e3, -14.e3, -14.e3, -14.e3, -14.e3,-14.e3, -14.e3, -14.e3};        
+Double_t pDC_tWinMax[dc_PLANES] = { -10.e3,  -10.e3,   -10.e3,  -10.e3,  -10.e3,  -10.e3,  -10.e3,  -10.e3,  -10.e3, -10.e3,  -10.e3,  -10.e3};      
 
 //---------------------------------------
-//----Define and set Multiple of Sigma 
-//----to place cuts (Mean +/- nSig*sig) 
+//----Define and set +/- time (ns) away from mean 
+//----to place cuts (Mean +/- nSig) 
 //----around ADC:TDC Time Diff HERE ! ! !
 //----------------------------------------
 
 //HMS
-Double_t hhod_nSig = 4.0;
-Double_t hcal_nSig = 4.0;
+Double_t hhod_nSig = 40.;  //hodoscopes
+Double_t hcal_nSig = 40.;  //calorimeter
 
 //SHMS
-Double_t phod_nSig = 4.5;
-Double_t pcal_nSig = 10.0;
+Double_t phod_nSig = 40.;  // hodoscopes
+Double_t pcal_nSig = 40.;  // calorimeter
 
 
 //----------------------------------
@@ -444,60 +445,71 @@ TString n_ptrg4_r2;
 //Define Variables Associated with Leafs
 //========================================
 
+/*
+  NOTE: It is EXTREMELY IMPORTANT TO DECLARE VARIABLES whic
+  will be used in SetBranchAddress as STATIC to avoid any
+  weirdendness when the valriable is obtained during T-GetEntry()
+  
+  In my experience, because I did NOT have these set to static,
+  the HMS Calorimeter layer 1 (pr) Pos, for PMT indices [0] and [1]
+  was outputting ONLY zeros. 
+
+*/
+
 //HMS Leaf Variables
-Double_t hhod_TdcTimeUnCorr[hod_PLANES][SIDES][16];
-Double_t hhod_TdcAdcTimeDiff[hod_PLANES][SIDES][16];
-Double_t hhod_AdcMult[hod_PLANES][SIDES][16];
-Double_t hcer_TdcAdcTimeDiff[2];
-Double_t hcer_AdcMult[2];
-Double_t hcal_TdcAdcTimeDiff[cal_PLANES][SIDES][13];
-Double_t hcal_AdcMult[cal_PLANES][SIDES][13];
+static Double_t hhod_TdcTimeUnCorr[hod_PLANES][SIDES][16];
+static Double_t hhod_TdcAdcTimeDiff[hod_PLANES][SIDES][16];
+static Double_t hhod_AdcMult[hod_PLANES][SIDES][16];
+static Double_t hcer_TdcAdcTimeDiff[2];
+static Double_t hcer_AdcMult[2];
+static Double_t hcal_TdcAdcTimeDiff[cal_PLANES][SIDES][13];
+static Double_t hcal_AdcMult[cal_PLANES][SIDES][13];
 
 //HMS Ref. Time Varables                                                                                                                                           
-Double_t hT1_ref;                                                                                                    
-Double_t hDC_ref[4];                                                                                      
-Double_t hFADC_ref;
-Double_t hT1_tdcMult;
-Double_t hDC_tdcMult[4];
-Double_t hFADC_adcMult;
+static Double_t hT1_ref;                                                                                                    
+static Double_t hDC_ref[4];                                                                                      
+static Double_t hFADC_ref;
+static Double_t hT1_tdcMult;
+static Double_t hDC_tdcMult[4];
+static Double_t hFADC_adcMult;
 
 //SHMS Leaf Variables
-Double_t phod_TdcTimeUnCorr[hod_PLANES][SIDES][21];
-Double_t phod_TdcAdcTimeDiff[hod_PLANES][SIDES][21];
-Double_t phod_AdcMult[hod_PLANES][SIDES][21];
-Double_t pcal_TdcAdcTimeDiff[1][224];
-Double_t pcal_AdcMult[1][224];
-Double_t pPrSh_TdcAdcTimeDiff[1][SIDES][14]; 
-Double_t pPrSh_AdcMult[1][SIDES][14];
-Double_t pcal_AdcTime[1][224];
-Double_t pPrSh_AdcTime[1][SIDES][14]; 
-Double_t phgcer_TdcAdcTimeDiff[4];
-Double_t phgcer_AdcMult[4];
-Double_t pngcer_TdcAdcTimeDiff[4];
-Double_t pngcer_AdcMult[4];
+static Double_t phod_TdcTimeUnCorr[hod_PLANES][SIDES][21];
+static Double_t phod_TdcAdcTimeDiff[hod_PLANES][SIDES][21];
+static Double_t phod_AdcMult[hod_PLANES][SIDES][21];
+static Double_t pcal_TdcAdcTimeDiff[1][224];
+static Double_t pcal_AdcMult[1][224];
+static Double_t pPrSh_TdcAdcTimeDiff[1][SIDES][14]; 
+static Double_t pPrSh_AdcMult[1][SIDES][14];
+static Double_t pcal_AdcTime[1][224];
+static Double_t pPrSh_AdcTime[1][SIDES][14]; 
+static Double_t phgcer_TdcAdcTimeDiff[4];
+static Double_t phgcer_AdcMult[4];
+static Double_t pngcer_TdcAdcTimeDiff[4];
+static Double_t pngcer_AdcMult[4];
 
 //SHMS Ref. Time Varables                                                                                                                                           
-Double_t pT1_ref;
-Double_t pT2_ref;                                                                                                    
-Double_t pDC_ref[10];                                                                                      
-Double_t pFADC_ref;
-Double_t pT1_tdcMult;
-Double_t pT2_tdcMult;
-Double_t pDC_tdcMult[10];
-Double_t pFADC_adcMult;
+static Double_t pT1_ref;
+static Double_t pT2_ref;                                                                                                    
+static Double_t pDC_ref[10];                                                                                      
+static Double_t pFADC_ref;
+static Double_t pT1_tdcMult;
+static Double_t pT2_tdcMult;
+static Double_t pDC_tdcMult[10];
+static Double_t pFADC_adcMult;
 
 //Drift Chamber rawTDC / Ndata / Multiplicity
-Double_t hdc_rawTDC[dc_PLANES][1000];
-Double_t pdc_rawTDC[dc_PLANES][1000];
+static Double_t hdc_rawTDC[dc_PLANES][1000];
+static Double_t pdc_rawTDC[dc_PLANES][1000];
 
-Int_t hndata_rawTDC[dc_PLANES];
-Int_t pndata_rawTDC[dc_PLANES];
+static Int_t hndata_rawTDC[dc_PLANES];
+static Int_t pndata_rawTDC[dc_PLANES];
 
 //TRG Detector Leaf Variables
-Double_t ptrg1_r1;
-Double_t ptrg1_r2;
-Double_t ptrg4_r1;
-Double_t ptrg4_r2;
+static Double_t ptrg1_r1;
+static Double_t ptrg1_r2;
+static Double_t ptrg4_r1;
+static Double_t ptrg4_r2;
 
 //=========================================================
 
